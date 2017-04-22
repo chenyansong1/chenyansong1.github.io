@@ -1,0 +1,913 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.集合库概览  1234567891011121314/*Iterable是主要特质,他同时还是可变和不可变序列(Seq) , 集(Set), 以及映射(Map)的超特质,序列是有序的集合,例如:数组和列表,集可以通过==方法确定对每个对象最多只包含一个,映射则包含了键值映射关系的额集合命名为Iterable是为了说明集合对象可以通过名为elements的方法产生Iterator(枚举器),*/">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十七章 集合类型">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/第十七章 集合类型/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.集合库概览  1234567891011121314/*Iterable是主要特质,他同时还是可变和不可变序列(Seq) , 集(Set), 以及映射(Map)的超特质,序列是有序的集合,例如:数组和列表,集可以通过==方法确定对每个对象最多只包含一个,映射则包含了键值映射关系的额集合命名为Iterable是为了说明集合对象可以通过名为elements的方法产生Iterator(枚举器),*/">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/17/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/17/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/17/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/17/4.png">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.058Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第十七章 集合类型">
+<meta name="twitter:description" content="1.集合库概览  1234567891011121314/*Iterable是主要特质,他同时还是可变和不可变序列(Seq) , 集(Set), 以及映射(Map)的超特质,序列是有序的集合,例如:数组和列表,集可以通过==方法确定对每个对象最多只包含一个,映射则包含了键值映射关系的额集合命名为Iterable是为了说明集合对象可以通过名为elements的方法产生Iterator(枚举器),*/">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/17/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/第十七章 集合类型/"/>
+
+
+
+
+
+  <title> 第十七章 集合类型 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第十七章 集合类型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第十七章 集合类型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-集合库概览"><a href="#1-集合库概览" class="headerlink" title="1.集合库概览"></a>1.集合库概览</h1><p> <img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/17/1.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">Iterable是主要特质,他同时还是可变和不可变序列(Seq) , 集(Set), 以及映射(Map)的超特质,序列是有序的集合,例如:数组和列表,集可以通过==方法确定对每个对象最多只包含一个,映射则包含了键值映射关系的额集合</div><div class="line"></div><div class="line">命名为Iterable是为了说明集合对象可以通过名为elements的方法产生Iterator(枚举器),</div><div class="line">*/</div><div class="line">def elements: Iterator[A]</div><div class="line"></div><div class="line">/*</div><div class="line">例子中的A是Iterator的类型参数,他指代集合中包含的元素的类型, elements返回的Iterator被参数化为同样的类型,,例如:Iterable[Int] 的elements方法将创建Iterator[Int]</div><div class="line"></div><div class="line">Iterable包含几十个有用的具体方法,所有这些方法都是使用了elements返回的Iterator实现的,而elements是Iterable唯一的抽象方法,Iterable定义的方法中,许多是高阶方法,多数都已经在前面的章节中出现过,其中包含map, flatMap,filter, exists及find </div><div class="line"></div><div class="line">Iterator有许多与Iterable相同的方法,包括哪些高阶方法,但他们不属于同一层级,如图</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p> <img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/17/2.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">特质Iterator扩展了AnyRef,Iterable与Iterator之间的差异在于特质Iterable指代的是可以被枚举的类型(如集合类型),而特质Iterator是用来执行枚举操作的机制,尽管Iterable可以被枚举若干次,但Iterator仅能使用一次,一旦你使用Iterator枚举遍历了集合对象,你就不能再使用它了,如果你需要再次枚举该集合对象,你需要对他调用elements方法获得新的Iterator</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">Iterator提供的具体方法都使用了next和hasNext抽象方法实现</div><div class="line">*/</div><div class="line"></div><div class="line">def hasNext: Boolean</div><div class="line">def next: A</div></pre></td></tr></table></figure>
+<h1 id="2-序列"><a href="#2-序列" class="headerlink" title="2.序列"></a>2.序列</h1><p>&emsp;序列是继承自特质Seq的类,他可以让你处理一组线性分布的数据,因为元素是有序的,所以你可以请求第一个元素,第二个元素,…第n个元素</p>
+<p> 列表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">scala&gt; val colors = List(&quot;red&quot;, &quot;blue&quot;, &quot;green&quot;)</div><div class="line">colors: List[String] = List(red, blue, green)</div><div class="line"></div><div class="line">scala&gt; colors.head</div><div class="line">res42: String = red</div><div class="line"></div><div class="line">scala&gt; colors.tail</div><div class="line">res43: List[String] = List(blue, green)</div></pre></td></tr></table></figure></p>
+<p> 数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">数组能够让你保留一组元素序列并可以基于零的索引高效访问(无论是获取还是添加)处于任意位置的元素,下列代码说明了如何创建长度已知但内容未知的数组</div><div class="line">*/</div><div class="line">scala&gt; val fiveInts = new Array[Int](5)</div><div class="line">fiveInts: Array[Int] = Array(0, 0, 0, 0, 0)</div><div class="line"></div><div class="line">scala&gt; val fiveToOne = Array(5,4,3,2,1)</div><div class="line">fiveToOne: Array[Int] = Array(5, 4, 3, 2, 1)</div><div class="line"></div><div class="line">//正如之前提到的,scala中数组的访问方式是通过把索引值放在圆括号里,而不是像java里那样放在方括号里,下面的例子和更新了数组元素:</div><div class="line"></div><div class="line">scala&gt; fiveInts(0) = fiveToOne(4)</div><div class="line"></div><div class="line">scala&gt; fiveInts</div><div class="line">res45: Array[Int] = Array(1, 0, 0, 0, 0)</div></pre></td></tr></table></figure></p>
+<p> 列表缓存<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">List类能够提供对列表头部,而非尾部的快速访问,因此,如果需要通过向结尾添加对象的方式建造列表,你应该考虑先以对表头前缀元素的方式反向构造列表,完成之后再调用reverse使得元素反转为你需要的顺序</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">另一种方式是使用ListBuffer, 这可以避免reverse操作,ListBuffer是可变对象(包含在scala.collection.mutable包中),他可以更高效的通过添加元素的方式构建列表,ListBuffer能够支持常量的添加和前缀操作,元素的添加使用+= 操作符,前缀使用+: 操作符,完成之后,可以通过对ListBuffer调用toList方法获得List,举例如下:</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; import scala.collection.mutable.ListBuffer</div><div class="line">import scala.collection.mutable.ListBuffer</div><div class="line"></div><div class="line">scala&gt; val buf = new ListBuffer[Int]</div><div class="line">buf: scala.collection.mutable.ListBuffer[Int] = ListBuffer()</div><div class="line"></div><div class="line">scala&gt; buf += 1</div><div class="line">res46: buf.type = ListBuffer(1)</div><div class="line"></div><div class="line">scala&gt; buf += 2    //向ListBuffer的后面添加元素</div><div class="line">res47: buf.type = ListBuffer(1, 2)</div><div class="line"></div><div class="line">scala&gt; buf</div><div class="line">res48: scala.collection.mutable.ListBuffer[Int] = ListBuffer(1, 2)</div><div class="line"></div><div class="line">scala&gt; 3 +: buf        //在前面添加新的元素,生成新的ListBuffer</div><div class="line">res49: scala.collection.mutable.ListBuffer[Int] = ListBuffer(3, 1, 2)</div><div class="line"></div><div class="line">scala&gt; buf</div><div class="line">res50: scala.collection.mutable.ListBuffer[Int] = ListBuffer(1, 2)</div><div class="line"></div><div class="line">scala&gt; buf.toList</div><div class="line">res51: List[Int] = List(1, 2)</div><div class="line"></div><div class="line">/*</div><div class="line">使用ListBuffer替代List的另一个理由是为了避免栈溢出的风险,即使你能够使用前缀的方式以正确的次序构建列表,但是所需的递归算法不是尾递归,那么你也可以使用for表达式或while循环及ListBuffer做替代</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 数组缓存<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">ArrayBuffer与数组类似,只是额外还允许你在序列的开始或结束的地方添加和删除元素,所有的Array操作都被保留,只是由于实现中的包装层导致执行的稍微有些慢,</div><div class="line">*/</div><div class="line">//在使用ArrayBuffer之前,你必须首先从可变集合包中引用它</div><div class="line">scala&gt; import scala.collection.mutable.ArrayBuffer</div><div class="line"></div><div class="line">//创建ArrayBuffer的时候,你必须指定他的类型参数,但可以不用指定长度,ArrayBuffer可以自动调整分配的空间:</div><div class="line"></div><div class="line">scala&gt; val buf = new ArrayBuffer[Int]()</div><div class="line">buf: scala.collection.mutable.ArrayBuffer[Int] = ArrayBuffer()</div><div class="line"></div><div class="line">//ArrayBuffer还能使用 += 操作添加元素</div><div class="line">scala&gt; buf += 12    </div><div class="line">res0: buf.type = ArrayBuffer(12)</div><div class="line"></div><div class="line">scala&gt; buf += 15</div><div class="line">res1: buf.type = ArrayBuffer(12, 15)</div><div class="line"></div><div class="line">scala&gt; buf.length    //获得数组的长度</div><div class="line">res2: Int = 2</div><div class="line"></div><div class="line">scala&gt; buf(0)    //通过索引访问元素</div><div class="line">res3: Int = 12</div></pre></td></tr></table></figure></p>
+<p> 队列(Queue)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">如果你需要先进先出序列,可以使用Queue,scala的集合库提供了可变和不可变的Queue</div><div class="line">*/</div><div class="line">import scala.collection.immutable.Queue</div><div class="line">val empty = new Queue[Int]</div><div class="line"></div><div class="line">//你可以使用enqueue为不可变队列添加元素</div><div class="line">val has1 = empty.enqueue(1)</div><div class="line"></div><div class="line">//如果要添加多个元素的话,可以把集合当做enqueue调用的参数</div><div class="line">val has123 =has1.enqueue(List(2,3))</div><div class="line"></div><div class="line">//从队列的头部移除元素,可以使用dequeue</div><div class="line">val (element, has23) = has123.dequeue        //element =1   has23 = Queue(2,3)</div><div class="line"></div><div class="line"></div><div class="line">//对于不可变队列来说,dequeue方法将返回由队列头部元素和移除该元素之后的剩余队列组成的对偶(Tuple2)</div><div class="line"></div><div class="line"></div><div class="line">//可变队列的使用方式与不可变队列一样,只是代之以enqueue方法,你可以使用 += ,及 ++= 操作符添加元素,还有,对于可变队列来说,dequeue方法将只从队列移除元素头并返回</div><div class="line"></div><div class="line">scala&gt; import scala.collection.mutable.Queue</div><div class="line">import scala.collection.mutable.Queue</div><div class="line"></div><div class="line">scala&gt; val queue = new Queue[String]</div><div class="line">queue: scala.collection.mutable.Queue[String] = Queue()</div><div class="line"></div><div class="line">//添加元素</div><div class="line">scala&gt; queue += &quot;a&quot;</div><div class="line">res4: queue.type = Queue(a)</div><div class="line"></div><div class="line">//添加List</div><div class="line">scala&gt; queue ++= List(&quot;b&quot;, &quot;c&quot;)</div><div class="line">res5: queue.type = Queue(a, b, c)</div><div class="line"></div><div class="line">//返回头部</div><div class="line">scala&gt; queue.dequeue</div><div class="line">res6: String = a</div><div class="line"></div><div class="line">scala&gt; queue</div><div class="line">res7: scala.collection.mutable.Queue[String] = Queue(b, c)</div></pre></td></tr></table></figure></p>
+<p> 栈<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">//如果需要的是先进后出的序列,你可以使用Stack,他同样在scala的集合库中也有可变和不可变版本,元素的推入使用push,弹出使用pop,只获取栈顶的元素而不移除可以使用top,下面是使用的可变栈的例子</div><div class="line"></div><div class="line">scala&gt; import scala.collection.mutable.Stack</div><div class="line">import scala.collection.mutable.Stack</div><div class="line"></div><div class="line">scala&gt; val stack = new Stack[Int]</div><div class="line">stack: scala.collection.mutable.Stack[Int] = Stack()</div><div class="line"></div><div class="line">scala&gt; stack.push(1)</div><div class="line">res8: stack.type = Stack(1)</div><div class="line"></div><div class="line">scala&gt; stack</div><div class="line">res9: scala.collection.mutable.Stack[Int] = Stack(1)</div><div class="line"></div><div class="line">scala&gt; stack.push(2)</div><div class="line">res10: stack.type = Stack(2, 1)</div><div class="line"></div><div class="line">scala&gt; stack</div><div class="line">res11: scala.collection.mutable.Stack[Int] = Stack(2, 1)</div><div class="line"></div><div class="line">scala&gt; stack.top</div><div class="line">res12: Int = 2</div><div class="line"></div><div class="line">scala&gt; stack</div><div class="line">res13: scala.collection.mutable.Stack[Int] = Stack(2, 1)</div><div class="line"></div><div class="line">scala&gt; stack.pop</div><div class="line">res14: Int = 2</div><div class="line"></div><div class="line">scala&gt; stack</div><div class="line">res15: scala.collection.mutable.Stack[Int] = Stack(1)</div></pre></td></tr></table></figure></p>
+<p> 字符串(经RichString隐式转换)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">RichString也是应该知道的序列,他的类型是Seq[Char] ,因为Predef包含了从String到RichString的隐式转换,所以你可以把任何字符串字符当做Seq[Char],举例如下:</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; def hasUpperCase(s: String) = s.exists(_.isUpperCase)</div><div class="line">&lt;console&gt;:12: error: value isUpperCase is not a member of Char</div><div class="line">       def hasUpperCase(s: String) = s.exists(_.isUpperCase)</div><div class="line">                                                ^</div><div class="line"></div><div class="line">scala&gt; def hasUpperCase(s: String) = s.exists(_.isUpperCase)    </div><div class="line"></div><div class="line">scala&gt; hasUpperCase(&quot;Robert Frost&quot;)    // true</div><div class="line"></div><div class="line">scala&gt; hasUpperCase(&quot;e e cummings&quot;)    // false</div><div class="line"></div><div class="line">/*</div><div class="line">本例中的hasUpperCase方法体中,字符串s调用了exists方法,而String类本身并没有定义名为&quot;exists&quot;的方法,因此scala编译器会把s隐式转换为含有这个方法的RichString类,exists方法把字符串看做Seq[Char] ,并且如果所有的字符都是大写字母则返回值</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<h1 id="3-集-set-和映射-map"><a href="#3-集-set-和映射-map" class="headerlink" title="3.集(set)和映射(map)"></a>3.集(set)和映射(map)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">默认情况下在你使用&quot;Set&quot; 或&quot; Map&quot; 的时候,获得的都是不可变对象,如果需要的是可变版本,你需要首先写明引用,scala让你更易于使用不可变的版本,期望能够以此方式而并非相对的可变版本,这种访问易于来自Predef对象的支持,他被每个scala源文件隐含引用</div><div class="line">*/</div><div class="line"></div><div class="line">object Predef &#123;</div><div class="line">    type Set[T] = scala.collection.immutable.Set[T]</div><div class="line">    type Map[K,V] = scala.collection.immutable.Map[K, V]</div><div class="line">    type Set  = scala.collection.immutable.Set    //默认</div><div class="line">    type Map = scala.collection.immutable.Map        //默认</div><div class="line">///.....</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//如果同一个源文件中既要用到可变版本,也要用到不可变版本的集合或映射,方式之一是引用包含了可变版本的包名</div><div class="line"></div><div class="line">scala&gt; import scala.collection.mutable</div><div class="line">import scala.collection.mutable</div><div class="line"></div><div class="line">scala&gt; val mutaSet = mutable.Set(1,2,3)</div><div class="line">mutaSet: scala.collection.mutable.Set[Int] = Set(1, 2, 3)</div></pre></td></tr></table></figure>
+<p> 使用集<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">集的关键特性在于他可以使用对象的==操作检查,确保任何时候每个对象只在集中保留最多一个副本,</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; val text = &quot;See Spot run, Run, Spot, Run!&quot;</div><div class="line"></div><div class="line">scala&gt; val wordsArray = text.split(&quot;[!,. ]+&quot;)</div><div class="line">wordsArray: Array[String] = Array(See, Spot, run, Run, Spot, Run)</div><div class="line"></div><div class="line">scala&gt; for(word &lt;- wordsArray)</div><div class="line">     words += word.toLowerCase</div></pre></td></tr></table></figure></p>
+<p> 集的常用操作</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">操作</th>
+<th style="text-align:left">行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">val nums = Set(1,2,3)</td>
+<td style="text-align:left">创建不可变集(nums.toString) 返回Set(1,2,3)</td>
+</tr>
+<tr>
+<td style="text-align:left">nums += 5</td>
+<td style="text-align:left">添加元素(返回Set(1,2,3,5))</td>
+</tr>
+<tr>
+<td style="text-align:left">nums -= 3</td>
+<td style="text-align:left">删除元素(返回Set(1,2))</td>
+</tr>
+<tr>
+<td style="text-align:left">nums ++ List(5,6)</td>
+<td style="text-align:left">添加多个元素(返回Set(1,2,3,5,6)</td>
+</tr>
+<tr>
+<td style="text-align:left">nums – List(1,2)</td>
+<td style="text-align:left">删除多个元素(返回Set(3))</td>
+</tr>
+<tr>
+<td style="text-align:left">nums ** Set(1,3,5,7)</td>
+<td style="text-align:left">获得交集(返回Set(1,3))</td>
+</tr>
+<tr>
+<td style="text-align:left">nums.size</td>
+<td style="text-align:left">返回集中包含的对象数量(返回3)</td>
+</tr>
+<tr>
+<td style="text-align:left">nums.contains(3)</td>
+<td style="text-align:left">检查是否包含(返回true)</td>
+</tr>
+<tr>
+<td style="text-align:left">import scala.collection.mutable</td>
+<td style="text-align:left">引用可变集合类型</td>
+</tr>
+<tr>
+<td style="text-align:left">val words = mutable.Set.empty[String]</td>
+<td style="text-align:left">创建空可变集(words.toString, 返回Set())</td>
+</tr>
+<tr>
+<td style="text-align:left">words += “the”</td>
+<td style="text-align:left">添加元素(words.toString返回Set(the))</td>
+</tr>
+<tr>
+<td style="text-align:left">words -= “the”</td>
+<td style="text-align:left">如果存在元素,则删除(words.toString 返回Set())</td>
+</tr>
+<tr>
+<td style="text-align:left">words ++= List(“do”, “re”, “md”)</td>
+<td style="text-align:left">添加多个元素(words.toString ,返回Set(do,re,md)</td>
+</tr>
+<tr>
+<td style="text-align:left">words –= List(“do”, “re”)</td>
+<td style="text-align:left">删除多个元素(words.toString 返回Set(md))</td>
+</tr>
+<tr>
+<td style="text-align:left">words.clear</td>
+<td style="text-align:left">删除所有元素(words.toString 返回Set())</td>
+</tr>
+</tbody>
+</table>
+<p>使用映射</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">scala&gt; val map = scala.collection.mutable.Map.empty[String, Int]</div><div class="line">map: scala.collection.mutable.Map[String,Int] = Map()</div><div class="line">/*</div><div class="line">在创建映射的时候,你必须指定两个类型,第一个类型是用来定义映射的键(key) , 第二个用来定义值(value), 在这个例子中,键是字符串,值是整数</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; map(&quot;hello&quot;) = 1</div><div class="line">scala&gt; map(&quot;there&quot;) = 2</div><div class="line"></div><div class="line">scala&gt; map</div><div class="line">res5: scala.collection.mutable.Map[String,Int] = Map(hello -&gt; 1, there -&gt; 2)</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; map(&quot;hello&quot;)</div><div class="line">res6: Int = 1</div></pre></td></tr></table></figure>
+<p> 映射的常用操作</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">操作</th>
+<th style="text-align:left">行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">val nums = Map(“i” -&gt; 1, “ii” -&gt; 2)</td>
+<td style="text-align:left">创建不可变映射</td>
+</tr>
+<tr>
+<td style="text-align:left">nums + (“vi” -&gt; 6)</td>
+<td style="text-align:left">添加条目(返回Map(i-&gt;1, II-&gt;2, vi-&gt;6)</td>
+</tr>
+<tr>
+<td style="text-align:left">nums - “ii”</td>
+<td style="text-align:left">删除条目(返回Map(i-&gt;1))</td>
+</tr>
+<tr>
+<td style="text-align:left">nums += List(“iii” -&gt; 3, “v”-&gt;5)</td>
+<td style="text-align:left">添加多个条目</td>
+</tr>
+<tr>
+<td style="text-align:left">nums – List(“i”, “ii”)</td>
+<td style="text-align:left">删除多个条目</td>
+</tr>
+<tr>
+<td style="text-align:left">nums.size</td>
+<td style="text-align:left">返回映射的条目的数量</td>
+</tr>
+<tr>
+<td style="text-align:left">nums(“ii”)</td>
+<td style="text-align:left">获取指定键的关联值(返回2)</td>
+</tr>
+<tr>
+<td style="text-align:left">nums.key</td>
+<td style="text-align:left">返回键枚举器(返回字符串”i”, 和”ii”的Iterator)</td>
+</tr>
+<tr>
+<td style="text-align:left">nums.keySet</td>
+<td style="text-align:left">返回键集</td>
+</tr>
+<tr>
+<td style="text-align:left">nums.values</td>
+<td style="text-align:left">返回值枚举器(返回整数1,2 的Iterator)</td>
+</tr>
+<tr>
+<td style="text-align:left">nums.isEmpty</td>
+<td style="text-align:left">指明映射是否为空(返回false)</td>
+</tr>
+<tr>
+<td style="text-align:left">import scala.collection.mutable</td>
+<td style="text-align:left">引用可变集合类型</td>
+</tr>
+<tr>
+<td style="text-align:left">val words = mutable.Map.empty[String,Int]</td>
+<td style="text-align:left">创建空的可变集合</td>
+</tr>
+<tr>
+<td style="text-align:left">words += (“one”-&gt;1)</td>
+<td style="text-align:left">添加一条映射</td>
+</tr>
+<tr>
+<td style="text-align:left">words -= “one”</td>
+<td style="text-align:left">若存在映射条目,则删除</td>
+</tr>
+<tr>
+<td style="text-align:left">words ++= List(“one” -&gt;1, “two”-&gt;2, “three”-&gt;3)</td>
+<td style="text-align:left">添加多个映射条目</td>
+</tr>
+<tr>
+<td style="text-align:left">words –= List(“one”, “two”)</td>
+<td style="text-align:left">删除多个对象</td>
+</tr>
+</tbody>
+</table>
+<p> 默认的(Default)集和映射<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">工厂方法提供的实现都使用了快速查找算法,通常都涉及哈希表,因此他们能够快速反应对象是否存在于集合中,</div><div class="line">如scala.collection.mutable.Set() 工厂方法返回scala.collection.mutable.HashSet,则其在内部使用了哈希表</div><div class="line">类似的,scala.collection.mutable.Map() 工厂方法返回了scala.collection.mutable.HashMap</div><div class="line"></div><div class="line"></div><div class="line">不可变集和映射的情况更为复杂一些,例如:scala.collection.immutable.Set() 工厂方法返回的类,取决于你传递给他的元素, 具体说明参加下表,对于少于5个元素的集,类型完全取决于他的元素数量,以获得最优的性能,然而一旦你请求的集包含了5个元素以上,工厂方法返回的将是不可变的HashSet</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/17/3.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">类似的,scala.collection.immutable.Map()工厂方法返回的类取决于传递进去的键值对数量,参见下表,对于少于5个元素的不可变映射,类型完全取决于其键值对数量,以获得最优的性能,但如果包含了5个或以上的键值对,则使用的是不可变的HashMap</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/17/4.png" alt=""></p>
+<p> 有序的(Sorted) 集和映射<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">有时,可能你需要集或映射的枚举器能够返回那特定顺序排序的元素,为此,scala的集合库提供了SortedSet和SortedMap特质,这两个特质分别有类TreeSet和TreeMap实现,他们都使用了红黑树有序的保存元素(TreeSet类) 或键(TreeMap)类,具体的顺序取决于Ordered特质,集的元素类型或映射的键类型要么混入,要么能够隐式的转换成Ordered的特质,这些类只有不可变类型的版本</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; import scala.collection.immutable.TreeSet</div><div class="line">import scala.collection.immutable.TreeSet</div><div class="line"></div><div class="line">scala&gt; val ts = TreeSet(1,2,3,8,9)</div><div class="line">ts: scala.collection.immutable.TreeSet[Int] = TreeSet(1, 2, 3, 8, 9)</div><div class="line"></div><div class="line">scala&gt; val cs = TreeSet(&apos;t&apos;,&apos;u&apos;,&apos;n&apos;)</div><div class="line">cs: scala.collection.immutable.TreeSet[Char] = TreeSet(n, t, u)</div><div class="line"></div><div class="line">scala&gt; import scala.collection.immutable.TreeMap</div><div class="line">import scala.collection.immutable.TreeMap</div><div class="line"></div><div class="line">scala&gt; val tm = TreeMap(3-&gt;&apos;x&apos;, 1-&gt;&apos;x&apos;, 4-&gt;&apos;x&apos;)</div><div class="line">tm: scala.collection.immutable.TreeMap[Int,Char] = Map(1 -&gt; x, 3 -&gt; x, 4 -&gt; x)</div><div class="line"></div><div class="line">scala&gt; tm</div><div class="line">res12: scala.collection.immutable.TreeMap[Int,Char] = Map(1 -&gt; x, 3 -&gt; x, 4 -&gt; x)</div></pre></td></tr></table></figure></p>
+<p> 同步的集和映射<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">我们曾经提到过如果需要线程安全的映射,可以把SynchronizedMap特质混入到你想要的特定类实现中,例如,把SynchronizedMap混入HashMap,</div><div class="line">*/</div><div class="line"></div><div class="line">import scala.collection.mutable</div><div class="line">import scala.collection.mutable.&#123;HashMap, Map, SynchronizedMap&#125;</div><div class="line">object MapMaker &#123;</div><div class="line">  def makMap:Map[String,String] = &#123;</div><div class="line">    new HashMap[String,String] with SynchronizedMap[String,String] &#123;</div><div class="line">      override def default(key: String): String = &quot;why do you want to know?&quot;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">scala编译器将产生混入了SynchronizedMap的HashMap合成子类,并创建他的返回实例,这个合成子类还重载了名为default的方法</div><div class="line"></div><div class="line">如果你请求映射返回与特定键关联的值,而该键的映射实际不存在,默认你将得到NoSuchElementException,然而如果你定义了新的映射类并重载了default方法,那么这个新的映射将在查询不存在的键时返回default方法的返回值,这里是返回&quot;why do you want to know?&quot;</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">由于makeMap方法返回的可变映射混入了SynchronizedMap特质,因此可以立即用于多线程环境,每次对映射的访问都被同步操作,下面是单线程访问映射的情况:</div><div class="line">*/</div><div class="line">val capital = MapMaker.makeMap</div><div class="line">capital ++ List(&quot;us&quot;-&gt;&quot;Washington&quot;, &quot;paris&quot;-&gt;&quot;France&quot;,&quot;Japan&quot;-&gt;&quot;Tokyo&quot;)</div><div class="line">capital(&quot;Japan&quot;)    // Tokyo</div><div class="line">capital(&quot;New Zealand&quot;)    //why do you want to know?</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">对于同步的Set,同理可以创建SynchronizedSet特质创建同步的HashSet</div><div class="line">*/</div><div class="line">import scala.collection.mutable</div><div class="line">val synchroSet = new mutable.HashSet[Int] with mutable.SynchronizedSet[Int]</div><div class="line"></div><div class="line">/*</div><div class="line">对于同步,你也可以考虑使用java.util.concurrent的并发集合,又或者,还可以使用非同步的集合及scala的actor</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<h1 id="4-可变-mutable-集合vs不可变-immutable-集合"><a href="#4-可变-mutable-集合vs不可变-immutable-集合" class="headerlink" title="4.可变(mutable)集合vs不可变(immutable)集合"></a>4.可变(mutable)集合vs不可变(immutable)集合</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">不可变集合比可变集合更为紧促,节省大量的空间</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; val people = Set(&quot;Nancy&quot;, &quot;Jane&quot;)</div><div class="line">people: scala.collection.immutable.Set[String] = Set(Nancy, Jane)</div><div class="line"></div><div class="line">scala&gt; people += &quot;Bob&quot;</div><div class="line">&lt;console&gt;:11: error: value += is not a member of scala.collection.immutable.Set[String]</div><div class="line">              people += &quot;Bob&quot;    //因为是val的,所以不能重新赋值</div><div class="line">                     ^</div><div class="line"></div><div class="line">scala&gt; var people = Set(&quot;Nancy&quot;, &quot;Jane&quot;)</div><div class="line">people: scala.collection.immutable.Set[String] = Set(Nancy, Jane)</div><div class="line"></div><div class="line">scala&gt; people += &quot;Bob&quot;</div><div class="line"></div><div class="line">scala&gt; people</div><div class="line">res15: scala.collection.immutable.Set[String] = Set(Nancy, Jane, Bob)</div><div class="line"></div><div class="line">/*</div><div class="line">尽管集合是不可变类型的,过程是:首先,创建集合,然后,people将被重新赋值为新集合</div><div class="line">经过一系列操作之后,people变量现在指向新的不可变集合,其中包含了添加的字符串&quot;Bob&quot;,同样的理念可以应用于以=结尾的方法,而不仅是+=方法,</div><div class="line">*/</div><div class="line">people -= &quot;Jane&quot;</div><div class="line">people ++= List(&quot;Tom&quot;, &quot;Harry&quot;)</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">如果你想使用可变集合,仅需要引用可变版本的Map即可,这样就可以重写对不可变Map的默认引用</div><div class="line">*/</div><div class="line"></div><div class="line">import scala.collection.mutable.Map   //唯一的改变</div><div class="line">var capital = Map(&quot;Us&quot;-&gt;&quot;Washington&quot;, &quot;France&quot;-&gt;&quot;Paris&quot;)</div><div class="line">capital += (&quot;Japan&quot;-&gt;&quot;Tokyo&quot;)</div></pre></td></tr></table></figure>
+<h1 id="5-初始化集合"><a href="#5-初始化集合" class="headerlink" title="5.初始化集合"></a>5.初始化集合</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">最常见的创建和初始化集合的办法是把初始值传递给要用的集合类型的伴生对象的工厂方法,你只需把元素放在伴生对象名后面的括号中,scala编译器就会把它转化为该伴生对象的apply方法调用</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; List (1,2,3)</div><div class="line">res16: List[Int] = List(1, 2, 3)</div><div class="line"></div><div class="line">scala&gt; Set(&apos;a&apos;,&apos;b&apos;,&apos;c&apos;)</div><div class="line">res17: scala.collection.immutable.Set[Char] = Set(a, b, c)</div><div class="line"></div><div class="line">scala&gt; import scala.collection.mutable</div><div class="line">import scala.collection.mutable</div><div class="line"></div><div class="line">scala&gt; mutable.Map(&quot;hi&quot;-&gt;2,&quot;there&quot;-&gt;5)</div><div class="line">res19: scala.collection.mutable.Map[String,Int] = Map(hi -&gt; 2, there -&gt; 5)</div><div class="line"></div><div class="line">scala&gt; Array(1.0, 2.0, 3.0)</div><div class="line">res20: Array[Double] = Array(1.0, 2.0, 3.0)</div><div class="line"></div><div class="line">/*</div><div class="line">尽管通常都可以让scala编译器从传递给工厂方法的元素推断集合的元素类型,但有些时候或许你会希望指定以不同于编译器所选的类型创建集合,尤其对于可变集合来说更为如此</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; import scala.collection.mutable</div><div class="line">import scala.collection.mutable</div><div class="line"></div><div class="line">scala&gt; val stuff = mutable.Set(42)</div><div class="line">stuff: scala.collection.mutable.Set[Int] = Set(42)</div><div class="line"></div><div class="line">scala&gt; stuff += &quot;abcde&quot;</div><div class="line">&lt;console&gt;:14: error: type mismatch;</div><div class="line"> found   : String(&quot;abcde&quot;)</div><div class="line"> required: Int</div><div class="line">              stuff += &quot;abcde&quot;</div><div class="line">                       ^</div><div class="line"></div><div class="line">/*</div><div class="line">上面的问题在于stuff被指定元素类型为Int,如果想要让他的类型为Any,你需要明确的说明,把元素类型放在方括号中</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; val stuff = mutable.Set[Any](42)</div><div class="line">stuff: scala.collection.mutable.Set[Any] = Set(42)</div><div class="line"></div><div class="line">/*</div><div class="line">另一种特殊情况是,你想要把集合初始化为指定类型,例如:设想你要把列表中的元素保存在TreeSet中</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; val colors = List(&quot;blue&quot;, &quot;yellow&quot;,&quot;red&quot;)</div><div class="line">colors: List[String] = List(blue, yellow, red)</div><div class="line"></div><div class="line">//你不能把colors列表传递给TreeSet工厂方法</div><div class="line">scala&gt; import scala.collection.immutable.TreeSet</div><div class="line">import scala.collection.immutable.TreeSet</div><div class="line"></div><div class="line">scala&gt; val treeSet = TreeSet(colors)</div><div class="line">&lt;console&gt;:14: error: No implicit Ordering defined for List[String].</div><div class="line">       val treeSet = TreeSet(colors)</div><div class="line">                            ^</div><div class="line">//需要创建空的TreeSet[String] 对象并使用TreeSet的++ 操作符把列表元素加入其中</div><div class="line">scala&gt; val treeSet = TreeSet[String]() ++ colors</div><div class="line">treeSet: scala.collection.immutable.TreeSet[String] = TreeSet(blue, red, yellow)</div></pre></td></tr></table></figure>
+<p> 数组与列表之间的互转<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">如果你需要用集合初始化列表或数组,使用集合初始化列表,只需对集合调用toList方法</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; treeSet</div><div class="line">res22: scala.collection.immutable.TreeSet[String] = TreeSet(blue, red, yellow)</div><div class="line"></div><div class="line">scala&gt; treeSet.toList</div><div class="line">res23: List[String] = List(blue, red, yellow)</div><div class="line"></div><div class="line"></div><div class="line">//或者你需要的是数组</div><div class="line">scala&gt; treeSet.toArray</div><div class="line">res24: Array[String] = Array(blue, red, yellow)</div><div class="line"></div><div class="line">/*</div><div class="line">对TreeSet调用toList产生的列表元素是按照字母顺序排列的,如下</div><div class="line">*/.</div><div class="line">scala&gt; val test = TreeSet(&quot;ff&quot;, &quot;bb&quot;, &quot;ee&quot;, &quot;cc&quot;)</div><div class="line">test: scala.collection.immutable.TreeSet[String] = TreeSet(bb, cc, ee, ff)</div><div class="line"></div><div class="line">scala&gt; test.toList</div><div class="line">res25: List[String] = List(bb, cc, ee, ff)</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">请牢记:转变为列表或数组同样需要复制集合的所有元素,因此对于大型集合来说可能比较慢,所以toList和toArray对于小的Set转成List或者Array还是可以的</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 集和映射的可变与不可变互转<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">另一种偶尔发生的情况是:把可变集或映射转换成不可变类型,或者反向转换,</div><div class="line">可以先创建空不可变集合,然后把可变集合的元素用++操作符添加进去</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; import scala.collection.mutable</div><div class="line">import scala.collection.mutable</div><div class="line"></div><div class="line">scala&gt; treeSet</div><div class="line">res26: scala.collection.immutable.TreeSet[String] = TreeSet(blue, red, yellow)</div><div class="line"></div><div class="line">scala&gt; val mutaSet = mutable.Set.empty ++ treeSet</div><div class="line">mutaSet: scala.collection.mutable.Set[String] = Set(red, blue, yellow)</div><div class="line"></div><div class="line">scala&gt; val immutaSet = Set.empty ++ mutaSet</div><div class="line">immutaSet: scala.collection.immutable.Set[String] = Set(red, blue, yellow)</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">使用同样的技巧实现可变映射与不可变映射之间的转换</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; val muta = mutable.Map(&apos;i&apos;-&gt;1, &quot;ii&quot;-&gt;2)</div><div class="line">muta: scala.collection.mutable.Map[Any,Int] = Map(ii -&gt; 2, i -&gt; 1)</div><div class="line"></div><div class="line">scala&gt; val immu = Map.empty ++ muta</div><div class="line">immu: scala.collection.immutable.Map[Any,Int] = Map(ii -&gt; 2, i -&gt; 1)</div></pre></td></tr></table></figure></p>
+<h1 id="6-元组"><a href="#6-元组" class="headerlink" title="6.元组"></a>6.元组</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">元组可以把固定数量的条目组合在一起以便于作为整体传送,不像数组或列表,元组可以保存不同类型的对象,下面是可以作为整体保存整数,字符串,和控制台的元组</div><div class="line">*/</div><div class="line">(1, &quot;hello&quot;, Console)</div><div class="line"></div><div class="line">/*</div><div class="line">由于元组可以组合不同类型的对象,因此他不能继承自Iterator,如果你发现自己想要的是把&quot;一个&quot;整数和&quot;一个&quot;字符串组合在一起,那么你需要的就是元组,不是List,也不是Array</div><div class="line">*/</div><div class="line"></div><div class="line">//元组常用来返回方法的多个值,如:下面的方法找到集合中的最长单词并返回他的索引</div><div class="line">def longestWord(words: Array[String]) = &#123;</div><div class="line">  var word = words(0)</div><div class="line">  var idx = 0</div><div class="line">  for (i &lt;- 1 until words.length)</div><div class="line">    if (words(i).length &gt; word.length)</div><div class="line">      word = words(i)</div><div class="line">      idx = 1</div><div class="line">  (word,idx)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//使用</div><div class="line">scala&gt; val longest = longestWord(&quot;the quick brown fox&quot; split(&quot; &quot;))</div><div class="line">longest: (String, Int) = (quick,1)</div><div class="line"></div><div class="line"></div><div class="line">//访问元组的元素</div><div class="line">scala&gt; longest._1</div><div class="line">res27: String = quick</div><div class="line"></div><div class="line">scala&gt; longest._2</div><div class="line">res28: Int = 1</div><div class="line"></div><div class="line"></div><div class="line">//而且,你可以把元组的每个元素赋值给他自己的变量(这种模式实际上是模式匹配的特例)</div><div class="line">scala&gt; val (word, idx) = longest</div><div class="line">word: String = quick</div><div class="line">idx: Int = 1</div><div class="line"></div><div class="line">scala&gt; val word, idx = longest        //相当于为每个变量赋值</div><div class="line">word: (String, Int) = (quick,1)</div><div class="line">idx: (String, Int) = (quick,1)</div><div class="line">//每个变量被初始化为右侧表达式的单次执行结果</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十三章 包和引用/" rel="next" title="第十三章 包和引用">
+                <i class="fa fa-chevron-left"></i> 第十三章 包和引用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十一章 scala的层级/" rel="prev" title="第十一章 scala的层级">
+                第十一章 scala的层级 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-集合库概览"><span class="nav-number">1.</span> <span class="nav-text">1.集合库概览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-序列"><span class="nav-number">2.</span> <span class="nav-text">2.序列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-集-set-和映射-map"><span class="nav-number">3.</span> <span class="nav-text">3.集(set)和映射(map)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-可变-mutable-集合vs不可变-immutable-集合"><span class="nav-number">4.</span> <span class="nav-text">4.可变(mutable)集合vs不可变(immutable)集合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-初始化集合"><span class="nav-number">5.</span> <span class="nav-text">5.初始化集合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-元组"><span class="nav-number">6.</span> <span class="nav-text">6.元组</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

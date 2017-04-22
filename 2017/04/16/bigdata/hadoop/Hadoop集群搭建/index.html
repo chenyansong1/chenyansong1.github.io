@@ -1,0 +1,793 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.hdfs和yarn的作用 HDFS就是负责管理文件的，其中data node 就是数据节点存储数据的，而name node就是管理data node的 yarn是负责跑mapreduce，调度硬件资源给执行的程序用的，node manager 负责调用mapreduce程序，而resource manager是负责管理node manager的">
+<meta name="keywords" content="hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop集群搭建">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/hadoop/Hadoop集群搭建/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.hdfs和yarn的作用 HDFS就是负责管理文件的，其中data node 就是数据节点存储数据的，而name node就是管理data node的 yarn是负责跑mapreduce，调度硬件资源给执行的程序用的，node manager 负责调用mapreduce程序，而resource manager是负责管理node manager的">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/install/install_hadoop.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/install/install_test.png">
+<meta property="og:updated_time" content="2017-02-27T05:55:04.704Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hadoop集群搭建">
+<meta name="twitter:description" content="1.hdfs和yarn的作用 HDFS就是负责管理文件的，其中data node 就是数据节点存储数据的，而name node就是管理data node的 yarn是负责跑mapreduce，调度硬件资源给执行的程序用的，node manager 负责调用mapreduce程序，而resource manager是负责管理node manager的">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/install/install_hadoop.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/hadoop/Hadoop集群搭建/"/>
+
+
+
+
+
+  <title> Hadoop集群搭建 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/hadoop/Hadoop集群搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Hadoop集群搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-hdfs和yarn的作用"><a href="#1-hdfs和yarn的作用" class="headerlink" title="1.hdfs和yarn的作用"></a>1.hdfs和yarn的作用</h1><ol>
+<li>HDFS就是负责管理文件的，其中data node 就是数据节点存储数据的，而name node就是管理data node的</li>
+<li>yarn是负责跑mapreduce，调度硬件资源给执行的程序用的，node manager 负责调用mapreduce程序，而resource manager是负责管理node manager的</li>
+</ol>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/install/install_hadoop.png" alt=""></p>
+<a id="more"></a>
+<h1 id="2-主机规划"><a href="#2-主机规划" class="headerlink" title="2.主机规划"></a>2.主机规划</h1><table>
+<thead>
+<tr>
+<th style="text-align:center">节点</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">hdp-node-01</td>
+<td style="text-align:center">NameNode  、ResourceManager</td>
+</tr>
+<tr>
+<td style="text-align:center">hdp-node-02</td>
+<td style="text-align:center">DataNode  、NodeManager</td>
+</tr>
+<tr>
+<td style="text-align:center">hdp-node-03</td>
+<td style="text-align:center">DataNode  、NodeManager</td>
+</tr>
+<tr>
+<td style="text-align:center">hdp-node-04</td>
+<td style="text-align:center">DataNode  、NodeManager</td>
+</tr>
+</tbody>
+</table>
+<h1 id="3-准备工作"><a href="#3-准备工作" class="headerlink" title="3.准备工作"></a>3.准备工作</h1><h2 id="3-1-添加HADOOP用户，设置密码"><a href="#3-1-添加HADOOP用户，设置密码" class="headerlink" title="3.1.添加HADOOP用户，设置密码"></a>3.1.添加HADOOP用户，设置密码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">useradd hadoop</div><div class="line">passwd hadoop</div></pre></td></tr></table></figure>
+<h2 id="3-2-为HADOOP用户分配sudoer权限"><a href="#3-2-为HADOOP用户分配sudoer权限" class="headerlink" title="3.2.为HADOOP用户分配sudoer权限"></a>3.2.为HADOOP用户分配sudoer权限</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#vim    /etc/sudoers</div><div class="line"></div><div class="line">root    ALL=(ALL)       ALL</div><div class="line">//添加</div><div class="line">hadoop  ALL=(ALL)       ALL</div></pre></td></tr></table></figure>
+<h2 id="3-3-时间同步"><a href="#3-3-时间同步" class="headerlink" title="3.3.时间同步"></a>3.3.时间同步</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#d.time sync</div><div class="line">/usr/sbin/ntpdate time.nist.gov</div><div class="line">echo &apos;#time sync by oldboy at 2010-2-1&apos; &gt;&gt;/var/spool/cron/root</div><div class="line">echo &apos;*/5 * * * * /usr/sbin/ntpdate time.nist.gov &gt;/dev/null 2&gt;&amp;1&apos; &gt;&gt;/var/spool/cron/root</div><div class="line">crontab -l</div></pre></td></tr></table></figure>
+<h2 id="3-4-设置主机名"><a href="#3-4-设置主机名" class="headerlink" title="3.4.设置主机名"></a>3.4.设置主机名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#vim /etc/sysconfig/network</div><div class="line"> </div><div class="line">NETWORKING=yes</div><div class="line">HOSTNAME=hdp-node-01</div><div class="line"></div><div class="line">&apos;对应的机器设置为hdp-node-01、hdp-node-02、hdp-node-03、hdp-node-04&apos;</div></pre></td></tr></table></figure>
+<h2 id="3-5-配置内网域名映射（hosts）"><a href="#3-5-配置内网域名映射（hosts）" class="headerlink" title="3.5.配置内网域名映射（hosts）"></a>3.5.配置内网域名映射（hosts）</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#vim /etc/hosts</div><div class="line"></div><div class="line">192.168.0.11    hdp-node-01</div><div class="line">192.168.0.22    hdp-node-02</div><div class="line">192.168.0.33    hdp-node-03</div><div class="line">192.168.0.44    hdp-node-04</div></pre></td></tr></table></figure>
+<h2 id="3-6-配置防火墙"><a href="#3-6-配置防火墙" class="headerlink" title="3.6.配置防火墙"></a>3.6.配置防火墙</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/iptables stop</div><div class="line">/etc/init.d/iptables status        #查看状态</div></pre></td></tr></table></figure>
+<h2 id="3-7-配置ssh免密登陆"><a href="#3-7-配置ssh免密登陆" class="headerlink" title="3.7.配置ssh免密登陆"></a>3.7.配置ssh免密登陆</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -t rsa            #一直回车</div><div class="line">ssh-copy-id -i .ssh/id_rsa.pub root@hdp-node-04        #另外的机器上也要拷贝：hdp-node-01（本机）、hdp-node-02、hdp-node-03、hdp-node-04</div></pre></td></tr></table></figure>
+<h2 id="3-8-安装JDK"><a href="#3-8-安装JDK" class="headerlink" title="3.8.安装JDK"></a>3.8.安装JDK</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">#1.解压jdk</div><div class="line"></div><div class="line">mkdir /home/hadoop/app -p            #jdk解压目录</div><div class="line">tar -zxvf jdk-7u80-linux-x64.tar.gz -C /home/hadoop/app/            #解压到指定文件</div><div class="line"></div><div class="line"></div><div class="line">#2.修改配置/etc/profile，添加</div><div class="line"></div><div class="line">JAVA_HOME=/home/hadoop/app/jdk1.7.0_80</div><div class="line">CLASSPATH=.:$JAVA_HOME/lib/tools.jar</div><div class="line">PATH=$JAVA_HOME/bin:$PATH</div><div class="line">export JAVA_HOME CLASSPATH PATH</div><div class="line"></div><div class="line">#3.使配置生效</div><div class="line">source /etc/profile</div><div class="line"></div><div class="line">#4.检查</div><div class="line">[root@hdp-node-01 app]# java -version</div><div class="line">java version &quot;1.7.0_80&quot;</div><div class="line">Java(TM) SE Runtime Environment (build 1.7.0_80-b15)</div><div class="line">Java HotSpot(TM) 64-Bit Server VM (build 24.80-b11, mixed mode)</div><div class="line">[root@hdp-node-01 app]#</div></pre></td></tr></table></figure>
+<h1 id="4-Hadoop安装"><a href="#4-Hadoop安装" class="headerlink" title="4.Hadoop安装"></a>4.Hadoop安装</h1><h2 id="4-1-解压"><a href="#4-1-解压" class="headerlink" title="4.1.解压"></a>4.1.解压</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">上传：cenos-6.5-hadoop-2.6.4.tar.gz        #这是一个经过编译的文件</div><div class="line"></div><div class="line">tar -zxvf cenos-6.5-hadoop-2.6.4.tar.gz -C    /home/hadoop/app/        #解压到指定的目录</div></pre></td></tr></table></figure>
+<h2 id="4-2-修改配置文件"><a href="#4-2-修改配置文件" class="headerlink" title="4.2.修改配置文件"></a>4.2.修改配置文件</h2><p>所有的配置文件在官网可以看到：</p>
+<p>Configuration</p>
+<ul>
+<li>core-default.xml</li>
+<li>hdfs-default.xml</li>
+<li>mapred-default.xml</li>
+<li>yarn-default.xml</li>
+<li>Deprecated Properties</li>
+</ul>
+<blockquote>
+<p>cd /home/hadoop/app/hadoop-2.6.4/</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#vim ./etc/hadoop/hadoop-env.sh</div><div class="line"></div><div class="line">export JAVA_HOME=/home/hadoop/app/jdk1.7.0_80</div><div class="line"></div><div class="line"></div><div class="line">#vim ./etc/hadoop/core-site.xml</div><div class="line"></div><div class="line">&lt;configuration&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;fs.defaultFS&lt;/name&gt;        #指定HADOOP所使用的文件系统schema（URI），HDFS的老大（NameNode）的地址</div><div class="line">                &lt;value&gt;hdfs://hdp-node-01:9000&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;        #存放hdfs的数据目录，这是一个基础的目录，如果会和namenode和datanode以及secondarynamenode的目录相关</div><div class="line">                &lt;value&gt;/home/hadoop/app/hadoop-2.6.4/hadoopdata&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div><div class="line"></div><div class="line"></div><div class="line">#vim ./etc/hadoop/hdfs-site.xml</div><div class="line"></div><div class="line">&lt;configuration&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;    #name node 的镜像文件存储目录，如果没有指定，默认是：file://$&#123;hadoop.tmp.dir&#125;/dfs/name</div><div class="line">                &lt;value&gt;/home/hadoop/data/name&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;        #如果没有指定，默认是： file://$&#123;hadoop.tmp.dir&#125;/dfs/data </div><div class="line">                &lt;value&gt;/home/hadoop/data/data&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">       &lt;property&gt;</div><div class="line">                &lt;name&gt;dfs.namenode.checkpoint.dir&lt;/name&gt;        #如果没有指定，默认是：file://$&#123;hadoop.tmp.dir&#125;/dfs/namesecondary</div><div class="line">                &lt;value&gt;/home/hadoop/data/namesecondary&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;dfs.replication&lt;/name&gt;        #副本数量</div><div class="line">                &lt;value&gt;3&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div><div class="line"></div><div class="line"></div><div class="line">#mv ./etc/hadoop/mapred-site.xml.template ./etc/hadoop/mapred-site.xml</div><div class="line">vim ./etc/hadoop/mapred-site.xml</div><div class="line"></div><div class="line">&lt;configuration&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;mapreduce.framework.name&lt;/name&gt;        #程序是要放在一个指定的资源平台上去跑，这里指定yarn，默认是local</div><div class="line">                &lt;value&gt;yarn&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div><div class="line"></div><div class="line"></div><div class="line">#vim ./etc/hadoop/yarn-site.xml</div><div class="line"></div><div class="line">&lt;configuration&gt;</div><div class="line">         &lt;property&gt;</div><div class="line">                &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt;        #配置yarn的resourcemanager存放的主机</div><div class="line">               &lt;value&gt;hdp-node-01&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property&gt;</div><div class="line">                &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</div><div class="line">                &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">&lt;/configuration&gt;</div><div class="line"></div><div class="line"></div><div class="line">&apos;vim ./etc/hadoop/slaves &apos;</div><div class="line">hdp-node-01</div><div class="line">hdp-node-02</div><div class="line">hdp-node-03</div><div class="line">hdp-node-04</div></pre></td></tr></table></figure>
+<h1 id="5-格式化namenode"><a href="#5-格式化namenode" class="headerlink" title="5.格式化namenode"></a>5.格式化namenode</h1><p>这里只是初始化了namenode的工作目录（/home/hadoop/data/name），而datanode的工作目录是在datanode启动后自动初始化的<br>注意：namenode的初始化，只需要一次就够了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&apos;格式化namenode（是对namenode进行初始化，相当于生成账本）&apos;</div><div class="line">  hdfs namenode -format                # (过时的一个：hadoop namenode -format)</div><div class="line"></div><div class="line">#出现下面的语句表示成功</div><div class="line">Storage directory /home/hadoop/data/name has been successfully formatted.</div></pre></td></tr></table></figure></p>
+<h1 id="6-先启动HDFS"><a href="#6-先启动HDFS" class="headerlink" title="6.先启动HDFS"></a>6.先启动HDFS</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">#sbin/start-dfs.sh</div><div class="line"></div><div class="line">[root@hdp-node-01 hadoop-2.6.4]# ./sbin/start-dfs.sh</div><div class="line">Starting namenodes on [hdp-node-01]</div><div class="line">hdp-node-01: starting namenode, logging to /home/hadoop/app/hadoop-2.6.4/logs/hadoop-root-namenode-hdp-node-01.out</div><div class="line">hdp-node-01: starting datanode, logging to /home/hadoop/app/hadoop-2.6.4/logs/hadoop-root-datanode-hdp-node-01.out</div><div class="line">hdp-node-03: starting datanode, logging to /home/hadoop/app/hadoop-2.6.4/logs/hadoop-root-datanode-hdp-node-03.out</div><div class="line">hdp-node-02: starting datanode, logging to /home/hadoop/app/hadoop-2.6.4/logs/hadoop-root-datanode-hdp-node-02.out</div><div class="line">hdp-node-04: starting datanode, logging to /home/hadoop/app/hadoop-2.6.4/logs/hadoop-root-datanode-hdp-node-04.out</div><div class="line"></div><div class="line">&apos;结果：&apos;</div><div class="line">/*</div><div class="line">[root@hdp-node-01 hadoop-2.6.4]# jps</div><div class="line">1561 DataNode</div><div class="line">1901 Jps</div><div class="line">1474 NameNode</div><div class="line">1682 SecondaryNameNode</div><div class="line"></div><div class="line">[root@hdp-node-02 ~]# jps</div><div class="line">1293 Jps</div><div class="line">1263 DataNode</div><div class="line"></div><div class="line">[root@hdp-node-03 ~]# jps</div><div class="line">1237 Jps</div><div class="line">1207 DataNode</div><div class="line"></div><div class="line">[root@hdp-node-04 ~]# jps</div><div class="line">1223 Jps</div><div class="line">1188 DataNode</div><div class="line"></div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="7-再启动YARN"><a href="#7-再启动YARN" class="headerlink" title="7.再启动YARN"></a>7.再启动YARN</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">#sbin/start-yarn.sh</div><div class="line"></div><div class="line">[root@hdp-node-01 hadoop-2.6.4]# sbin/start-yarn.sh</div><div class="line">starting yarn daemons</div><div class="line">starting resourcemanager, logging to /home/hadoop/app/hadoop-2.6.4/logs/yarn-root-resourcemanager-hdp-node-01.out</div><div class="line">hdp-node-01: starting nodemanager, logging to /home/hadoop/app/hadoop-2.6.4/logs/yarn-root-nodemanager-hdp-node-01.out</div><div class="line">hdp-node-03: starting nodemanager, logging to /home/hadoop/app/hadoop-2.6.4/logs/yarn-root-nodemanager-hdp-node-03.out</div><div class="line">hdp-node-04: starting nodemanager, logging to /home/hadoop/app/hadoop-2.6.4/logs/yarn-root-nodemanager-hdp-node-04.out</div><div class="line">hdp-node-02: starting nodemanager, logging to /home/hadoop/app/hadoop-2.6.4/logs/yarn-root-nodemanager-hdp-node-02.out</div><div class="line"></div><div class="line"></div><div class="line">&apos;结果：&apos;</div><div class="line">/*</div><div class="line">[root@hdp-node-01 hadoop-2.6.4]# jps</div><div class="line">1561 DataNode</div><div class="line">1474 NameNode</div><div class="line">1682 SecondaryNameNode</div><div class="line">27803 ResourceManager</div><div class="line">2039 NodeManager</div><div class="line">2158 Jps</div><div class="line"></div><div class="line">[root@hdp-node-02 ~]# jps</div><div class="line">1473 Jps</div><div class="line">1263 DataNode</div><div class="line">1376 NodeManager</div><div class="line"></div><div class="line"></div><div class="line">[root@hdp-node-03 ~]# jps</div><div class="line">1320 NodeManager</div><div class="line">1207 DataNode</div><div class="line">1416 Jps</div><div class="line"> </div><div class="line"></div><div class="line">[root@hdp-node-04 ~]# jps</div><div class="line">1188 DataNode</div><div class="line">1397 Jps</div><div class="line">1301 NodeManager</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="8-测试"><a href="#8-测试" class="headerlink" title="8.测试"></a>8.测试</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&apos;向hdfs中put一个文件&apos;</div><div class="line">hadoop fs -put /etc/profile /  </div><div class="line"></div><div class="line">#查看</div><div class="line">[root@hdp-node-02 ~]# hadoop fs -ls /</div><div class="line">Found 1 items</div><div class="line">-rw-r--r--   3 root supergroup       2025 2016-11-18 02:59 /profile</div></pre></td></tr></table></figure>
+<p><a href="http://192.168.0.11:50070" target="_blank" rel="external">http://192.168.0.11:50070</a></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/install/install_test.png" alt=""></p>
+<h1 id="9-停止"><a href="#9-停止" class="headerlink" title="9.停止"></a>9.停止</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">[root@hdp-node-01 hadoop-2.6.4]# ./sbin/stop-yarn.sh</div><div class="line">stopping yarn daemons</div><div class="line">no resourcemanager to stop</div><div class="line">hdp-node-01: no nodemanager to stop</div><div class="line">hdp-node-03: no nodemanager to stop</div><div class="line">hdp-node-04: no nodemanager to stop</div><div class="line">hdp-node-02: no nodemanager to stop</div><div class="line">no proxyserver to stop</div><div class="line"></div><div class="line"></div><div class="line">[root@hdp-node-01 hadoop-2.6.4]# ./sbin/stop-dfs.sh</div><div class="line">Stopping namenodes on [hdp-node-01]</div><div class="line">hdp-node-01: stopping namenode</div><div class="line">hdp-node-01: stopping datanode</div><div class="line">hdp-node-02: stopping datanode</div><div class="line">hdp-node-03: stopping datanode</div><div class="line">hdp-node-04: stopping datanode</div><div class="line">Stopping secondary namenodes [0.0.0.0]</div><div class="line">0.0.0.0: stopping secondarynamenode</div><div class="line"></div><div class="line"></div><div class="line">[root@hdp-node-01 hadoop-2.6.4]# jps</div><div class="line">2927 Jps</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/HDFS的API使用/" rel="next" title="HDFS的API使用">
+                <i class="fa fa-chevron-left"></i> HDFS的API使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/Hadoop集群增加新节点/" rel="prev" title="Hadoop集群增加新节点">
+                Hadoop集群增加新节点 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-hdfs和yarn的作用"><span class="nav-number">1.</span> <span class="nav-text">1.hdfs和yarn的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-主机规划"><span class="nav-number">2.</span> <span class="nav-text">2.主机规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-准备工作"><span class="nav-number">3.</span> <span class="nav-text">3.准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-添加HADOOP用户，设置密码"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.添加HADOOP用户，设置密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-为HADOOP用户分配sudoer权限"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.为HADOOP用户分配sudoer权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-时间同步"><span class="nav-number">3.3.</span> <span class="nav-text">3.3.时间同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-设置主机名"><span class="nav-number">3.4.</span> <span class="nav-text">3.4.设置主机名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-配置内网域名映射（hosts）"><span class="nav-number">3.5.</span> <span class="nav-text">3.5.配置内网域名映射（hosts）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6-配置防火墙"><span class="nav-number">3.6.</span> <span class="nav-text">3.6.配置防火墙</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-7-配置ssh免密登陆"><span class="nav-number">3.7.</span> <span class="nav-text">3.7.配置ssh免密登陆</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-8-安装JDK"><span class="nav-number">3.8.</span> <span class="nav-text">3.8.安装JDK</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Hadoop安装"><span class="nav-number">4.</span> <span class="nav-text">4.Hadoop安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-解压"><span class="nav-number">4.1.</span> <span class="nav-text">4.1.解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-修改配置文件"><span class="nav-number">4.2.</span> <span class="nav-text">4.2.修改配置文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-格式化namenode"><span class="nav-number">5.</span> <span class="nav-text">5.格式化namenode</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-先启动HDFS"><span class="nav-number">6.</span> <span class="nav-text">6.先启动HDFS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-再启动YARN"><span class="nav-number">7.</span> <span class="nav-text">7.再启动YARN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-测试"><span class="nav-number">8.</span> <span class="nav-text">8.测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-停止"><span class="nav-number">9.</span> <span class="nav-text">9.停止</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

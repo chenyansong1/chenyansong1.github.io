@@ -1,0 +1,758 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mysql," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1、索引概述 索引是表的索引目录，在查找内容之前先查目录中查找索引位置，从而快速定位查询数据； 可以理解成新华字典中的索引； 索引会保存在额外的文件中。  2、索引种类 普通索引：仅加速查询 唯一索引：加速查询 + 列值唯一（可以有null） 主键索引：加速查询 + 列值唯一 +　表中只有一个（不可以有null） 组合索引：多列值组成一个索引，专门用于组合搜索，其效率大于索引合并 全文索引：对文本">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql实战之索引">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/mysql/mysql实战之索引/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1、索引概述 索引是表的索引目录，在查找内容之前先查目录中查找索引位置，从而快速定位查询数据； 可以理解成新华字典中的索引； 索引会保存在额外的文件中。  2、索引种类 普通索引：仅加速查询 唯一索引：加速查询 + 列值唯一（可以有null） 主键索引：加速查询 + 列值唯一 +　表中只有一个（不可以有null） 组合索引：多列值组成一个索引，专门用于组合搜索，其效率大于索引合并 全文索引：对文本">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/index/1.jpg">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/index/2.jpg">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/index/3.jpg">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/index/4.jpg">
+<meta property="og:updated_time" content="2017-02-24T17:10:01.239Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql实战之索引">
+<meta name="twitter:description" content="1、索引概述 索引是表的索引目录，在查找内容之前先查目录中查找索引位置，从而快速定位查询数据； 可以理解成新华字典中的索引； 索引会保存在额外的文件中。  2、索引种类 普通索引：仅加速查询 唯一索引：加速查询 + 列值唯一（可以有null） 主键索引：加速查询 + 列值唯一 +　表中只有一个（不可以有null） 组合索引：多列值组成一个索引，专门用于组合搜索，其效率大于索引合并 全文索引：对文本">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/index/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/mysql/mysql实战之索引/"/>
+
+
+
+
+
+  <title> mysql实战之索引 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/mysql/mysql实战之索引/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                mysql实战之索引
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1、索引概述"><a href="#1、索引概述" class="headerlink" title="1、索引概述"></a>1、索引概述</h1><ul>
+<li>索引是表的索引目录，在查找内容之前先查目录中查找索引位置，从而快速定位查询数据；</li>
+<li>可以理解成新华字典中的索引；</li>
+<li>索引会保存在额外的文件中。</li>
+</ul>
+<h1 id="2、索引种类"><a href="#2、索引种类" class="headerlink" title="2、索引种类"></a>2、索引种类</h1><ul>
+<li>普通索引：仅加速查询</li>
+<li>唯一索引：加速查询 + 列值唯一（可以有null）</li>
+<li>主键索引：加速查询 + 列值唯一 +　表中只有一个（不可以有null）</li>
+<li>组合索引：多列值组成一个索引，专门用于组合搜索，其效率大于索引合并</li>
+<li>全文索引：对文本的内容进行分词，进行搜索</li>
+<li>索引合并：使用多个单列索引组合查询搜索</li>
+<li>覆盖索引：select的数据列只用从索引中就能够取得，不必读取数据行，换句话说查询列要被所建的索引覆盖</li>
+</ul>
+<h2 id="a、普通索引"><a href="#a、普通索引" class="headerlink" title="a、普通索引"></a>a、普通索引</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"># 创建表 + 索引</div><div class="line">create table in1&#123;</div><div class="line">    nid int not null auto_increament primary key,</div><div class="line">    name varchar(32) not null,</div><div class="line">    email varchar(64) not null,</div><div class="line">    extra text,</div><div class="line">    index ix_name (name)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"># 创建索引</div><div class="line">create index index_name on table_name(column_name)</div><div class="line"></div><div class="line"># 删除索引</div><div class="line">drop index_name on table_name;</div><div class="line"> </div><div class="line"># 查看索引</div><div class="line">show index from table_name;</div><div class="line"></div><div class="line">#注意：对于创建索引时如果是BLOB 和 TEXT 类型，必须指定length。</div><div class="line">create index ix_extra on in1(extra(32));</div></pre></td></tr></table></figure>
+<h2 id="b、唯一索引"><a href="#b、唯一索引" class="headerlink" title="b、唯一索引"></a>b、唯一索引</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># 创建表 + 唯一索引</div><div class="line">create table in1&#123;</div><div class="line">    nid int not null auto_increament primary key,</div><div class="line">    name varchar(32) not null,</div><div class="line">    email varchar(64) not null,</div><div class="line">    extra text,</div><div class="line">    unique ix_name (name)</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 创建唯一索引</div><div class="line">create unique index 索引名 on 表名(列名)</div><div class="line"> </div><div class="line"># 删除唯一索引</div><div class="line">drop unique index 索引名 on 表名</div></pre></td></tr></table></figure>
+<h2 id="c、主键索引"><a href="#c、主键索引" class="headerlink" title="c、主键索引"></a>c、主键索引</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"># 创建表 + 创建主键</div><div class="line">create table in1&#123;</div><div class="line">    nid int not null auto_increament primary key,</div><div class="line">    name varchar(32) not null,</div><div class="line">    email varchar(64) not null,</div><div class="line">    extra text,</div><div class="line">    index ix_name (name)</div><div class="line">&#125;</div><div class="line"></div><div class="line">#or</div><div class="line"></div><div class="line">create table in1&#123;</div><div class="line">    nid int not null auto_increament ,</div><div class="line">    name varchar(32) not null,</div><div class="line">    email varchar(64) not null,</div><div class="line">    extra text,</div><div class="line">    primary key(nid),</div><div class="line">    index ix_name (name)</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 创建主键</div><div class="line">alter table 表名 add primary key(列名);</div><div class="line"> </div><div class="line"># 删除主键</div><div class="line">alter table 表名 drop primary key;</div><div class="line">alter table 表名  modify  列名 int, drop primary key;</div></pre></td></tr></table></figure>
+<h2 id="d、组合索引"><a href="#d、组合索引" class="headerlink" title="d、组合索引"></a>d、组合索引</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">组合索引是多个列组合成一个索引来查询</div><div class="line">应用场景：频繁的同时使用多列来进行查询，如：where name = &apos;nick&apos; and age = 18。</div><div class="line">*/</div><div class="line"></div><div class="line"># 创建表</div><div class="line">create table mess&#123;</div><div class="line">    nid int not null auto_increment primary key,</div><div class="line">    name varchar(32) not null,</div><div class="line">    age int not null</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 创建组合索引</div><div class="line">create index ix_name_age on mess(name,age);</div><div class="line"></div><div class="line">/*</div><div class="line">如上创建组合索引之后，查询一定要注意：</div><div class="line"> </div><div class="line">name and email  -- &gt;使用索引，name一定要放前面</div><div class="line">name         -- &gt;使用索引</div><div class="line">email         -- &gt;不使用索引</div><div class="line"> </div><div class="line">注意：同时搜索多个条件时，组合索引的性能效率好过于多个单一索引合并。</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="3、相关命令"><a href="#3、相关命令" class="headerlink" title="3、相关命令"></a>3、相关命令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># 查看索引</div><div class="line">    show index from  表名</div><div class="line"> </div><div class="line"># 查看执行时间</div><div class="line">    set profiling = 1;  # 开启profiling</div><div class="line">    SQL...              # 执行SQL语句</div><div class="line">    show profiles;      # 查看结果</div></pre></td></tr></table></figure>
+<h1 id="4、如何正确使用索引"><a href="#4、如何正确使用索引" class="headerlink" title="4、如何正确使用索引"></a>4、如何正确使用索引</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"># like &apos;%xx&apos;，避免%_写在开头</div><div class="line">    select * from tb1 where name like &apos;%n&apos;;</div><div class="line"> </div><div class="line"># 使用函数</div><div class="line">    select * from tb1 where reverse(name) = &apos;nick&apos;;</div><div class="line"> </div><div class="line"># or</div><div class="line">    select * from tb1 where nid = 1 or email = &apos;630571017@qq.com&apos;;</div><div class="line">    注：当or条件中有未建立索引的列才失效，否则会走索引</div><div class="line"> </div><div class="line"># 类型不一致</div><div class="line">    如果列是字符串类型，传入条件是必须用引号引起来。</div><div class="line">    select * from tb1 where name = 999;</div><div class="line"> </div><div class="line"># !=，不等于</div><div class="line">    select * from tb1 where name != &apos;nick&apos;</div><div class="line">    注：如果是主键，则还是会走索引</div><div class="line">        select * from tb1 where nid != 123</div><div class="line"> </div><div class="line"># &gt;，大于</div><div class="line">    select * from tb1 where name &gt; &apos;nick&apos;</div><div class="line">    注：如果是主键或索引是整数类型，则还是会走索引</div><div class="line">        select * from tb1 where nid &gt; 123</div><div class="line">        select * from tb1 where num &gt; 123</div><div class="line"> </div><div class="line"># order by</div><div class="line">    select email from tb1 order by name desc;</div><div class="line">    当根据索引排序时候，选择的映射如果不是索引，则不走索引</div><div class="line">    注：如果对主键排序，则还是走索引：</div><div class="line">        select * from tb1 order by nid desc;</div><div class="line"> </div><div class="line"># 组合索引最左前缀</div><div class="line">    如果组合索引为：(name,email)，查询使用：</div><div class="line">    name and email       -- 使用索引</div><div class="line">    name                 -- 使用索引</div><div class="line">    email                -- 不使用索引</div></pre></td></tr></table></figure>
+<h1 id="5、注意事项"><a href="#5、注意事项" class="headerlink" title="5、注意事项"></a>5、注意事项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"># 避免使用select *</div><div class="line"># count(1)或count(列) 代替 count(*)</div><div class="line"># 创建表时尽量时 char 代替 varchar</div><div class="line"># 表的字段顺序固定长度的字段优先</div><div class="line"># 组合索引代替多个单列索引（经常使用多个条件查询时）</div><div class="line"># 尽量使用短索引</div><div class="line"># 使用连接（JOIN）来代替子查询(Sub-Queries)</div><div class="line"># 连表时注意条件类型需一致</div><div class="line"># 索引散列值（重复少）不适合建索引，例：性别不适合</div><div class="line"></div><div class="line"># 索引会加快查询速度，但是也会影响更新的速度，因为更新要维护索引数据。</div><div class="line"># 索引列并不是越多越好，要在频繁查询的where后的条件列上创建索引</div><div class="line"># 小表或重复值很多的列可以不建索引，要在大表以及重复值少的条件列上创建索引</div><div class="line"># 多个列联合索引有前缀生效特性</div><div class="line"># 当字段内容前n个字符已经接近唯一时，可以对字段的前n个字符创建索引</div></pre></td></tr></table></figure>
+<h1 id="6、执行计划"><a href="#6、执行计划" class="headerlink" title="6、执行计划"></a>6、执行计划</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select *from student;</div><div class="line">+------+-----------+</div><div class="line">| id   | name      |</div><div class="line">+------+-----------+</div><div class="line">|    1 | zhangsan  |</div><div class="line">|    2 | zhangsan2 |</div><div class="line">|    3 | zhangsan3 |</div><div class="line">|    4 | zhangsan4 |</div><div class="line">+------+-----------+</div><div class="line">4 rows in set (0.00 sec)</div><div class="line"> </div><div class="line">mysql&gt; explain select *from student;</div><div class="line">+----+-------------+---------+------+---------------+------+---------+------+------+-------+</div><div class="line">| id | select_type | table   | type | possible_keys | key  | key_len | ref  | rows | Extra |</div><div class="line">+----+-------------+---------+------+---------------+------+---------+------+------+-------+</div><div class="line">|  1 | SIMPLE      | student | ALL  | NULL          | NULL | NULL    | NULL |    4 |       |</div><div class="line">+----+-------------+---------+------+---------------+------+---------+------+------+-------+</div><div class="line">1 row in set (0.00 sec)</div><div class="line"> </div><div class="line"></div><div class="line">#有子查询</div><div class="line">mysql&gt; explain select * from (select id,name from student where id&lt;4) as B;            </div><div class="line">+----+-------------+------------+------+---------------+------+---------+------+------+-------------+</div><div class="line">| id | select_type | table      | type | possible_keys | key  | key_len | ref  | rows | Extra       |</div><div class="line">+----+-------------+------------+------+---------------+------+---------+------+------+-------------+</div><div class="line">|  1 | PRIMARY     | &lt;derived2&gt; | ALL  | NULL          | NULL | NULL    | NULL |    3 |             |</div><div class="line">|  2 | DERIVED     | student    | ALL  | NULL          | NULL | NULL    | NULL |    4 | Using where |</div><div class="line">+----+-------------+------------+------+---------------+------+---------+------+------+-------------+</div><div class="line">2 rows in set (0.08 sec)</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/index/1.jpg" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/index/2.jpg" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/index/3.jpg" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/index/4.jpg" alt=""></p>
+<p><a href="http://dbaplus.cn/news-11-760-1.html" target="_blank" rel="external">整理自</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/mysql/mysql实战之表内容操作/" rel="next" title="mysql实战之表内容操作">
+                <i class="fa fa-chevron-left"></i> mysql实战之表内容操作
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/mysql/mysql实战之用户管理及授权管理/" rel="prev" title="mysql实战之用户管理及授权管理">
+                mysql实战之用户管理及授权管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、索引概述"><span class="nav-number">1.</span> <span class="nav-text">1、索引概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、索引种类"><span class="nav-number">2.</span> <span class="nav-text">2、索引种类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#a、普通索引"><span class="nav-number">2.1.</span> <span class="nav-text">a、普通索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#b、唯一索引"><span class="nav-number">2.2.</span> <span class="nav-text">b、唯一索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c、主键索引"><span class="nav-number">2.3.</span> <span class="nav-text">c、主键索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#d、组合索引"><span class="nav-number">2.4.</span> <span class="nav-text">d、组合索引</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、相关命令"><span class="nav-number">3.</span> <span class="nav-text">3、相关命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、如何正确使用索引"><span class="nav-number">4.</span> <span class="nav-text">4、如何正确使用索引</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5、注意事项"><span class="nav-number">5.</span> <span class="nav-text">5、注意事项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6、执行计划"><span class="nav-number">6.</span> <span class="nav-text">6、执行计划</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

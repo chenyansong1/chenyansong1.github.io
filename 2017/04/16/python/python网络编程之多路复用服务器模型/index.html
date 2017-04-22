@@ -1,0 +1,790 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.select 模块的作用&amp;emsp;select系统调用用来检测多个文件描述符状态变化，程序会一直在select中等待直到超时或者被监视文件描述符中的一个或者多个状态发生变化 2.select函数12345select(rlist, wlist, xlist[,timeout])                      #返回值：（rlist, wlist, xlist）#rlist：读取s">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python网络编程之多路复用服务器模型">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/python/python网络编程之多路复用服务器模型/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.select 模块的作用&amp;emsp;select系统调用用来检测多个文件描述符状态变化，程序会一直在select中等待直到超时或者被监视文件描述符中的一个或者多个状态发生变化 2.select函数12345select(rlist, wlist, xlist[,timeout])                      #返回值：（rlist, wlist, xlist）#rlist：读取s">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/select/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/select/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/select/3.png">
+<meta property="og:updated_time" content="2017-02-24T17:10:36.855Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python网络编程之多路复用服务器模型">
+<meta name="twitter:description" content="1.select 模块的作用&amp;emsp;select系统调用用来检测多个文件描述符状态变化，程序会一直在select中等待直到超时或者被监视文件描述符中的一个或者多个状态发生变化 2.select函数12345select(rlist, wlist, xlist[,timeout])                      #返回值：（rlist, wlist, xlist）#rlist：读取s">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/select/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/python/python网络编程之多路复用服务器模型/"/>
+
+
+
+
+
+  <title> python网络编程之多路复用服务器模型 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/python/python网络编程之多路复用服务器模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python网络编程之多路复用服务器模型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-select-模块的作用"><a href="#1-select-模块的作用" class="headerlink" title="1.select 模块的作用"></a>1.select 模块的作用</h1><p>&emsp;select系统调用用来检测多个文件描述符状态变化，程序会一直在select中等待直到超时或者被监视文件描述符中的一个或者多个状态发生变化</p>
+<h1 id="2-select函数"><a href="#2-select函数" class="headerlink" title="2.select函数"></a>2.select函数</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">select(rlist, wlist, xlist[,timeout])                      #返回值：（rlist, wlist, xlist）</div><div class="line">#rlist：读取socket列表，判断是否有可以读的socket</div><div class="line">#wlist：写入socket列表，判断是否有可以写的socket</div><div class="line">#xlist：异常socket列表，判断是否有异常的socket</div><div class="line">#如果socket可以读，可以写，或者异常，select返回相应的socket列表</div></pre></td></tr></table></figure>
+<h1 id="3-select工作模型"><a href="#3-select工作模型" class="headerlink" title="3.select工作模型"></a>3.select工作模型</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/python/select/1.png" alt=""></p>
+<h1 id="4-select如何判断可读、可写、异常"><a href="#4-select如何判断可读、可写、异常" class="headerlink" title="4.select如何判断可读、可写、异常"></a>4.select如何判断可读、可写、异常</h1><ul>
+<li>select如何判断可读<ol>
+<li>将监测的socket加入到rlist中，然后调用select等待数据</li>
+<li>如果有客户端连接或者对方数据，那么select就会立刻返回</li>
+<li>如果是新的连接调用accept接受新的socket，并将该socket计入到rlist或者wlist中</li>
+<li>如果有数据，那么就接受数据</li>
+</ol>
+</li>
+<li><p>select如何判断可以写</p>
+<ol>
+<li>将检测到的socket加入到wlist，调用select等待</li>
+<li>如果socket可以写，返回可以写的socket列表</li>
+<li>调用send方法，发送数据</li>
+</ol>
+</li>
+<li><p>select如何判断异常</p>
+<ol>
+<li>将监测到的socket加入到xlist，调用select等待</li>
+<li>如果socket有异常，返回异常的xlist列表</li>
+<li>处理异常的socket</li>
+</ol>
+</li>
+</ul>
+<h1 id="5-select编程模型"><a href="#5-select编程模型" class="headerlink" title="5.select编程模型"></a>5.select编程模型</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/python/select/2.png" alt=""></p>
+<ul>
+<li>read操作：需要将可读的socket全部读出</li>
+<li>write操作：将可以写的socket根据自己需要发送相关消息和数据<ol>
+<li>socket一般都是可写的，所以要根据自己需求决定是否每次写完之后是否将wlist中的socket移除</li>
+<li>因为网络问题，socket并不是一致处于可写状态，如果使用UDP，不去判断socket是否可写，可能会写失败</li>
+</ol>
+</li>
+</ul>
+<h1 id="6-程序实现"><a href="#6-程序实现" class="headerlink" title="6.程序实现"></a>6.程序实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line">#服务端</div><div class="line">[root@backup python]# cat select.py</div><div class="line">#!/usr/bin/python</div><div class="line"> </div><div class="line">from socket import *</div><div class="line">import time</div><div class="line">import os</div><div class="line">import sys</div><div class="line">import threading</div><div class="line">import select</div><div class="line">import Queue</div><div class="line"> </div><div class="line"> </div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">        tcp_server = socket(AF_INET, SOCK_STREAM)</div><div class="line">        tcp_server.bind((&apos;localhost&apos;,5002))</div><div class="line">        tcp_server.listen(5)</div><div class="line"> </div><div class="line">        msg_list = &#123;&#125; #client queue</div><div class="line">        in_list = [] #socket readline</div><div class="line">        out_list = [] #socket writelist</div><div class="line">        in_list.append(tcp_server)</div><div class="line"> </div><div class="line">        while True:</div><div class="line">                ilist,olist,elist = select.select(in_list,out_list,in_list,1)</div><div class="line"> </div><div class="line">                if not (ilist or olist or elist):</div><div class="line">                        print(&quot;Wait Timeout : in_list = &quot;+len(in_list))</div><div class="line">                        continue</div><div class="line"> </div><div class="line">                for c in ilist:                            #读处理</div><div class="line">                        if c == tcp_server:</div><div class="line">                                client,client_info = c.accept()</div><div class="line">                                in_list.append(client)</div><div class="line">                                msg_list[client]=Queue.Queue()</div><div class="line">                        else:</div><div class="line">                                recv_data = c.recv(1024)</div><div class="line">                                if recv_data:</div><div class="line">                                        print(&quot;recv= &quot;+recv_data)</div><div class="line">                                        msg_list[c].put(recv_data)                #将数据放入消息队列中</div><div class="line">                                        if c not in out_list:</div><div class="line">                                                out_list.append(c)</div><div class="line">                                else:                                        #如果接受的数据为空的话（可能client异常了），那么从ilist、outlist中删除</div><div class="line">                                        if c in out_list:</div><div class="line">                                                out_list.remove(c)</div><div class="line">                                        in_list.remove(c)</div><div class="line">                                        c.close()</div><div class="line">                                        del msg_list[c]</div><div class="line">                                        print(&quot;a client exit&quot;)</div><div class="line"> </div><div class="line">                for c in elist:                        #异常处理</div><div class="line">                        if c in in_list:</div><div class="line">                                in_list.remove(c)</div><div class="line">                        if c in out_list:</div><div class="line">                                out_list.remove(c)</div><div class="line">                        c.close()</div><div class="line">                        del msg_list[c]</div><div class="line"> </div><div class="line">                for c in olist:                        #写处理</div><div class="line">                        if c in msg_list:</div><div class="line">                                try:</div><div class="line">                                        msg = msg_list.get_nowait()        #从队列中取出数据</div><div class="line">                                except Queue.Empty:</div><div class="line">                                        out_list.remove(c)</div><div class="line">                                else:</div><div class="line">                                        print(&quot;send msg= &quot;+msg)</div><div class="line">                                        c.send(msg)                #发送数据</div><div class="line"> </div><div class="line">        tcp_server.close()</div></pre></td></tr></table></figure>
+<h1 id="7-select多路服务器优点和缺点"><a href="#7-select多路服务器优点和缺点" class="headerlink" title="7.select多路服务器优点和缺点"></a>7.select多路服务器优点和缺点</h1><ul>
+<li>优点<ol>
+<li>不需要频繁的创建和销毁线程和进程，节省了系统的开销和负担</li>
+<li>select采用轮询方式处理收发数据，处理效率高于多进程和多线程模型</li>
+</ol>
+</li>
+<li>缺点<ol>
+<li>单个进程监控的最多文件描述符是有限的（系统默认1024个）</li>
+<li>需要维护一个文件描述符列表</li>
+<li>对于文件描述符扫描是线性的，当每次对这个结构进行扫描时时间会增加</li>
+<li>内核把文件描述符消息通知给用户空间，空间需要拷贝</li>
+</ol>
+</li>
+</ul>
+<h1 id="8-select和多线程模型"><a href="#8-select和多线程模型" class="headerlink" title="8.select和多线程模型"></a>8.select和多线程模型</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/python/select/3.png" alt=""></p>
+<h1 id="9-epoll模型"><a href="#9-epoll模型" class="headerlink" title="9.epoll模型"></a>9.epoll模型</h1><ol>
+<li>是Linux下多路复用IO接口select、poll的增强版本</li>
+<li>它所支持的文件描述符的上限是最大可以打开文件的数目</li>
+<li>epoll只会对“活跃”的socket进行操作，不会因为文件描述符的增加导致效率线性的下降</li>
+<li>epoll是通过内核于用户空间mmap同一块内存实现，使用mmap加速内核于用户空间的消息传递</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/python/python网络编程之简介/" rel="next" title="python网络编程之简介">
+                <i class="fa fa-chevron-left"></i> python网络编程之简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/python网络编程之多线程多进程服务端模型/" rel="prev" title="python网络编程之多线程多进程服务端模型">
+                python网络编程之多线程多进程服务端模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-select-模块的作用"><span class="nav-number">1.</span> <span class="nav-text">1.select 模块的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-select函数"><span class="nav-number">2.</span> <span class="nav-text">2.select函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-select工作模型"><span class="nav-number">3.</span> <span class="nav-text">3.select工作模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-select如何判断可读、可写、异常"><span class="nav-number">4.</span> <span class="nav-text">4.select如何判断可读、可写、异常</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-select编程模型"><span class="nav-number">5.</span> <span class="nav-text">5.select编程模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-程序实现"><span class="nav-number">6.</span> <span class="nav-text">6.程序实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-select多路服务器优点和缺点"><span class="nav-number">7.</span> <span class="nav-text">7.select多路服务器优点和缺点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-select和多线程模型"><span class="nav-number">8.</span> <span class="nav-text">8.select和多线程模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-epoll模型"><span class="nav-number">9.</span> <span class="nav-text">9.epoll模型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

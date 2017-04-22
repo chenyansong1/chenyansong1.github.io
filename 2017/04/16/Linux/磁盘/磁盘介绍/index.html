@@ -1,0 +1,833 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="linux," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.磁盘相关的名词   英文 汉语     Disk 磁盘   Head 磁头   sector 扇区   Track 磁道   Cylinder 柱面   Units 单元快(一个柱面的大小   Block 数据块   INode 索引节点    2.磁盘实体图  &amp;emsp;扇区:盘面由圆心向四周画直线,不同的磁道被直线分成许多的扇形(弧形)的区域,每个弧形的区域叫做扇区,每个扇区大小一般为5">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="磁盘介绍">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/Linux/磁盘/磁盘介绍/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.磁盘相关的名词   英文 汉语     Disk 磁盘   Head 磁头   sector 扇区   Track 磁道   Cylinder 柱面   Units 单元快(一个柱面的大小   Block 数据块   INode 索引节点    2.磁盘实体图  &amp;emsp;扇区:盘面由圆心向四周画直线,不同的磁道被直线分成许多的扇形(弧形)的区域,每个弧形的区域叫做扇区,每个扇区大小一般为5">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/5.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/6.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/7.png">
+<meta property="og:updated_time" content="2017-02-24T17:09:32.550Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="磁盘介绍">
+<meta name="twitter:description" content="1.磁盘相关的名词   英文 汉语     Disk 磁盘   Head 磁头   sector 扇区   Track 磁道   Cylinder 柱面   Units 单元快(一个柱面的大小   Block 数据块   INode 索引节点    2.磁盘实体图  &amp;emsp;扇区:盘面由圆心向四周画直线,不同的磁道被直线分成许多的扇形(弧形)的区域,每个弧形的区域叫做扇区,每个扇区大小一般为5">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/Linux/磁盘/磁盘介绍/"/>
+
+
+
+
+
+  <title> 磁盘介绍 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/Linux/磁盘/磁盘介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                磁盘介绍
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-磁盘相关的名词"><a href="#1-磁盘相关的名词" class="headerlink" title="1.磁盘相关的名词"></a>1.磁盘相关的名词</h1><table>
+<thead>
+<tr>
+<th>英文</th>
+<th>汉语</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Disk</td>
+<td>磁盘</td>
+</tr>
+<tr>
+<td>Head</td>
+<td>磁头</td>
+</tr>
+<tr>
+<td>sector</td>
+<td>扇区</td>
+</tr>
+<tr>
+<td>Track</td>
+<td>磁道</td>
+</tr>
+<tr>
+<td>Cylinder</td>
+<td>柱面</td>
+</tr>
+<tr>
+<td>Units</td>
+<td>单元快(一个柱面的大小</td>
+</tr>
+<tr>
+<td>Block</td>
+<td>数据块</td>
+</tr>
+<tr>
+<td>INode</td>
+<td>索引节点</td>
+</tr>
+</tbody>
+</table>
+<h1 id="2-磁盘实体图"><a href="#2-磁盘实体图" class="headerlink" title="2.磁盘实体图"></a>2.磁盘实体图</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/1.png" alt="磁头,主轴" title="磁头,主轴"><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/2.png" alt="柱面,磁柱" title="柱面,磁柱"><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/3.png" alt="扇区,磁道" title="扇区,磁道"></p>
+<p> &emsp;扇区:盘面由圆心向四周画直线,不同的磁道被直线分成许多的扇形(弧形)的区域,每个弧形的区域叫做扇区,每个扇区大小一般为512字节,扇区看起来就是圆弧或扇形<br>柱面:磁盘中不同的盘片(或盘面)相同半径的磁道轨迹从上到下所组成的圆柱型区域就称为柱面,柱面看起来是一个圆柱形<br>&emsp;扇区的第一个主要部分是标识符,标识符就是扇区头标,包括组成扇区三维地址的三个数字,扇区所在的磁头(或盘面)/磁道(或柱面号)以及扇区在磁道上的位置即扇区号,头标中还包括一个字段,其中有显示扇区是否能可靠存储数据,或者是是否已发现某个故障因而不宜使用的标记,有些磁盘控制器在扇区头标中还记录有指示字,可在原扇区出错时指引磁盘转到替换扇区或磁道,最后,扇区头标以循环冗余校验(CRC)值作为结果以供控制器检验扇区头标的读出情况,确保准确无误<br>&emsp;扇区的第二个主要部分是存储数据的数据段,可分为数据和保护数据的交错码(ECC),在初始化准备期间,计算机用512个虚拟信息字节(实际数据的存放地)和这些虚拟信息字节相应的ECC数字填入这个部分</p>
+<p>&emsp;磁道,柱面,扇区总结<br>&emsp;磁盘最基本的组成部分是由坚硬的金属材料制成的涂以磁性介质的盘片(有很多层)不同容量磁盘的盘片数不等</p>
+<ol>
+<li>一块磁盘有2-14个盘片,每个盘片有两个面,每个面对应一个读写磁头,用磁头号来区分盘面,即盘面就是磁头数,盘片数*2=磁头数(盘面数)</li>
+<li>不同盘面的磁道被划分为多个扇形区域,每个扇形区域就是一个扇区</li>
+<li>同一个盘面,以盘片中心为圆心,每个不同半径的圆形轨迹就是一个磁道(Track)</li>
+<li>不同盘面相同半径的磁道组成一个圆柱面就是柱面(Cylinder)</li>
+<li>一个柱面包含多个磁道(这些磁道半径相同),一个磁道包含多个扇区</li>
+<li>数据信息记录可表示为:某磁头,某磁道(柱面),某扇区</li>
+</ol>
+<h1 id="3-磁盘容量计算"><a href="#3-磁盘容量计算" class="headerlink" title="3.磁盘容量计算"></a>3.磁盘容量计算</h1><p>磁盘容量=柱面数(磁道数)<em>柱面大小(磁道大小</em>磁头数)=512B<em>扇区数</em>磁道数*磁头数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# fdisk -l /dev/sdb</div><div class="line"> </div><div class="line">Disk /dev/sdb: 1073 MB, 1073741824 bytes</div><div class="line">255 heads, 63 sectors/track, 130 cylinders</div><div class="line">Units = cylinders of 16065 * 512 = 8225280 bytes</div><div class="line">Sector size (logical/physical): 512 bytes / 512 bytes</div><div class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</div><div class="line">Disk identifier: 0x000315a8</div><div class="line"> </div><div class="line">   Device Boot      Start         End      Blocks   Id  System</div><div class="line">/dev/sdb1               1          13      102400   83  Linux</div><div class="line">Partition 1 does not end on cylinder boundary.</div><div class="line">/dev/sdb2              13          77      512000    5  Extended</div><div class="line">Partition 2 does not end on cylinder boundary.</div><div class="line">/dev/sdb5              14          39      204800   83  Linux</div><div class="line">/dev/sdb6              39          77      305152   83  Linux</div></pre></td></tr></table></figure>
+<h1 id="4-机械磁盘读写数据的原理"><a href="#4-机械磁盘读写数据的原理" class="headerlink" title="4.机械磁盘读写数据的原理"></a>4.机械磁盘读写数据的原理</h1><ol>
+<li>磁盘是按照柱面为单位读写数据的，即先读取同一个盘面的某一个磁道，读完之后，如果数据没有读完，磁头也不会切换到其他的磁道，而是选择切换磁头，读取下一个盘面的相同半径的磁道，知道所有盘面的相同半径的磁道读取完成之后，如果数据还没有读写完成，才会切换其他不同半径的磁道，这个切换磁道的过程为寻道。</li>
+<li>不同磁头间的切换是电子切换，而不同磁道间的切换需要磁头做径向运动，这个径向运动需要步进电机调节，这个动作是机械的切 换。<br>寻道：是机械的，所以很浪费时间</li>
+</ol>
+<p>&emsp;为什么按照柱面的方式读写数据？<br>因为同一个柱面上我只要让磁头做电子的切换（即一个磁头读完一个柱面上的一个磁道就电子让下一次磁头读取同一个柱面上的下一个磁道），就能够读取数据（显然电子的切换相比较机械的切换要快很多）</p>
+<h1 id="5-磁盘分区的介绍"><a href="#5-磁盘分区的介绍" class="headerlink" title="5.磁盘分区的介绍"></a>5.磁盘分区的介绍</h1><h2 id="5-1-磁盘存储逻辑结构图"><a href="#5-1-磁盘存储逻辑结构图" class="headerlink" title="5.1.磁盘存储逻辑结构图"></a>5.1.磁盘存储逻辑结构图</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/4.png" alt="磁盘存储逻辑结构图" title="磁盘存储逻辑结构图"></p>
+<p> MBR:主引导记录，0磁头，0磁道，1扇区，446字节</p>
+<h2 id="5-2-分区表示意图"><a href="#5-2-分区表示意图" class="headerlink" title="5.2.分区表示意图"></a>5.2.分区表示意图</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/5.png" alt="分区表示意图"></p>
+<h2 id="5-3-16字节分区表含义"><a href="#5-3-16字节分区表含义" class="headerlink" title="5.3.16字节分区表含义"></a>5.3.16字节分区表含义</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/6.png" alt="16字节分区表含义"></p>
+<h2 id="5-4-备份主引导记录"><a href="#5-4-备份主引导记录" class="headerlink" title="5.4.备份主引导记录"></a>5.4.备份主引导记录</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/磁盘/7.png" alt="备份主引导记录"></p>
+<h2 id="5-5-磁盘分区小结"><a href="#5-5-磁盘分区小结" class="headerlink" title="5.5.磁盘分区小结"></a>5.5.磁盘分区小结</h2><ol>
+<li>磁盘分区的实质就是针对上述0磁头0磁道1扇区的前446字节后面接下来的64byte的分区表进行设置，<br>即主要划分起始以及结束磁头号，及扇区号和柱面号</li>
+<li>一块磁盘的分区表仅有64byte大小，每个分区表要占用16字节，因此一块磁盘仅支持4个分区表信息，<br>即：主分区+扩展分区的总量不超过4个</li>
+<li>扩展分区是不能直接使用的，还需要在扩展分区的基础上划分逻辑分区才行。</li>
+<li>扩展分区有自己的分区表，因此扩展分区下面的逻辑分区可以有多个。</li>
+</ol>
+<h2 id="5-6-主分区primary"><a href="#5-6-主分区primary" class="headerlink" title="5.6.主分区primary"></a>5.6.主分区primary</h2><p>一般来说，主分区是磁盘上必须存在的分区，一般我们在主分区上安装操作系统</p>
+<h2 id="5-7-扩展分区"><a href="#5-7-扩展分区" class="headerlink" title="5.7.扩展分区"></a>5.7.扩展分区</h2><p>&esmp;严格来说,扩展分区不能算一个正常的分区,而是一个链接,起到一个指向的作用,我们可以在扩展分区内建立逻辑分区,从上面逻辑结构图中我们可以看到,扩展分区就像一个虚拟出来的一个小硬盘一样,但是不同的是,没有MBR,而只有扩展分区表,而且这个扩展分区表是没有64bytes的限制的,所以可以在扩展分区划分多个逻辑分区<br>&esmp;一块硬盘只能存在一个扩展分区,并且扩展分区不能直接存放数据,扩展分区受限于操作系统</p>
+<h2 id="5-8-逻辑分区logical"><a href="#5-8-逻辑分区logical" class="headerlink" title="5.8.逻辑分区logical"></a>5.8.逻辑分区logical</h2><p>&esmp;不能在磁盘中单独直接划分逻辑分区(fdisk),逻辑分区必须存在于扩展分区内,在扩展分区内可以划分多个逻辑分区,逻辑分区的编号从数字5开始,在这个扩展分区内可以划分多个逻辑分区(IDE磁盘大概编号可以是5-63), SATA(编号是5-15)<br>&esmp;实际应用:主分区和逻辑分区,都可以用,一般系统安装在主分区中,存放数据都可以</p>
+<h2 id="5-9-分区的注意事项"><a href="#5-9-分区的注意事项" class="headerlink" title="5.9.分区的注意事项"></a>5.9.分区的注意事项</h2><p>&emsp;一块硬盘的分区方式只能为如下组合之一：<br>P + P + P + P<br>P + P + P + E<br>P + P + E<br>P + E<br>P<br>其中的P为primary，E为Extended</p>
+<ol>
+<li>扩展分区不是一个真正可用的分区，建立扩展分区之后，还需要在扩展分区上面建立逻辑分区才可以使用。</li>
+<li>对于主分区和逻辑分区在一般的数据存储使用上是没有区别的（对于大多数的数据存储），在安装操作系统时<br>第一个分区要选主分区</li>
+<li>分区号1-4留给主分区或扩展分区使用，逻辑分区只能从5开始，即使1-4分区号有剩余，也不会分配给逻辑分区。</li>
+<li>对硬盘分区，实际上就是在修改硬盘的分区表，也就是说我们通过fdisk分区实际上就是在改64字节的分区表，分区和对应的数据没有关系，因此理论上调整分区大小，不会删除分区内的数据。<br>特殊说明:磁盘也可以不分区,直接格式化使用,但是不推荐这样做, 主分区最少有一个，而扩展分区最多一个</li>
+</ol>
+<h2 id="5-10-磁盘分区方案"><a href="#5-10-磁盘分区方案" class="headerlink" title="5.10.磁盘分区方案"></a>5.10.磁盘分区方案</h2><blockquote>
+<p>方案1:集群架构中的某个节点,数据有多份或者不重要</p>
+</blockquote>
+<p>/boot 100MB linux引导程序<br>swap 物理内存的1.5倍,当内存大于等于8GB时,给8GB即可<br>/ 剩余硬盘大小(相当于Windows只分C盘)</p>
+<blockquote>
+<p>方案2:数据库即存储,有大量重要的数据</p>
+</blockquote>
+<p>/boot 100MB<br>/ 50-200GB<br>swap 物理内存的1.5倍,当内存大于等于8GB时,给8GB即可<br>/data 剩余硬盘大小,放数据库及存储数据的</p>
+<blockquote>
+<p>方案3:门户级别或大网站</p>
+</blockquote>
+<p>/boot 100MB<br>swap 物理内存的1.5倍,当内存大于等于8GB时,给8GB即可<br>/ 50-200GB<br>剩余空间保留,不再进行分区,将来分给哪个部分,拿到服务器的部分,就自己根据需求再分,此种方式更灵活</p>
+<p>参见：<a href="http://oldboy.blog.51cto.com/2561410/634725" target="_blank" rel="external">http://oldboy.blog.51cto.com/2561410/634725</a></p>
+<h2 id="5-11-磁盘分区设备名"><a href="#5-11-磁盘分区设备名" class="headerlink" title="5.11.磁盘分区设备名"></a>5.11.磁盘分区设备名</h2><p>&emsp;以硬盘为目标来说明设备命名规则。linux将硬盘分为两类：第一类是传统的IDE硬盘，使用hd标示；第 二种是SATA、SCSI、USB硬盘、U盘（严格的说U盘不算硬盘）等，均用sd标示；对于SATA，SCSI，USB硬盘，U盘等，只要把hd改成sd就可以了。命名规则是相同的。<br>&emsp;对应于：第一块硬盘：sda   //我们使用a，b，c表示第几块盘<br>&emsp;如果第一块盘有1个主分区和1个扩展分区，2个逻辑分区<br>对应于：sda1   //主分区<br>        sda2   //扩展分区<br>        sda5   //逻辑分区<br>        sda6   //逻辑分区<br>注意：我们使用1,2,3.。。来表示不同的分区号<br>&emsp;每个硬盘只能有四个主分区和扩展分区（三个主分区+一个扩展分区，或者四个主分区），这个是由硬盘本身决定的（64字节，每个分区表16字节），<br>跟操作系统没关系。每个硬盘最多只能有一个扩展分区，这个是由操作系统限制的。我的理解，扩展分区只是标志该分区处被再次分成多个逻辑分区了，因此扩展分区相当于逻辑分区的容器而已，没有必要多个，因此OS限制了扩展分区最多只能有一个。</p>
+<p><a href="http://oldboy.blog.51cto.com/" target="_blank" rel="external">整理自老男孩</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/Linux/磁盘/磁盘分区,格式化,挂载/" rel="next" title="磁盘分区,格式化,挂载">
+                <i class="fa fa-chevron-left"></i> 磁盘分区,格式化,挂载
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/Linux/磁盘/磁盘inode图/" rel="prev" title="磁盘inode原理">
+                磁盘inode原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-磁盘相关的名词"><span class="nav-number">1.</span> <span class="nav-text">1.磁盘相关的名词</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-磁盘实体图"><span class="nav-number">2.</span> <span class="nav-text">2.磁盘实体图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-磁盘容量计算"><span class="nav-number">3.</span> <span class="nav-text">3.磁盘容量计算</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-机械磁盘读写数据的原理"><span class="nav-number">4.</span> <span class="nav-text">4.机械磁盘读写数据的原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-磁盘分区的介绍"><span class="nav-number">5.</span> <span class="nav-text">5.磁盘分区的介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-磁盘存储逻辑结构图"><span class="nav-number">5.1.</span> <span class="nav-text">5.1.磁盘存储逻辑结构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-分区表示意图"><span class="nav-number">5.2.</span> <span class="nav-text">5.2.分区表示意图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-16字节分区表含义"><span class="nav-number">5.3.</span> <span class="nav-text">5.3.16字节分区表含义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-备份主引导记录"><span class="nav-number">5.4.</span> <span class="nav-text">5.4.备份主引导记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5-磁盘分区小结"><span class="nav-number">5.5.</span> <span class="nav-text">5.5.磁盘分区小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-6-主分区primary"><span class="nav-number">5.6.</span> <span class="nav-text">5.6.主分区primary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-7-扩展分区"><span class="nav-number">5.7.</span> <span class="nav-text">5.7.扩展分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-8-逻辑分区logical"><span class="nav-number">5.8.</span> <span class="nav-text">5.8.逻辑分区logical</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-9-分区的注意事项"><span class="nav-number">5.9.</span> <span class="nav-text">5.9.分区的注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-10-磁盘分区方案"><span class="nav-number">5.10.</span> <span class="nav-text">5.10.磁盘分区方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-11-磁盘分区设备名"><span class="nav-number">5.11.</span> <span class="nav-text">5.11.磁盘分区设备名</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

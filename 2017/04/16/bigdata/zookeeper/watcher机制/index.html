@@ -1,0 +1,870 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="zookeeper," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="watcher 问题  集群中有多个机器,当某个通用的配置发生变化后,怎么让所有服务器的配置都统一生效? 当某个集群节点宕机,其他节点怎么知道? zk中引入了watcher机制来实现发布/订阅功能,能够让多个订阅者同时监听某一个主题对象,当这个主题对象自身状态变化时,会通知所有的订阅者       watcher组成 客户端 客户端watcherManager zk服务器   watcher机制">
+<meta name="keywords" content="zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="watcher简介及简单示例">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/zookeeper/watcher机制/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="watcher 问题  集群中有多个机器,当某个通用的配置发生变化后,怎么让所有服务器的配置都统一生效? 当某个集群节点宕机,其他节点怎么知道? zk中引入了watcher机制来实现发布/订阅功能,能够让多个订阅者同时监听某一个主题对象,当这个主题对象自身状态变化时,会通知所有的订阅者       watcher组成 客户端 客户端watcherManager zk服务器   watcher机制">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/watcher/1.png">
+<meta property="og:updated_time" content="2017-02-24T17:07:51.547Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="watcher简介及简单示例">
+<meta name="twitter:description" content="watcher 问题  集群中有多个机器,当某个通用的配置发生变化后,怎么让所有服务器的配置都统一生效? 当某个集群节点宕机,其他节点怎么知道? zk中引入了watcher机制来实现发布/订阅功能,能够让多个订阅者同时监听某一个主题对象,当这个主题对象自身状态变化时,会通知所有的订阅者       watcher组成 客户端 客户端watcherManager zk服务器   watcher机制">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/watcher/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/watcher机制/"/>
+
+
+
+
+
+  <title> watcher简介及简单示例 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/watcher机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                watcher简介及简单示例
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="watcher"><a href="#watcher" class="headerlink" title="watcher"></a>watcher</h1><ul>
+<li><p>问题</p>
+<ol>
+<li>集群中有多个机器,当某个通用的配置发生变化后,怎么让所有服务器的配置都统一生效?</li>
+<li>当某个集群节点宕机,其他节点怎么知道?<blockquote>
+<p>zk中引入了watcher机制来实现发布/订阅功能,能够让多个订阅者同时监听某一个主题对象,当这个主题对象自身状态变化时,会通知所有的订阅者</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li>watcher组成<br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/watcher/1.png" alt=""><ul>
+<li>客户端</li>
+<li>客户端watcherManager</li>
+<li>zk服务器</li>
+</ul>
+</li>
+<li><p>watcher机制</p>
+<ol>
+<li>客户端向zk服务器注册watcher的同时,会将watcher对象存储在客户端的watcherManager</li>
+<li>zk服务器触发watcher事件后,回向客户端发送通知,客户端线程从watcherManager中调取watcher执行 </li>
+</ol>
+</li>
+<li><p>watcher接口</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">public class ZLock implements Watcher</div><div class="line">public void process(WatcherEvent event)</div></pre></td></tr></table></figure>
+<ul>
+<li>事件类型<ul>
+<li>通知状态:org.apache.zookeeper.Watcher.Event.KeeperState</li>
+<li>事件类型:org.apache.zookeeper.Watcher.Event.EventType</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>keeperState</th>
+<th>EventType</th>
+<th>触发条件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SyncConnected</td>
+<td>None(-1)</td>
+<td>客户端与服务器成功建立会话</td>
+<td>此时客户端处于连接状态</td>
+</tr>
+<tr>
+<td>SyncConnected</td>
+<td>NodeCreated(1)</td>
+<td>Watcher监听的对应数据节点被创建</td>
+<td>此时客户端处于连接状态</td>
+</tr>
+<tr>
+<td>SyncConnected</td>
+<td>NodeDataChanged(3)</td>
+<td>数据节点的数据内容发生变更</td>
+<td>此时客户端处于连接状态</td>
+</tr>
+<tr>
+<td>SyncConnected</td>
+<td>NodeChildrenChanged(4)</td>
+<td>被监控的数据节点的子节点列表发生变更</td>
+<td>此时客户端处于连接状态</td>
+</tr>
+<tr>
+<td>Disconnected(0)</td>
+<td>None(-1)</td>
+<td>客户端与zk服务器端口连接</td>
+<td>此时客户端与服务器处于断开连接状态</td>
+</tr>
+<tr>
+<td>Expired(-12)</td>
+<td>None(-1)</td>
+<td>会话超时</td>
+<td>此时客户端会话失效,通常会收到SessionExpiredException异常</td>
+</tr>
+<tr>
+<td>AuthFailed(4)</td>
+<td>None(-1)</td>
+<td>1.使用错误的scheme进行授权检查;2.SALA权限检查失败</td>
+<td>通常会受到AuthFailedException异常</td>
+</tr>
+<tr>
+<td>Unknown(-1)</td>
+<td></td>
+<td></td>
+<td>从3.0版本开始已经废弃</td>
+</tr>
+<tr>
+<td>NoSyncConnected</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>NodeDataChanged事件</p>
+<ul>
+<li>无论节点数据发生变化还是数据版本发生变化都会触发</li>
+<li>即使被更新数据与新数据一样,数据版本都会发生变化<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">[zk: localhost:2181(CONNECTED) 6] get /student</div><div class="line">&quot;zhangsan&quot;</div><div class="line">cZxid = 0x3</div><div class="line">ctime = Thu Feb 23 17:29:37 CST 2017</div><div class="line">mZxid = 0x3</div><div class="line">mtime = Thu Feb 23 17:29:37 CST 2017</div><div class="line">pZxid = 0x3</div><div class="line">cversion = 0</div><div class="line">dataVersion = 0</div><div class="line">aclVersion = 0</div><div class="line">ephemeralOwner = 0x0</div><div class="line">dataLength = 10</div><div class="line">numChildren = 0</div><div class="line"></div><div class="line">#重新以相同的内容设置节点</div><div class="line">[zk: localhost:2181(CONNECTED) 7] set /student &quot;zhangsan&quot;</div><div class="line">cZxid = 0x3</div><div class="line">ctime = Thu Feb 23 17:29:37 CST 2017</div><div class="line">mZxid = 0x4</div><div class="line">mtime = Thu Feb 23 17:31:12 CST 2017</div><div class="line">pZxid = 0x3</div><div class="line">cversion = 0</div><div class="line">dataVersion = 1		#数据版本发生了变化</div><div class="line">aclVersion = 0</div><div class="line">ephemeralOwner = 0x0</div><div class="line">dataLength = 10</div><div class="line">numChildren = 0</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>NodeChildrenChanged</p>
+<ul>
+<li>新增节点或者删除节点</li>
+</ul>
+</li>
+<li><p>AuthFailed</p>
+<ul>
+<li>重点不是客户端会话没有权限而是授权失败<blockquote>
+<p>客户端只能收到相关事件的通知,但是并不能获取对应数据节点的原始数据内容以及变更之后新数据内容,因此,如果业务需要知道变更前的数据或者是变更收的数据,则需要业务保存变更前的数据和调用接口获取新的数据</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>watcher注册</p>
+<ul>
+<li><p>创建zk客户端对象实例时注册</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public ZooKeeper(String connectString, int sessionTimeout, Watcher watcher)</div><div class="line">public ZooKeeper(String connectString, int sessionTimeout, Watcher watcher, boolean canBeReadOnly)</div><div class="line">public ZooKeeper(String connectString, int sessionTimeout, Watcher watcher, long sessionId, byte[] sessionPasswd)</div><div class="line">public ZooKeeper(String connectString, int sessionTimeout, Watcher watcher, long sessionId, byte[] sessionPasswd, boolean canBeReadOnly)</div><div class="line"></div><div class="line">/*</div><div class="line">通过上述方式注册的watcher将会作为整个zk会话期间的默认watcher,会被一直保存在客户端ZKWatchManager的defaultWatcher中,如果有其他的设置,则这个watcher会被覆盖</div><div class="line">*/</div></pre></td></tr></table></figure>
+</li>
+<li><p>其他注册API</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">getChildren(String path, Watcher watcher)</div><div class="line"></div><div class="line">getChildren(String path, boolean watch)	</div><div class="line">	#Boolean watch 表示是否使用上下文中默认的watcher,即创建zk实例时设置的watcher</div><div class="line">	#The watch willbe triggered by a successful operation that deletes the node of the given path or creates/delete a child under the node. </div><div class="line"></div><div class="line">getData(String path, bolean watch, Stat stat)</div><div class="line">	#Boolean watch 表示是否使用上下文中默认的watcher,即创建zk实例时设置的watcher</div><div class="line">	#The watch will be triggered by a successful operation that sets data on the node, or deletes the node. </div><div class="line"></div><div class="line">getData(String path, Watcher watcher, AsyncCallback.DataCallback cb, Objcet ctx)</div><div class="line"></div><div class="line">exists(String path, boolean watch)</div><div class="line">	#Boolean watch 表示是否使用上下文中默认的watcher,即创建zk实例时设置的watcher</div><div class="line">	#The watch will be triggered by a successful operation that creates/delete the node or sets the data on the node.</div><div class="line"></div><div class="line">exists(String path, Watcher watcher)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p>watcher设置后,一旦触发一次即会失效,如果需要一直监听,就需要再注册(很重要)</p>
+<p>下面用代码来说明:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">#Watcher</div><div class="line"></div><div class="line">public class WatcherExample1 implements Watcher &#123;</div><div class="line">	private ZooKeeper  zk = null;</div><div class="line">	@Override</div><div class="line">	public void process(WatchedEvent event) &#123;#watcher事件触发后的处理动作</div><div class="line">		System.out.println(&quot;watcher=&quot;+this.getClass().getName());</div><div class="line">		System.out.println(&quot;path=&quot;+event.getPath());</div><div class="line">		System.out.println(&quot;eventType=&quot;+event.getType().name());</div><div class="line">	&#125;</div><div class="line">	public ZooKeeper getZk() &#123;</div><div class="line">		return zk;</div><div class="line">	&#125;</div><div class="line">	public void setZk(ZooKeeper zk) &#123;</div><div class="line">		this.zk = zk;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">-----------------------------------</div><div class="line"></div><div class="line">#注册watcher</div><div class="line">public class WatcherRegister &#123;</div><div class="line">	private ZooKeeper  zk = null;</div><div class="line">	public WatcherRegister(String connectString,Watcher watcher) &#123;</div><div class="line">		try &#123;</div><div class="line">			zk = new ZooKeeper(connectString,10000,watcher);</div><div class="line">		&#125; catch (IOException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	public void testWatcherdisabled(String path) throws KeeperException, InterruptedException&#123;</div><div class="line">		WatcherExample1 we1 = new WatcherExample1();</div><div class="line">		we1.setZk(zk);</div><div class="line">		//向getData上注册一个watcher</div><div class="line">		zk.getData(path, we1, null);</div><div class="line">	&#125;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		WatcherExample we = new WatcherExample();</div><div class="line">		//注册watcher</div><div class="line">		WatcherRegister wr = new WatcherRegister(&quot;localhost:2181&quot;,we);</div><div class="line">		try &#123;</div><div class="line">			wr.testWatcherdisabled(&quot;/student&quot;);</div><div class="line">			Thread.sleep(300000);</div><div class="line">		&#125; catch (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>启动执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">watcher=com.zk.example.watcher.WatcherExample</div><div class="line">path=null</div><div class="line">eventType=None</div></pre></td></tr></table></figure></p>
+<p>执行: set /student “zhangsan3” 打印下面的结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">watcher=com.zk.example.watcher.WatcherExample1</div><div class="line">path=/student</div><div class="line">eventType=NodeDataChanged</div></pre></td></tr></table></figure></p>
+<p>再次执行: set /student “zhangsan3” 没有打印<br>说明:watcher设置后,一旦触发一次即会失效,如果需要一直监听,就需要再注册</p>
+<p>下面是触发一次watcher之后,重新注册的例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">#watcher</div><div class="line">public class WatcherExample1 implements Watcher &#123;</div><div class="line">	private ZooKeeper  zk = null;</div><div class="line">	@Override</div><div class="line">	public void process(WatchedEvent event) &#123;</div><div class="line">		System.out.println(&quot;watcher=&quot;+this.getClass().getName());</div><div class="line">		System.out.println(&quot;path=&quot;+event.getPath());</div><div class="line">		System.out.println(&quot;eventType=&quot;+event.getType().name());</div><div class="line">		try &#123;</div><div class="line">			//在一次触发watcher之后,重新设置watcher</div><div class="line">			WatcherExample1 we1 = new WatcherExample1();</div><div class="line">			we1.setZk(zk);</div><div class="line">			zk.getData(event.getPath(), we1, null);</div><div class="line">		&#125; catch (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	public ZooKeeper getZk() &#123;</div><div class="line">		return zk;</div><div class="line">	&#125;</div><div class="line">	public void setZk(ZooKeeper zk) &#123;</div><div class="line">		this.zk = zk;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">---------------------------------------------</div><div class="line"></div><div class="line"></div><div class="line"># 注册watcher</div><div class="line"></div><div class="line">public class WatcherRegister &#123;</div><div class="line">	private ZooKeeper  zk = null;</div><div class="line">	public WatcherRegister(String connectString,Watcher watcher) &#123;</div><div class="line">		try &#123;</div><div class="line">			zk = new ZooKeeper(connectString,10000,watcher);</div><div class="line">		&#125; catch (IOException e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	public void testWatcherdisabled(String path) throws KeeperException, InterruptedException&#123;</div><div class="line">		WatcherExample1 we1 = new WatcherExample1();</div><div class="line">		we1.setZk(zk);</div><div class="line">		zk.getData(path, we1, null);</div><div class="line">	&#125;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		WatcherExample we = new WatcherExample();</div><div class="line">		WatcherRegister wr = new WatcherRegister(&quot;localhost:2181&quot;,we);</div><div class="line">		try &#123;</div><div class="line">			wr.testWatcherdisabled(&quot;/student&quot;);</div><div class="line">			Thread.sleep(300000);</div><div class="line">		&#125; catch (Exception e) &#123;</div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>启动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">watcher=com.zk.example.watcher.WatcherExample</div><div class="line">path=null</div><div class="line">eventType=None</div></pre></td></tr></table></figure></p>
+<p>修改:  set /student “zhangsan3”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">watcher=com.zk.example.watcher.WatcherExample1</div><div class="line">path=/student</div><div class="line">eventType=NodeDataChanged</div></pre></td></tr></table></figure></p>
+<p>再次修改:  set /student “zhangsan3” (<strong> 这里需要说明的是修改此次修改数据的内容还是”zhangsan3”,但是数据的版本是被改变了,所以数据节点还是被改变了 </strong>)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">watcher=com.zk.example.watcher.WatcherExample1</div><div class="line">path=/student</div><div class="line">eventType=NodeDataChanged</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zk分布式锁的类型/" rel="next" title="zk分布式锁的类型">
+                <i class="fa fa-chevron-left"></i> zk分布式锁的类型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/watcher处理流程源码解析/" rel="prev" title="watcher处理流程源码解析">
+                watcher处理流程源码解析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#watcher"><span class="nav-number">1.</span> <span class="nav-text">watcher</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

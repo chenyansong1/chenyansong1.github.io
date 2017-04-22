@@ -1,0 +1,734 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.为什么要有checkpoint?因为在spark进行计算的时候,会有很多的中间结果,但是一旦中间某一步失败,那么又要重新从头开始计算,但是如果我们将中间的某一个计算的结果checkpoint下来,那么下次计算的时候,直接从checkpoint的点拿数据,那么将会大大提高计算的速度">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="checkpoint">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark/checkpoint/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.为什么要有checkpoint?因为在spark进行计算的时候,会有很多的中间结果,但是一旦中间某一步失败,那么又要重新从头开始计算,但是如果我们将中间的某一个计算的结果checkpoint下来,那么下次计算的时候,直接从checkpoint的点拿数据,那么将会大大提高计算的速度">
+<meta property="og:updated_time" content="2017-03-04T11:21:27.086Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="checkpoint">
+<meta name="twitter:description" content="1.为什么要有checkpoint?因为在spark进行计算的时候,会有很多的中间结果,但是一旦中间某一步失败,那么又要重新从头开始计算,但是如果我们将中间的某一个计算的结果checkpoint下来,那么下次计算的时候,直接从checkpoint的点拿数据,那么将会大大提高计算的速度">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark/checkpoint/"/>
+
+
+
+
+
+  <title> checkpoint | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark/checkpoint/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                checkpoint
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-为什么要有checkpoint"><a href="#1-为什么要有checkpoint" class="headerlink" title="1.为什么要有checkpoint?"></a>1.为什么要有checkpoint?</h1><p>因为在spark进行计算的时候,会有很多的中间结果,但是一旦中间某一步失败,那么又要重新从头开始计算,但是如果我们将中间的某一个计算的结果checkpoint下来,那么下次计算的时候,直接从checkpoint的点拿数据,那么将会大大提高计算的速度</p>
+<a id="more"></a>
+<h1 id="2-checkpoint的源码说明"><a href="#2-checkpoint的源码说明" class="headerlink" title="2.checkpoint的源码说明"></a>2.checkpoint的源码说明</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">/**</div><div class="line"> * Mark this RDD for checkpointing. It will be saved to a file inside the checkpoint</div><div class="line"> * directory set with `SparkContext#setCheckpointDir` and all references to its parent</div><div class="line"> * RDDs will be removed. This function must be called before any job has been</div><div class="line"> * executed on this RDD. It is strongly recommended that this RDD is persisted in</div><div class="line"> * memory, otherwise saving it on a file will require recomputation.</div><div class="line">直到一个action被调用,那么checkpoint才会被执行</div><div class="line">如果做了checkpoint,那么checkpoint之前的所有的lineage(rdd之间的依赖关系)将被移除</div><div class="line">强烈建议将checkpoint的rdd保存到内存中(cache),不然在进行checkpoint的时候,又要重新进行计算</div><div class="line"> */</div><div class="line">def checkpoint(): Unit = RDDCheckpointData.synchronized &#123;</div><div class="line">  // NOTE: we use a global lock here due to complexities downstream with ensuring</div><div class="line">  // children RDD partitions point to the correct parent partitions. In the future</div><div class="line">  // we should revisit this consideration.</div><div class="line">  if (context.checkpointDir.isEmpty) &#123;</div><div class="line">    throw new SparkException(&quot;Checkpoint directory has not been set in the SparkContext&quot;)</div><div class="line">  &#125; else if (checkpointData.isEmpty) &#123;</div><div class="line">    checkpointData = Some(new ReliableRDDCheckpointData(this))</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h1><p>&emsp;在进行checkpoint的时候,会进行重新的计算,然后将checkpoint的结果放到磁盘,但是如果我们在checkpoint之前就进行一次cache,那么checkpoint的时候需要的计算结果就直接从内存中拿到,然后在将数据保存到磁盘<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">package spark.examples.rddapi  </div><div class="line">  </div><div class="line">import org.apache.spark.&#123;SparkContext, SparkConf&#125;  </div><div class="line">  </div><div class="line">object CheckpointTest &#123;  </div><div class="line">  def main(args: Array[String]) &#123;  </div><div class="line">    val conf = new SparkConf().setMaster(&quot;local&quot;).setAppName(&quot;AggregateTest_00&quot;)  </div><div class="line">    val sc = new SparkContext(conf);  </div><div class="line">    val z = sc.parallelize(List(3, 6, 7, 9, 11)).cache()        //将数据cache,然后在checkpoint的时候,直接从cache中的拿数据,不用从头开始计算   </div><div class="line">    sc.setCheckpointDir(&quot;file:///d:/checkpoint&quot;)  //这里指定的是本地文件系统,不建议使用,因为如果本地机器宕机了,其他机器将无法拿到数据进行恢复,实际的生产过程中使用的是hdfs</div><div class="line">    z.checkpoint()  </div><div class="line">    println(&quot;length: &quot; + z.collect().length) //rdd存入目录  </div><div class="line">    println(&quot;count: &quot; + z.count()) //5  </div><div class="line">  &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="checkpoint的文件保存路径"><a href="#checkpoint的文件保存路径" class="headerlink" title="checkpoint的文件保存路径"></a>checkpoint的文件保存路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">d:\checkpoint&gt;tree /f  </div><div class="line">文件夹 PATH 列表  </div><div class="line">卷序列号为 EA23-0890  </div><div class="line">D:.  </div><div class="line">└─9b0ca0d9-f7fb-46bb-84dc-097d95b9e7b8  </div><div class="line">    └─rdd-0  </div><div class="line">            .part-00000.crc  </div><div class="line">            part-00000 </div><div class="line"> </div><div class="line"> </div><div class="line"> </div><div class="line">/*</div><div class="line">1. 运行过程中发现，checkpoint目录会自动创建，无需预创建</div><div class="line">2.程序运行结束后，checkpoint目录并没有删除，上面这些属于checkpoint目录下的目录和文件也没有删除，再次运行会产生新的目录</div><div class="line">*/</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark/IP查找并插入数据到mysql/" rel="next" title="IP查找并插入数据到mysql">
+                <i class="fa fa-chevron-left"></i> IP查找并插入数据到mysql
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/logstash/logstash安装及启动/" rel="prev" title="logstash安装及启动">
+                logstash安装及启动 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-为什么要有checkpoint"><span class="nav-number">1.</span> <span class="nav-text">1.为什么要有checkpoint?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-checkpoint的源码说明"><span class="nav-number">2.</span> <span class="nav-text">2.checkpoint的源码说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例代码"><span class="nav-number">3.</span> <span class="nav-text">实例代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#checkpoint的文件保存路径"><span class="nav-number">4.</span> <span class="nav-text">checkpoint的文件保存路径</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

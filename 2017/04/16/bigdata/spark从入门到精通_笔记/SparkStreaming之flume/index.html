@@ -1,0 +1,757 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="flume的安装参见详细的文档">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SparkStreaming之flume">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="flume的安装参见详细的文档">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/flume.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/flume2.png">
+<meta property="og:updated_time" content="2017-04-22T07:23:06.201Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SparkStreaming之flume">
+<meta name="twitter:description" content="flume的安装参见详细的文档">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/flume.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/"/>
+
+
+
+
+
+  <title> SparkStreaming之flume | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SparkStreaming之flume
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T16:50:08+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>flume的安装参见详细的文档</p>
+<a id="more"></a>
+<h1 id="接收flume实时数据流之push方式"><a href="#接收flume实时数据流之push方式" class="headerlink" title="接收flume实时数据流之push方式"></a>接收flume实时数据流之push方式</h1><p>Flume被设计为可以在agent之间推送数据(数据从一个agent到另外一个agent)，而不一定是从agent将数据传输到sink中。在这种方式下，Spark Streaming需要启动一个作为Avro Agent的Receiver，来让flume可以推送数据过来。下面是我们的整合步骤：</p>
+<h2 id="前提需要"><a href="#前提需要" class="headerlink" title="前提需要"></a>前提需要</h2><p>选择一台机器：<br>1、Spark Streaming与Flume都可以在这台机器上启动，Spark的其中一个Worker必须运行在这台机器上面<br>2、Flume可以将数据推送到这台机器上的某个端口</p>
+<p>由于flume的push模型，Spark Streaming必须先启动起来，Receiver要被调度起来并且监听本地某个端口，来让flume推送数据。</p>
+<h2 id="配置flume"><a href="#配置flume" class="headerlink" title="配置flume"></a>配置flume</h2><p>接收来自目录的变化,然后将变化的文件push到spark streaming中,在flume-conf.properties文件中，配置flume的sink是将数据推送到其他的agent中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">agent1.sinks.sink1.type = avro</div><div class="line">agent1.sinks.sink1.channel = channel1</div><div class="line">agent1.sinks.sink1.hostname = 192.168.0.103</div><div class="line">agent1.sinks.sink1.port = 8888</div></pre></td></tr></table></figure></p>
+<p>整个配置文件如下:</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/flume.png" alt=""></p>
+<h2 id="配置spark-streaming"><a href="#配置spark-streaming" class="headerlink" title="配置spark streaming"></a>配置spark streaming</h2><p>在我们的spark工程的pom.xml中加入spark streaming整合flume的依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">groupId = org.apache.spark</div><div class="line">artifactId = spark-streaming-flume_2.10</div><div class="line">version = 1.5.0</div></pre></td></tr></table></figure></p>
+<p>在代码中使用整合flume的方式创建输入DStream<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">import org.apache.spark.streaming.flume.*;</div><div class="line"></div><div class="line">JavaReceiverInputDStream&lt;SparkFlumeEvent&gt; flumeStream =</div><div class="line">	FlumeUtils.createStream(streamingContext, [chosen machine&apos;s hostname], [chosen port]);</div></pre></td></tr></table></figure></p>
+<p>这里有一点需要注意的是，这里监听的hostname，必须与cluster manager（比如Standalone Master、YARN ResourceManager）是同一台机器，这样cluster manager<br>才能匹配到正确的机器，并将receiver调度在正确的机器上运行。</p>
+<h2 id="部署spark-streaming应用"><a href="#部署spark-streaming应用" class="headerlink" title="部署spark streaming应用"></a>部署spark streaming应用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line">package cn.spark.study.streaming;</div><div class="line"></div><div class="line">import java.util.Arrays;</div><div class="line"></div><div class="line">import org.apache.spark.SparkConf;</div><div class="line">import org.apache.spark.api.java.function.FlatMapFunction;</div><div class="line">import org.apache.spark.api.java.function.Function2;</div><div class="line">import org.apache.spark.api.java.function.PairFunction;</div><div class="line">import org.apache.spark.streaming.Durations;</div><div class="line">import org.apache.spark.streaming.api.java.JavaDStream;</div><div class="line">import org.apache.spark.streaming.api.java.JavaPairDStream;</div><div class="line">import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;</div><div class="line">import org.apache.spark.streaming.api.java.JavaStreamingContext;</div><div class="line">import org.apache.spark.streaming.flume.FlumeUtils;</div><div class="line">import org.apache.spark.streaming.flume.SparkFlumeEvent;</div><div class="line"></div><div class="line">import scala.Tuple2;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 基于Flume Push方式的实时wordcount程序</div><div class="line"> * @author Administrator</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class FlumePushWordCount &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		SparkConf conf = new SparkConf()</div><div class="line">				.setMaster(&quot;local[2]&quot;)</div><div class="line">				.setAppName(&quot;FlumePushWordCount&quot;);  </div><div class="line">		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));</div><div class="line">		</div><div class="line">		JavaReceiverInputDStream&lt;SparkFlumeEvent&gt; lines =</div><div class="line">				FlumeUtils.createStream(jssc, &quot;192.168.0.103&quot;, 8888);  </div><div class="line">		</div><div class="line">		JavaDStream&lt;String&gt; words = lines.flatMap(</div><div class="line">				</div><div class="line">				new FlatMapFunction&lt;SparkFlumeEvent, String&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">					@Override</div><div class="line">					public Iterable&lt;String&gt; call(SparkFlumeEvent event) throws Exception &#123;</div><div class="line">						String line = new String(event.event().getBody().array());  </div><div class="line">						return Arrays.asList(line.split(&quot; &quot;));   </div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;String, Integer&gt; pairs = words.mapToPair(</div><div class="line">				</div><div class="line">				new PairFunction&lt;String, String, Integer&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">					@Override</div><div class="line">					public Tuple2&lt;String, Integer&gt; call(String word) throws Exception &#123;</div><div class="line">						return new Tuple2&lt;String, Integer&gt;(word, 1);</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;String, Integer&gt; wordCounts = pairs.reduceByKey(</div><div class="line">				</div><div class="line">				new Function2&lt;Integer, Integer, Integer&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">					@Override</div><div class="line">					public Integer call(Integer v1, Integer v2) throws Exception &#123;</div><div class="line">						return v1 + v2;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		wordCounts.print();</div><div class="line">		</div><div class="line">		jssc.start();</div><div class="line">		jssc.awaitTermination();</div><div class="line">		jssc.close();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打包工程为一个jar包，使用spark-submit来提交作业</p>
+<h2 id="启动flume-agent"><a href="#启动flume-agent" class="headerlink" title="启动flume agent"></a>启动flume agent</h2><p>flume-ng agent -n agent1 -c conf -f /usr/local/flume/conf/flume-conf.properties -Dflume.root.logger=DEBUG,console</p>
+<h2 id="flume的使用场景"><a href="#flume的使用场景" class="headerlink" title="flume的使用场景"></a>flume的使用场景</h2><p>什么时候我们应该用Spark Streaming整合Kafka去用，做实时计算？<br>什么使用应该整合flume？</p>
+<p>看你的实时数据流的产出频率<br>1、如果你的实时数据流产出特别频繁，比如说一秒钟10w条，那就必须是kafka，分布式的消息缓存中间件，可以承受超高并发<br>2、如果你的实时数据流产出频率不固定，比如有的时候是1秒10w，有的时候是1个小时才10w，可以选择将数据用nginx日志来表示，每隔一段时间将日志文件<br>放到flume监控的目录中，然后呢，spark streaming来计算</p>
+<h1 id="接收flume实时数据流之poll方式"><a href="#接收flume实时数据流之poll方式" class="headerlink" title="接收flume实时数据流之poll方式"></a>接收flume实时数据流之poll方式</h1><p>除了让flume将数据推送到spark streaming，还有一种方式，可以运行一个自定义的flume sink<br>1、Flume推送数据到sink中，然后数据缓存在sink中<br>2、spark streaming用一个可靠的flume receiver以及事务机制从sink中拉取数据</p>
+<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><p>1、选择一台可以在flume agent中运行自定义sink的机器<br>2、将flume的数据管道流配置为将数据传送到那个sink中<br>3、spark streaming所在的机器可以从那个sink中拉取数据</p>
+<h2 id="配置flume-1"><a href="#配置flume-1" class="headerlink" title="配置flume"></a>配置flume</h2><p>1、加入sink jars，将以下jar加入flume的classpath中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">groupId = org.apache.spark</div><div class="line">artifactId = spark-streaming-flume-sink_2.10</div><div class="line">version = 1.5.1</div><div class="line"></div><div class="line">groupId = org.scala-lang</div><div class="line">artifactId = scala-library</div><div class="line">version = 2.10.4</div><div class="line"></div><div class="line">groupId = org.apache.commons</div><div class="line">artifactId = commons-lang3</div><div class="line">version = 3.3.2</div></pre></td></tr></table></figure></p>
+<p>2、修改配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">agent1.sinks.sink1.type = org.apache.spark.streaming.flume.sink.SparkSink</div><div class="line">agent1.sinks.sink1.hostname = 192.168.0.103</div><div class="line">agent1.sinks.sink1.port = 8888</div><div class="line">agent1.sinks.sink1.channel = channel1</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/flume2.png" alt=""></p>
+<h2 id="配置spark-streaming-1"><a href="#配置spark-streaming-1" class="headerlink" title="配置spark streaming"></a>配置spark streaming</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">import org.apache.spark.streaming.flume.*;</div><div class="line"></div><div class="line">JavaReceiverInputDStream&lt;SparkFlumeEvent&gt;flumeStream =</div><div class="line">	FlumeUtils.createPollingStream(streamingContext, [sink machine hostname], [sink port]);</div></pre></td></tr></table></figure>
+<p>代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line">package cn.spark.study.streaming;</div><div class="line"></div><div class="line">import java.util.Arrays;</div><div class="line"></div><div class="line">import org.apache.spark.SparkConf;</div><div class="line">import org.apache.spark.api.java.function.FlatMapFunction;</div><div class="line">import org.apache.spark.api.java.function.Function2;</div><div class="line">import org.apache.spark.api.java.function.PairFunction;</div><div class="line">import org.apache.spark.streaming.Durations;</div><div class="line">import org.apache.spark.streaming.api.java.JavaDStream;</div><div class="line">import org.apache.spark.streaming.api.java.JavaPairDStream;</div><div class="line">import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;</div><div class="line">import org.apache.spark.streaming.api.java.JavaStreamingContext;</div><div class="line">import org.apache.spark.streaming.flume.FlumeUtils;</div><div class="line">import org.apache.spark.streaming.flume.SparkFlumeEvent;</div><div class="line"></div><div class="line">import scala.Tuple2;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 基于Flume Poll方式的实时wordcount程序</div><div class="line"> * @author Administrator</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class FlumePollWordCount &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		SparkConf conf = new SparkConf()</div><div class="line">				.setMaster(&quot;local[2]&quot;)</div><div class="line">				.setAppName(&quot;FlumePollWordCount&quot;);  </div><div class="line">		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(5));</div><div class="line">		</div><div class="line">		JavaReceiverInputDStream&lt;SparkFlumeEvent&gt; lines =</div><div class="line">				FlumeUtils.createPollingStream(jssc, &quot;192.168.0.103&quot;, 8888);  </div><div class="line">		</div><div class="line">		JavaDStream&lt;String&gt; words = lines.flatMap(</div><div class="line">				</div><div class="line">				new FlatMapFunction&lt;SparkFlumeEvent, String&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">					@Override</div><div class="line">					public Iterable&lt;String&gt; call(SparkFlumeEvent event) throws Exception &#123;</div><div class="line">						String line = new String(event.event().getBody().array());  </div><div class="line">						return Arrays.asList(line.split(&quot; &quot;));   </div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;String, Integer&gt; pairs = words.mapToPair(</div><div class="line">				</div><div class="line">				new PairFunction&lt;String, String, Integer&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">					@Override</div><div class="line">					public Tuple2&lt;String, Integer&gt; call(String word) throws Exception &#123;</div><div class="line">						return new Tuple2&lt;String, Integer&gt;(word, 1);</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;String, Integer&gt; wordCounts = pairs.reduceByKey(</div><div class="line">				</div><div class="line">				new Function2&lt;Integer, Integer, Integer&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">					@Override</div><div class="line">					public Integer call(Integer v1, Integer v2) throws Exception &#123;</div><div class="line">						return v1 + v2;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		wordCounts.print();</div><div class="line">		</div><div class="line">		jssc.start();</div><div class="line">		jssc.awaitTermination();</div><div class="line">		jssc.close();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>一定要先启动flume，再去提交spark streaming</p>
+<h2 id="启动flume"><a href="#启动flume" class="headerlink" title="启动flume"></a>启动flume</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">flume-ng agent -n agent1 -c conf -f /usr/local/flume/conf/flume-conf.properties -Dflume.root.logger=DEBUG,console</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之自定义Receiver/" rel="next" title="SparkStreaming之自定义Receiver">
+                <i class="fa fa-chevron-left"></i> SparkStreaming之自定义Receiver
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/数据仓库/数据仓库/" rel="prev" title="数据仓库">
+                数据仓库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#接收flume实时数据流之push方式"><span class="nav-number">1.</span> <span class="nav-text">接收flume实时数据流之push方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前提需要"><span class="nav-number">1.1.</span> <span class="nav-text">前提需要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置flume"><span class="nav-number">1.2.</span> <span class="nav-text">配置flume</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置spark-streaming"><span class="nav-number">1.3.</span> <span class="nav-text">配置spark streaming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署spark-streaming应用"><span class="nav-number">1.4.</span> <span class="nav-text">部署spark streaming应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动flume-agent"><span class="nav-number">1.5.</span> <span class="nav-text">启动flume agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flume的使用场景"><span class="nav-number">1.6.</span> <span class="nav-text">flume的使用场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接收flume实时数据流之poll方式"><span class="nav-number">2.</span> <span class="nav-text">接收flume实时数据流之poll方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前提条件"><span class="nav-number">2.1.</span> <span class="nav-text">前提条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置flume-1"><span class="nav-number">2.2.</span> <span class="nav-text">配置flume</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置spark-streaming-1"><span class="nav-number">2.3.</span> <span class="nav-text">配置spark streaming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动flume"><span class="nav-number">2.4.</span> <span class="nav-text">启动flume</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

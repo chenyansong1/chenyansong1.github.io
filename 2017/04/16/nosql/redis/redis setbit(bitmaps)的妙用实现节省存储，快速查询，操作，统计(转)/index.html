@@ -1,0 +1,767 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="redis提供了二进制的操作，分别是：12345678 setbit getbit bitcount bitop 看完具体的使用后，可以衍生出两个经典案例 1.存储布尔性质的值，节约内存，快速实现业务如下需求，在用户系统中(user),ID往往是唯一且递增生成的，如果用redis实现一套用户系统，则可以这样123set user:1:name &amp;quot;begin man&amp;quot;     #">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转)">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/redis/redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转)/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="redis提供了二进制的操作，分别是：12345678 setbit getbit bitcount bitop 看完具体的使用后，可以衍生出两个经典案例 1.存储布尔性质的值，节约内存，快速实现业务如下需求，在用户系统中(user),ID往往是唯一且递增生成的，如果用redis实现一套用户系统，则可以这样123set user:1:name &amp;quot;begin man&amp;quot;     #">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/5.png">
+<meta property="og:updated_time" content="2017-02-24T17:10:16.996Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转)">
+<meta name="twitter:description" content="redis提供了二进制的操作，分别是：12345678 setbit getbit bitcount bitop 看完具体的使用后，可以衍生出两个经典案例 1.存储布尔性质的值，节约内存，快速实现业务如下需求，在用户系统中(user),ID往往是唯一且递增生成的，如果用redis实现一套用户系统，则可以这样123set user:1:name &amp;quot;begin man&amp;quot;     #">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/redis/redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转)/"/>
+
+
+
+
+
+  <title> redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转) | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/redis/redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>redis提供了二进制的操作，分别是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> </div><div class="line">setbit</div><div class="line"> </div><div class="line">getbit</div><div class="line"> </div><div class="line">bitcount</div><div class="line"> </div><div class="line">bitop</div></pre></td></tr></table></figure></p>
+<p>看完具体的使用后，可以衍生出两个经典案例</p>
+<h1 id="1-存储布尔性质的值，节约内存，快速实现业务"><a href="#1-存储布尔性质的值，节约内存，快速实现业务" class="headerlink" title="1.存储布尔性质的值，节约内存，快速实现业务"></a>1.存储布尔性质的值，节约内存，快速实现业务</h1><p>如下需求，在用户系统中(user),ID往往是唯一且递增生成的，如果用redis实现一套用户系统，则可以这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">set user:1:name &quot;begin man&quot;     # 注意空格必须加引号以区分</div><div class="line">set user:1:age 24</div><div class="line">set user:1:sex 1    # 性别 1表示男，0表示女</div></pre></td></tr></table></figure></p>
+<p>这样如果有1w个用户则对应1w个user:ID:sex键值对，如果我们想要节省内存，何不尝试用bit呢，如下面二进制，2个字节(16位二进制组成)，其中是1的二进制位共9个</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/1.png" alt=""></p>
+<p>那么我们可以用user_id对应每个二进制位，这里设置键名为”users:sex”</p>
+<p>比如我们总共有1亿个用户，userID从1到一亿，当然数字不一定是连贯性的，那么userID为0则表示offset(偏移量)为0， userID为15则表示offset为15,(如果你的uid不是从1开始的，比如从100000开始，实际上你也可以相应的用uid减去初始值来表示其位数，比如1000000用户对应到bitmap的第一位)如下命令我们创建了该键值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; SETBIT users:sex 100000000 0</div><div class="line">(integer) 0</div></pre></td></tr></table></figure></p>
+<p>需要注意的是redis的bitmap只支持2^32大小,即使用512M内存。结合你的业务规划好内存的分配。</p>
+<p>接下来做个测试，这里初始化userID用户性别都是0，这里看下userID为0和15和1亿的性别</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; GETBIT users:sex 0</div><div class="line">(integer) 0</div><div class="line">127.0.0.1:6379&gt; GETBIT users:sex 15</div><div class="line">(integer) 0</div><div class="line">127.0.0.1:6379&gt; GETBIT users:sex 100000000</div><div class="line">(integer) 0</div></pre></td></tr></table></figure>
+<p>某一天UserID为15的哥们设置了自己的性别为男，则</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; setbit users:sex 15 1</div><div class="line">(integer) 0</div><div class="line">127.0.0.1:6379&gt; GETBIT users:sex 15</div><div class="line">(integer) 1</div></pre></td></tr></table></figure>
+<p> 后台管理员为了统计男女比例，则可以：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; BITCOUNT users:sex</div><div class="line">(integer) 1</div></pre></td></tr></table></figure>
+<p>哇，亿里才有1个男人啊，赶紧抢啊。。 别看有1亿多数据，其实整个操作耗时基本是毫秒级别的，时间复杂度为O(1).迅速吧。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/2.png" alt=""></p>
+<p>想到这里我们还可以扩展常见的需求：</p>
+<ul>
+<li>对用户标识一条消息的已读未读</li>
+<li>用户是否某某某等，只要涉及布尔形式的都可以用bitmaps</li>
+</ul>
+<h1 id="2-日活跃用户"><a href="#2-日活跃用户" class="headerlink" title="2.日活跃用户"></a>2.日活跃用户</h1><p>参考了这篇译文: <a href="http://blog.csdn.net/gaoyingju/article/details/9671283" target="_blank" rel="external">使用Redis bitmaps进行快速、简单、实时统计</a><br>为了统计今日登录的用户数，我们建立了一个bitmap,每一位标识一个用户ID。当某个用户访问我们的网页或执行了某个操作，就在bitmap中把标识此用户的位置为1。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/3.png" alt=""></p>
+<p> 这个简单的例子中，每次用户登录时会执行一次redis.setbit(daily_active_users, user_id, 1)。将bitmap中对应位置的位置为1，时间复杂度是O(1)。统计bitmap结果显示有今天有9个用户登录。Bitmap的key是daily_active_users，它的值是1011110100100101。</p>
+<p>因为日活跃用户每天都变化，所以需要每天创建一个新的bitmap。我们简单地把日期添加到key后面，实现了这个功能。例如，要统计某一天有多少个用户至少听了一个音乐app中的一首歌曲，可以把这个bitmap的redis key设计为play:yyyy-mm-dd-hh。当用户听了一首歌曲，我们只是简单地在bitmap中把标识这个用户的位置为1，时间复杂度是O(1)。</p>
+<p>setbit play:yyyy-mm-dd user_id 1  </p>
+<p>今天听过歌曲的用户就是key是play:yyyy-mm-dd的bitmap的位图计数。如果要按周或月统计，只要对这周或这个月的所有bitmap求并集，得出新的bitmap，在对它做位图计数。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/4.png" alt=""></p>
+<p>利用这些bitmap做其它复杂的统计也非常容易。例如，统计11月听过歌曲的高级用户(premium user),只需通过bitop命令进行AND,OR,XOR,NOT操作即可，如下伪代码：</p>
+<p>(play:2011-11-01 ∪ play:2011-11-02 ∪…∪play:2011-11-30) ∩ premium:2011-11</p>
+<p>下面的表格显示了在1亿2千8百万用户上完成的时间粒度为1天，一周，一个月的用户统计的时间消耗比较。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/bitmap/5.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/redis-java-API使用/" rel="next" title="redis-java-API使用">
+                <i class="fa fa-chevron-left"></i> redis-java-API使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/RDB快照持久化/" rel="prev" title="RDB快照持久化">
+                RDB快照持久化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-存储布尔性质的值，节约内存，快速实现业务"><span class="nav-number">1.</span> <span class="nav-text">1.存储布尔性质的值，节约内存，快速实现业务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-日活跃用户"><span class="nav-number">2.</span> <span class="nav-text">2.日活跃用户</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

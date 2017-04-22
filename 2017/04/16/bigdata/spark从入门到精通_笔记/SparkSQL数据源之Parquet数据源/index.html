@@ -1,0 +1,743 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="数据源Parquet的介绍Parquet是面向分析性业务的列式存储格式,由Twitter和Cloudera合作开发,2015年5月从Apache的孵化器里毕业成为Apache顶级项目 列式存储和行式存储相比有哪些优势呢?1.可以跳过不符合条件的数据,制只读取需要的数据,降低IO数据量2.压缩编码可以降低磁盘存储空间,由于同一列的数据类型是一样的,可以使用更高效的压缩编码(例如:Run Length">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SparkSQL数据源之Parquet数据源">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之Parquet数据源/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="数据源Parquet的介绍Parquet是面向分析性业务的列式存储格式,由Twitter和Cloudera合作开发,2015年5月从Apache的孵化器里毕业成为Apache顶级项目 列式存储和行式存储相比有哪些优势呢?1.可以跳过不符合条件的数据,制只读取需要的数据,降低IO数据量2.压缩编码可以降低磁盘存储空间,由于同一列的数据类型是一样的,可以使用更高效的压缩编码(例如:Run Length">
+<meta property="og:updated_time" content="2017-04-06T01:10:56.883Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SparkSQL数据源之Parquet数据源">
+<meta name="twitter:description" content="数据源Parquet的介绍Parquet是面向分析性业务的列式存储格式,由Twitter和Cloudera合作开发,2015年5月从Apache的孵化器里毕业成为Apache顶级项目 列式存储和行式存储相比有哪些优势呢?1.可以跳过不符合条件的数据,制只读取需要的数据,降低IO数据量2.压缩编码可以降低磁盘存储空间,由于同一列的数据类型是一样的,可以使用更高效的压缩编码(例如:Run Length">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之Parquet数据源/"/>
+
+
+
+
+
+  <title> SparkSQL数据源之Parquet数据源 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之Parquet数据源/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SparkSQL数据源之Parquet数据源
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="数据源Parquet的介绍"><a href="#数据源Parquet的介绍" class="headerlink" title="数据源Parquet的介绍"></a>数据源Parquet的介绍</h1><p>Parquet是面向分析性业务的列式存储格式,由Twitter和Cloudera合作开发,2015年5月从Apache的孵化器里毕业成为Apache顶级项目</p>
+<p>列式存储和行式存储相比有哪些优势呢?<br>1.可以跳过不符合条件的数据,制只读取需要的数据,降低IO数据量<br>2.压缩编码可以降低磁盘存储空间,由于同一列的数据类型是一样的,可以使用更高效的压缩编码(例如:Run Length Encoding和Delta Encoding)进一步节约存储空间<br>3.只读取需要的列,支持向量运算,能够获取更好的扫描性能</p>
+<h1 id="数据源Parquet的编程方式加载数据"><a href="#数据源Parquet的编程方式加载数据" class="headerlink" title="数据源Parquet的编程方式加载数据"></a>数据源Parquet的编程方式加载数据</h1><p>下面介绍的是Parquet数据源,使用编程的方式加载Parquet文件中的数据</p>
+<p>案例:查询用户数据中的用户名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">val sparkConf = new SparkConf().setAppName(&quot;dataFrame&quot;).setMaster(&quot;local&quot;)</div><div class="line">val sc = new SparkContext(sparkConf)</div><div class="line">val sqlContext = new SQLContext(sc)</div><div class="line"></div><div class="line">// 使用format(&quot;parquet&quot;).load()是通用的方式</div><div class="line">//val userDF = sqlContext.read.format(&quot;parquet&quot;).load(&quot;C:\\Users\\Administrator\\Desktop\\users.parquet&quot;)</div><div class="line">// parquet()是针对parquet文件具体的读取,例如对于json文件,就有sqlContext.read.json();cvs,jdbc等是一样的</div><div class="line">val userDF = sqlContext.read.parquet(&quot;C:\\Users\\Administrator\\Desktop\\users.parquet&quot;)</div><div class="line"></div><div class="line">// 将DataFrame注册为临时表,然后使用sql查询需要的数据</div><div class="line">userDF.registerTempTable(&quot;users&quot;)</div><div class="line">val userNameDF = sqlContext.sql(&quot;select name from users&quot;)</div><div class="line"></div><div class="line">//对查询出来的DataFrame进行Transformation操作,然后打印</div><div class="line">// 在进行DF到rdd的转换的时候,一行数据转成rdd就是一个Array,所以用()去取数组元素</div><div class="line">val userName = userNameDF.rdd.map(row=&gt;row(0).toString+&quot;-xxx&quot;)</div><div class="line">userName.foreach(println)</div><div class="line"></div><div class="line">/*打印结果:</div><div class="line">  Alyssa-xxx</div><div class="line">  Ben-xxx</div><div class="line"> */</div></pre></td></tr></table></figure></p>
+<h1 id="Parquet数据源的自动分区推断"><a href="#Parquet数据源的自动分区推断" class="headerlink" title="Parquet数据源的自动分区推断"></a>Parquet数据源的自动分区推断</h1><p>表分区是一种常见的优化方式,比如hive中就提供了表分区的特性,在一个分区表中,不同分区的数据通常存储在不同的目录中,分区列的值通常就包含在了分区目录的目录名中,spark sql中的Parquet数据源支持自动根据目录名推断出分区信息,例如,如果将入口数据存储在分区表中,并且使用性别和国家作为分区列,那么目录结构可能如下所以:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">tableName</div><div class="line">	|--gender=male</div><div class="line">		|--country=US</div><div class="line">			....</div><div class="line">		|--country=CN</div><div class="line">			....</div><div class="line"></div><div class="line">	|--gender=female</div><div class="line">		|--country=US</div><div class="line">			....</div><div class="line">		|--country=CN</div><div class="line">			....</div></pre></td></tr></table></figure>
+<p>如果将/tableName传入SQLContext.read.Parquet()或者SQLContext.read.load()方法,那么spark sql就会自动根据目录结构,推断出分区信息,是gender和country,即使数据文件中只包含了两列值:name和age,但是spark sql返回的DataFrame,调用printSchema()方法时,会打印四个列的值:name,age,country,gender,这就是自动分区推断你的功能</p>
+<p>此外,分区列的数据类型,也是自动被推断出来的,目前,spark sql仅支持自动推断出数字类型和字符串类型,有时,用户也许不希望spark sql自动推断分区列的数据类型,此时只要设置一个配置即可,spark.sql.source.partitionColumnTypeInference.enabled,默认为true,即:自动推断分区列的类型,设置为false,即不糊自动推断类型,禁止自动推断分区列的类型时,所有分区列的类型就统一默认都是String</p>
+<p>案例:自动推断用户数据的性别和国家</p>
+<p>创建目录并上传Parquet文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">hadoop fs -mkdir /spark-study/users</div><div class="line">hadoop fs -mkdir /spark-study/users/gender=male</div><div class="line">hadoop fs -mkdir /spark-study/users/gender=male/country=US</div><div class="line">hadoop fs -put users.parquet /spark-study/users/gender=male/country=US/users.parquet</div></pre></td></tr></table></figure></p>
+<p>测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">val sparkConf = new SparkConf().setAppName(&quot;dataFrame&quot;).setMaster(&quot;local&quot;)</div><div class="line">val sc = new SparkContext(sparkConf)</div><div class="line">val sqlContext = new SQLContext(sc)</div><div class="line"></div><div class="line">val userDF = sqlContext.read.parquet(&quot;C:\\Users\\Administrator\\Desktop\\users\\gender=male\\country=US\\users.parquet&quot;)</div><div class="line">userDF.printSchema()</div><div class="line">userDF.show</div></pre></td></tr></table></figure></p>
+<h1 id="Parquet数据源之合并元数据"><a href="#Parquet数据源之合并元数据" class="headerlink" title="Parquet数据源之合并元数据"></a>Parquet数据源之合并元数据</h1><p>如同ProtocolBuffer,Avro,Thrift一样,Parquet也是支持元数据的合并的,用户可以在一开始就定义一个简单的元数据,然后随着业务需要,逐渐往元数据中添加更多的列,在这种情况下,用户可能会创建多个Parquet文件,有着多个不同的但是却相互兼容的元数据,Parquet数据源支持自动推断出这种情况,并且进行多个Parquet文件的元数据的合并</p>
+<p>因为元数据合并是一种相对耗时的操作,而且在大多数情况下不是一种必要的特性,从spark 1.5.0版本开始,默认是关闭Parquet文件的自动合并元数据的特性的,可以通过以下的两种方式开启Parquet数据源的自动合并元数据的特性:<br>1.读取parquet文件时,将数据源的选项,mergeSchema设置为true<br>2.使用SQLContext.setConf()方法,将”spark.sql.parquet.mergeSchema”参数设置为true</p>
+<p>案例:合并学生的基本信息和成绩信息的元数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"> val sparkConf = new SparkConf().setAppName(&quot;dataFrame&quot;).setMaster(&quot;local&quot;)</div><div class="line"> val sc = new SparkContext(sparkConf)</div><div class="line"> val sqlContext = new SQLContext(sc)</div><div class="line"></div><div class="line"> import sqlContext.implicits._</div><div class="line"></div><div class="line"> // 首先手动创建一个DataFrame,作为学生的基本信息数据,并将其写入到一个Parquet文件中</div><div class="line"> val studentWithNameAge = Array((&quot;leo&quot;,23),(&quot;jack&quot;,25))</div><div class="line"> val studentWithNameAgeDF = sc.parallelize(studentWithNameAge).toDF(&quot;name&quot;, &quot;age&quot;)</div><div class="line"> studentWithNameAgeDF.write.save(&quot;C:\\Users\\Administrator\\Desktop\\student&quot;, SaveMode.Append)</div><div class="line"></div><div class="line"> //创建第二个DataFrame,作为学生的成绩信息,并写入一个Parquet文件中</div><div class="line"> val studentWithNameGrade = Array((&quot;marry&quot;,&quot;A&quot;),(&quot;tom&quot;,&quot;B&quot;))</div><div class="line"> val studentWithNameGradeDF = sc.parallelize(studentWithNameGrade).toDF(&quot;name&quot;, &quot;grade&quot;)</div><div class="line"> studentWithNameGradeDF.write.save(&quot;C:\\Users\\Administrator\\Desktop\\student&quot;, SaveMode.Append)</div><div class="line"></div><div class="line"> /*</div><div class="line"> 第一个DataFrame的元数据和第二个DataFrame的元数据是不相同的,</div><div class="line"> 第一个包含了name和age两个列,第二个包含了name和grade两个列</div><div class="line"> 所以,这里期望的是,读取出来的表数据,自动合并两个问价你的元数据,</div><div class="line"> 出现3个列:name,age,grade</div><div class="line">  */</div><div class="line"> val studentDF = sqlContext.read.option(&quot;mergeSchema&quot;, true).parquet(&quot;C:\\Users\\Administrator\\Desktop\\student&quot;)</div><div class="line"> studentDF.printSchema()</div><div class="line"> studentDF.show</div><div class="line"></div><div class="line"></div><div class="line">// 注意在spark1.5.0上是可以的,在spark2.1.0上不行,编译就报错</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL的前世今生/" rel="next" title="SparkSQL的前世今生">
+                <i class="fa fa-chevron-left"></i> SparkSQL的前世今生
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之json数据源/" rel="prev" title="SparkSQL数据源之json数据源">
+                SparkSQL数据源之json数据源 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据源Parquet的介绍"><span class="nav-number">1.</span> <span class="nav-text">数据源Parquet的介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据源Parquet的编程方式加载数据"><span class="nav-number">2.</span> <span class="nav-text">数据源Parquet的编程方式加载数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parquet数据源的自动分区推断"><span class="nav-number">3.</span> <span class="nav-text">Parquet数据源的自动分区推断</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Parquet数据源之合并元数据"><span class="nav-number">4.</span> <span class="nav-text">Parquet数据源之合并元数据</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,801 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="静态资源分配原理spark提供了许多功能用来在集群中同时调度多个作业。首先，回想一下，每个spark作业都会运行自己独立的一批executor进程，此时集群管理器会为我们提供同时调度多个作业的功能。第二，在每个spark作业内部，多个job也可以并行执行，比如说spark-shell就是一个spark application，但是随着我们输入scala rdd action类代码，就会触发多个jo">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark运维管理之作业资源调度">
+<meta property="og:url" content="http://yoursite.com/2017/04/18/bigdata/spark从入门到精通_笔记/Spark运维管理之作业资源调度/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="静态资源分配原理spark提供了许多功能用来在集群中同时调度多个作业。首先，回想一下，每个spark作业都会运行自己独立的一批executor进程，此时集群管理器会为我们提供同时调度多个作业的功能。第二，在每个spark作业内部，多个job也可以并行执行，比如说spark-shell就是一个spark application，但是随着我们输入scala rdd action类代码，就会触发多个jo">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/allocat_yarn_resource.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/allocat_yarn_resource2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/allocat_yarn_resource3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/allocat_yarn_resource4.png">
+<meta property="og:updated_time" content="2017-04-22T07:23:06.415Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark运维管理之作业资源调度">
+<meta name="twitter:description" content="静态资源分配原理spark提供了许多功能用来在集群中同时调度多个作业。首先，回想一下，每个spark作业都会运行自己独立的一批executor进程，此时集群管理器会为我们提供同时调度多个作业的功能。第二，在每个spark作业内部，多个job也可以并行执行，比如说spark-shell就是一个spark application，但是随着我们输入scala rdd action类代码，就会触发多个jo">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/18/bigdata/spark从入门到精通_笔记/Spark运维管理之作业资源调度/"/>
+
+
+
+
+
+  <title> Spark运维管理之作业资源调度 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/18/bigdata/spark从入门到精通_笔记/Spark运维管理之作业资源调度/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark运维管理之作业资源调度
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-18T08:29:59+08:00">
+                2017-04-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="静态资源分配原理"><a href="#静态资源分配原理" class="headerlink" title="静态资源分配原理"></a>静态资源分配原理</h1><p>spark提供了许多功能用来在集群中同时调度多个作业。首先，回想一下，每个spark作业都会运行自己独立的一批executor进程，此时集群管理器会为我们提供同时调度多个作业的功能。第二，在每个spark作业内部，多个job也可以并行执行，比如说spark-shell就是一个spark application，但是随着我们输入scala rdd action类代码，就会触发多个job，多个job是可以并行执行的。为这种情况，spark也提供了不同的调度器来在一个application内部调度多个job。</p>
+<a id="more"></a>
+<p>我们先来看一下多个作业的同时调度</p>
+<p>静态资源分配</p>
+<p>当一个spark application运行在集群中时，会获取一批独立的executor进程专门为自己服务，比如运行task和存储数据。如果多个用户同时在使用一个集群，并且同时提交多个作业，那么根据cluster manager的不同，有几种不同的方式来管理作业间的资源分配。</p>
+<p>最简单的一种方式，是所有cluster manager都提供的，也就是静态资源分配。在这种方式下，每个作业都会被给予一个它能使用的最大资源量的限额，并且可以在运行期间持有这些资源。这是spark standalone集群和YARN集群使用的默认方式。</p>
+<p>Standalone集群: 默认情况下，提交到standalone集群上的多个作业，会通过FIFO的方式来运行，每个作业都会尝试获取所有的资源。可以限制每个作业能够使用的cpu core的最大数量（spark.cores.max），或者设置每个作业的默认cpu core使用量（spark.deploy.defaultCores）。最后，除了控制cpu core之外，每个作业的spark.executor.memory也用来控制它的最大内存的使用。</p>
+<p>YARN集群管理器: –num-executors属性用来配置作业可以在集群中分配到多少个executor，–executor-memory和–executor-cores可以控制每个executor能够使用的资源。</p>
+<p>要注意的是，没有一种cluster manager可以提供多个作业间的内存共享功能。如果你想要通过这种方式来在多个作业间共享数据，我们建议就运行一个spark作业，但是可以接收网络请求，并对相同RDD的进行计算操作。在未来的版本中，内存存储系统，比如Tachyon会提供其他的方式来共享RDD数据。</p>
+<h1 id="动态资源分配原理"><a href="#动态资源分配原理" class="headerlink" title="动态资源分配原理"></a>动态资源分配原理</h1><p>spark 1.2开始，引入了一种根据作业负载动态分配集群资源给你的多个作业的功能。这意味着你的作业在申请到了资源之后，可以在使用完之后将资源还给cluster manager，而且可以在之后有需要的时候再次申请这些资源。这个功能对于多个作业在集群中共享资源是非常有用的。如果部分资源被分配给了一个作业，然后出现了空闲，那么可以还给cluster manager的资源池中，并且被其他作业使用(<strong>如果是今天资源分配,那么属于该作业的空闲资源,要等到作业完成之后才会释放,而不会立即释放空闲的资源</strong>)。在spark中，动态资源分配在executor粒度上被实现，可以通过spark.dynamicAllocation.enabled来启用。</p>
+<h2 id="资源分配策略"><a href="#资源分配策略" class="headerlink" title="资源分配策略"></a>资源分配策略</h2><p>以一个较高的角度来说，当executor不再被使用的时候，spark就应该释放这些executor，并且在需要的时候再次获取这些executor。因为没有一个绝对的方法去预测一个未来可能会运行一个task的executor应该被移除掉，或者一个新的executor应该别加入，我们需要一系列的探索式算法来决定什么应该移除和申请executor。</p>
+<h2 id="申请策略"><a href="#申请策略" class="headerlink" title="申请策略"></a>申请策略</h2><p>一个启用了动态资源分配的spark作业会在它有pending住的task等待被调度时，申请额外的executor。这个条件必要地暗示了，已经存在的executor是不足以同时运行所有的task的，这些task已经提交了，但是没有完成。</p>
+<p>driver会轮询式地申请executor。当在一定时间内（spark.dynamicAllocation.schedulerBacklogTimeout）有pending的task时，就会触发真正的executor申请，然后每隔一定时间后（spark.dynamicAllocation.sustainedSchedulerBacklogTimeout），如果又有pending的task了，则再次触发申请操作。此外，每一轮申请到的executor数量都会比上一轮要增加。举例来说，一个作业需要增加一个executor在第一轮申请时，那么在后续的一轮中会申请2个、4个、8个executor。</p>
+<p>每轮增加executor数量的原因主要有两方面。第一，一个作业应该在开始谨慎地申请以防它只需要一点点executor就足够了。第二，作业应该会随着时间的推移逐渐增加它的资源使用量，以防突然大量executor被增加进来。</p>
+<h2 id="移除策略"><a href="#移除策略" class="headerlink" title="移除策略"></a>移除策略</h2><p>移除一个executor的策略比较简单。一个spark作业会在它的executor出现了空闲超过一定时间后（spark.dynamicAllocation.executorIdleTimeout），被移除掉。要注意，在大多数环境下，这个条件都是跟申请条件互斥的，因为如果有task被pending住的话，executor是不该是空闲的。</p>
+<h2 id="executor如何优雅地被释放掉"><a href="#executor如何优雅地被释放掉" class="headerlink" title="executor如何优雅地被释放掉"></a>executor如何优雅地被释放掉</h2><p>在使用动态分配之前，executor无论是发生了故障失败，还是关联的application退出了，都还是存在的。在所有场景中，executor关联的所有状态都不再被需要，并且可以被安全地抛弃。使用动态分配之后，executor移除之后，作业还是存在的。如果作业尝试获取executor写的中间状态数据，就需要去重新计算哪些数据。因此，spark需要一种机制来优雅地卸载executor，在移除它之前要保护它的状态。</p>
+<p>解决方案就是使用一个外部的shuffle服务来保存每个executor的中间写状态，这也是spark 1.2引入的特性。这个服务是一个长时间运行的进程，集群的每个节点上都会运行一个,为你的spark作业和executor服务。如果服务被启用了，那么spark executor会在shuffle write和read时，将数据写入该服务，并从该服务获取数据。这意味着所有executor写的shuffle数据都可以在executor声明周期之外继续使用。</p>
+<p>除了写shuffle文件，executor也会在内存或磁盘中持久化数据。当一个executor被移除掉时，所有缓存的数据都会消失。目前还没有有效的方案。在未来的版本中，缓存的数据可能会通过堆外存储来进行保存，就像external shuffle service保存shuffle write文件一样。</p>
+<h1 id="Standalone模式下使用动态资源分配"><a href="#Standalone模式下使用动态资源分配" class="headerlink" title="Standalone模式下使用动态资源分配"></a>Standalone模式下使用动态资源分配</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#启用external shuffle service</div><div class="line">--conf spark.shuffle.service.enabled=true \</div><div class="line">#启用动态资源分配</div><div class="line">--conf spark.dynamicAllocation.enabled=true \</div><div class="line">#指定external shuffle service的端口号</div><div class="line">--conf spark.shuffle.service.port=7337 \</div></pre></td></tr></table></figure>
+<p>1、启动external shuffle service<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./sbin/.start-shuffle-service.sh</div></pre></td></tr></table></figure></p>
+<p>2、启动spark-shell，启用动态资源分配</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">spark-shell --master spark://192.168.0.103:7077 --conf spark.shuffle.service.enabled=true --conf spark.dynamicAllocation.enabled=true --conf spark.shuffle.service.port=7337</div></pre></td></tr></table></figure>
+<p>jps可以观察到ExternalShuffleService,并且在spark-shell开始的时候,会启动一个executor进程(CoarseGrainedExecutorBackend)</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService.png" alt=""></p>
+<p>3、过60s，发现打印日志，说executor被removed，executor进程也没了,jps再次查看</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService2.png" alt=""></p>
+<p>而且通过观察spark-shell的日志可以看到<br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService3.png" alt=""></p>
+<p>4、然后动手写一个wordcount程序，最后提交job的时候，会动态申请一个新的executor，出来一个新的executor进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">scala&gt;val lines = sc.textFile(&quot;hdfs://192.168.0.103:9000/test/hello.txt&quot;)</div><div class="line">scala&gt;val words = lines.flatMap(_.split(&quot; &quot;)).map((_,1))</div><div class="line">scala&gt;val counts = words.reduceByKey(_+_)</div><div class="line">scala&gt;counts.collect</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService4.png" alt=""></p>
+<p>新的executor进程会从external shuffle service进程中读取shuffle write的数据</p>
+<p>5、然后整个作业执行完毕，证明external shuffle service+动态资源分配，流程可以走通</p>
+<p>6、再等60s，executor又被释放掉</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/externalShuffleService2.png" alt=""></p>
+<h1 id="yarn模式下使用动态资源分配"><a href="#yarn模式下使用动态资源分配" class="headerlink" title="yarn模式下使用动态资源分配"></a>yarn模式下使用动态资源分配</h1><p>先停止之前为standalone集群启动的shuffle service<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./sbin/stop-shuffle-service.sh</div></pre></td></tr></table></figure></p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>动态资源分配功能使用的所有配置，都是以spark.dynamicAllocation作为前缀的。要启用这个功能，你的作业必须将spark.dynamicAllocation.enabled设置为true。其他相关的配置之后会详细说明。</p>
+<p>此外，你的作业必须有一个外部shuffle服务（external shuffle service）。这个服务的目的是去保存executor的shuffle write<br>文件，从而让executor可以被安全地移除。要启用这个服务，可以将spark.shuffle.service.enabled设置为true。在YARN中，这个<br>外部shuffle service是由org.apache.spark.yarn.network.YarnShuffleService实现的，在每个NodeManager中都会运行。要启用<br>这个服务，需要使用以下步骤：</p>
+<p>1、首先配置好yarn的shuffle service，然后重启集群<br>1.1.使用预编译好的spark版本。<br>1.2.定位到spark-<version>-yarn-shuffle.jar。这个应该在$SPARK_HOME/lib目录下。<br>1.3.将上面的jar加入到所有NodeManager的classpath中(即在每个NodeManager中都拷贝一份)。</version></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/allocat_yarn_resource.png" alt=""></p>
+<p>1.4.在yarn-site.xml中，将yarn.nodemanager.aux-services设置为spark_shuffle，将yarn.nodemanager.aux-services.spark_shuffle.class设置为org.apache.spark.network.yarn.YarnShuffleService</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/allocat_yarn_resource2.png" alt=""></p>
+<p>1.5.重启所有hadoop集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">start-all.sh</div></pre></td></tr></table></figure></p>
+<p>查看进程<br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/allocat_yarn_resource3.png" alt=""></p>
+<p>在浏览器查看确定:HDFS和yarn是启动OK的<br>HDFS:192.168.0.103:50070<br>yarn:192.168.0.103:8088</p>
+<p>2、接着呢，启动spark shell，并启用动态资源分配，但是这里跟standalone不一样，上来不会立刻申请executor<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">spark-shell --master spark://192.168.0.103:7077 --conf spark.shuffle.service.enabled=true --conf spark.dynamicAllocation.enabled=true --conf spark.shuffle.service.port=7337</div><div class="line"></div><div class="line"></div><div class="line">scala&gt;val lines = sc.textFile(&quot;hdfs://192.168.0.103:9000/test/hello.txt&quot;)</div><div class="line">scala&gt;val words = lines.flatMap(_.split(&quot; &quot;)).map((_,1))</div><div class="line">scala&gt;val counts = words.reduceByKey(_+_)</div><div class="line">scala&gt;counts.collect</div></pre></td></tr></table></figure></p>
+<p>3、接着执行wordcount，会尝试动态申请executor，并且申请到后，执行job，在spark web ui上，有两个executor<br>4、过了一会儿，60s过后，executor由于空闲，所以自动被释放掉了，在看spark web ui，没有executor了</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/allocat_yarn_resource4.png" alt=""></p>
+<h1 id="多个job资源调度原理"><a href="#多个job资源调度原理" class="headerlink" title="多个job资源调度原理"></a>多个job资源调度原理</h1><p>在一个spark作业内部，多个并行的job是可以同时运行的。对于job，就是一个spark action操作触发的计算单元。spark的调度器是完全线程安全的，而且支持一个spark application来服务多个网络请求，以及并发执行多个job。</p>
+<p>默认情况下，spark的调度会使用FIFO的方式来调度多个job。每个job都会被划分为多个stage，而且第一个job会对所有可用的资源获取优先使用权，并且让它的stage的task去运行，然后第二个job再获取资源的使用权，以此类推。如果队列头部的job不需要使用整个集群资源，之后的job可以立即运行，但是如果队列头部的job使用了集群几乎所有的资源，那么之后的job的运行会被推迟。</p>
+<p>从spark 0.8开始，我们是可以在多个job之间配置公平的调度器的。在公平的资源共享策略下，spark会将多个job的task使用一种轮询的方式来分配资源和执行，所以所有的job都有一个基本公平的机会去使用集群的资源。这就意味着，即使运行时间很长的job先提交并在运行了，之后提交的运行时间较短的job，也同样可以立即获取到资源并且运行，而不会等待运行时间很长的job结束之后才能获取到资源。这种模式对于多个并发的job是最好的一种调度方式。</p>
+<h1 id="fair-Scheduler使用详解"><a href="#fair-Scheduler使用详解" class="headerlink" title="fair Scheduler使用详解"></a>fair Scheduler使用详解</h1><p>默认采用的是FIFO,要启用Fair Scheduler，只要简单地将spark.scheduler.mode属性设置为FAIR即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">val conf = new SparkConf().setMaster(...).setAppName(...)</div><div class="line">conf.set(&quot;spark.scheduler.mode&quot;, &quot;FAIR&quot;)</div><div class="line">val sc = new SparkContext(conf)</div><div class="line"></div><div class="line">或者</div><div class="line"></div><div class="line">--conf spark.scheduler.mode=FAIR</div></pre></td></tr></table></figure></p>
+<p>fair scheduler也支持将job分成多个组并放入多个池中，以及为每个池设置不同的调度优先级。这个feature对于将重要的和不重要的job隔离运行的情况非常有用，可以为重要的job分配一个池，并给予更高的优先级; 为不重要的job分配另一个池，并给予较低的优先级。</p>
+<p>默认情况下，新提交的job会进入一个默认池，但是job的池是可以通过spark.scheduler.pool属性来设置的。</p>
+<p>如果你的spark application是作为一个服务启动的，SparkContext 7*24小时长时间存在，然后服务每次接收到一个请求，就用一个子线程去服务它在子线程内部，去执行一系列的RDD算子以及代码来触发job的执行在子线程内部，可以调用SparkContext.setLocalProperty(“spark.scheduler.pool”, “pool1”)</p>
+<p>在设置这个属性之后，所有在这个线程中提交的job都会进入这个池中。同样也可以通过将该属性设置为null来清空池子。</p>
+<p>池的默认行为</p>
+<p>默认情况下，每个池子都会对集群资源有相同的优先使用权，但是在每个池内，job会使用FIFO的模式来执行。举例来说，如果要为每个用户创建一个池，这就意味着每个用户都会获得集群的公平使用权，但是每个用户自己的job会按照顺序来执行。</p>
+<p>配置池的属性</p>
+<p>可以通过配置文件来修改池的属性。每个池都支持以下三个属性: </p>
+<p>1、schedulingMode: 可以是FIFO或FAIR，来控制池中的jobs是否要排队，或者是共享池中的资源<br>2、weight: 控制每个池子对集群资源使用的权重。默认情况下，所有池子的权重都是1.如果指定了一个池子的权重为2。举例来说，它就会获取其他池子两倍的资源使用权。设置一个很高的权重值，比如1000，也会很有影响，基本上该池子的task会在其他所有池子的task之前运行。<br>3、minShare: 除了权重之外，每个池子还能被给予一个最小的资源使用量(cpu core)。</p>
+<p>池子的配置是通过xml文件来配置的，在spark/conf的fairscheduler.xml中配置<br>我们自己去设置这个文件的路径，conf.set(“spark.scheduler.allocation.file”, “/path/to/file”)</p>
+<p>文件内容大致如下所示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</div><div class="line">&lt;allocations&gt;</div><div class="line">  &lt;pool name=&quot;production&quot;&gt;</div><div class="line">    &lt;schedulingMode&gt;FAIR&lt;/schedulingMode&gt;</div><div class="line">    &lt;weight&gt;1&lt;/weight&gt;</div><div class="line">    &lt;minShare&gt;2&lt;/minShare&gt;</div><div class="line">  &lt;/pool&gt;</div><div class="line">  &lt;pool name=&quot;test&quot;&gt;</div><div class="line">    &lt;schedulingMode&gt;FIFO&lt;/schedulingMode&gt;</div><div class="line">    &lt;weight&gt;2&lt;/weight&gt;</div><div class="line">    &lt;minShare&gt;3&lt;/minShare&gt;</div><div class="line">  &lt;/pool&gt;</div><div class="line">&lt;/allocations&gt;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/18/bigdata/spark从入门到精通_笔记/Spark2.0新特性之介绍/" rel="next" title="Spark2.0新特性之介绍">
+                <i class="fa fa-chevron-left"></i> Spark2.0新特性之介绍
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之spark Metrics系统以及自定义Metrics Sink/" rel="prev" title="Spark运维管理之spark Metrics系统以及自定义Metrics Sink">
+                Spark运维管理之spark Metrics系统以及自定义Metrics Sink <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#静态资源分配原理"><span class="nav-number">1.</span> <span class="nav-text">静态资源分配原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态资源分配原理"><span class="nav-number">2.</span> <span class="nav-text">动态资源分配原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#资源分配策略"><span class="nav-number">2.1.</span> <span class="nav-text">资源分配策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#申请策略"><span class="nav-number">2.2.</span> <span class="nav-text">申请策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移除策略"><span class="nav-number">2.3.</span> <span class="nav-text">移除策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executor如何优雅地被释放掉"><span class="nav-number">2.4.</span> <span class="nav-text">executor如何优雅地被释放掉</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Standalone模式下使用动态资源分配"><span class="nav-number">3.</span> <span class="nav-text">Standalone模式下使用动态资源分配</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#yarn模式下使用动态资源分配"><span class="nav-number">4.</span> <span class="nav-text">yarn模式下使用动态资源分配</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">4.1.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多个job资源调度原理"><span class="nav-number">5.</span> <span class="nav-text">多个job资源调度原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fair-Scheduler使用详解"><span class="nav-number">6.</span> <span class="nav-text">fair Scheduler使用详解</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

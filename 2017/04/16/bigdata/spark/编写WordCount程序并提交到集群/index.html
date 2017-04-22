@@ -1,0 +1,756 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;spark shell仅在测试和验证我们的程序时使用的较多，在生产环境中，通常会在IDE中编制程序，然后打成jar包，然后提交到集群，最常用的是创建一个Maven项目，利用Maven来管理jar包的依赖。">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编写WordCount程序并提交到集群">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark/编写WordCount程序并提交到集群/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="&amp;emsp;spark shell仅在测试和验证我们的程序时使用的较多，在生产环境中，通常会在IDE中编制程序，然后打成jar包，然后提交到集群，最常用的是创建一个Maven项目，利用Maven来管理jar包的依赖。">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/1.jpg">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/5.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/6.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/7.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/8.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/9.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/10.png">
+<meta property="og:updated_time" content="2017-03-04T11:21:27.151Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编写WordCount程序并提交到集群">
+<meta name="twitter:description" content="&amp;emsp;spark shell仅在测试和验证我们的程序时使用的较多，在生产环境中，通常会在IDE中编制程序，然后打成jar包，然后提交到集群，最常用的是创建一个Maven项目，利用Maven来管理jar包的依赖。">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark/编写WordCount程序并提交到集群/"/>
+
+
+
+
+
+  <title> 编写WordCount程序并提交到集群 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark/编写WordCount程序并提交到集群/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                编写WordCount程序并提交到集群
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;spark shell仅在测试和验证我们的程序时使用的较多，在生产环境中，通常会在IDE中编制程序，然后打成jar包，然后提交到集群，最常用的是创建一个Maven项目，利用Maven来管理jar包的依赖。</p>
+<a id="more"></a>
+<h1 id="1-创建一个项目"><a href="#1-创建一个项目" class="headerlink" title="1.创建一个项目"></a>1.创建一个项目</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/1.jpg" alt=""></p>
+<h1 id="2-选择Maven项目，然后点击next"><a href="#2-选择Maven项目，然后点击next" class="headerlink" title="2.选择Maven项目，然后点击next"></a>2.选择Maven项目，然后点击next</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/2.png" alt=""></p>
+<h1 id="3-填写maven的GAV，然后点击next"><a href="#3-填写maven的GAV，然后点击next" class="headerlink" title="3.填写maven的GAV，然后点击next"></a>3.填写maven的GAV，然后点击next</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/3.png" alt=""></p>
+<h1 id="4-填写项目名称，然后点击finish"><a href="#4-填写项目名称，然后点击finish" class="headerlink" title="4.填写项目名称，然后点击finish"></a>4.填写项目名称，然后点击finish</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/4.png" alt=""></p>
+<h1 id="5-创建好maven项目后，点击Enable-Auto-Import"><a href="#5-创建好maven项目后，点击Enable-Auto-Import" class="headerlink" title="5.创建好maven项目后，点击Enable Auto-Import"></a>5.创建好maven项目后，点击Enable Auto-Import</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/5.png" alt=""></p>
+<h1 id="6-配置Maven的pom-xml"><a href="#6-配置Maven的pom-xml" class="headerlink" title="6.配置Maven的pom.xml"></a>6.配置Maven的pom.xml</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</div><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</div><div class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line"></div><div class="line">    &lt;groupId&gt;cn.itcast.spark&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;spark-mvn&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</div><div class="line"></div><div class="line">    &lt;properties&gt;</div><div class="line">        &lt;maven.compiler.source&gt;1.7&lt;/maven.compiler.source&gt;</div><div class="line">        &lt;maven.compiler.target&gt;1.7&lt;/maven.compiler.target&gt;</div><div class="line">        &lt;encoding&gt;UTF-8&lt;/encoding&gt;</div><div class="line">        &lt;scala.version&gt;2.10.6&lt;/scala.version&gt;</div><div class="line">        &lt;scala.compat.version&gt;2.10&lt;/scala.compat.version&gt;</div><div class="line">    &lt;/properties&gt;</div><div class="line"></div><div class="line">    &lt;dependencies&gt;</div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.scala-lang&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;scala-library&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;$&#123;scala.version&#125;&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.apache.spark&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spark-core_2.10&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.5.2&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.apache.spark&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;spark-streaming_2.10&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;1.5.2&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line"></div><div class="line">        &lt;dependency&gt;</div><div class="line">            &lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</div><div class="line">            &lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;</div><div class="line">            &lt;version&gt;2.6.2&lt;/version&gt;</div><div class="line">        &lt;/dependency&gt;</div><div class="line">    &lt;/dependencies&gt;</div><div class="line"></div><div class="line">    &lt;build&gt;</div><div class="line">        &lt;sourceDirectory&gt;src/main/scala&lt;/sourceDirectory&gt;</div><div class="line">        &lt;testSourceDirectory&gt;src/test/scala&lt;/testSourceDirectory&gt;</div><div class="line">        &lt;plugins&gt;</div><div class="line">            &lt;plugin&gt;</div><div class="line">                &lt;groupId&gt;net.alchim31.maven&lt;/groupId&gt;</div><div class="line">                &lt;artifactId&gt;scala-maven-plugin&lt;/artifactId&gt;</div><div class="line">                &lt;version&gt;3.2.0&lt;/version&gt;</div><div class="line">                &lt;executions&gt;</div><div class="line">                    &lt;execution&gt;</div><div class="line">                        &lt;goals&gt;</div><div class="line">                            &lt;goal&gt;compile&lt;/goal&gt;</div><div class="line">                            &lt;goal&gt;testCompile&lt;/goal&gt;</div><div class="line">                        &lt;/goals&gt;</div><div class="line">                        &lt;configuration&gt;</div><div class="line">                            &lt;args&gt;</div><div class="line">                                &lt;arg&gt;-make:transitive&lt;/arg&gt;</div><div class="line">                                &lt;arg&gt;-dependencyfile&lt;/arg&gt;</div><div class="line">                                &lt;arg&gt;$&#123;project.build.directory&#125;/.scala_dependencies&lt;/arg&gt;</div><div class="line">                            &lt;/args&gt;</div><div class="line">                        &lt;/configuration&gt;</div><div class="line">                    &lt;/execution&gt;</div><div class="line">                &lt;/executions&gt;</div><div class="line">            &lt;/plugin&gt;</div><div class="line">            &lt;plugin&gt;</div><div class="line">                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</div><div class="line">                &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;</div><div class="line">                &lt;version&gt;2.18.1&lt;/version&gt;</div><div class="line">                &lt;configuration&gt;</div><div class="line">                    &lt;useFile&gt;false&lt;/useFile&gt;</div><div class="line">                    &lt;disableXmlReport&gt;true&lt;/disableXmlReport&gt;</div><div class="line">                    &lt;includes&gt;</div><div class="line">                        &lt;include&gt;**/*Test.*&lt;/include&gt;</div><div class="line">                        &lt;include&gt;**/*Suite.*&lt;/include&gt;</div><div class="line">                    &lt;/includes&gt;</div><div class="line">                &lt;/configuration&gt;</div><div class="line">            &lt;/plugin&gt;</div><div class="line"></div><div class="line">            &lt;plugin&gt;</div><div class="line">                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</div><div class="line">                &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;</div><div class="line">                &lt;version&gt;2.3&lt;/version&gt;</div><div class="line">                &lt;executions&gt;</div><div class="line">                    &lt;execution&gt;</div><div class="line">                        &lt;phase&gt;package&lt;/phase&gt;</div><div class="line">                        &lt;goals&gt;</div><div class="line">                            &lt;goal&gt;shade&lt;/goal&gt;</div><div class="line">                        &lt;/goals&gt;</div><div class="line">                        &lt;configuration&gt;</div><div class="line">                            &lt;filters&gt;</div><div class="line">                                &lt;filter&gt;</div><div class="line">                                    &lt;artifact&gt;*:*&lt;/artifact&gt;</div><div class="line">                                    &lt;excludes&gt;</div><div class="line">                                        &lt;exclude&gt;META-INF/*.SF&lt;/exclude&gt;</div><div class="line">                                        &lt;exclude&gt;META-INF/*.DSA&lt;/exclude&gt;</div><div class="line">                                        &lt;exclude&gt;META-INF/*.RSA&lt;/exclude&gt;</div><div class="line">                                    &lt;/excludes&gt;</div><div class="line">                                &lt;/filter&gt;</div><div class="line">                            &lt;/filters&gt;</div><div class="line">                            &lt;transformers&gt;</div><div class="line">                                &lt;transformer implementation=&quot;org.apache.maven.plugins.shade.resource.ManifestResourceTransformer&quot;&gt;</div><div class="line">                                    &lt;mainClass&gt;cn.itcast.spark.WordCount&lt;/mainClass&gt;</div><div class="line">                                &lt;/transformer&gt;</div><div class="line">                            &lt;/transformers&gt;</div><div class="line">                        &lt;/configuration&gt;</div><div class="line">                    &lt;/execution&gt;</div><div class="line">                &lt;/executions&gt;</div><div class="line">            &lt;/plugin&gt;</div><div class="line">        &lt;/plugins&gt;</div><div class="line">    &lt;/build&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<h1 id="7-将src-main-java和src-test-java分别修改成src-main-scala和src-test-scala，与pom-xml中的配置保持一致"><a href="#7-将src-main-java和src-test-java分别修改成src-main-scala和src-test-scala，与pom-xml中的配置保持一致" class="headerlink" title="7.将src/main/java和src/test/java分别修改成src/main/scala和src/test/scala，与pom.xml中的配置保持一致"></a>7.将src/main/java和src/test/java分别修改成src/main/scala和src/test/scala，与pom.xml中的配置保持一致</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/6.png" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/7.png" alt=""></p>
+<h1 id="8-新建一个scala-class，类型为Object"><a href="#8-新建一个scala-class，类型为Object" class="headerlink" title="8.新建一个scala class，类型为Object"></a>8.新建一个scala class，类型为Object</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/8.png" alt=""></p>
+<h1 id="9-编写spark程序"><a href="#9-编写spark程序" class="headerlink" title="9.编写spark程序"></a>9.编写spark程序</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.spark</div><div class="line"></div><div class="line">import org.apache.spark.&#123;SparkContext, SparkConf&#125;</div><div class="line"></div><div class="line">object WordCount &#123;</div><div class="line">  def main(args: Array[String]) &#123;</div><div class="line">    //创建SparkConf()并设置App名称</div><div class="line">    val conf = new SparkConf().setAppName(&quot;WC&quot;)</div><div class="line">    //创建SparkContext，该对象是提交spark App的入口</div><div class="line">    val sc = new SparkContext(conf)</div><div class="line">    //使用sc创建RDD并执行相应的transformation和action</div><div class="line">    sc.textFile(args(0)).flatMap(_.split(&quot; &quot;)).map((_, 1)).reduceByKey(_+_, 1).sortBy(_._2, false).saveAsTextFile(args(1))</div><div class="line">    //停止sc，结束该任务</div><div class="line">    sc.stop()</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="10-使用Maven打包"><a href="#10-使用Maven打包" class="headerlink" title="10.使用Maven打包"></a>10.使用Maven打包</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/9.png" alt=""></p>
+<h1 id="11-选择编译成功的jar包，并将该jar上传到Spark集群中的某个节点上"><a href="#11-选择编译成功的jar包，并将该jar上传到Spark集群中的某个节点上" class="headerlink" title="11.选择编译成功的jar包，并将该jar上传到Spark集群中的某个节点上"></a>11.选择编译成功的jar包，并将该jar上传到Spark集群中的某个节点上</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark/word_count/10.png" alt=""></p>
+<h1 id="12-首先启动hdfs和Spark集群"><a href="#12-首先启动hdfs和Spark集群" class="headerlink" title="12.首先启动hdfs和Spark集群"></a>12.首先启动hdfs和Spark集群</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">启动hdfs</div><div class="line">/usr/local/hadoop-2.6.1/sbin/start-dfs.sh</div><div class="line">启动spark</div><div class="line">/usr/local/spark-1.5.2-bin-hadoop2.6/sbin/start-all.sh</div></pre></td></tr></table></figure>
+<h1 id="13-使用spark-submit命令提交Spark应用（注意参数的顺序）"><a href="#13-使用spark-submit命令提交Spark应用（注意参数的顺序）" class="headerlink" title="13.使用spark-submit命令提交Spark应用（注意参数的顺序）"></a>13.使用spark-submit命令提交Spark应用（注意参数的顺序）</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">/usr/local/spark-1.5.2-bin-hadoop2.6/bin/spark-submit \</div><div class="line">--class cn.itcast.spark.WordCount \</div><div class="line">--master spark://node1.itcast.cn:7077 \</div><div class="line">--executor-memory 2G \</div><div class="line">--total-executor-cores 4 \</div><div class="line">/root/spark-mvn-1.0-SNAPSHOT.jar \</div><div class="line">hdfs://node1.itcast.cn:9000/words.txt \</div><div class="line">hdfs://node1.itcast.cn:9000/out</div><div class="line"> </div><div class="line">/*</div><div class="line">--class cn.itcast.spark.WordCount \         //是启动类</div><div class="line">/root/spark-mvn-1.0-SNAPSHOT.jar \        //jar包</div><div class="line">hdfs://node1.itcast.cn:9000/words.txt \        //输入参数1 ,要读取的文件</div><div class="line">hdfs://node1.itcast.cn:9000/out        //输入参数2 , 内容输出的文件</div><div class="line"></div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="14-查看程序执行结果"><a href="#14-查看程序执行结果" class="headerlink" title="14.查看程序执行结果"></a>14.查看程序执行结果</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">hdfs dfs -cat hdfs://node1.itcast.cn:9000/out/part-00000</div><div class="line">(hello,6)</div><div class="line">(tom,3)</div><div class="line">(kitty,2)</div><div class="line">(jerry,1)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark/网站访问次数/" rel="next" title="网站访问次数">
+                <i class="fa fa-chevron-left"></i> 网站访问次数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark/窗口函数/" rel="prev" title="窗口函数">
+                窗口函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-创建一个项目"><span class="nav-number">1.</span> <span class="nav-text">1.创建一个项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-选择Maven项目，然后点击next"><span class="nav-number">2.</span> <span class="nav-text">2.选择Maven项目，然后点击next</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-填写maven的GAV，然后点击next"><span class="nav-number">3.</span> <span class="nav-text">3.填写maven的GAV，然后点击next</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-填写项目名称，然后点击finish"><span class="nav-number">4.</span> <span class="nav-text">4.填写项目名称，然后点击finish</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-创建好maven项目后，点击Enable-Auto-Import"><span class="nav-number">5.</span> <span class="nav-text">5.创建好maven项目后，点击Enable Auto-Import</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-配置Maven的pom-xml"><span class="nav-number">6.</span> <span class="nav-text">6.配置Maven的pom.xml</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-将src-main-java和src-test-java分别修改成src-main-scala和src-test-scala，与pom-xml中的配置保持一致"><span class="nav-number">7.</span> <span class="nav-text">7.将src/main/java和src/test/java分别修改成src/main/scala和src/test/scala，与pom.xml中的配置保持一致</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-新建一个scala-class，类型为Object"><span class="nav-number">8.</span> <span class="nav-text">8.新建一个scala class，类型为Object</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-编写spark程序"><span class="nav-number">9.</span> <span class="nav-text">9.编写spark程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-使用Maven打包"><span class="nav-number">10.</span> <span class="nav-text">10.使用Maven打包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-选择编译成功的jar包，并将该jar上传到Spark集群中的某个节点上"><span class="nav-number">11.</span> <span class="nav-text">11.选择编译成功的jar包，并将该jar上传到Spark集群中的某个节点上</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-首先启动hdfs和Spark集群"><span class="nav-number">12.</span> <span class="nav-text">12.首先启动hdfs和Spark集群</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-使用spark-submit命令提交Spark应用（注意参数的顺序）"><span class="nav-number">13.</span> <span class="nav-text">13.使用spark-submit命令提交Spark应用（注意参数的顺序）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14-查看程序执行结果"><span class="nav-number">14.</span> <span class="nav-text">14.查看程序执行结果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

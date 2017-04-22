@@ -1,0 +1,744 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop,mapreduce," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.需求现有一些原始日志需要做增强解析处理，流程：1、从原始日志文件中读取数据2、根据日志中的一个URL字段到外部知识库中获取信息增强到原始日志3、如果成功增强，则输出到增强结果目录；如果增强失败，则抽取原始数据中URL字段输出到待爬清单目录 如图所示：  2.分析程序的关键点是要在一个mapreduce程序中根据数据的不同输出两类结果到不同目录，这类灵活的输出需求可以通过自定义outputfor">
+<meta name="keywords" content="hadoop,mapreduce">
+<meta property="og:type" content="article">
+<meta property="og:title" content="运营商日志增强之自定义outputFormat">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/hadoop/运营商日志增强之自定义outputFormat/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.需求现有一些原始日志需要做增强解析处理，流程：1、从原始日志文件中读取数据2、根据日志中的一个URL字段到外部知识库中获取信息增强到原始日志3、如果成功增强，则输出到增强结果目录；如果增强失败，则抽取原始数据中URL字段输出到待爬清单目录 如图所示：  2.分析程序的关键点是要在一个mapreduce程序中根据数据的不同输出两类结果到不同目录，这类灵活的输出需求可以通过自定义outputfor">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/outputFormat/outputFormat.png">
+<meta property="og:updated_time" content="2017-02-27T05:55:04.810Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="运营商日志增强之自定义outputFormat">
+<meta name="twitter:description" content="1.需求现有一些原始日志需要做增强解析处理，流程：1、从原始日志文件中读取数据2、根据日志中的一个URL字段到外部知识库中获取信息增强到原始日志3、如果成功增强，则输出到增强结果目录；如果增强失败，则抽取原始数据中URL字段输出到待爬清单目录 如图所示：  2.分析程序的关键点是要在一个mapreduce程序中根据数据的不同输出两类结果到不同目录，这类灵活的输出需求可以通过自定义outputfor">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/outputFormat/outputFormat.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/hadoop/运营商日志增强之自定义outputFormat/"/>
+
+
+
+
+
+  <title> 运营商日志增强之自定义outputFormat | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/hadoop/运营商日志增强之自定义outputFormat/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                运营商日志增强之自定义outputFormat
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-需求"><a href="#1-需求" class="headerlink" title="1.需求"></a>1.需求</h1><p>现有一些原始日志需要做增强解析处理，流程：<br>1、从原始日志文件中读取数据<br>2、根据日志中的一个URL字段到外部知识库中获取信息增强到原始日志<br>3、如果成功增强，则输出到增强结果目录；如果增强失败，则抽取原始数据中URL字段输出到待爬清单目录</p>
+<p>如图所示：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/outputFormat/outputFormat.png" alt=""></p>
+<h1 id="2-分析"><a href="#2-分析" class="headerlink" title="2.分析"></a>2.分析</h1><p>程序的关键点是要在一个mapreduce程序中根据数据的不同输出两类结果到不同目录，这类灵活的输出需求可以通过自定义outputformat来实现</p>
+<a id="more"></a>
+<h1 id="3-实现"><a href="#3-实现" class="headerlink" title="3.实现"></a>3.实现</h1><p>实现要点：<br>1、在mapreduce中访问外部资源<br>2、自定义outputformat，改写其中的recordwriter，改写具体输出数据的方法write()</p>
+<p>代码实现如下：<br>数据库获取数据的工具</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.mr.logenhance;</div><div class="line">import java.sql.Connection;</div><div class="line">import java.sql.DriverManager;</div><div class="line">import java.sql.ResultSet;</div><div class="line">import java.sql.Statement;</div><div class="line">import java.util.HashMap;</div><div class="line">import java.util.Map;</div><div class="line"></div><div class="line">public class DBLoader &#123;</div><div class="line"></div><div class="line">	public static void dbLoader(Map&lt;String, String&gt; ruleMap) throws Exception &#123;</div><div class="line"></div><div class="line">		Connection conn = null;</div><div class="line">		Statement st = null;</div><div class="line">		ResultSet res = null;</div><div class="line">		</div><div class="line">		try &#123;</div><div class="line">			//注册驱动</div><div class="line">			Class.forName(&quot;com.mysql.jdbc.Driver&quot;);</div><div class="line">			</div><div class="line">			conn = DriverManager.getConnection(&quot;jdbc:mysql://localhost:3306/urldb&quot;, &quot;root&quot;, &quot;root&quot;);</div><div class="line">			st = conn.createStatement();</div><div class="line">			res = st.executeQuery(&quot;select url,content from url_rule&quot;);</div><div class="line">			while (res.next()) &#123;</div><div class="line">				ruleMap.put(res.getString(1), res.getString(2));</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		&#125; finally &#123;</div><div class="line">			try&#123;</div><div class="line">				if(res!=null)&#123;</div><div class="line">					res.close();</div><div class="line">				&#125;</div><div class="line">				if(st!=null)&#123;</div><div class="line">					st.close();</div><div class="line">				&#125;</div><div class="line">				if(conn!=null)&#123;</div><div class="line">					conn.close();</div><div class="line">				&#125;</div><div class="line"></div><div class="line">			&#125;catch(Exception e)&#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>自定义一个outputformat</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.mr.logenhance;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line">import org.apache.hadoop.fs.FSDataOutputStream;</div><div class="line">import org.apache.hadoop.fs.FileSystem;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.NullWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.RecordWriter;</div><div class="line">import org.apache.hadoop.mapreduce.TaskAttemptContext;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line"></div><div class="line">/**</div><div class="line"> * maptask或者reducetask在最终输出时，先调用OutputFormat的getRecordWriter方法拿到一个RecordWriter</div><div class="line"> * 然后再调用RecordWriter的write(k,v)方法将数据写出</div><div class="line"> */</div><div class="line">public class LogEnhanceOutputFormat extends FileOutputFormat&lt;Text, NullWritable&gt; &#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public RecordWriter&lt;Text, NullWritable&gt; getRecordWriter(TaskAttemptContext context) throws IOException, InterruptedException &#123;</div><div class="line"></div><div class="line">		FileSystem fs = FileSystem.get(context.getConfiguration());</div><div class="line">		</div><div class="line">		//指定要写的path</div><div class="line">		Path enhancePath = new Path(&quot;D:/temp/en/log.dat&quot;);</div><div class="line">		Path tocrawlPath = new Path(&quot;D:/temp/crw/url.dat&quot;);</div><div class="line"></div><div class="line">		//指定要写的hdfs流</div><div class="line">		FSDataOutputStream enhancedOs = fs.create(enhancePath);</div><div class="line">		FSDataOutputStream tocrawlOs = fs.create(tocrawlPath);</div><div class="line"></div><div class="line">		return new EnhanceRecordWriter(enhancedOs, tocrawlOs);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 构造一个自己的recordwriter</div><div class="line">	 */</div><div class="line">	static class EnhanceRecordWriter extends RecordWriter&lt;Text, NullWritable&gt; &#123;</div><div class="line">		FSDataOutputStream enhancedOs = null;</div><div class="line">		FSDataOutputStream tocrawlOs = null;</div><div class="line"></div><div class="line">		public EnhanceRecordWriter(FSDataOutputStream enhancedOs, FSDataOutputStream tocrawlOs) &#123;</div><div class="line">			super();</div><div class="line">			this.enhancedOs = enhancedOs;</div><div class="line">			this.tocrawlOs = tocrawlOs;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		public void write(Text key, NullWritable value) throws IOException, InterruptedException &#123;</div><div class="line">			String result = key.toString();</div><div class="line">			// 如果要写出的数据是待爬的url，则写入待爬清单文件 /logenhance/tocrawl/url.dat</div><div class="line">			if (result.contains(&quot;tocrawl&quot;)) &#123;</div><div class="line">				//写流数据</div><div class="line">				tocrawlOs.write(result.getBytes());</div><div class="line">			&#125; else &#123;</div><div class="line">				// 如果要写出的数据是增强日志，则写入增强日志文件 /logenhance/enhancedlog/log.dat</div><div class="line">				enhancedOs.write(result.getBytes());</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		public void close(TaskAttemptContext context) throws IOException, InterruptedException &#123;</div><div class="line">			if (tocrawlOs != null) &#123;</div><div class="line">				tocrawlOs.close();</div><div class="line">			&#125;</div><div class="line">			if (enhancedOs != null) &#123;</div><div class="line">				enhancedOs.close();</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>开发mapreduce处理流程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.mr.logenhance;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line">import java.util.HashMap;</div><div class="line">import java.util.Map;</div><div class="line"></div><div class="line">import org.apache.commons.lang.StringUtils;</div><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.LongWritable;</div><div class="line">import org.apache.hadoop.io.NullWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Counter;</div><div class="line">import org.apache.hadoop.mapreduce.Job;</div><div class="line">import org.apache.hadoop.mapreduce.Mapper;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 这个程序是对每个小时不断产生的用户上网记录日志进行增强(将日志中的url所指向的网页内容分析结果信息追加到每一行原始日志后面)</div><div class="line"> */</div><div class="line">public class LogEnhance &#123;</div><div class="line"></div><div class="line">	static class LogEnhanceMapper extends Mapper&lt;LongWritable, Text, Text, NullWritable&gt; &#123;</div><div class="line"></div><div class="line">		Map&lt;String, String&gt; ruleMap = new HashMap&lt;String, String&gt;();</div><div class="line"></div><div class="line">		Text k = new Text();</div><div class="line">		NullWritable v = NullWritable.get();</div><div class="line">		/**</div><div class="line">		 * maptask在初始化时会先调用setup方法一次 利用这个机制，将外部的知识库加载到maptask执行的机器内存中</div><div class="line">		 * 从数据库中加载规则信息倒ruleMap中</div><div class="line">		 */</div><div class="line">		@Override</div><div class="line">		protected void setup(Context context) throws IOException, InterruptedException &#123;</div><div class="line"></div><div class="line">			try &#123;</div><div class="line">				DBLoader.dbLoader(ruleMap);</div><div class="line">			&#125; catch (Exception e) &#123;</div><div class="line">				e.printStackTrace();</div><div class="line">			&#125;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException &#123;</div><div class="line">			// 获取一个计数器用来记录不合法的日志行数, 组名, 计数器名称</div><div class="line">			Counter counter = context.getCounter(&quot;malformed&quot;, &quot;malformedline&quot;);</div><div class="line">			</div><div class="line">			String line = value.toString();</div><div class="line">			String[] fields = StringUtils.split(line, &quot;\t&quot;);</div><div class="line">			try &#123;</div><div class="line">				String url = fields[26];</div><div class="line">				//对这一行日志中的url去知识库中查找内容分析信息</div><div class="line">				String content_tag = ruleMap.get(url);</div><div class="line"></div><div class="line">				// 判断内容标签是否为空，如果为空，则只输出url到待爬清单；如果有值，则输出到增强日志</div><div class="line">				if (content_tag == null) &#123;</div><div class="line">					k.set(url + &quot;\t&quot; + &quot;tocrawl&quot; + &quot;\n&quot;);// 输往待爬清单的内容</div><div class="line">					context.write(k, v);</div><div class="line">				&#125; else &#123;// 输往增强日志的内容</div><div class="line">					k.set(line + &quot;\t&quot; + content_tag + &quot;\n&quot;);</div><div class="line">					context.write(k, v);</div><div class="line">				&#125;</div><div class="line"></div><div class="line">			&#125; catch (Exception exception) &#123;</div><div class="line">				counter.increment(1);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line"></div><div class="line">		Configuration conf = new Configuration();</div><div class="line"></div><div class="line">		Job job = Job.getInstance(conf);</div><div class="line"></div><div class="line">		job.setJarByClass(LogEnhance.class);</div><div class="line"></div><div class="line">		job.setMapperClass(LogEnhanceMapper.class);</div><div class="line"></div><div class="line">		job.setOutputKeyClass(Text.class);</div><div class="line">		job.setOutputValueClass(NullWritable.class);</div><div class="line"></div><div class="line">		// 要控制不同的内容写往不同的目标路径，可以采用自定义outputformat的方法</div><div class="line">		job.setOutputFormatClass(LogEnhanceOutputFormat.class);</div><div class="line"></div><div class="line">		FileInputFormat.setInputPaths(job, new Path(&quot;D:/srcdata/webloginput/&quot;));</div><div class="line"></div><div class="line">		// 尽管我们用的是自定义outputformat，但是它是继承制fileoutputformat</div><div class="line">		// 在fileoutputformat中，必须输出一个_success文件，所以在此还需要设置输出path</div><div class="line">		FileOutputFormat.setOutputPath(job, new Path(&quot;D:/temp/output/&quot;));</div><div class="line"></div><div class="line">		// 不需要reducer</div><div class="line">		job.setNumReduceTasks(0);</div><div class="line"></div><div class="line">		job.waitForCompletion(true);</div><div class="line">		System.exit(0);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+            <a href="/tags/mapreduce/" rel="tag"># mapreduce</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/运行一个mapreduce例子程序/" rel="next" title="运行一个mapreduce例子程序">
+                <i class="fa fa-chevron-left"></i> 运行一个mapreduce例子程序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/计数器应用/" rel="prev" title="计数器应用">
+                计数器应用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-需求"><span class="nav-number">1.</span> <span class="nav-text">1.需求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-分析"><span class="nav-number">2.</span> <span class="nav-text">2.分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-实现"><span class="nav-number">3.</span> <span class="nav-text">3.实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

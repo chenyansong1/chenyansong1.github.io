@@ -1,0 +1,754 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="shell," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.设置环境变量的方法123456789101112131415#1export varName = value#2varName = valueexport varName#3declare -x varName = value#eg:export NAME = chenyansongdeclare -x NAME = chenyansongNAME = chenyansong ; export">
+<meta name="keywords" content="shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="环境变量">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/Linux/shell/环境变量/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.设置环境变量的方法123456789101112131415#1export varName = value#2varName = valueexport varName#3declare -x varName = value#eg:export NAME = chenyansongdeclare -x NAME = chenyansongNAME = chenyansong ; export">
+<meta property="og:updated_time" content="2017-02-24T17:09:32.518Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="环境变量">
+<meta name="twitter:description" content="1.设置环境变量的方法123456789101112131415#1export varName = value#2varName = valueexport varName#3declare -x varName = value#eg:export NAME = chenyansongdeclare -x NAME = chenyansongNAME = chenyansong ; export">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/Linux/shell/环境变量/"/>
+
+
+
+
+
+  <title> 环境变量 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/Linux/shell/环境变量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                环境变量
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/shell/" itemprop="url" rel="index">
+                    <span itemprop="name">shell</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-设置环境变量的方法"><a href="#1-设置环境变量的方法" class="headerlink" title="1.设置环境变量的方法"></a>1.设置环境变量的方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">#1</div><div class="line">export varName = value</div><div class="line"></div><div class="line">#2</div><div class="line">varName = value</div><div class="line">export varName</div><div class="line"></div><div class="line">#3</div><div class="line">declare -x varName = value</div><div class="line"></div><div class="line"></div><div class="line">#eg:</div><div class="line">export NAME = chenyansong</div><div class="line">declare -x NAME = chenyansong</div><div class="line">NAME = chenyansong ; export NAME</div></pre></td></tr></table></figure>
+<h1 id="2-用户环境变量和全局环境变量"><a href="#2-用户环境变量和全局环境变量" class="headerlink" title="2.用户环境变量和全局环境变量"></a>2.用户环境变量和全局环境变量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">#用户环境变量：在用户的家目录下：.bash_profile  .bashrc</div><div class="line">[root@MySQL ~]# ll /root/.bashrc /root/.bash_profile</div><div class="line">-rw-r--r--. 1 root root 176 5月  20 2009 /root/.bash_profile</div><div class="line">-rw-r--r--. 1 root root 176 9月  23 2004 /root/.bashrc</div><div class="line"></div><div class="line">#全局环境变量：</div><div class="line">[root@MySQL ~]# ll /etc/profile /etc/bashrc</div><div class="line">-rw-r--r--. 1 root root 2681 6月  22 2012 /etc/bashrc</div><div class="line">-rw-r--r--  1 root root 1967 8月  12 23:02 /etc/profile</div><div class="line">[root@MySQL ~]#</div><div class="line"></div><div class="line">#需要登录后显示加载的内容可以把脚本文件放在/etc/profile.d下 </div><div class="line">[root@MySQL ~]# ll /etc/profile.d/</div><div class="line">总用量 56</div><div class="line">-rw-r--r--. 1 root root 1127 4月  17 2012 colorls.csh</div><div class="line">-rw-r--r--. 1 root root 1143 4月  17 2012 colorls.sh</div><div class="line">//.。。。。</div><div class="line">-rw-r--r--. 1 root root  169 5月  20 2009 which2.sh</div><div class="line"></div><div class="line"></div><div class="line">#如下面的文件</div><div class="line">[root@MySQL profile.d]# ll /etc/profile.d/welcome.sh</div><div class="line">-rw-r--r-- 1 root root 28 8月  16 21:33 /etc/profile.d/welcome.sh</div><div class="line">[root@MySQL profile.d]# cat welcome.sh      </div><div class="line">echo &quot;Welcome to my world!&quot;</div><div class="line"></div><div class="line">#重新登录显示：</div><div class="line">Last login: Wed Feb 15 02:04:23 2017 from 192.168.0.221</div><div class="line">欢迎来到测试环境        #这个是由/etc/motd  文件内容控制</div><div class="line">Welcom to my world!</div></pre></td></tr></table></figure>
+<h1 id="3-java环境变量"><a href="#3-java环境变量" class="headerlink" title="3.java环境变量"></a>3.java环境变量</h1><p>参见JDK安装</p>
+<h1 id="4-显示或取消环境变量"><a href="#4-显示或取消环境变量" class="headerlink" title="4.显示或取消环境变量"></a>4.显示或取消环境变量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">#1.通过echo或printf命令答应环境变量</div><div class="line">echo $HOME</div><div class="line">echo $UID</div><div class="line"></div><div class="line"></div><div class="line">#2.通过env(printenv)或set显示默认的环境变量</div><div class="line">[root@lamp01 ~]# env</div><div class="line">HOSTNAME=lamp01</div><div class="line">TERM=linux</div><div class="line">SHELL=/bin/bash</div><div class="line">HISTSIZE=1000</div><div class="line">SSH_CLIENT=192.168.0.221 53043 22</div><div class="line">SSH_TTY=/dev/pts/0</div><div class="line">USER=root</div><div class="line"></div><div class="line">#set也是一样</div><div class="line"></div><div class="line">#3.取消环境变量</div><div class="line">unset HOSTNAME</div></pre></td></tr></table></figure>
+<h1 id="5-局部变量"><a href="#5-局部变量" class="headerlink" title="5.局部变量"></a>5.局部变量</h1><h2 id="5-1-本地变量的生命周期"><a href="#5-1-本地变量的生命周期" class="headerlink" title="5.1.本地变量的生命周期"></a>5.1.本地变量的生命周期</h2><p>&emsp;本地变量在用户当前的shell生存期的脚本中使用，例如：本地变量OLDBOY取值为zhangsan，这个值只在用户当前的shell生存期中有意义，如果在shell中启动另一个进程或退出，本地变量OLDBOY值将无效</p>
+<h2 id="5-2-定义变量的例子"><a href="#5-2-定义变量的例子" class="headerlink" title="5.2.定义变量的例子"></a>5.2.定义变量的例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">varName = value</div><div class="line">varName = ‘value’</div><div class="line">varName = “value”</div></pre></td></tr></table></figure>
+<h2 id="5-3-变量的书写规范"><a href="#5-3-变量的书写规范" class="headerlink" title="5.3.变量的书写规范"></a>5.3.变量的书写规范</h2><ul>
+<li>在脚本中定义普通字符串变量,尽量把变量的内容用双引号引起来</li>
+<li>在单纯数字内容可以不加引号</li>
+<li>希望原样输出加上单引号</li>
+<li>希望引用命令就用反引号</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">#特殊例子:awk调用shell变量引号例子</div><div class="line">[root@lamp01 ~]# age=24</div><div class="line">[root@lamp01 ~]# awk &apos;BEGIN &#123;print &quot;$age&quot;&#125;&apos;</div><div class="line">$age</div><div class="line">[root@lamp01 ~]# awk &apos;BEGIN &#123;print &apos;$age&apos;&#125;&apos;</div><div class="line">24</div><div class="line">[root@lamp01 ~]# awk &apos;BEGIN &#123;print $age&#125;&apos; </div><div class="line"> </div><div class="line">[root@lamp01 ~]#</div><div class="line">#以上的结果正好与前面的结论相反,这是awk调用shell的特殊用法</div></pre></td></tr></table></figure>
+<h2 id="5-4-变量的使用-打印变量"><a href="#5-4-变量的使用-打印变量" class="headerlink" title="5.4.变量的使用(打印变量)"></a>5.4.变量的使用(打印变量)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$valName   </div><div class="line"></div><div class="line">#or   </div><div class="line"></div><div class="line">$&#123;varName&#125;  </div><div class="line"></div><div class="line">#or    </div><div class="line"></div><div class="line">“$&#123;varName&#125;”</div></pre></td></tr></table></figure>
+<h2 id="5-5-变量内容是命令"><a href="#5-5-变量内容是命令" class="headerlink" title="5.5.变量内容是命令"></a>5.5.变量内容是命令</h2><p> 要用反引号或者而是$() 把变量括起来使用</p>
+<h2 id="5-6-位置变量"><a href="#5-6-位置变量" class="headerlink" title="5.6.位置变量"></a>5.6.位置变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">echo “$0” 获取当前执行的shell脚本的文件名</div><div class="line">$n获取当前执行的shell脚本第n个参数值，超过9要用：$&#123;10&#125;,$&#123;11&#125;....</div><div class="line">$* 获取当前shell的所有参数“$1 $2 $3 ...”</div><div class="line">$@ 获取程序的所有参数”$1” “$2” ...</div><div class="line">$# 当前shell命令行中参数的总个数</div><div class="line">$! 执行上一个指令的PID</div><div class="line">$$ 当前shell的进程号</div><div class="line">$? 获取执行上一个指令的返回值</div></pre></td></tr></table></figure>
+<p>实例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#$*</div><div class="line">[root@lamp01 ~]# cat test.sh</div><div class="line">for i in &quot;$*&quot; ;do</div><div class="line">        echo $i</div><div class="line">done</div><div class="line">#执行脚本</div><div class="line">[root@lamp01 ~]# sh test.sh I am handsome boy</div><div class="line">I am handsome boy</div><div class="line"> </div><div class="line">#$@</div><div class="line">[root@lamp01 ~]# cat test.sh</div><div class="line">for i in &quot;$@&quot; ;do</div><div class="line">        echo $i</div><div class="line">done</div><div class="line">#执行结果</div><div class="line">[root@lamp01 ~]# sh test.sh I am handsome boy</div><div class="line">I</div><div class="line">am</div><div class="line">handsome</div><div class="line">boy</div><div class="line"> </div><div class="line"></div><div class="line">#$$ 当前shell的进程号</div><div class="line">[root@lamp01 ~]# cat pid.sh</div><div class="line">echo $$&gt;/tmp/a.pid</div><div class="line">sleep 300</div><div class="line"></div><div class="line">[root@lamp01 ~]# sh pid.sh &amp;</div><div class="line">[1] 8447</div><div class="line"></div><div class="line">[root@lamp01 ~]# ps -ef|grep pid.sh|grep -v grep</div><div class="line">root      8447  8382  0 02:31 pts/0    00:00:00 sh pid.sh</div><div class="line">[root@lamp01 ~]# cat /tmp/a.pid</div><div class="line">8447</div><div class="line"></div><div class="line">#显示当前脚本的进程号，这样我们就可以管理该进程了，如：杀掉进程</div><div class="line">#下面的脚本是：保证每次只是存在一个进程</div><div class="line">[root@lamp01 ~]# cat pid.sh</div><div class="line">#!/bin/sh</div><div class="line">pidpath=/tmp/a.pid</div><div class="line"> </div><div class="line">if [ -f &quot;$pidpath&quot; ];then</div><div class="line">        kill -USR2 `cat $pidpath` &gt;/dev/null 2&gt;&amp;1    #如果pid存在,就杀死他</div><div class="line">        rm -f $pidpath        #删除文件</div><div class="line">fi</div><div class="line">echo $$&gt;$pidpath    #重新生成pid文件</div><div class="line">sleep 300</div><div class="line"></div><div class="line"></div><div class="line">#$0带路径执行和不带路径执行的区别</div><div class="line">root@MySQL shell]# ll</div><div class="line">总用量 4</div><div class="line">-rwxr-xr-x 1 root root 8 8月  16 16:18 test.sh</div><div class="line">[root@MySQL shell]# cat test.sh</div><div class="line">echo $0</div><div class="line">[root@MySQL shell]# sh test.sh</div><div class="line">test.sh</div><div class="line">[root@MySQL shell]# sh /home/chenyansong/shell/test.sh</div><div class="line">/home/chenyansong/shell/test.sh</div></pre></td></tr></table></figure></p>
+<h2 id="5-7-echo"><a href="#5-7-echo" class="headerlink" title="5.7.echo $?"></a>5.7.echo $?</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">0        #表示运行成功</div><div class="line">2        # 权限拒绝</div><div class="line">1-125    #表示运行失败,脚本命令,系统命令错误或参数传递错误</div><div class="line">126    #找到该命令了但无法执行</div><div class="line">127    #未找到要运行的命令</div><div class="line">&gt;128    #命令被系统强制结束</div></pre></td></tr></table></figure>
+<blockquote>
+<p>企业场景返回值的用法</p>
+</blockquote>
+<ul>
+<li>判断命令或者脚本是否执行成功</li>
+<li>通过脚本调用执行exit数字,则脚本返回这个数字给$?<br>如果是函数里return 0 返回返回值给$?</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/shell/" rel="tag"># shell</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/Linux/shell/监控服务是否正常的方法/" rel="next" title="监控服务是否正常的方法">
+                <i class="fa fa-chevron-left"></i> 监控服务是否正常的方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/Linux/shell/条件测试,控制流及for循环/" rel="prev" title="条件测试,控制流及for循环">
+                条件测试,控制流及for循环 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-设置环境变量的方法"><span class="nav-number">1.</span> <span class="nav-text">1.设置环境变量的方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-用户环境变量和全局环境变量"><span class="nav-number">2.</span> <span class="nav-text">2.用户环境变量和全局环境变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-java环境变量"><span class="nav-number">3.</span> <span class="nav-text">3.java环境变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-显示或取消环境变量"><span class="nav-number">4.</span> <span class="nav-text">4.显示或取消环境变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-局部变量"><span class="nav-number">5.</span> <span class="nav-text">5.局部变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-本地变量的生命周期"><span class="nav-number">5.1.</span> <span class="nav-text">5.1.本地变量的生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-定义变量的例子"><span class="nav-number">5.2.</span> <span class="nav-text">5.2.定义变量的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-变量的书写规范"><span class="nav-number">5.3.</span> <span class="nav-text">5.3.变量的书写规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-变量的使用-打印变量"><span class="nav-number">5.4.</span> <span class="nav-text">5.4.变量的使用(打印变量)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5-变量内容是命令"><span class="nav-number">5.5.</span> <span class="nav-text">5.5.变量内容是命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-6-位置变量"><span class="nav-number">5.6.</span> <span class="nav-text">5.6.位置变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-7-echo"><span class="nav-number">5.7.</span> <span class="nav-text">5.7.echo $?</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,752 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mongodb," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="db.goods.find().count();  1.比较查询操作符对于官网：$eq     $gt    $gte    $lt    $lte    $ne        $in    $ninhttps://docs.mongodb.com/manual/reference/operator/query/in/ 12345678910111213141516171819202122232">
+<meta name="keywords" content="mongodb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="查询表达式">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/mongodb/查询表达式/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="db.goods.find().count();  1.比较查询操作符对于官网：$eq     $gt    $gte    $lt    $lte    $ne        $in    $ninhttps://docs.mongodb.com/manual/reference/operator/query/in/ 12345678910111213141516171819202122232">
+<meta property="og:updated_time" content="2017-02-24T17:10:16.950Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="查询表达式">
+<meta name="twitter:description" content="db.goods.find().count();  1.比较查询操作符对于官网：$eq     $gt    $gte    $lt    $lte    $ne        $in    $ninhttps://docs.mongodb.com/manual/reference/operator/query/in/ 12345678910111213141516171819202122232">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/mongodb/查询表达式/"/>
+
+
+
+
+
+  <title> 查询表达式 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/查询表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                查询表达式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>db.goods.find().count();</p>
+</blockquote>
+<h1 id="1-比较查询操作符"><a href="#1-比较查询操作符" class="headerlink" title="1.比较查询操作符"></a>1.比较查询操作符</h1><p>对于官网：$eq     $gt    $gte    $lt    $lte    $ne        $in    $nin<br><a href="https://docs.mongodb.com/manual/reference/operator/query/in/" target="_blank" rel="external">https://docs.mongodb.com/manual/reference/operator/query/in/</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">#$eq</div><div class="line">&#123; _id: 1, item: &#123; name: &quot;ab&quot;, code: &quot;123&quot; &#125;, qty: 15, tags: [ &quot;A&quot;, &quot;B&quot;, &quot;C&quot; ] &#125;</div><div class="line">&#123; _id: 2, item: &#123; name: &quot;cd&quot;, code: &quot;123&quot; &#125;, qty: 20, tags: [ &quot;B&quot; ] &#125;</div><div class="line">&#123; _id: 3, item: &#123; name: &quot;ij&quot;, code: &quot;456&quot; &#125;, qty: 25, tags: [ &quot;A&quot;, &quot;B&quot; ] &#125;</div><div class="line">&#123; _id: 4, item: &#123; name: &quot;xy&quot;, code: &quot;456&quot; &#125;, qty: 30, tags: [ &quot;B&quot;, &quot;A&quot; ] &#125;</div><div class="line">&#123; _id: 5, item: &#123; name: &quot;mn&quot;, code: &quot;000&quot; &#125;, qty: 20, tags: [ [ &quot;A&quot;, &quot;B&quot; ], &quot;C&quot; ] &#125;</div><div class="line"></div><div class="line">db.inventory.find( &#123; qty: &#123; $eq: 20 &#125; &#125; )</div><div class="line">#结果如下:</div><div class="line">&#123; _id: 2, item: &#123; name: &quot;cd&quot;, code: &quot;123&quot; &#125;, qty: 20, tags: [ &quot;B&quot; ] &#125;</div><div class="line">&#123; _id: 5, item: &#123; name: &quot;mn&quot;, code: &quot;000&quot; &#125;, qty: 20, tags: [ [ &quot;A&quot;, &quot;B&quot; ], &quot;C&quot; ] &#125;</div><div class="line"></div><div class="line"></div><div class="line">db.inventory.find( &#123; &quot;item.name&quot;: &#123; $eq: &quot;ab&quot; &#125; &#125; )    #因为是文档类型,所以可以使用点来取属性</div><div class="line">#结果如下:</div><div class="line">&#123; _id: 1, item: &#123; name: &quot;ab&quot;, code: &quot;123&quot; &#125;, qty: 15, tags: [ &quot;A&quot;, &quot;B&quot;, &quot;C&quot; ] &#125;</div><div class="line"></div><div class="line">#等值查询</div><div class="line">db.collection.find(&#123;filed:value&#125;)</div><div class="line"></div><div class="line">#指定返回的列</div><div class="line">db.user.find(&#123;name:&quot;user0&quot;&#125;,&#123;age:1&#125;) </div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;age&quot; : 0 &#125; </div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c3cac686eb50e2c843bd&quot;), &quot;age&quot; : 20 &#125;</div><div class="line">#_id是默认显示的,可以传入_id:0来隐藏它</div><div class="line"></div><div class="line"></div><div class="line">#不等于 $ne</div><div class="line">db.collection.find(&#123;filed:&#123;$ne:value&#125;&#125;)</div><div class="line"></div><div class="line">#not in $nin</div><div class="line">db.collection.find(&#123;filed:&#123;$nin:[value1,value2,value3]&#125;&#125;)</div></pre></td></tr></table></figure>
+<h1 id="2-逻辑查询操作符"><a href="#2-逻辑查询操作符" class="headerlink" title="2.逻辑查询操作符"></a>2.逻辑查询操作符</h1><p><a href="https://docs.mongodb.com/manual/reference/operator/query-logical/" target="_blank" rel="external">https://docs.mongodb.com/manual/reference/operator/query-logical/</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> </div><div class="line">#满足一个 $or</div><div class="line">&gt; db.user.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 5 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b8&quot;), &quot;name&quot; : &quot;user6&quot;, &quot;age&quot; : 6 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b9&quot;), &quot;name&quot; : &quot;user7&quot;, &quot;age&quot; : 7 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843ba&quot;), &quot;name&quot; : &quot;user8&quot;, &quot;age&quot; : 8 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bb&quot;), &quot;name&quot; : &quot;user9&quot;, &quot;age&quot; : 9 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bc&quot;), &quot;name&quot; : &quot;user10&quot;, &quot;age&quot; : 10 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c3cac686eb50e2c843bd&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 20 &#125;</div><div class="line"> </div><div class="line">&gt; db.user.find(&#123;$or:[&#123;name:&quot;user1&quot;&#125;,&#123;age:20&#125;]&#125;) # 由此可见or的键值为一个数组</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c3cac686eb50e2c843bd&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 20 &#125;</div><div class="line"> </div><div class="line"> </div><div class="line">#都不满足(排除) $nor</div><div class="line">&gt; db.user.find(&#123;$nor:[&#123;name:&quot;user1&quot;&#125;,&#123;age:20&#125;]&#125;) # name不等于user1,以及age不等于20,可以理解为排除;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 5 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b8&quot;), &quot;name&quot; : &quot;user6&quot;, &quot;age&quot; : 6 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b9&quot;), &quot;name&quot; : &quot;user7&quot;, &quot;age&quot; : 7 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843ba&quot;), &quot;name&quot; : &quot;user8&quot;, &quot;age&quot; : 8 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bb&quot;), &quot;name&quot; : &quot;user9&quot;, &quot;age&quot; : 9 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bc&quot;), &quot;name&quot; : &quot;user10&quot;, &quot;age&quot; : 10 &#125;</div></pre></td></tr></table></figure>
+<h1 id="3-元素查询操作符"><a href="#3-元素查询操作符" class="headerlink" title="3.元素查询操作符"></a>3.元素查询操作符</h1><p><a href="https://docs.mongodb.com/manual/reference/operator/query-element/" target="_blank" rel="external">https://docs.mongodb.com/manual/reference/operator/query-element/</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">取模操作 $mod</div><div class="line">&gt; db.user.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 5 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b8&quot;), &quot;name&quot; : &quot;user6&quot;, &quot;age&quot; : 6 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b9&quot;), &quot;name&quot; : &quot;user7&quot;, &quot;age&quot; : 7 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843ba&quot;), &quot;name&quot; : &quot;user8&quot;, &quot;age&quot; : 8 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bb&quot;), &quot;name&quot; : &quot;user9&quot;, &quot;age&quot; : 9 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bc&quot;), &quot;name&quot; : &quot;user10&quot;, &quot;age&quot; : 10 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c3cac686eb50e2c843bd&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 20 &#125;</div><div class="line"> </div><div class="line">&gt; db.user.find(&#123;age:&#123;$mod:[3,1]&#125;&#125;)  # 模三余一</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b9&quot;), &quot;name&quot; : &quot;user7&quot;, &quot;age&quot; : 7 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bc&quot;), &quot;name&quot; : &quot;user10&quot;, &quot;age&quot; : 10 &#125;</div><div class="line"></div><div class="line"> </div><div class="line">#查找包含该字段的文档 $exists</div><div class="line">&gt; db.phone.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e20220c9b0dc40419385&quot;), &quot;num&quot; : [ 1, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e21820c9b0dc40419386&quot;), &quot;num&quot; : [ 4, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e22120c9b0dc40419387&quot;), &quot;num&quot; : [ 1, 2, 5 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e51a20c9b0dc40419388&quot;), &quot;state&quot; : 1 &#125;</div><div class="line"> </div><div class="line">&gt; db.phone.find(&#123;state:&#123;$exists:1&#125;&#125;)　# 存在state字段的</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e51a20c9b0dc40419388&quot;), &quot;state&quot; : 1 &#125;</div><div class="line"> </div><div class="line">&gt; db.phone.find(&#123;state:&#123;$exists:0&#125;&#125;)　# 不存在state字段的文档</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e20220c9b0dc40419385&quot;), &quot;num&quot; : [ 1, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e21820c9b0dc40419386&quot;), &quot;num&quot; : [ 4, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e22120c9b0dc40419387&quot;), &quot;num&quot; : [ 1, 2, 5 ] &#125;</div><div class="line"> </div><div class="line"></div><div class="line">#根据数据类型查询 $type</div><div class="line">#在mongodb中每一种数据类型都有对应的数字,我们在使用$type的时候需要使用这些数字,文档中给出如下的表示</div><div class="line"></div><div class="line">|类型|编号|</div><div class="line">|:-:|:-:|</div><div class="line">|双精度|1|</div><div class="line">|字符串|2|</div><div class="line">|对象|3|</div><div class="line">|数组|4|</div><div class="line">|二进制数据|5|</div><div class="line">|对象 ID|7|</div><div class="line">|布尔值|8|</div><div class="line">|日期|9|</div><div class="line">|空|10|</div><div class="line">|正则表达式|11|</div><div class="line">|JavaScript|13|</div><div class="line">|符号|14|</div><div class="line">|JavaScript（带范围）|15|</div><div class="line">|32 位整数|16|</div><div class="line">|时间戳|17|</div><div class="line">|64 位整数|18|</div><div class="line">|最小键|255|</div><div class="line">|最大键|127|</div><div class="line"></div><div class="line"></div><div class="line">&gt; db.user.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 5 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b8&quot;), &quot;name&quot; : &quot;user6&quot;, &quot;age&quot; : 6 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b9&quot;), &quot;name&quot; : &quot;user7&quot;, &quot;age&quot; : 7 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843ba&quot;), &quot;name&quot; : &quot;user8&quot;, &quot;age&quot; : 8 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bb&quot;), &quot;name&quot; : &quot;user9&quot;, &quot;age&quot; : 9 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bc&quot;), &quot;name&quot; : &quot;user10&quot;, &quot;age&quot; : 10 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c3cac686eb50e2c843bd&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 20 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;51996ef22b76790566165e47&quot;), &quot;name&quot; : 23, &quot;age&quot; : 33 &#125;</div><div class="line">&gt; db.user.find(&#123;name:&#123;$type:1&#125;&#125;) # 查找name为双精度的文档</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;51996ef22b76790566165e47&quot;), &quot;name&quot; : 23, &quot;age&quot; : 33 &#125;</div><div class="line"></div><div class="line"></div><div class="line">#$and</div><div class="line">Syntax: &#123; $and: [ &#123; &lt;expression1&gt; &#125;, &#123; &lt;expression2&gt; &#125; , ... , &#123; &lt;expressionN&gt; &#125; ] &#125;</div><div class="line"></div><div class="line">db.inventory.find( &#123;</div><div class="line">    $and : [</div><div class="line">        &#123; $or : [ &#123; price : 0.99 &#125;, &#123; price : 1.99 &#125; ] &#125;,</div><div class="line">        &#123; $or : [ &#123; sale : true &#125;, &#123; qty : &#123; $lt : 20 &#125; &#125; ] &#125;</div><div class="line">    ]</div><div class="line">&#125; )</div><div class="line">/*</div><div class="line">the price field value equals 0.99 or 1.99, and</div><div class="line">the sale field value is equal to true or the qty field value is less than 20.</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">#$or</div><div class="line">&#123; $or: [ &#123; &lt;expression1&gt; &#125;, &#123; &lt;expression2&gt; &#125;, ... , &#123; &lt;expressionN&gt; &#125; ] &#125;</div><div class="line">#数量小于20或者价格等于10 </div><div class="line">db.inventory.find( &#123; $or: [ &#123; quantity: &#123; $lt: 20 &#125; &#125;, &#123; price: 10 &#125; ] &#125; )</div></pre></td></tr></table></figure>
+<h1 id="4-数组操作"><a href="#4-数组操作" class="headerlink" title="4.数组操作"></a>4.数组操作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">#数组查询$all $in</div><div class="line">$all　数组中必须包含所有给定的查询的元素</div><div class="line">$in　数组中只要包含给定的查询元素就可以</div><div class="line"></div><div class="line">&gt; db.phone.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e20220c9b0dc40419385&quot;), &quot;num&quot; : [ 1, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e21820c9b0dc40419386&quot;), &quot;num&quot; : [ 4, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e22120c9b0dc40419387&quot;), &quot;num&quot; : [ 1, 2, 5 ] &#125;</div><div class="line">&gt; db.phone.find(&#123;num:&#123;$all:[1,2]&#125;&#125;)</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e20220c9b0dc40419385&quot;), &quot;num&quot; : [ 1, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e22120c9b0dc40419387&quot;), &quot;num&quot; : [ 1, 2, 5 ] &#125;</div><div class="line">&gt; db.phone.find(&#123;num:&#123;$all:[1,4]&#125;&#125;)　# 同时包含１，４的没有数据</div><div class="line">&gt; db.phone.find(&#123;num:&#123;$in:[1,4]&#125;&#125;)　# 包含１或４的数据</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e20220c9b0dc40419385&quot;), &quot;num&quot; : [ 1, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e21820c9b0dc40419386&quot;), &quot;num&quot; : [ 4, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e22120c9b0dc40419387&quot;), &quot;num&quot; : [ 1, 2, 5 ] &#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#查询数组的长度等于给定数组长度的文档 $size</div><div class="line">&gt; db.phone.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e20220c9b0dc40419385&quot;), &quot;num&quot; : [ 1, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e21820c9b0dc40419386&quot;), &quot;num&quot; : [ 4, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e22120c9b0dc40419387&quot;), &quot;num&quot; : [ 1, 2, 5 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e51a20c9b0dc40419388&quot;), &quot;state&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;519969952b76790566165de2&quot;), &quot;num&quot; : [ 2, 3 ] &#125;</div><div class="line"> </div><div class="line">&gt; db.phone.find(&#123;num:&#123;$size:4&#125;&#125;) # num数组长度为4的结果没有</div><div class="line"> </div><div class="line">&gt; db.phone.find(&#123;num:&#123;$size:3&#125;&#125;) # 长度为3的有三个</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e20220c9b0dc40419385&quot;), &quot;num&quot; : [ 1, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e21820c9b0dc40419386&quot;), &quot;num&quot; : [ 4, 2, 3 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198e22120c9b0dc40419387&quot;), &quot;num&quot; : [ 1, 2, 5 ] &#125;</div></pre></td></tr></table></figure>
+<h1 id="5-自定义的查询-where"><a href="#5-自定义的查询-where" class="headerlink" title="5.自定义的查询 $where"></a>5.自定义的查询 $where</h1><p>由bson转换为json,然后再通过回调函数去判断,性能很差,能不用尽量别用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&gt; db.user.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 5 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b8&quot;), &quot;name&quot; : &quot;user6&quot;, &quot;age&quot; : 6 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b9&quot;), &quot;name&quot; : &quot;user7&quot;, &quot;age&quot; : 7 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843ba&quot;), &quot;name&quot; : &quot;user8&quot;, &quot;age&quot; : 8 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bb&quot;), &quot;name&quot; : &quot;user9&quot;, &quot;age&quot; : 9 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843bc&quot;), &quot;name&quot; : &quot;user10&quot;, &quot;age&quot; : 10 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c3cac686eb50e2c843bd&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 20 &#125;</div><div class="line"> </div><div class="line">&gt; db.user.find(&#123;$where:function()&#123;return this.age == 3 || this.age == 4&#125;&#125;) # 回调,进入了隐式迭代,然后符合条件的才返回;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line"> </div><div class="line"># 如今的新版本也可以直接写where条件</div><div class="line">db.goods.find(&#123;$where:&apos;this.cat_id != 3 &amp;&amp; this.cat_id != 11&apos;&#125;);</div></pre></td></tr></table></figure></p>
+<h1 id="6-正则表达式"><a href="#6-正则表达式" class="headerlink" title="6.正则表达式"></a>6.正则表达式</h1><p>正则的效率都知道的,得一一解析后再查找,所以效率也是很低;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; db.user.find(&#123;name:/user.*/i&#125;) # 查询name以user开头不区分大小写的文档</div><div class="line">&gt; db.goods.find(&#123;goods_name:/诺基亚.*/&#125;,&#123;goods_name:1&#125;); # 以诺基亚开头的商品</div></pre></td></tr></table></figure>
+<h1 id="7-limit"><a href="#7-limit" class="headerlink" title="7.limit"></a>7.limit</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt; db.user.find(&#123;age:&#123;$gte:5&#125;&#125;).limit(3) # 限制返回的是三条数据</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 5 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b8&quot;), &quot;name&quot; : &quot;user6&quot;, &quot;age&quot; : 6 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b9&quot;), &quot;name&quot; : &quot;user7&quot;, &quot;age&quot; : 7 &#125;</div></pre></td></tr></table></figure>
+<h1 id="8-分页查询"><a href="#8-分页查询" class="headerlink" title="8.分页查询"></a>8.分页查询</h1><p>使用到skip 和limit方法.skip表示跳过前面的几个文档,limit表示显示几个文档.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&gt; db.user.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&gt; db.user.find().skip(2).limit(3) # 跳过前两个文档查询后面的三个文档,经过测试这两个方法的使用顺序没有影响</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&gt; db.user.find().limit(3).skip(2)</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 1 &#125;</div></pre></td></tr></table></figure>
+<h1 id="9-sort-排序"><a href="#9-sort-排序" class="headerlink" title="9.sort 排序"></a>9.sort 排序</h1><p>在mongodb中排序很简单,使用sort方法,传递给它你想按照哪个字段的哪种方式排序即可.这里1代表升序,-1代表降序.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&gt; db.user.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 5 &#125;</div><div class="line">&gt; db.user.find().sort(&#123;age:1&#125;)</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 5 &#125;</div><div class="line">&gt; db.user.find().sort(&#123;age:-1&#125;)</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 5 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 4 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div></pre></td></tr></table></figure></p>
+<h1 id="10-group-分组查询"><a href="#10-group-分组查询" class="headerlink" title="10.group 分组查询"></a>10.group 分组查询</h1><p>&emsp;mongodb中的group可以实现类似关系型数据库中的分组的功能,但是mongodb中的group远比关系型数据库中的group强大,可以实现map-reduce功能,关于什么是map-reduce,会在后续大数据专题里面说明,这里先略过,感兴趣的朋友可以百度<br>group中的json参数类似这样{key:{字段:1},initial:{变量:初始值},\$reduce:function(doc,prev){函数代码}}.<br>其中的字段代表,需要按哪个字段分组.<br>变量表示这一个分组中会使用的变量,并且给一个初始值.可以在后面的$reduce函数中使用.<br>$reduce的两个参数,分别代表当前的文档和上个文档执行完函数后的结果.如下我们按年龄分组,同级不同年龄的用户的多少:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">&gt; db.user.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 2 &#125;</div><div class="line"> </div><div class="line">&gt; db.user.group(&#123;key:&#123;age:1&#125;,initial:&#123;count:0&#125;,$reduce:function(doc,prev)&#123;prev.count++&#125;&#125;)</div><div class="line">[</div><div class="line">        &#123;</div><div class="line">                &quot;age&quot; : 0,</div><div class="line">                &quot;count&quot; : 1</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">                &quot;age&quot; : 1,</div><div class="line">                &quot;count&quot; : 3</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">                &quot;age&quot; : 2,</div><div class="line">                &quot;count&quot; : 2</div><div class="line">        &#125;</div><div class="line">]</div><div class="line"> </div><div class="line">&gt; db.user.group(&#123;key:&#123;age:1&#125;,initial:&#123;users:[]&#125;,$reduce:function(doc,prev)&#123;prev.users.push(doc.name)&#125;&#125;); #由于内部是使用js引擎来解析的,所以完全可以通过js语法来操作(操作数组用push),这使得虽然mongodb的分组很麻烦但却很灵活</div><div class="line">[</div><div class="line">        &#123;</div><div class="line">                &quot;age&quot; : 0,</div><div class="line">                &quot;users&quot; : [</div><div class="line">                        &quot;user0&quot;</div><div class="line">                ]</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">                &quot;age&quot; : 1,</div><div class="line">                &quot;users&quot; : [</div><div class="line">                        &quot;user1&quot;,</div><div class="line">                        &quot;user3&quot;,</div><div class="line">                        &quot;user4&quot;</div><div class="line">                ]</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">                &quot;age&quot; : 2,</div><div class="line">                &quot;users&quot; : [</div><div class="line">                        &quot;user2&quot;,</div><div class="line">                        &quot;user5&quot;</div><div class="line">                ]</div><div class="line">        &#125;</div><div class="line">]</div><div class="line"> </div><div class="line"># 另外本函数还有两个可选参数 condition 和 finalize</div><div class="line"> </div><div class="line"># condition就是分组的条件筛选类似mysql中的having</div><div class="line">&gt; db.user.group(&#123;key:&#123;age:1&#125;,initial:&#123;users:[]&#125;,$reduce:function(doc,prev)&#123;prev.users.push(doc.name)&#125;,condition:&#123;age:&#123;$gt:0&#125;&#125;&#125;) # 筛选出age大于0的;</div><div class="line">[</div><div class="line">        &#123;</div><div class="line">                &quot;age&quot; : 1,</div><div class="line">                &quot;users&quot; : [</div><div class="line">                        &quot;user1&quot;,</div><div class="line">                        &quot;user3&quot;,</div><div class="line">                        &quot;user4&quot;</div><div class="line">                ]</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">                &quot;age&quot; : 2,</div><div class="line">                &quot;users&quot; : [</div><div class="line">                        &quot;user2&quot;,</div><div class="line">                        &quot;user5&quot;</div><div class="line">                ]</div><div class="line">        &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<h1 id="11-count-统计"><a href="#11-count-统计" class="headerlink" title="11.count 统计"></a>11.count 统计</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt; db.goods.count() #不传参数就统计该集合的总数</div><div class="line">31</div><div class="line">&gt; db.goods.count(&#123;cat_id:3&#125;) # 统计cat_id=3的总数</div><div class="line">15</div></pre></td></tr></table></figure>
+<h1 id="12-distinct-排重"><a href="#12-distinct-排重" class="headerlink" title="12.distinct 排重"></a>12.distinct 排重</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&gt; db.user.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b2&quot;), &quot;name&quot; : &quot;user0&quot;, &quot;age&quot; : 0 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b3&quot;), &quot;name&quot; : &quot;user1&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b4&quot;), &quot;name&quot; : &quot;user2&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b5&quot;), &quot;name&quot; : &quot;user3&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b6&quot;), &quot;name&quot; : &quot;user4&quot;, &quot;age&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5198c286c686eb50e2c843b7&quot;), &quot;name&quot; : &quot;user5&quot;, &quot;age&quot; : 2 &#125;</div><div class="line">&gt; db.user.distinct(&quot;age&quot;) # 略微有点特殊,传入的参数直接是字符串,而不是对象;</div><div class="line">[ 0, 1, 2 ]</div></pre></td></tr></table></figure>
+<h1 id="13-子文档查询-elemMatch与对象中的属性"><a href="#13-子文档查询-elemMatch与对象中的属性" class="headerlink" title="13.子文档查询 $elemMatch与对象中的属性"></a>13.子文档查询 $elemMatch与对象中的属性</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&#123; _id: 1, results: [ 82, 85, 88 ] &#125;</div><div class="line">&#123; _id: 2, results: [ 75, 88, 89 ] &#125;</div><div class="line"> </div><div class="line">db.scores.find(</div><div class="line">   &#123; results: &#123; $elemMatch: &#123; $gte: 80, $lt: 85 &#125; &#125; &#125; #查询results文档中的元素同时满足即大于80并且又小于85的,注意此处只要其中一个元素满足这个查询就会返回</div><div class="line">)</div><div class="line"> </div><div class="line">&#123; &quot;_id&quot; : 1, &quot;results&quot; : [ 82, 85, 88 ] &#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">&gt; db.user.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c070a02cc8cec37073a1d9&quot;), &quot;name&quot; : &quot;zxg&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : &#123; &quot;life&quot; : [ &quot;电影&quot;, &quot;小说&quot;, &quot;漫画&quot; ], &quot;work&quot; : [ &quot;发呆&quot;, &quot;发呆2&quot; ], &quot;home&quot; : &quot;玩耍&quot; &#125; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c070a52cc8cec37073a1da&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ], &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ], &quot;home&quot; : &quot;卖萌&quot; &#125; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c072db2cc8cec37073a1db&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : [ &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ] &#125;, &#123; &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ] &#125;, &#123; &quot;home&quot; : &quot;卖萌&quot; &#125; ] &#125;</div><div class="line"> </div><div class="line">&gt; db.user.find(&#123;hobby:&#123;$elemMatch:&#123;home:&apos;卖萌&apos;&#125;&#125;&#125;) # 注意上文的结构,必须是要在数组中才可以查出</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c072db2cc8cec37073a1db&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : [ &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ] &#125;, &#123; &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ] &#125;, &#123; &quot;home&quot; : &quot;卖萌&quot; &#125; ] &#125;</div><div class="line"> </div><div class="line">&gt; db.user.find(&#123;&apos;hobby.home&apos;:&apos;卖萌&apos;&#125;) # 注意,hobby.home类似js中对象与属性的操作方式,但是要加上引号,否则会报错</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c070a52cc8cec37073a1da&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ], &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ], &quot;home&quot; : &quot;卖萌&quot; &#125; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c072db2cc8cec37073a1db&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : [ &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ] &#125;, &#123; &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ] &#125;, &#123; &quot;home&quot; : &quot;卖萌&quot; &#125; ] &#125;</div></pre></td></tr></table></figure>
+<h1 id="14-查询实例"><a href="#14-查询实例" class="headerlink" title="14.查询实例"></a>14.查询实例</h1><p>以下查询基于ecshop网站的数据查询<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"># 本店价格低于或等于100元的商品($lte)</div><div class="line">db.goods.find(&#123;shop_price:&#123;$lte:100&#125;&#125;,&#123;goods_name:1,shop_price:1&#125;);</div><div class="line"> </div><div class="line"># 取出第4栏目或第11栏目的商品($in)</div><div class="line">db.goods.find(&#123;cat_id:&#123;$in:[4,11]&#125;&#125;,&#123;goods_name:1,shop_price:1&#125;);</div><div class="line"> </div><div class="line"># 取出100&lt;=价格&lt;=500的商品($and)</div><div class="line">db.goods.find(&#123;$and:[&#123;&apos;shop_price&apos;:&#123;$gte:100&#125;&#125;,&#123;&apos;shop_price&apos;:&#123;$lte:500&#125;&#125;]&#125;,&#123;_id:0,shop_price:1&#125;)</div><div class="line"> </div><div class="line"># 取出不属于第3栏目且不属于第11栏目的商品($and $nin和$nor分别实现)</div><div class="line">db.goods.find(&#123;$and:[&#123;cat_id:&#123;$ne:3&#125;&#125;,&#123;cat_id:&#123;$ne:11&#125;&#125;]&#125;,&#123;_id:0,cat_id:1&#125;)</div><div class="line">db.goods.find(&#123;cat_id:&#123;$nin:[3,11]&#125;&#125;,&#123;_id:0,cat_id:1&#125;)</div><div class="line">db.goods.find(&#123;$nor:[&#123;cat_id:3&#125;,&#123;cat_id:11&#125;]&#125;,&#123;_id:0,cat_id:1&#125;)</div><div class="line"> </div><div class="line"># 取出价格大于100且小于300,或者大于2000且小于5000的商品()</div><div class="line">db.goods.find(&#123;$or:[&#123;$and:[&#123;shop_price:&#123;$gt:100&#125;&#125;, &#123;shop_price:&#123;$lt:300&#125; &#125;]&#125;, &#123;$and:[&#123;shop_price:&#123;$gt:2000&#125;&#125;, &#123;shop_price:&#123;$lt:5000&#125; &#125;] &#125; ] &#125;,&#123;_id:0,shop_price:1&#125; )</div><div class="line"> </div><div class="line"># 取出所有goods_id为偶数的商品;</div><div class="line">db.goods.find(&#123;goods_id:&#123;$mod:[2,0]&#125;&#125;,&#123;_id:0,goods_id:1&#125;)</div><div class="line"></div><div class="line"></div><div class="line">#主键为32的商品</div><div class="line">db.goods.find(&#123;goods_id:32&#125;);</div><div class="line"></div><div class="line"></div><div class="line">#不属第3栏目的所有商品($ne)</div><div class="line">db.goods.find(&#123;cat_id:&#123;$ne:3&#125;&#125;,&#123;goods_id:1,cat_id:1,goods_name:1&#125;);</div><div class="line"> </div><div class="line">#本店价格高于3000元的商品&#123;$gt&#125;</div><div class="line">db.goods.find(&#123;shop_price:&#123;$gt:3000&#125;&#125;,&#123;goods_name:1,shop_price:1&#125;);</div><div class="line"></div><div class="line">#本店价格低于或等于100元的商品($lte)</div><div class="line">db.goods.find(&#123;shop_price:&#123;$lte:100&#125;&#125;,&#123;goods_name:1,shop_price:1&#125;);</div><div class="line">  </div><div class="line"> </div><div class="line">#取出100&lt;=价格&lt;=500的商品($and)</div><div class="line">db.goods.find(&#123;$and:[&#123;price:&#123;$gt:100&#125;,&#123;$price:&#123;$lt:500&#125;&#125;&#125;]);</div><div class="line"> </div><div class="line">#取出价格大于100且小于300,或者大于4000且小于5000的商品()</div><div class="line">db.goods.find(&#123;$or:[&#123;$and:[&#123;shop_price:&#123;$gt:100&#125;&#125;,&#123;shop_price:&#123;$lt:300&#125;&#125;]&#125;,&#123;$and:[&#123;shop_price:&#123;$gt:4000&#125;&#125;,&#123;shop_price:&#123;$lt:5000&#125;&#125;]&#125;]&#125;,&#123;goods_name:1,shop_price:1&#125;);</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mongodb/" rel="tag"># mongodb</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/游标操作(转)/" rel="next" title="游标操作(转)">
+                <i class="fa fa-chevron-left"></i> 游标操作(转)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/帮助说明/" rel="prev" title="帮助说明">
+                帮助说明 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-比较查询操作符"><span class="nav-number">1.</span> <span class="nav-text">1.比较查询操作符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-逻辑查询操作符"><span class="nav-number">2.</span> <span class="nav-text">2.逻辑查询操作符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-元素查询操作符"><span class="nav-number">3.</span> <span class="nav-text">3.元素查询操作符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-数组操作"><span class="nav-number">4.</span> <span class="nav-text">4.数组操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-自定义的查询-where"><span class="nav-number">5.</span> <span class="nav-text">5.自定义的查询 $where</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-正则表达式"><span class="nav-number">6.</span> <span class="nav-text">6.正则表达式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-limit"><span class="nav-number">7.</span> <span class="nav-text">7.limit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-分页查询"><span class="nav-number">8.</span> <span class="nav-text">8.分页查询</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-sort-排序"><span class="nav-number">9.</span> <span class="nav-text">9.sort 排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-group-分组查询"><span class="nav-number">10.</span> <span class="nav-text">10.group 分组查询</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-count-统计"><span class="nav-number">11.</span> <span class="nav-text">11.count 统计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-distinct-排重"><span class="nav-number">12.</span> <span class="nav-text">12.distinct 排重</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-子文档查询-elemMatch与对象中的属性"><span class="nav-number">13.</span> <span class="nav-text">13.子文档查询 $elemMatch与对象中的属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14-查询实例"><span class="nav-number">14.</span> <span class="nav-text">14.查询实例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

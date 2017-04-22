@@ -1,0 +1,804 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala函数式编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;手动追踪下面的程序是如何求值的?12345List(1,2,3,4).map(_ + 10).filter(_%2 == 0).map(_ * 3)List(11,12,13,14).filter(_%2 == 0).map(_ * 3)List(12,14).map(_ * 3)List(36, 42) &amp;emsp;从上面可以看出在进行map,filter,map的过程中,会有中间结">
+<meta name="keywords" content="scala,scala函数式编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第五章 严格求值和惰性求值">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第五章 严格求值和惰性求值/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="&amp;emsp;手动追踪下面的程序是如何求值的?12345List(1,2,3,4).map(_ + 10).filter(_%2 == 0).map(_ * 3)List(11,12,13,14).filter(_%2 == 0).map(_ * 3)List(12,14).map(_ * 3)List(36, 42) &amp;emsp;从上面可以看出在进行map,filter,map的过程中,会有中间结">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/5/1.png">
+<meta property="og:updated_time" content="2017-02-24T17:08:20.402Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第五章 严格求值和惰性求值">
+<meta name="twitter:description" content="&amp;emsp;手动追踪下面的程序是如何求值的?12345List(1,2,3,4).map(_ + 10).filter(_%2 == 0).map(_ * 3)List(11,12,13,14).filter(_%2 == 0).map(_ * 3)List(12,14).map(_ * 3)List(36, 42) &amp;emsp;从上面可以看出在进行map,filter,map的过程中,会有中间结">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/5/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第五章 严格求值和惰性求值/"/>
+
+
+
+
+
+  <title> 第五章 严格求值和惰性求值 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第五章 严格求值和惰性求值/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第五章 严格求值和惰性求值
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;手动追踪下面的程序是如何求值的?<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">List(1,2,3,4).map(_ + 10).filter(_%2 == 0).map(_ * 3)</div><div class="line">List(11,12,13,14).filter(_%2 == 0).map(_ * 3)</div><div class="line">List(12,14).map(_ * 3)</div><div class="line">List(36, 42)</div></pre></td></tr></table></figure></p>
+<p>&emsp;从上面可以看出在进行map,filter,map的过程中,会有中间结果产生(如:List(11,12,13,14), List(12,14)) ,那么我们如何避免产生临时数据结构(中间结果)呢?我们可以使用非严格求值来实现这种自动循环的融合物,非严格求值又叫惰性求值</p>
+<h1 id="1-严格和非严格函数"><a href="#1-严格和非严格函数" class="headerlink" title="1.严格和非严格函数"></a>1.严格和非严格函数</h1><blockquote>
+<p>非严格求值的定义</p>
+</blockquote>
+<p>&emsp;非严格求值是函数的一种属性,称一个函数是非严格求值的意思是这个函数可以选择不对他的一个或多个参数求值,相反,严格求值总会对他的参数求值,严格求值函数在大多数编程语言中是一种常态,并且大部分编程语言也只支持严格求值,在scala中除非明确声明,否则任何函数都是严格求值的<br>&emsp;当你调用square(41.0+1.0) 时,square函数将接收到完成求值的42.0作为参数,因为他是严格求值的,如果你调用square(sys.error(“fail)),将在square方法执行之前得到一个异常,因为sys.error(“fail)会先被求值</p>
+<blockquote>
+<p>scala中非严格求值的例子</p>
+</blockquote>
+<p>&emsp;在很多语言包括scala语言中都会出现的短路Boolean函数&amp;&amp;和||,就是非严格求值的例子,&amp;&amp;接收2个Boolean参数,但只有第一个参数是true的情况下,才对第二个参数求值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">false &amp;&amp; &#123;println(&quot;!!&quot;);true&#125;        //不打印任何内容</div></pre></td></tr></table></figure></p>
+<p>&emsp;||函数只有在第一个参数为false的情况下才对第二个参数求值<br>&emsp;另一个非严格求值的例子是scala中的if控制结构:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">val result = if(input.isEmpty) sys.error(&quot;empty input&quot;) else input</div></pre></td></tr></table></figure></p>
+<p>&emsp;尽管if是scala的内置结构,也可以看做是一个接收3个参数的函数,一个Boolean类型的条件参数,一个返回类型为A的表达式在条件为true时执行,另一个返回类型也为A的表达式在条件为false时执行,这个if函数也是非严格求值的,因为他不会对所有的参数都求值,更精确的说,if函数对条件参数是严格求值的,因为他总是要对条件判断来决定选择哪个分支,对两个true和false的分支参数是非严格求值的,因为他只对其中满足条件的一个参数求值</p>
+<blockquote>
+<p>非严格求值语法的由来</p>
+</blockquote>
+<p>&emsp;在scala中我们可以通过接收某个未求值的参数来写非严格求值函数,先展示这种方式,然后再展示更好的scala内置的语法,下面是一个非严格求值的if函数:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">def if2[A](cond: Boolean, onTrue: ()=&gt;A, onFalse: ()=&gt;A): A = </div><div class="line">    if (cond) onTrue()  else onFalse()</div><div class="line"></div><div class="line">if2(a&lt;22,</div><div class="line">    ()=&gt;println(&quot;a&quot;),    //函数字面量语法,创建一个()=&gt;A的函数</div><div class="line">    ()=&gt;println(&quot;b&quot;)</div></pre></td></tr></table></figure></p>
+<p>&emsp;()=&gt;A类型的值表示一个函数,接收0个参数并返回一个A类型,实际上,()=&gt;A类型是Function0[A]类型的语法别名,通常一个表达式的未求值形式称为thunk,我们可以强制对thunk求值得到结果,通过传入一个空参数列表调用函数,如onTrue()或onFalse(),同样if2的调用者必须显式的创建thunk,语法与之前我们见过的函数字面量相同</p>
+<p>&emsp;总体来说,这种语法也很清晰—-我们在每一个非严格求值参数的地方传入一个无参函数,然后在方法体里显式的调用这个函数获取结果,但这是一个非常常见的例子,所以scala提供了更好的语法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def if2[A](cond: Boolean, onTrue: =&gt;A, onFalse: =&gt;A): A = </div><div class="line">    if(cond) onTrue else onFalse</div></pre></td></tr></table></figure></p>
+<p>&emsp;我们传递的未求值的参数有一个箭头=&gt;紧接在类型前边,在方法体中我们不需要对使用=&gt;标注的参数做任何事情,就像往常一样只引用标识符也不需要对这个函数做任何特殊调用,只需要使用正常的函数调用语法,scala会负责为我们将表达式包装为thunk<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">if2(false, sys.error(&quot;fail&quot;), 3)</div></pre></td></tr></table></figure></p>
+<p>&emsp;使用上述两种语法中的任何一种,给一个函数传递一个未求值的参数,在方法体中引用的地方会被求值一次,即:scala不会(默认)缓存一个参数的求值结果:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">def maybeTwice(b: Boolean, i: =&gt; Int) = if (b) i+i  else 0</div><div class="line"></div><div class="line">val x = maybeTwice(true, &#123;println(&quot;hi&quot;); 1+41&#125;)</div><div class="line"></div><div class="line">//打印结果</div><div class="line">hi</div><div class="line">hi</div><div class="line">x:Int = 84</div></pre></td></tr></table></figure></p>
+<p>&emsp;这里i在maybeTwice方法体中引用了两次,也就是说i没有在第一次引用之后,没有被缓存,在第二次引用时,又去计算了一遍<br>&emsp;如果我们希望只求值一次,可以通过lazy关键字显示的缓存这个值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">def maybeTwice2(b: Boolean, i: =&gt; Int) = &#123;</div><div class="line">    lazy val j = i</div><div class="line">    if (b) j+j else 0</div><div class="line">&#125;</div><div class="line"></div><div class="line">val x = maybeTwice(true, &#123;println(&quot;hi&quot;); 1+41&#125;)</div><div class="line"></div><div class="line">//打印结果</div><div class="line">hi</div><div class="line">x:Int = 84</div></pre></td></tr></table></figure></p>
+<p>&emsp;对一个val声明的变量添加修饰符,将导致scala延迟对这个变量求值,直到他第一个被引用,他也会缓存结果,在后续引用的地方不会触发重复求值<br>&emsp;最后一个术语:scala中非严格求值的函数接收的参数是传名参数,而非传值参数</p>
+<h1 id="2-一个扩展例子-惰性列表"><a href="#2-一个扩展例子-惰性列表" class="headerlink" title="2.一个扩展例子:惰性列表"></a>2.一个扩展例子:惰性列表</h1><p>&emsp;我们将使用惰性列表或Stream作为一个例子探索惰性化在函数式编程中是如何用于提升效率和模块化的,我们将看到基于流(Stream)的转换链怎么通过使用惰性化融合成一次操作,这里是一个简单的Stream的定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">sealed trait Stream[+A]</div><div class="line">case object Empty extends Stream[Nothing]</div><div class="line">case class Cons[+A](h: ()=&gt;A, t: ()=&gt; Stream[A]) extends Stream[A]</div><div class="line">//一个非空的Stream由head和tail组成,head和tail都是非严格求值的,因为技术限制,这些参数都是必须明确强制求值的thunk,而非传名参数</div><div class="line"></div><div class="line">object Stream&#123; </div><div class="line">  def cons[A](hd: =&gt;A, tl: =&gt; Stream[A]): Stream[A] = &#123; //用于创建空Stream的智能构造器</div><div class="line">    lazy val head = hd //对惰性列表求值的head和tail做缓存,避免重复及求值</div><div class="line">    lazy val tail = tl</div><div class="line">    Cons(()=&gt;head, ()=&gt;tail)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def empty[A]: Stream[A] = Empty</div><div class="line"></div><div class="line">  def apply[A](as: A*): Stream[A] =</div><div class="line">    if(as.isEmpty) empty else cons(as.head, apply(as.tail:_*))</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;下面是一个以可选的方式抽取Stream的head的函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def headOption: Option[A] = this match&#123;</div><div class="line">  case Empty =&gt; None</div><div class="line">  case Cons(h,t) =&gt; Some(h()) //对h,thunk显示的调用h()强制求值</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;注意,我们必须显式的调用h()来对h强制求值,不这样做代码会跟List一样,但Stream直到这部分真正需要才求值( 我们不会对Cons的tail求值)的能力很有用</p>
+<h2 id="2-1-对stream保持记忆-避免重复运算"><a href="#2-1-对stream保持记忆-避免重复运算" class="headerlink" title="2.1.对stream保持记忆,避免重复运算"></a>2.1.对stream保持记忆,避免重复运算</h2><p>&emsp;我们希望能缓存Cons节点的值,一旦他们被强制求值,如果我们直接用Cons数据构造器,比如下面的代码,实际运算了2次expensive(x)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">val x = Cons(()=&gt;expensive(x), t1)</div><div class="line">val h1 = x.headOption</div><div class="line">val h2 = x.headOption</div></pre></td></tr></table></figure></p>
+<p>&emsp;我们通常定义更智能的构造器来避免这个问题,他是一种构造器类型的函数,同时能够保证一些附加的不变式或提供与真正构造签名稍微不同的用于模式匹配的能力,智能构造器的写法习惯上跟普通的数据构造器相似,但首字母为小写,这里智能的cons构造器负责将传名参数记录到head和tail,这是一个常见的技巧,他确保thunk只运行一次,只在第一次使用时被强制求值,后续的调用会返回已经缓存的lazy val<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def cons[A](hd: =&gt;A, tl: =&gt;Stream[A]): Stream[A] = &#123;</div><div class="line">  lazy val head = hd</div><div class="line">  lazy val tail = tl</div><div class="line">  Cons(()=&gt;head, ()=&gt;tail)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;空的智能构造器仅仅返回空(Empty),但Empty被标识为Stream[A]在某些情况下是一个更好的类型接口,我们看一下智能构造器在Stream.apply函数中是如何被使用的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def apply[A](as: A*): Stream[A] = &#123;</div><div class="line">  if (as.isEmpty) empty</div><div class="line">  else cons(as.head, apply(as.tail:_*))</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;此外,scala负责包装thunk中传给cons的参数,所以as.head和apply(as.tail:_*)表达式不会求值,知道Stream中被强制求值</p>
+<h2 id="2-2-用于检测Stream的helper函数"><a href="#2-2-用于检测Stream的helper函数" class="headerlink" title="2.2.用于检测Stream的helper函数"></a>2.2.用于检测Stream的helper函数</h2><p>&emsp;练习:写一个可将Stream转换成List的函数,他会被强制求值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">def toList: List[A] = &#123;</div><div class="line">  @annotation.tailrec</div><div class="line">  def go(s: Stream[A], acc: List[A]): List[A] = s match &#123;</div><div class="line">    case Cons(h,t) =&gt; go(t(), h() :: acc)</div><div class="line">    case _ =&gt; acc</div><div class="line">  &#125;</div><div class="line">  go(this, List()).reverse</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>&amp;emsp:练习:写一个函数take(n)返回Stream中的前n个元素,写一个函数drop(n)返回Stream中第n个元素之后的所有元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">def take(n: Int): Stream[A] = this match &#123;</div><div class="line">  case Cons(h, t) if n &gt; 1 =&gt; cons(h(), t().take(n - 1))</div><div class="line">  case Cons(h, _) if n == 1 =&gt; cons(h(), empty)</div><div class="line">  case _ =&gt; empty</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">@annotation.tailrec</div><div class="line">final def drop(n: Int): Stream[A] = this match &#123;</div><div class="line">  case Cons(_, t) if n &gt; 0 =&gt; t().drop(n - 1)</div><div class="line">  case _ =&gt; this</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;写一个函数takeWhile返回Stream中从起始元素连续满足给定断言的所有元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def takeWhile(f: A =&gt; Boolean): Stream[A] = this match &#123;</div><div class="line">  case Cons(h,t) if f(h()) =&gt; cons(h(), t() takeWhile f)</div><div class="line">  case _ =&gt; empty</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="3-把函数的描述与求值分离"><a href="#3-把函数的描述与求值分离" class="headerlink" title="3.把函数的描述与求值分离"></a>3.把函数的描述与求值分离</h1><p>&emsp;函数式编程的主题之一是关注分离,我们希望将计算的描述与实际运行分离,在前几章我们已经以不同的方式接触过这一主题了,比如一等函数,捕获函数体内部的运算逻辑,只有在接收到参数时才执行他,我们使用Option捕获实际发生的错误,而决定对他做什么是一个分离的关注点,对Stream,可以构建一个产生一系列元素的计算逻辑知道实际需要这些元素时才运行<br>&emsp;一般而言,惰性化让我们对一个表达式分离了他的描述和求值,这给我们带来一种强大的能力—–可以选择描述一个比我们所需要的更大的表达式,只对这个表达式的一部分求值,用一个例子来看,函数exists检查Stream中是否存在匹配一个Boolean函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def exists(p: A=&gt;Boolean): Boolean = this match &#123;</div><div class="line">    case Cons(h, t) =&gt; p(h() || t().exists(p)</div><div class="line">    case _ =&gt; false</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;注意||对他的第二个参数是非严格求值,如果p(h())返回true,那么exists提前终止遍历也返回true,另外,Stream的tail部分也是一个lazy val,不仅仅给是提前终止,Stream的tail压根就没有被求值,所以不管tail里是什么代码,他根本没执行</p>
+<p>&emsp;exists函数使用显示的递归实现,回顾一下第3章中的List我们可以以foldRight方式实现一个更通用的递归,可以以惰性的方式对Stream做相同的事情:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def foldRight[B](z: =&gt;B)(f: (A,=&gt;B) =&gt;B): B = this match &#123; //f参数的类型声明中B类型前箭头=&gt;表示第二个参数是传名参数,f不会对他进行求值</div><div class="line">    case Cons(h,t) =&gt; f(h(), t().foldRight(z)(f))  //如果f不对第二个参数求值,递归就不会发生</div><div class="line">    case _ =&gt; z</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;这看上去与List中的foldRight非常相似,但注意我们的组合函数f对他的第二个参数是非严格求值的,如果f选择不对第二个参数求值,这会提前终止遍历,我们看一下使用foldRight实现的exists:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">def exists(p: A=&gt;Boolean): Boolean = foldRight(false)((a,b) =&gt; p(a) || b)</div></pre></td></tr></table></figure></p>
+<p>&emsp;这里b是对Stream的tail进行fold的未求值的递归步骤,如果p(a)返回true,b不会被求值,计算提前终止</p>
+<blockquote>
+<p>练习:</p>
+</blockquote>
+<p>&emsp;实现一个forAll函数,检查Stream中所有元素是否与给定的断言匹配,遇到不匹配的值应该立即终止遍历<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def forAll(f: A =&gt; Boolean): Boolean =</div><div class="line">  foldRight(true)((a,b) =&gt; f(a) &amp;&amp; b)   //调用了前面的foldRight</div></pre></td></tr></table></figure></p>
+<p>&emsp;使用foldRight实现takeWhile<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def takeWhile_1(f: A =&gt; Boolean): Stream[A] =</div><div class="line">  foldRight(empty[A])((h,t) =&gt;</div><div class="line">    if (f(h)) cons(h,t)</div><div class="line">    else      empty)</div></pre></td></tr></table></figure></p>
+<p>&emsp;使用foldRight实现headOption<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def headOption: Option[A] =</div><div class="line">  foldRight(None: Option[A])((h,_) =&gt; Some(h))</div></pre></td></tr></table></figure></p>
+<p>&emsp;使用foldRight实现map, filter, append和flatMap,其中append方法参数应该是非严格求值的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">def map[B](f: A =&gt; B): Stream[B] =</div><div class="line">  foldRight(empty[B])((h,t) =&gt; cons(f(h), t))</div><div class="line"></div><div class="line">def filter(f: A =&gt; Boolean): Stream[A] =</div><div class="line">  foldRight(empty[A])((h,t) =&gt;</div><div class="line">    if (f(h)) cons(h, t)</div><div class="line">    else t)</div><div class="line"></div><div class="line">def append[B&gt;:A](s: =&gt; Stream[B]): Stream[B] =</div><div class="line">  foldRight(s)((h,t) =&gt; cons(h,t))</div><div class="line"></div><div class="line">def flatMap[B](f: A =&gt; Stream[B]): Stream[B] =</div><div class="line">  foldRight(empty[B])((h,t) =&gt; f(h) append t)</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>跟踪Stream程序</p>
+</blockquote>
+<p>&emsp;让我们看一个简单的程序,跟踪一段本章开头用于启发的例子:Stream(1,2,3,4),map(<em>+10).filter(</em> % 2 ==0) ,我们将转换这个表达式为一个List来强制求值,花几分钟跟踪并理解发生了什么,如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Stream(1,2,3,4).map(_ + 10).filter(_ % 2==0).toList</div><div class="line">cons(11, Stream(2,3,4).map(_ + 10)).filter(_ % 2 ==0).toList    //对第1个元素应用map</div><div class="line">Stream(2,3,4).map(_ + 10).filter(_ % 2==0).toList    //对第1个元素应用filter</div><div class="line">cons(12, Stream(3,4).map(_ + 10)).filter(_ % 2==0).toList //对第2个元素应用map</div><div class="line">12::Stream(3,4).map(_ + 10).filter(_ % 2 ==0).toList   //对第2个元素应用filter生成第1个元素结果</div><div class="line">12::cons(13, Stream(4).map(_ + 10).filter(_ % 2==0).toList</div><div class="line">12::Stream(4).map(_ + 10).filter(_ % 2==0).toList //将13%==0过滤掉了</div><div class="line">12::cons(14, Stream(),map(_ + 10)).filter(_ % 2==0).toList</div><div class="line">12::14::Stream().map(_ + 10).filter(_ % 2==0).toList</div><div class="line">12:14:List()   //map和filter没有更多要做的了,空Stream变成了空List</div></pre></td></tr></table></figure></p>
+<p>&emsp;跟踪过程中要注意的是filter和map转换时如何交错的—-计算在用于生成单个元素的map函数与用于测试元素是否被2整除的filter函数之间交替进行,注意我们不会完全实例化map运算结果的中间Stream,就跟我们使用一个专用的循环处理交错逻辑一样,因为这个原因,人们有时也把Stream描述为”一等函数”, 这些逻辑可以使用高阶函数,如map,filter等组合<br>&emsp;既然中间Stream不会实例化,很容易以全新的方式复用已存在的组合子,而不用担心我们对Stream处理超出需要的部分,举个例子,可以复用filter来定义find,一个方法返回第一个匹配的元素,如果存在的话,虽然filter转换了整个stream,但转换时惰性的,所以find一遇到匹配的元素就立刻终止:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def find(p: A=&gt; Boolean): Option[A] =</div><div class="line">    filter(p).headOption</div></pre></td></tr></table></figure></p>
+<p>&emsp;stream转换的增量性质对内存使用也有重要的影响,因为不再生成中间Stream,转换只需要处理当前元素所够用的内存,比如,Stream(1,2,3,4).map(<em> + 10).filter(</em> % 2 ==0) 这个转换中垃圾收集会回收分配给由map产生的值11和13的内存空间</p>
+<h1 id="4-无限流与共递归"><a href="#4-无限流与共递归" class="headerlink" title="4.无限流与共递归"></a>4.无限流与共递归</h1><p>&emsp;我们所写的函数也适用于无限流,下面是一个由1组成的无限流的例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">val ones: Stream[Int] = Stream.cons(1, ones)    //指向自身的</div><div class="line"></div><div class="line">//使用</div><div class="line">ones.take(3).toList    //List(1,1,1)</div><div class="line"></div><div class="line">ones.exists(_ % 2 !=0)    //true</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/5/1.png" alt="无限流" title="无限流"></p>
+<p>&emsp;再来几个例子<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ones.map(_ + 1).exists(_ % 2 ==0)</div><div class="line">ones.takeWhile(_ == 1)</div><div class="line">ones.forAll(_ != 1)</div></pre></td></tr></table></figure></p>
+<p>&emsp;在每个例子里,我们立即取得一个结果,不过要小心,因为很容易写出永不结束或线程栈不安全的表达式,比如ones.forAll(_ == 1)将一直检测后续的元素,因为不会遇到一个可以让他终止遍历并给出确切答案的元素(最终会导致堆栈溢出而非无限循环)</p>
+<blockquote>
+<p>练习</p>
+</blockquote>
+<p>&emsp;对ones稍微泛化一下,定义一个constant函数,根据给定值返回一个无限流<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def constant[A](a: A): Stream[A] = &#123;</div><div class="line">  lazy val tail: Stream[A] = Cons(() =&gt; a, () =&gt; tail)    //后面又指向了tail变量,所以是无限流</div><div class="line">  tail</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;写一个函数生成一个整数无限流,从n开始,然后n+1,n+2,等等<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def from(n: Int): Stream[Int] =</div><div class="line">  cons(n, from(n+1))    //tail又是指向的是from,不过此时传递过去的是n+1,所以无限循环的</div></pre></td></tr></table></figure></p>
+<p>&emsp;写一个fibs函数生成斐波那契数列的无限流: 0, 1, 1, 2, 3, 5, 8等等<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">val fibs = &#123;</div><div class="line">  def go(f0: Int, f1: Int): Stream[Int] =</div><div class="line">    cons(f0, go(f1, f0+f1))</div><div class="line">  go(0, 1)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;写一个更加通用的构造流的函数unfold,他接收一个初始化状态,以及一个在生成的stream中用于产生下一状态和下一个值的函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def unfold[A, S](z: S)(f: S =&gt; Option[(A, S)]): Stream[A] =</div><div class="line">  f(z) match &#123;    //用于判断还有没有下一个状态</div><div class="line">    case Some((h,s)) =&gt; cons(h, unfold(s)(f))</div><div class="line">    case None =&gt; empty</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;unfold函数是一个被称作共递归函数的例子,递归函数由不断的对更小范围的输入参数进行递归调用而结束,共递归函数只要保持生产数据不需要结束,这意味着我们总是可以在一个有限的时间段里对更多的结果求值,unfold函数生产能力随f函数的结束而结束,因为我们只需要再次运行f函数生成stream中的下一个元素,共递归有时也被称为守护递归,生产能力有时也被称为共结束</p>
+<blockquote>
+<p>练习</p>
+</blockquote>
+<p>&emsp;根据unfold函数来写fibs,from, constant和ones<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">val fibsViaUnfold =</div><div class="line">  unfold((0,1)) &#123; case (f0,f1) =&gt; Some((f0,(f1,f0+f1))) &#125;</div><div class="line"></div><div class="line">def fromViaUnfold(n: Int) =</div><div class="line">  unfold(n)(n =&gt; Some((n,n+1)))</div><div class="line"></div><div class="line">def constantViaUnfold[A](a: A) =</div><div class="line">  unfold(a)(_ =&gt; Some((a,a)))</div></pre></td></tr></table></figure></p>
+<p>&emsp;使用unfold实现map, take, takeWhile, zipWith以及zipAll,zipAll函数应该继续遍历只要Stream还有更多元素—-它使用Option表示Stream是否已经彻底遍历完了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">def mapViaUnfold[B](f: A =&gt; B): Stream[B] =</div><div class="line">  unfold(this) &#123;</div><div class="line">    case Cons(h,t) =&gt; Some((f(h()), t()))</div><div class="line">    case _ =&gt; None</div><div class="line">  &#125;</div><div class="line"></div><div class="line">def takeViaUnfold(n: Int): Stream[A] =</div><div class="line">  unfold((this,n)) &#123;</div><div class="line">    case (Cons(h,t), 1) =&gt; Some((h(), (empty, 0)))</div><div class="line">    case (Cons(h,t), n) if n &gt; 1 =&gt; Some((h(), (t(), n-1)))</div><div class="line">    case _ =&gt; None</div><div class="line">  &#125;</div><div class="line"></div><div class="line">def takeWhileViaUnfold(f: A =&gt; Boolean): Stream[A] =</div><div class="line">  unfold(this) &#123;</div><div class="line">    case Cons(h,t) if f(h()) =&gt; Some((h(), t()))</div><div class="line">    case _ =&gt; None</div><div class="line">  &#125;</div><div class="line"></div><div class="line">def zipWith[B,C](s2: Stream[B])(f: (A,B) =&gt; C): Stream[C] =</div><div class="line">  unfold((this, s2)) &#123;</div><div class="line">    case (Cons(h1,t1), Cons(h2,t2)) =&gt;</div><div class="line">      Some((f(h1(), h2()), (t1(), t2())))</div><div class="line">    case _ =&gt; None</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;使用已写过的函数实现startWith函数,他检查一个Stream是否是另一个Stream的前缀,比如Stream(1,2,3) startWith Stream(1,2) 返回true<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def startsWith[A](s: Stream[A]): Boolean =</div><div class="line">  zipAll(s).takeWhile(!_._2.isEmpty) forAll &#123;</div><div class="line">    case (h,h2) =&gt; h == h2</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;使用unfold实现tails函数,对一个给定的Stream,tails返回这个Stream输入序列的所有后缀,比如给定Stream(1,2,3)返回Stream(Stream(1,2,3), Stream(2, 3), Stream(3), Stream())<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def tails: Stream[Stream[A]] =</div><div class="line">  unfold(this) &#123;</div><div class="line">    case Empty =&gt; None</div><div class="line">    case s =&gt; Some((s, s drop 1))</div><div class="line">  &#125; append Stream(empty)</div></pre></td></tr></table></figure></p>
+<p>&emsp;现在可以用之前写过的函数来实现hasSubsequence<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def hasSubsequence[A](s: Stream[A]): Boolean = </div><div class="line">    tails exists (_ startsWith s)</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala函数式编程/" rel="tag"># scala函数式编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/functionalProgrammingInScala/第四章 不使用异常来处理错误/" rel="next" title="第四章 不使用异常来处理错误">
+                <i class="fa fa-chevron-left"></i> 第四章 不使用异常来处理错误
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/functionalProgrammingInScala/第二章 在scala中使用函数式编程/" rel="prev" title="第二章 在scala中使用函数式编程">
+                第二章 在scala中使用函数式编程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-严格和非严格函数"><span class="nav-number">1.</span> <span class="nav-text">1.严格和非严格函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-一个扩展例子-惰性列表"><span class="nav-number">2.</span> <span class="nav-text">2.一个扩展例子:惰性列表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-对stream保持记忆-避免重复运算"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.对stream保持记忆,避免重复运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-用于检测Stream的helper函数"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.用于检测Stream的helper函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-把函数的描述与求值分离"><span class="nav-number">3.</span> <span class="nav-text">3.把函数的描述与求值分离</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-无限流与共递归"><span class="nav-number">4.</span> <span class="nav-text">4.无限流与共递归</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

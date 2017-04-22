@@ -1,0 +1,809 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="project," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.项目结构下面是项目的整体架构图:  下面是项目的具体实现: 该项目是一个纯粹的数据分析项目，其整体流程基本上就是依据数据的处理流程进行，依此有以下几个大的步骤：">
+<meta name="keywords" content="project">
+<meta property="og:type" content="article">
+<meta property="og:title" content="点击流日志离线分析">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/project/log_click_analyze_hive/点击流日志离线分析/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.项目结构下面是项目的整体架构图:  下面是项目的具体实现: 该项目是一个纯粹的数据分析项目，其整体流程基本上就是依据数据的处理流程进行，依此有以下几个大的步骤：">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/project/log_click/structure.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/project/log_click/structure_detail.png">
+<meta property="og:updated_time" content="2017-03-02T08:46:56.908Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="点击流日志离线分析">
+<meta name="twitter:description" content="1.项目结构下面是项目的整体架构图:  下面是项目的具体实现: 该项目是一个纯粹的数据分析项目，其整体流程基本上就是依据数据的处理流程进行，依此有以下几个大的步骤：">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/project/log_click/structure.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/project/log_click_analyze_hive/点击流日志离线分析/"/>
+
+
+
+
+
+  <title> 点击流日志离线分析 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/project/log_click_analyze_hive/点击流日志离线分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                点击流日志离线分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/project/" itemprop="url" rel="index">
+                    <span itemprop="name">project</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-项目结构"><a href="#1-项目结构" class="headerlink" title="1.项目结构"></a>1.项目结构</h1><p>下面是项目的整体架构图:</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/project/log_click/structure.png" alt=""></p>
+<p>下面是项目的具体实现:<br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/project/log_click/structure_detail.png" alt=""></p>
+<p>该项目是一个纯粹的数据分析项目，其整体流程基本上就是依据数据的处理流程进行，依此有以下几个大的步骤：</p>
+<a id="more"></a>
+<h1 id="2-各模块简介"><a href="#2-各模块简介" class="headerlink" title="2.各模块简介"></a>2.各模块简介</h1><h2 id="2-1-数据采集"><a href="#2-1-数据采集" class="headerlink" title="2.1.数据采集"></a>2.1.数据采集</h2><p>首先，通过页面嵌入JS代码的方式获取用户访问行为，并发送到web服务的后台记录日志,然后，将各服务器上生成的点击流日志通过实时或批量的方式汇聚到HDFS文件系统中</p>
+<p>当然，一个综合分析系统，数据源可能不仅包含点击流数据，还有数据库中的业务数据（如用户信息、商品信息、订单信息等）及对分析有益的外部数据。</p>
+<p>一般获取点击流日志的方式有两种:</p>
+<ul>
+<li>通过在页面埋点js,通过ajax发送数据到指定的服务器</li>
+<li>web页面有自己的访问日志,我们只需要拿日志即可</li>
+</ul>
+<p>收集日志文件到HDFS:<br>采用的是flume,flume的使用详见:<a href="http://chenyansong.site/2017/02/28/bigdata/flume/flume%E9%87%87%E9%9B%86%E6%A1%88%E4%BE%8B/" target="_blank" rel="external">flume采集案例</a></p>
+<h2 id="2-2-数据预处理"><a href="#2-2-数据预处理" class="headerlink" title="2.2.数据预处理"></a>2.2.数据预处理</h2><h3 id="2-2-1-过滤校验未通过的数据"><a href="#2-2-1-过滤校验未通过的数据" class="headerlink" title="2.2.1.过滤校验未通过的数据"></a>2.2.1.过滤校验未通过的数据</h3><p>通过mapreduce程序对采集到的点击流数据进行预处理，比如清洗，格式整理，滤除脏数据等</p>
+<ul>
+<li>首先将数据封装成Bean</li>
+<li><p>给封装的Bean加上invalid标记</p>
+<ul>
+<li>字段不够的Bean</li>
+<li>静态js/css/img等</li>
+<li>数据库中会有一张表记录我们要分析的页面,我们需要将表中没有的page页过滤掉</li>
+<li>HTTP错误的页面(如404)</li>
+</ul>
+</li>
+<li><p>发送校验通过的Bean</p>
+<ul>
+<li>发送到下一步的记录(remote_addr, Bean)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-2-2-添加必要的字段"><a href="#2-2-2-添加必要的字段" class="headerlink" title="2.2.2.添加必要的字段"></a>2.2.2.添加必要的字段</h3><p>将一个用户的所有访问记录在reduce中排序</p>
+<ul>
+<li><p>添加session字段<br>比较排序中的两个相邻记录的时间差,如果大于30分钟,则判断session过期,重置session</p>
+</li>
+<li><p>添加step字段<br>在一个session内step是累加的<br>当时间差大于30分钟,session重置,则step=1</p>
+</li>
+</ul>
+<h3 id="2-2-3-合并记录"><a href="#2-2-3-合并记录" class="headerlink" title="2.2.3.合并记录"></a>2.2.3.合并记录</h3><p>同样对相同的session在reduce中排序,添加字段:起始时间,结束时间,进入页面,离开页面,访问页面数量</p>
+<p>预处理之后的页面如下:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">session</th>
+<th style="text-align:center">起始时间</th>
+<th style="text-align:center">结束时间</th>
+<th style="text-align:center">进入页面</th>
+<th style="text-align:center">离开页面</th>
+<th style="text-align:center">访问页面数量</th>
+<th style="text-align:center">IP</th>
+<th style="text-align:center">cookie</th>
+<th style="text-align:center">referal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">s001</td>
+<td style="text-align:center">2012-01-01 12:31:12</td>
+<td style="text-align:center">2012-01-01 12:35:22</td>
+<td style="text-align:center">/a/….</td>
+<td style="text-align:center">/b/xxxx</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">101.0.0.1</td>
+<td style="text-align:center">xxxx</td>
+<td style="text-align:center">somesite.com</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-3-数据入库"><a href="#2-3-数据入库" class="headerlink" title="2.3.数据入库"></a>2.3.数据入库</h2><p>在数据入库之前需要hive建表,然后将预处理之后的数据导入到HIVE仓库中相应的库和表中,建立了如下表:</p>
+<ul>
+<li>贴源表<br>经过过滤之后的数据</li>
+<li>pageview表<br>添加session和step字段的表</li>
+<li>visit表<br>同一个session内,合并了所有访问记录的数据</li>
+<li>明细宽表<br>按维度拆分之后的表(如按时间维度拆分,按url拆分等)</li>
+</ul>
+<h2 id="2-4-数据分析"><a href="#2-4-数据分析" class="headerlink" title="2.4.数据分析"></a>2.4.数据分析</h2><p>项目的核心内容，即根据需求开发ETL分析语句，得出各种统计结果,即写各种维度的hive语句</p>
+<h2 id="2-5-数据展现"><a href="#2-5-数据展现" class="headerlink" title="2.5.数据展现"></a>2.5.数据展现</h2><p>在进行分析之前要先将数据导入到关系型数据库,如mysql,这里用到的导出工具是sqoop<br>最后,将分析所得数据进行可视化,可视化使用的是echarts</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/project/" rel="tag"># project</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/project/log_click_analyze_storm/点击流日志分析/" rel="next" title="点击流日志实时分析">
+                <i class="fa fa-chevron-left"></i> 点击流日志实时分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/订阅和发布相关命令及实例/" rel="prev" title="订阅和发布相关命令及实例">
+                订阅和发布相关命令及实例 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-项目结构"><span class="nav-number">1.</span> <span class="nav-text">1.项目结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-各模块简介"><span class="nav-number">2.</span> <span class="nav-text">2.各模块简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-数据采集"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.数据采集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-数据预处理"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.数据预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-过滤校验未通过的数据"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1.过滤校验未通过的数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-添加必要的字段"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2.添加必要的字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-3-合并记录"><span class="nav-number">2.2.3.</span> <span class="nav-text">2.2.3.合并记录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-数据入库"><span class="nav-number">2.3.</span> <span class="nav-text">2.3.数据入库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-数据分析"><span class="nav-number">2.4.</span> <span class="nav-text">2.4.数据分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-数据展现"><span class="nav-number">2.5.</span> <span class="nav-text">2.5.数据展现</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

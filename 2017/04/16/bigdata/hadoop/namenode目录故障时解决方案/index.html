@@ -1,0 +1,717 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="如果我们人为的将namenode的目录删除,那么该如何处理呢?">
+<meta name="keywords" content="hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="namenode目录故障时解决方案">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/hadoop/namenode目录故障时解决方案/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="如果我们人为的将namenode的目录删除,那么该如何处理呢?">
+<meta property="og:updated_time" content="2017-02-27T05:55:04.765Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="namenode目录故障时解决方案">
+<meta name="twitter:description" content="如果我们人为的将namenode的目录删除,那么该如何处理呢?">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/hadoop/namenode目录故障时解决方案/"/>
+
+
+
+
+
+  <title> namenode目录故障时解决方案 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/hadoop/namenode目录故障时解决方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                namenode目录故障时解决方案
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如果我们人为的将namenode的目录删除,那么该如何处理呢?<br><a id="more"></a></p>
+<p>正常情况下,mk一个目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@hdp-node-01 dfs]# hadoop fs -mkdir /test</div><div class="line">[root@hdp-node-01 dfs]# hadoop fs -ls /</div><div class="line">Found 6 items</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-12-02 08:26 /hbase</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-11-28 10:20 /student</div><div class="line">drwxr-xr-x   - root supergroup          0 2017-02-25 23:52 /test</div><div class="line">drwx-wx-wx   - root supergroup          0 2016-11-28 10:01 /tmp</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-11-27 23:34 /user</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-12-17 21:13 /wordcount</div></pre></td></tr></table></figure></p>
+<p>namenode和SecondaryNameNode的目录确定<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">#namenode的目录</div><div class="line"># cat /home/hadoop/app/hadoop-2.6.4/etc/hadoop/hdfs-site.xml    </div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</div><div class="line">	&lt;value&gt;/home/hadoop/data/name&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#SecondaryNameNode</div><div class="line">&lt;property&gt;</div><div class="line">     &lt;name&gt;dfs.namenode.checkpoint.dir&lt;/name&gt;        #如果没有指定，默认是：file://$&#123;hadoop.tmp.dir&#125;/dfs/namesecondary</div><div class="line">     &lt;value&gt;/home/hadoop/data/namesecondary&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">#如果没有配置,就去看core-site.xml</div><div class="line">#cat ./etc/hadoop/core-site.xml</div><div class="line"></div><div class="line"></div><div class="line">&lt;property&gt;</div><div class="line">        &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;        #存放hdfs的数据目录，这是一个基础的目录，如果会和namenode和datanode以及secondarynamenode的目录相关</div><div class="line">        &lt;value&gt;/home/hadoop/app/hadoop-2.6.4/hadoopdata&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line"></div><div class="line">#此文中我们没有指定SecondaryNameNode的目录,那么就是:$&#123;hadoop.tmp.dir&#125;/dfs/namesecondary</div><div class="line">[root@hdp-node-01 namesecondary]# pwd</div><div class="line">/home/hadoop/app/hadoop-2.6.4/hadoopdata/dfs/namesecondary</div></pre></td></tr></table></figure></p>
+<p>只是将namenode的工作目录删除<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[root@hdp-node-01 data]# pwd</div><div class="line">/home/hadoop/data</div><div class="line">[root@hdp-node-01 data]# ll</div><div class="line">total 12</div><div class="line">drwxr-xr-x 2 root root 4096 Dec 23 23:55 click-data</div><div class="line">drwx------ 3 root root 4096 Feb 25 23:44 data</div><div class="line">drwxr-xr-x 3 root root 4096 Feb 25 23:44 name</div><div class="line"></div><div class="line">[root@hdp-node-01 data]# rm -rf ./name/</div><div class="line">[root@hdp-node-01 data]# ll</div><div class="line">total 8</div><div class="line">drwxr-xr-x 2 root root 4096 Dec 23 23:55 click-data</div><div class="line">drwx------ 3 root root 4096 Feb 25 23:44 data</div></pre></td></tr></table></figure></p>
+<p> 还能正常工作，如下图：因为读取的是内存的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@hdp-node-01 data]# hadoop fs -ls /</div><div class="line">Found 6 items</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-12-02 08:26 /hbase</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-11-28 10:20 /student</div><div class="line">drwxr-xr-x   - root supergroup          0 2017-02-25 23:52 /test</div><div class="line">drwx-wx-wx   - root supergroup          0 2016-11-28 10:01 /tmp</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-11-27 23:34 /user</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-12-17 21:13 /wordcount</div><div class="line">[root@hdp-node-01 data]#</div></pre></td></tr></table></figure>
+<p>kill掉namenode进程后,重新启动它,发现起不来了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">[root@hdp-node-01 data]# jps</div><div class="line">1117 NameNode</div><div class="line">1220 DataNode</div><div class="line">1350 SecondaryNameNode</div><div class="line">1774 Jps</div><div class="line">[root@hdp-node-01 data]# kill -9 1117</div><div class="line">[root@hdp-node-01 data]# jps</div><div class="line">1220 DataNode</div><div class="line">1350 SecondaryNameNode</div><div class="line">1786 Jps</div><div class="line">[root@hdp-node-01 data]# hadoop-daemon.sh start namenode</div><div class="line">starting namenode, logging to /home/hadoop/app/hadoop-2.6.4/logs/hadoop-root-namenode-hdp-node-01.out</div><div class="line">[root@hdp-node-01 data]# jps</div><div class="line">1220 DataNode</div><div class="line">1350 SecondaryNameNode</div><div class="line">1861 Jps</div><div class="line"></div><div class="line">#执行命令</div><div class="line">[root@hdp-node-01 data]# hadoop fs -ls /</div><div class="line">ls: Call From hdp-node-01/192.168.0.11 to hdp-node-01:9000 failed on connection exception: java.net.ConnectException: Connection refused; For more details see:  http://wiki.apache.org/hadoop/ConnectionRefused</div></pre></td></tr></table></figure></p>
+<p>cp拷贝恢复：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@hdp-node-01 dfs]# pwd</div><div class="line">/home/hadoop/app/hadoop-2.6.4/hadoopdata/dfs</div><div class="line"></div><div class="line">[root@hdp-node-01 dfs]# cp -r ./namesecondary/ /home/hadoop/data/name</div><div class="line">[root@hdp-node-01 dfs]# ll /home/hadoop/data/name/</div><div class="line">total 8</div><div class="line">drwxr-xr-x 2 root root 4096 Feb 26 00:13 current</div><div class="line">-rw-r--r-- 1 root root   16 Feb 26 00:13 in_use.lock</div><div class="line">[root@hdp-node-01 dfs]#</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@hdp-node-01 dfs]# hadoop-daemon.sh start namenode</div><div class="line">starting namenode, logging to /home/hadoop/app/hadoop-2.6.4/logs/hadoop-root-namenode-hdp-node-01.out</div><div class="line">[root@hdp-node-01 dfs]# jps</div><div class="line">1927 NameNode</div><div class="line">1220 DataNode</div><div class="line">1995 Jps</div><div class="line">1350 SecondaryNameNode</div><div class="line">[root@hdp-node-01 dfs]#</div></pre></td></tr></table></figure>
+<p>查看数据是否完整<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#执行命令</div><div class="line">[root@hdp-node-01 dfs]# hadoop fs -ls /</div><div class="line">Found 3 items</div><div class="line">-rw-r--r--   3 root supergroup        258 2016-11-18 19:11 /hosts</div><div class="line">-rw-r--r--   3 root supergroup       2025 2016-11-19 23:00 /profile</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-11-19 23:01 /test</div><div class="line"></div><div class="line">#其实有数据的丢失,通过比较上面的ls /的目录就知道</div></pre></td></tr></table></figure></p>
+<p>这里的恢复只能是恢复到secondarynamenode 中存在的镜像位置，如果对于没有从edits中合并到secondarynamenode 的部分是无法恢复的</p>
+<p>为了避免namenode数据损坏，将namenode的工作目录放在多个磁盘上，如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</div><div class="line">	&lt;value&gt;/home/hadoop/data/name1,/home/hadoop/data/name2&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/reduce端join算法实现/" rel="next" title="reduce端join算法实现">
+                <i class="fa fa-chevron-left"></i> reduce端join算法实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/namenode工作机制/" rel="prev" title="namenode工作机制">
+                namenode工作机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

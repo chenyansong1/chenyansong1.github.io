@@ -1,0 +1,836 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="echarts," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="下面是对axis(轴)的一些常用选项的介绍">
+<meta name="keywords" content="echarts">
+<meta property="og:type" content="article">
+<meta property="og:title" content="直角坐标系之axis(xAsix/yAxis)">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/echarts/直角坐标系之axis(xAsix和yAxis)/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="下面是对axis(轴)的一些常用选项的介绍">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_type.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_position.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_name.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_nameLocation.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_nameGap.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_boundaryGap.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_boundaryGap_2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_min.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_min_2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_scale.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_scale_2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_splitNumber.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_data.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_data_2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_axixLine.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_axixLine_zero.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_axixLine_zero_2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_axixLine_style.png">
+<meta property="og:updated_time" content="2017-03-09T12:54:40.070Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="直角坐标系之axis(xAsix/yAxis)">
+<meta name="twitter:description" content="下面是对axis(轴)的一些常用选项的介绍">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_type.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/echarts/直角坐标系之axis(xAsix和yAxis)/"/>
+
+
+
+
+
+  <title> 直角坐标系之axis(xAsix/yAxis) | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/echarts/直角坐标系之axis(xAsix和yAxis)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                直角坐标系之axis(xAsix/yAxis)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/echarts/" itemprop="url" rel="index">
+                    <span itemprop="name">echarts</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>下面是对axis(轴)的一些常用选项的介绍<br><a id="more"></a></p>
+<hr>
+<p>axis.type | string  :坐标轴类型<br>[ default: ‘value’ ]</p>
+<p>可选：  </p>
+<ul>
+<li>‘value’ 数值轴，适用于连续数据。</li>
+<li>‘category’ 类目轴，适用于离散的类目数据，为该类型时必须通过 data 设置类目数据。</li>
+<li>‘time’ 时间轴，适用于连续的时序数据，与数值轴相比时间轴带有时间的格式化，在刻度计算上也有所不同，例如会根据跨度的范围来决定使用月，星期，日还是小时范围的刻度。</li>
+<li>‘log’ 对数轴。适用于对数数据。</li>
+</ul>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_type.png" alt=""></p>
+<hr>
+<p>axis.position | string :x/y轴的位置<br>默认 grid 中的第一个 y 轴在 grid 的左侧（’left’），第二个 y 轴视第一个 y 轴的位置放在另一侧。</p>
+<p>可选：</p>
+<ul>
+<li>‘left’</li>
+<li>‘right’</li>
+</ul>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_position.png" alt=""></p>
+<hr>
+<p>axis.name | string  : 坐标轴名称。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_name.png" alt=""></p>
+<hr>
+<p>axis.nameLocation | string : 坐标轴名称显示位置<br>[ default: ‘end’ ]</p>
+<p>可选：</p>
+<ul>
+<li>‘start’</li>
+<li>‘middle’</li>
+<li>‘end’</li>
+</ul>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_nameLocation.png" alt=""></h2><p>axis.nameTextStyle | Object : 坐标轴名称的文字样式</p>
+<p>nameTextStyle:{<br>    color:…,//坐标轴名称的颜色<br>    fontStyle:..,//坐标轴名称的文字字体风格<br>    //….<br>}</p>
+<hr>
+<p>axis.nameGap | number : 坐标轴名称与轴线之间的距离<br>[ default: 15 ]</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_nameGap.png" alt=""></p>
+<hr>
+<p>axis.boundaryGap | boolean, Array : 坐标轴两边留白策略，类目轴和非类目轴的设置和表现不一样</p>
+<p>类目轴中 boundaryGap 可以配置为 true 和 false。默认为 true，这时候刻度只是作为分隔线，标签和数据点都会在两个刻度之间的带(band)中间。<br>非类目轴，包括时间，数值，对数轴，boundaryGap是一个两个值的数组，分别表示数据最小值和最大值的延伸范围，可以直接设置数值或者相对的百分比，在设置 min 和 max 后无效。 示例：</p>
+<p><strong>类目轴</strong><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_boundaryGap.png" alt=""></p>
+<p>对于boundaryGap，对于柱形图(类目轴)是比较有用的，柱形图和y轴之间留出空白，这样会比较的好看。</p>
+<p><strong>非类目轴</strong><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_boundaryGap_2.png" alt=""></p>
+<hr>
+<p>axis.min | number, string  : 坐标轴刻度最小值<br>[ default: ‘auto’ ]</p>
+<p>可以设置成特殊值 ‘dataMin’，此时取数据在该轴上的最小值作为最小刻度。<br>不设置时会自动计算最小值保证坐标轴刻度的均匀分布。<br>在类目轴中，也可以设置为类目的序数（如类目轴 data: [‘类A’, ‘类B’, ‘类C’] 中，序数 2 表示 ‘类C’。也可以设置为负数，如 -3）。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_min.png" alt=""></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_min_2.png" alt=""></p>
+<hr>
+<p>axis.max | number, string : [ default: ‘auto’ ]<br>坐标轴刻度最大值。<br>可以设置成特殊值 ‘dataMax’，此时取数据在该轴上的最大值作为最大刻度。<br>不设置时会自动计算最大值保证坐标轴刻度的均匀分布。<br>在类目轴中，也可以设置为类目的序数（如类目轴 data: [‘类A’, ‘类B’, ‘类C’] 中，序数 2 表示 ‘类C’。也可以设置为负数，如 -3）。</p>
+<hr>
+<p>axis.scale | boolean<br>[ default: false ]</p>
+<p>只在数值轴中（type: ‘value’）有效。<br>是否是脱离 0 值比例。设置成 true 后坐标刻度不会强制包含零刻度。在双数值轴的散点图中比较有用。<br>在设置 min 和 max 之后该配置项无效。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_scale.png" alt=""></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_scale_2.png" alt=""></p>
+<hr>
+<p>axis.splitNumber | number : 坐标轴的分割段数<br>[ default: 5 ]</p>
+<p>需要注意的是这个分割段数只是个预估值，最后实际显示的段数会在这个基础上根据分割后坐标轴刻度显示的易读程度作调整。<br>在类目轴中无效。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_splitNumber.png" alt=""></p>
+<hr>
+<p>aAxis.data[i] Object<br>类目数据，在类目轴（type: ‘category’）中有效。<br>示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// 所有类目名称列表</div><div class="line">data: [&apos;周一&apos;, &apos;周二&apos;, &apos;周三&apos;, &apos;周四&apos;, &apos;周五&apos;, &apos;周六&apos;, &apos;周日&apos;]</div><div class="line">// 每一项也可以是具体的配置项，此时取配置项中的 `value` 为类目名</div><div class="line">data: [&#123;</div><div class="line">    value: &apos;周一&apos;,</div><div class="line">    // 突出周一</div><div class="line">    textStyle: &#123;</div><div class="line">        fontSize: 20,</div><div class="line">        color: &apos;red&apos;</div><div class="line">    &#125;</div><div class="line">&#125;, &apos;周二&apos;, &apos;周三&apos;, &apos;周四&apos;, &apos;周五&apos;, &apos;周六&apos;, &apos;周日&apos;]</div></pre></td></tr></table></figure></p>
+<p>yAxis.data[i].value | string : 单个类目名称</p>
+<p>yAxis.data[i].textStyle | Object : 类目标签的文字样式</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_data.png" alt=""></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_data_2.png" alt=""></p>
+<hr>
+<p>axis.axisLine | Object : 坐标轴轴线相关设置。</p>
+<p>axis.axisLine.show | boolean : 是否显示坐标轴轴线<br>[ default: true ]<br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_axixLine.png" alt=""></p>
+<p>axis.axisLine.onZero | boolean :<br>[ default: true ]<br>X 轴或者 Y 轴的轴线是否在另一个轴的 0 刻度上，只有在另一个轴为数值轴且包含 0 刻度时有效。<br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_axixLine_zero.png" alt=""></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_axixLine_zero_2.png" alt=""></p>
+<p>axis.axisLine.lineStyle | Object</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/axis/axis_axixLine_style.png" alt=""></p>
+<hr>
+<p>axis.Tick</p>
+<p>axis.Tick.interval</p>
+<hr>
+<p>axisLable</p>
+<hr>
+<p>axisLable.interval</p>
+<hr>
+<p>axisLable.rotate</p>
+<hr>
+<p>axisLable.margn</p>
+<hr>
+<p>axisLable.formatter/textStyle</p>
+<hr>
+<p>splitLine</p>
+<hr>
+<p>splitArea</p>
+<hr>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/echarts/" rel="tag"># echarts</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/functionalProgrammingInScala/第一章 什么是函数式编程/" rel="next" title="第一章 什么是函数式编程">
+                <i class="fa fa-chevron-left"></i> 第一章 什么是函数式编程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/echarts/echarts上各部分组件图解/" rel="prev" title="echarts上各部分组件图解">
+                echarts上各部分组件图解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">1.</span> <span class="nav-text"></span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

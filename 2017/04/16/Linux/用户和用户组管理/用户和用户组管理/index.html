@@ -1,0 +1,964 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="linux," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.用户配置文件1.1.用户信息文件/etc/passwd123[root@lamp01 ~]# cat /etc/passwdroot:x:0:0:root:/root:/bin/bashchenyansong:x:500:500::/home/chenyansong:/bin/bash    root :x :0 :0 :root :/root :/bin/bash     账号名称 :账号密">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用户和用户组管理">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/Linux/用户和用户组管理/用户和用户组管理/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.用户配置文件1.1.用户信息文件/etc/passwd123[root@lamp01 ~]# cat /etc/passwdroot:x:0:0:root:/root:/bin/bashchenyansong:x:500:500::/home/chenyansong:/bin/bash    root :x :0 :0 :root :/root :/bin/bash     账号名称 :账号密">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/usermanager/1.png">
+<meta property="og:updated_time" content="2017-02-24T17:09:32.550Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用户和用户组管理">
+<meta name="twitter:description" content="1.用户配置文件1.1.用户信息文件/etc/passwd123[root@lamp01 ~]# cat /etc/passwdroot:x:0:0:root:/root:/bin/bashchenyansong:x:500:500::/home/chenyansong:/bin/bash    root :x :0 :0 :root :/root :/bin/bash     账号名称 :账号密">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/usermanager/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/Linux/用户和用户组管理/用户和用户组管理/"/>
+
+
+
+
+
+  <title> 用户和用户组管理 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/Linux/用户和用户组管理/用户和用户组管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                用户和用户组管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-用户配置文件"><a href="#1-用户配置文件" class="headerlink" title="1.用户配置文件"></a>1.用户配置文件</h1><h2 id="1-1-用户信息文件-etc-passwd"><a href="#1-1-用户信息文件-etc-passwd" class="headerlink" title="1.1.用户信息文件/etc/passwd"></a>1.1.用户信息文件/etc/passwd</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# cat /etc/passwd</div><div class="line">root:x:0:0:root:/root:/bin/bash</div><div class="line">chenyansong:x:500:500::/home/chenyansong:/bin/bash</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>root</th>
+<th>:x</th>
+<th>:0</th>
+<th>:0</th>
+<th>:root</th>
+<th>:/root</th>
+<th>:/bin/bash</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>账号名称</td>
+<td>:账号密码</td>
+<td>:账号UID</td>
+<td>:账号组GID</td>
+<td>:用户说明</td>
+<td>:用户家目录</td>
+<td>:shell解释</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-1-1-各个字段说明"><a href="#1-1-1-各个字段说明" class="headerlink" title="1.1.1.各个字段说明"></a>1.1.1.各个字段说明</h3><ul>
+<li><p>UID(相当于身份证),GID（相当于家庭或者学校）：<br>超级用户：0 ，超级用户的用户名不一定就是root，但是只要UId的是0的用户就一定是超级用户。<br>系统用户（伪用户）：0-499  ，作用：<font color="red">满足文件或程序运行的需要</font>，而创建的，不能登录，不能使用<br>普通用户：500-65535<br>注意：安装系统后可以删除用不到的伪用户，但是<font color="red">最好不删而是注释掉</font>，我们在自己部属服务的时候，也会创建伪用户，<br>满足服务的需求，例如：apache,nginx,mysql,nfs,rsync,nagios.zabbix,redis.</p>
+</li>
+<li><p>用户家目录：当我们创建一个用户的时候，会默认在home（root除外）下创建一个以用户名命名的家目录</p>
+</li>
+<li>shell解释器：<font color="red">伪用户之所以不能登录，就是因为结尾以nologin结束</font>，如下:<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="1-1-2初始组和附加组"><a href="#1-1-2初始组和附加组" class="headerlink" title="1.1.2初始组和附加组"></a>1.1.2初始组和附加组</h3><ul>
+<li>初始组：指用户一登录立刻拥有这个用户组 的相关权限，每个用户的初始组只能有一个，一般就是和这个用户的用户名相同的组名作为这个用户的初始组。</li>
+<li>附加组：指用户可以加入多个其他的用户组，并拥有这些组的权限，附加组可以有多个。</li>
+</ul>
+<h2 id="1-2-影子文件-etc-shadow"><a href="#1-2-影子文件-etc-shadow" class="headerlink" title="1.2 影子文件/etc/shadow"></a>1.2 影子文件/etc/shadow</h2><p>&emsp;加密密码：如果密码是“!!”或“*”代表没有秘密，不能登录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">root:$6$z88R0.1iC2cYCAxW$PBtFGnl.via1K548GD.7maVCCiPAhCps.1TqI1furgoEM9da9FLfhMPCt2/iq.rv2qv/6M0qMaPjVRlfjdKfu/:16985:0:99999:7:::</div><div class="line">tcpdump:!!:16985::::::</div><div class="line">chenyansong:$6$hcQOHdN.$TUZ.b5ttQvpX1dhkWClz6FxStVLPX6gnHpDGzuyDHvUOuxcEWL0kQi5cP7JQX.UHv4KxgORBBTfk9.QjIUyna1:17001:0:99999:7:::</div></pre></td></tr></table></figure>
+<p>&emsp;shadow文件中一行的各个字段详细说明</p>
+<table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>注释说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>账号名称</td>
+<td>用户的账号名称</td>
+</tr>
+<tr>
+<td>账号密码</td>
+<td>用户密码,这是加密过的口令</td>
+</tr>
+<tr>
+<td>最近更改密码的时间</td>
+<td>从1970年1月1日起,到用户最近一次更改口令的天数</td>
+</tr>
+<tr>
+<td>禁止修改密码的天数</td>
+<td>从1970年1月1日起,到用户可以更改可以更改密码的天数</td>
+</tr>
+<tr>
+<td>用户必须更改口令 的天数</td>
+<td>从1970年1月1日起,到用户必须更改密码的天数</td>
+</tr>
+<tr>
+<td>不活动时间</td>
+<td>在用户密码过期之后到禁用账户的天数</td>
+</tr>
+<tr>
+<td>失效天数</td>
+<td>从1970年1月1日起,到用户被禁用的天数</td>
+</tr>
+<tr>
+<td>标志</td>
+<td>保留</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-3组信息文件-etc-group-和密码组文件-etc-gshadow"><a href="#1-3组信息文件-etc-group-和密码组文件-etc-gshadow" class="headerlink" title="1.3组信息文件/etc/group 和密码组文件/etc/gshadow"></a>1.3组信息文件/etc/group 和密码组文件/etc/gshadow</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">student_team:x:502:chenyansong,zhangsan</div><div class="line">组名:组密码标志:GID:组中附加用户</div></pre></td></tr></table></figure>
+<p>&emsp;group文件中一行的各个字段详细说明</p>
+<table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>注释说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户组名</td>
+<td>该组的名称</td>
+</tr>
+<tr>
+<td>用户组密码</td>
+<td>通常不需要设置该密码,由于安全原因,该密码被记录在/etc/gshadow中,因此,显示为”x”,这类似/etc/shadow</td>
+</tr>
+<tr>
+<td>GID</td>
+<td>就是用户组的ID</td>
+</tr>
+<tr>
+<td>用户组成员</td>
+<td>加入这个组的所有用户账号</td>
+</tr>
+</tbody>
+</table>
+<p>&emsp;gshadow文件中一行的各个字段详细说明</p>
+<table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>注释说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户组名</td>
+<td>该组的名称</td>
+</tr>
+<tr>
+<td>用户组密码</td>
+<td>用户组密码,这个字段可以是空的或!,如果是空的或!,表示没有密码</td>
+</tr>
+<tr>
+<td>用户组管理员账号</td>
+<td>用户组管理者,这个字段也可以为空,如果有多个用户组管理者,用逗号分隔</td>
+</tr>
+<tr>
+<td>用户组成员</td>
+<td>加入这个组的所有用户账号,列表中多个用户通过逗号分隔</td>
+</tr>
+</tbody>
+</table>
+<h1 id="2-用户管理命令"><a href="#2-用户管理命令" class="headerlink" title="2.用户管理命令"></a>2.用户管理命令</h1><h2 id="2-1-用户添加命令useradd"><a href="#2-1-用户添加命令useradd" class="headerlink" title="2.1.用户添加命令useradd"></a>2.1.用户添加命令useradd</h2><h3 id="2-1-1-useradd-c-添加说明"><a href="#2-1-1-useradd-c-添加说明" class="headerlink" title="2.1.1 useradd -c 添加说明"></a>2.1.1 useradd -c 添加说明</h3><p>–comment<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# useradd -c shoumingWenzi test_comment</div><div class="line">[root@lamp01 ~]# cat /etc/passwd|grep test_comm</div><div class="line">test_comment:x:510:511:shoumingWenzi:/home/test_comment:/bin/bash</div></pre></td></tr></table></figure></p>
+<h3 id="2-1-2-useradd-d-指定家目录"><a href="#2-1-2-useradd-d-指定家目录" class="headerlink" title="2.1.2 useradd -d 指定家目录"></a>2.1.2 useradd -d 指定家目录</h3><p>–home_dir 如果不存在,就帮你创建家目录,默认是在/home下创建与用户名同名的家目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# useradd test_home_dir -d /tmp/chenyansong</div><div class="line"></div><div class="line">[root@lamp01 ~]# grep test_home_dir /etc/passwd</div><div class="line">test_home_dir:x:511:512::/tmp/chenyansong:/bin/bash</div><div class="line"></div><div class="line">[root@lamp01 ~]# su - test_home_dir</div><div class="line">[test_home_dir@lamp01 ~]$ pwd    </div><div class="line">/tmp/chenyansong        #用户登录时,默认是进入到该用户的家目录下</div></pre></td></tr></table></figure></p>
+<h3 id="2-1-3-useradd-e-账号过期日期"><a href="#2-1-3-useradd-e-账号过期日期" class="headerlink" title="2.1.3 useradd -e 账号过期日期"></a>2.1.3 useradd -e 账号过期日期</h3><table>
+<thead>
+<tr>
+<th>-e expire_date</th>
+<th>账号终止日期,日期的格式为MM/DD/YY</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">useradd -e &apos;2016/07/21&apos; chenyansong</div></pre></td></tr></table></figure>
+<h3 id="2-1-4-useradd-g-useradd-G"><a href="#2-1-4-useradd-g-useradd-G" class="headerlink" title="2.1.4.useradd -g / useradd -G"></a>2.1.4.useradd -g / useradd -G</h3><ul>
+<li>-g 添加初始组，只有一个</li>
+<li>-G 添加附加组，可以有多个</li>
+</ul>
+<h3 id="2-1-5-useradd-M-不创建家目录"><a href="#2-1-5-useradd-M-不创建家目录" class="headerlink" title="2.1.5.useradd -M 不创建家目录"></a>2.1.5.useradd -M 不创建家目录</h3><p>&emsp;不创建家目录，优先于/etc/login.defs 文件的设定，一般创建虚拟用户时不建立家目录，部属服务时需要创建虚拟用户</p>
+<h3 id="2-1-6-useradd-s-shell"><a href="#2-1-6-useradd-s-shell" class="headerlink" title="2.1.6.useradd -s shell"></a>2.1.6.useradd -s shell</h3><p>&emsp;用户登录后使用的shell名称，默认值为不填写，这样系统会帮你指定预设的登入shell，（根据/etc/default/useradd 预设值）</p>
+<h3 id="2-1-7-useradd-u-uid"><a href="#2-1-7-useradd-u-uid" class="headerlink" title="2.1.7 useradd -u  uid"></a>2.1.7 useradd -u  uid</h3><p>&emsp;指定用户的uid 值，这个值必须要唯一，除非用-o选项，数字不可为负值</p>
+<h2 id="2-2-添加用户组-groupadd"><a href="#2-2-添加用户组-groupadd" class="headerlink" title="2.2.添加用户组 groupadd"></a>2.2.添加用户组 groupadd</h2><h3 id="2-2-1-和groupadd-命令有关的文件"><a href="#2-2-1-和groupadd-命令有关的文件" class="headerlink" title="2.2.1 和groupadd 命令有关的文件"></a>2.2.1 和groupadd 命令有关的文件</h3><ul>
+<li>/etc/group  -用户组相关文件</li>
+<li>/etc/gshadow  -用户组密码相关文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# grep test_g /etc/group</div><div class="line">test_g:x:514:</div><div class="line">[root@lamp01 ~]# grep test_g /etc/gshadow</div><div class="line">test_g:!::</div></pre></td></tr></table></figure>
+<h3 id="2-2-2-groupadd-语法"><a href="#2-2-2-groupadd-语法" class="headerlink" title="2.2.2 groupadd 语法"></a>2.2.2 groupadd 语法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">groupadd groupname -g GID</div><div class="line">groupadd incahome -g 506</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>-g gid</th>
+<th>指定用户组GID值,除非接-o参数,否则ID值必须是唯一的数字(不能为负数),如果不指定会从500开始</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-3-修改用户密码passwd"><a href="#2-3-修改用户密码passwd" class="headerlink" title="2.3.修改用户密码passwd"></a>2.3.修改用户密码passwd</h2><p>&emsp;通用户和超级用户都可以运行passwd命令，但是普通用户只能更改自身的用户密码，root用户则可以修改或设置所有用户的密码。当直接执行passwd命令侯曼不接任何参数或用户名时，则表示修改当前登录用户。普通用户修改密码必须遵守密码的复杂性原则.</p>
+<h3 id="2-3-1-passwd一些常用参数"><a href="#2-3-1-passwd一些常用参数" class="headerlink" title="2.3.1.passwd一些常用参数"></a>2.3.1.passwd一些常用参数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">passwd -x ：--maximun=days(maximun passwd lifetime(root only))两次密码修改的最大天数，后面接数字；仅root权限操作</div><div class="line">passwd -n ：--minimun=days 两次修改密码的最小天数，后面接数字，仅限root权限</div><div class="line">passwd -w ：-warning=days 在距离多少天提醒用户修改密码，仅限root权限</div><div class="line">passwd -i ：--inactive=days 在密码过期后多少天，用户被禁掉，仅限root权限</div><div class="line">passwd -l ：--lock 锁住用户，使其无法登陆，仅限root权限（其实就是在shadow中的密码字符串前加入！！，那么用户就不能登录）</div><div class="line">passwd -u ：--unclock解除锁定</div><div class="line">passwd -k ：--keep-tokens 保留即将过期的用户在期满或仍能使用</div><div class="line">passwd -d ：--delete 删除用户密码</div><div class="line">passwd -stdin ：--stdin （read new tokens from stdin (root only)）从stdin 读入密码</div><div class="line"></div><div class="line">passwd -S 查看密码状态</div><div class="line"></div><div class="line">[root@linux-study ~]# passwd -S chenyansong4</div><div class="line">chenyansong4 PS 2016-07-20 0 99999 7 -1 (密码已设置，使用 SHA512 加密。)</div><div class="line">##密码设定时间（2016-07-20） 密码修改间隔时间（0） 密码有效期（99999）警告时间（7）密码不失效（-1）</div><div class="line"></div><div class="line">- - stdin 是接受前面echo的输入</div><div class="line">[root@lamp01 ~]# echo 123|passwd --stdin test_home_dir</div><div class="line">更改用户 test_home_dir 的密码 。</div><div class="line">passwd： 所有的身份验证令牌已经成功更新</div><div class="line"></div><div class="line">#或者密码来自一个文件</div><div class="line">passwd --stdin oldboy &lt;p.log</div></pre></td></tr></table></figure>
+<h3 id="2-3-2-举例"><a href="#2-3-2-举例" class="headerlink" title="2.3.2.举例"></a>2.3.2.举例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"># 要求:oldboy用户7天内不能更改密码,60天以后必须修改密码,过期前10天提醒用户,过期30天后禁止用户登录</div><div class="line">[root@lamp01 ~]# passwd -n 7 -x 60 -w 10 -i 30 oldboy</div><div class="line">调整用户密码老化数据oldboy。</div><div class="line">passwd: 操作成功</div><div class="line"></div><div class="line">#查看用户的过期时间</div><div class="line">[root@lamp01 ~]# chage -l oldboy</div><div class="line">Last password change                                    : Feb 11, 2017</div><div class="line">Password expires                                        : Apr 12, 2017</div><div class="line">Password inactive                                       : May 12, 2017</div><div class="line">Account expires                                         : never</div><div class="line">Minimum number of days between password change          : 7</div><div class="line">Maximum number of days between password change          : 60</div><div class="line">Number of days of warning before password expires       : 10</div><div class="line"></div><div class="line"></div><div class="line">#注意：普通用户可以修改自己的密码，而管理员可以更改任何用户的密码，但是普通用户的密码命名规则必须是8位以上含有数字字母和其他字符的，但是管理员可以不必。</div><div class="line"> </div><div class="line">#在普通用户下，修改自己的密码：</div><div class="line">[lingzhiling@localhost ~]$ passwd</div><div class="line">更改用户 lingzhiling 的密码 。</div><div class="line">为 lingzhiling 更改 STRESS 密码。</div><div class="line">（当前）UNIX 密码：</div><div class="line">新的 密码：</div><div class="line">无效的密码： 过短</div><div class="line">新的 密码：</div><div class="line">重新输入新的 密码：</div><div class="line">passwd： 所有的身份验证令牌已经成功更新。</div></pre></td></tr></table></figure>
+<h2 id="2-4-修改用户信息usermod"><a href="#2-4-修改用户信息usermod" class="headerlink" title="2.4.修改用户信息usermod"></a>2.4.修改用户信息usermod</h2><h3 id="2-4-1-参数列表"><a href="#2-4-1-参数列表" class="headerlink" title="2.4.1.参数列表"></a>2.4.1.参数列表</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">usermod 的大多数参数和useradd相同</div><div class="line">-c comment;</div><div class="line">-d home_dir;</div><div class="line">-e expire_date;</div><div class="line">-f inactive_days ; 账号过期几日后永久过期停权</div><div class="line">-G 附加组</div><div class="line">-g 初始组</div><div class="line">-s 指定新登入的shell</div><div class="line">-u 指定uid（唯一，非负数）</div><div class="line">-L 冻结账户的密码，使之无法登录</div><div class="line">-U 解冻</div><div class="line">-l log_name;变更用户登录时的名称为log_name</div><div class="line"></div><div class="line">#例子</div><div class="line">usermod -c OOldBoy -u 1806 -G root -s /bin/tcsh -d /tmp/oldboy7 oldboy</div></pre></td></tr></table></figure>
+<h2 id="2-5-查看、更改用户密码信息（chage）"><a href="#2-5-查看、更改用户密码信息（chage）" class="headerlink" title="2.5.查看、更改用户密码信息（chage）"></a>2.5.查看、更改用户密码信息（chage）</h2><h3 id="2-5-1-chage-l-zhangsan-列表"><a href="#2-5-1-chage-l-zhangsan-列表" class="headerlink" title="2.5.1.chage -l zhangsan 列表"></a>2.5.1.chage -l zhangsan 列表</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@lamp01 ~]# chage -l oldboy</div><div class="line">Last password change                                    : Feb 11, 2017    #上次密码修改时间</div><div class="line">Password expires                                        : Apr 12, 2017    #密码过期时间</div><div class="line">Password inactive                                       : May 12, 2017    #密码过期后到禁用账户的天数</div><div class="line">Account expires                                         : never    #账户过期时间</div><div class="line">Minimum number of days between password change          : 7        #禁止修改密码的天数</div><div class="line">Maximum number of days between password change          : 60    #必须修改密码的天数</div><div class="line">Number of days of warning before password expires       : 10    #在密码过期多少天之前提醒</div></pre></td></tr></table></figure>
+<h3 id="2-5-2-参数含义"><a href="#2-5-2-参数含义" class="headerlink" title="2.5.2.参数含义"></a>2.5.2.参数含义</h3><table>
+<thead>
+<tr>
+<th>选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-l</td>
+<td>列出用户的详细密码状态</td>
+</tr>
+<tr>
+<td>-d  日期</td>
+<td>修改密码最后一次更改日期</td>
+</tr>
+<tr>
+<td>-m 天数</td>
+<td>两次密码修改时间</td>
+</tr>
+<tr>
+<td>-M 天数</td>
+<td>密码有效期</td>
+</tr>
+<tr>
+<td>-W 天数</td>
+<td>密码过期前警告天数</td>
+</tr>
+<tr>
+<td>-I 天数</td>
+<td>密码过后宽限天数</td>
+</tr>
+<tr>
+<td>-E 日期</td>
+<td>账号失效时间</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">chage -d 0 lamp</div><div class="line">#这个命令其实是把密码修改日期归0了,这样用户一登录就要修改密码</div></pre></td></tr></table></figure>
+<blockquote>
+<p>案例</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># 要求oldboy用户7天内不能更改密码,60天以后必须修改密码,过期前10天提醒用户,过期30天后禁止用户登录</div><div class="line">chage -m7 -M60 -W10 -I30 oldboy</div><div class="line">chage -m 7 -M 60 -W 10 -I 30 oldboy</div></pre></td></tr></table></figure>
+<h2 id="2-6-删除用户userdel"><a href="#2-6-删除用户userdel" class="headerlink" title="2.6.删除用户userdel"></a>2.6.删除用户userdel</h2><h3 id="2-6-1-语法"><a href="#2-6-1-语法" class="headerlink" title="2.6.1.语法"></a>2.6.1.语法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">useradd [-r] 用户名        # -r删除用户的同时删除用户家目录</div></pre></td></tr></table></figure>
+<p>&emsp;另外一个手工删除用户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">vim /etc/passwd</div><div class="line">vim /etc/shadow</div><div class="line">vim /etc/group</div><div class="line">vim /etc/gshadow</div><div class="line">rm -rf /var/spool/mail/lamp</div><div class="line">rm -rf /home/lamp    #家目录</div><div class="line"></div><div class="line">#总结：在生产场景中，请不要轻易用-r参数，这会在删除用户的同时删除用户家目录下的所有文件和目录，如果非要删除家目录，当家目录下有重要的文件时，那么删除之前请先备份文件。另外一种方式：将passwd中相关用户的行注释，或者锁定密码，或者让账号过期等方式</div></pre></td></tr></table></figure></p>
+<h2 id="2-7-groupdel-删除用户"><a href="#2-7-groupdel-删除用户" class="headerlink" title="2.7.groupdel 删除用户"></a>2.7.groupdel 删除用户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">groupdel chenyansong</div></pre></td></tr></table></figure>
+<h2 id="2-8-groupmod-修改用户组"><a href="#2-8-groupmod-修改用户组" class="headerlink" title="2.8.groupmod 修改用户组"></a>2.8.groupmod 修改用户组</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">groupmod [选项] 组名</div><div class="line">选项:</div><div class="line">    -g GID          修改组ID</div><div class="line">    -n 新组名    修改组名</div><div class="line"></div><div class="line">groupmod -n testgrp group1</div><div class="line">#把组名group1修改为testgrp</div></pre></td></tr></table></figure>
+<h2 id="2-9-向组中添加用户，删除组中用户"><a href="#2-9-向组中添加用户，删除组中用户" class="headerlink" title="2.9.向组中添加用户，删除组中用户"></a>2.9.向组中添加用户，删除组中用户</h2><p>&emsp;如果删除的组中有初始用户，那么该组就不能删除，而如果组中只是附加用户，这个组是可以删除的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">gpasswd 选项 组名</div><div class="line">选项:</div><div class="line">    -a 用户名 : 把用户加入组</div><div class="line">    -d 用户名  : 把用户从组中删除</div></pre></td></tr></table></figure></p>
+<h1 id="3-用户组示意图"><a href="#3-用户组示意图" class="headerlink" title="3.用户组示意图"></a>3.用户组示意图</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/usermanager/1.png" alt="用户组示意图" title="用户组示意图"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/Linux/磁盘/磁盘inode图/" rel="next" title="磁盘inode原理">
+                <i class="fa fa-chevron-left"></i> 磁盘inode原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/Linux/正则表达式/正则表达式/" rel="prev" title="正则表达式">
+                正则表达式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-用户配置文件"><span class="nav-number">1.</span> <span class="nav-text">1.用户配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-用户信息文件-etc-passwd"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.用户信息文件/etc/passwd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-1-各个字段说明"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1.1.各个字段说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-2初始组和附加组"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.1.2初始组和附加组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-影子文件-etc-shadow"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 影子文件/etc/shadow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3组信息文件-etc-group-和密码组文件-etc-gshadow"><span class="nav-number">1.3.</span> <span class="nav-text">1.3组信息文件/etc/group 和密码组文件/etc/gshadow</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-用户管理命令"><span class="nav-number">2.</span> <span class="nav-text">2.用户管理命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-用户添加命令useradd"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.用户添加命令useradd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-useradd-c-添加说明"><span class="nav-number">2.1.1.</span> <span class="nav-text">2.1.1 useradd -c 添加说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-2-useradd-d-指定家目录"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.1.2 useradd -d 指定家目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-3-useradd-e-账号过期日期"><span class="nav-number">2.1.3.</span> <span class="nav-text">2.1.3 useradd -e 账号过期日期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-4-useradd-g-useradd-G"><span class="nav-number">2.1.4.</span> <span class="nav-text">2.1.4.useradd -g / useradd -G</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-5-useradd-M-不创建家目录"><span class="nav-number">2.1.5.</span> <span class="nav-text">2.1.5.useradd -M 不创建家目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-6-useradd-s-shell"><span class="nav-number">2.1.6.</span> <span class="nav-text">2.1.6.useradd -s shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-7-useradd-u-uid"><span class="nav-number">2.1.7.</span> <span class="nav-text">2.1.7 useradd -u  uid</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-添加用户组-groupadd"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.添加用户组 groupadd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-和groupadd-命令有关的文件"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1 和groupadd 命令有关的文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-groupadd-语法"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2 groupadd 语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-修改用户密码passwd"><span class="nav-number">2.3.</span> <span class="nav-text">2.3.修改用户密码passwd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-passwd一些常用参数"><span class="nav-number">2.3.1.</span> <span class="nav-text">2.3.1.passwd一些常用参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2-举例"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.3.2.举例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-修改用户信息usermod"><span class="nav-number">2.4.</span> <span class="nav-text">2.4.修改用户信息usermod</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-1-参数列表"><span class="nav-number">2.4.1.</span> <span class="nav-text">2.4.1.参数列表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-查看、更改用户密码信息（chage）"><span class="nav-number">2.5.</span> <span class="nav-text">2.5.查看、更改用户密码信息（chage）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-1-chage-l-zhangsan-列表"><span class="nav-number">2.5.1.</span> <span class="nav-text">2.5.1.chage -l zhangsan 列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-2-参数含义"><span class="nav-number">2.5.2.</span> <span class="nav-text">2.5.2.参数含义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-删除用户userdel"><span class="nav-number">2.6.</span> <span class="nav-text">2.6.删除用户userdel</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-1-语法"><span class="nav-number">2.6.1.</span> <span class="nav-text">2.6.1.语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-7-groupdel-删除用户"><span class="nav-number">2.7.</span> <span class="nav-text">2.7.groupdel 删除用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-8-groupmod-修改用户组"><span class="nav-number">2.8.</span> <span class="nav-text">2.8.groupmod 修改用户组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-9-向组中添加用户，删除组中用户"><span class="nav-number">2.9.</span> <span class="nav-text">2.9.向组中添加用户，删除组中用户</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-用户组示意图"><span class="nav-number">3.</span> <span class="nav-text">3.用户组示意图</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

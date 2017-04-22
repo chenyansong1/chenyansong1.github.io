@@ -1,0 +1,758 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="lpush/rpushRPUSH key value [value …]         #从右侧 插入数据LPUSH key value [value …]            #从左侧插入数据123456789101112131415161718192021222324252627127.0.0.1:6379&amp;gt; lpush str_list &amp;quot;aa&amp;quot; &amp;quot;b">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis的list结构">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/redis/redis的list结构/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="lpush/rpushRPUSH key value [value …]         #从右侧 插入数据LPUSH key value [value …]            #从左侧插入数据123456789101112131415161718192021222324252627127.0.0.1:6379&amp;gt; lpush str_list &amp;quot;aa&amp;quot; &amp;quot;b">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/list/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/list/2.png">
+<meta property="og:updated_time" content="2017-02-24T17:10:17.028Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis的list结构">
+<meta name="twitter:description" content="lpush/rpushRPUSH key value [value …]         #从右侧 插入数据LPUSH key value [value …]            #从左侧插入数据123456789101112131415161718192021222324252627127.0.0.1:6379&amp;gt; lpush str_list &amp;quot;aa&amp;quot; &amp;quot;b">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/list/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/redis/redis的list结构/"/>
+
+
+
+
+
+  <title> redis的list结构 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/redis/redis的list结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                redis的list结构
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="lpush-rpush"><a href="#lpush-rpush" class="headerlink" title="lpush/rpush"></a>lpush/rpush</h1><p>RPUSH key value [value …]         #从右侧 插入数据<br>LPUSH key value [value …]            #从左侧插入数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; lpush str_list &quot;aa&quot; &quot;bb&quot;</div><div class="line">(integer) 2</div><div class="line">127.0.0.1:6379&gt; lrange str_list 0 11</div><div class="line">1) &quot;bb&quot;</div><div class="line">2) &quot;aa&quot;</div><div class="line">127.0.0.1:6379&gt; rpush str_list &quot;r_cc&quot;</div><div class="line">(integer) 3</div><div class="line">127.0.0.1:6379&gt; lrange str_list 0 11</div><div class="line">1) &quot;bb&quot;</div><div class="line">2) &quot;aa&quot;</div><div class="line">3) &quot;r_cc&quot;</div><div class="line">127.0.0.1:6379&gt; rpush str_list &quot;r_dd&quot;</div><div class="line">(integer) 4</div><div class="line">127.0.0.1:6379&gt; lrange str_list 0 11</div><div class="line">1) &quot;bb&quot;</div><div class="line">2) &quot;aa&quot;</div><div class="line">3) &quot;r_cc&quot;</div><div class="line">4) &quot;r_dd&quot;</div><div class="line">127.0.0.1:6379&gt; lpush str_list &quot;r_ee&quot;</div><div class="line">(integer) 5</div><div class="line">127.0.0.1:6379&gt; lrange str_list 0 11</div><div class="line">1) &quot;r_ee&quot;</div><div class="line">2) &quot;bb&quot;</div><div class="line">3) &quot;aa&quot;</div><div class="line">4) &quot;r_cc&quot;</div><div class="line">5) &quot;r_dd&quot;</div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="lrange"><a href="#lrange" class="headerlink" title="lrange"></a>lrange</h1><p>LRANGE key start stop<br>0表示第一个元素，1表示第二个元素。。。。<br>-1表示最后一个元素，-2表示倒数第二个元素。。。。。。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">redis&gt; RPUSH mylist &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; RPUSH mylist &quot;two&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; RPUSH mylist &quot;three&quot;</div><div class="line">(integer) 3</div><div class="line">redis&gt; LRANGE mylist 0 0</div><div class="line">1) &quot;one&quot;</div><div class="line">redis&gt; LRANGE mylist -3 2</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">redis&gt; LRANGE mylist -100 100</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">redis&gt; LRANGE mylist 5 10</div><div class="line">(empty list or set)</div><div class="line">redis&gt;</div><div class="line"></div><div class="line">&apos;取所有的元素，0表示第一个，-1表示最后一个&apos;</div><div class="line">127.0.0.1:6379&gt; lrange str_list 0 -1</div></pre></td></tr></table></figure></p>
+<h1 id="rpop-lpop"><a href="#rpop-lpop" class="headerlink" title="rpop/lpop"></a>rpop/lpop</h1><p>RPOP key<br>删除link中的元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">redis&gt; RPUSH mylist &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; RPUSH mylist &quot;two&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; RPUSH mylist &quot;three&quot;</div><div class="line">(integer) 3</div><div class="line">redis&gt; RPOP mylist                #从最右侧删除</div><div class="line">&quot;three&quot;</div><div class="line">redis&gt; LRANGE mylist 0 -1        #查询所有</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="lrem"><a href="#lrem" class="headerlink" title="lrem"></a>lrem</h1><p>LREM key count value<br>count &gt; 0:从开头到结尾移除值为value的元素count<br>count &lt; 0: 从结尾到开头移除值为value的元素count<br>count = 0: 移除所有的value元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">redis&gt; RPUSH mylist &quot;hello&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; RPUSH mylist &quot;hello&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; RPUSH mylist &quot;foo&quot;</div><div class="line">(integer) 3</div><div class="line">redis&gt; RPUSH mylist &quot;hello&quot;</div><div class="line">(integer) 4</div><div class="line">redis&gt; LREM mylist -2 &quot;hello&quot;        #从结尾开始移除，移除两个</div><div class="line">(integer) 2</div><div class="line">redis&gt; LRANGE mylist 0 -1</div><div class="line">1) &quot;hello&quot;</div><div class="line">2) &quot;foo&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="ltrim"><a href="#ltrim" class="headerlink" title="ltrim"></a>ltrim</h1><p>LTRIM key start stop<br>剪切key对应的链接，切【start , stop】一段，并将该段重新赋值给key</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">redis&gt; RPUSH mylist &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; RPUSH mylist &quot;two&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; RPUSH mylist &quot;three&quot;</div><div class="line">(integer) 3</div><div class="line">redis&gt; LTRIM mylist 1 -1            #从第二个元素开始截取，到最后一个元素</div><div class="line">OK</div><div class="line">redis&gt; LRANGE mylist 0 -1</div><div class="line">1) &quot;two&quot;</div><div class="line">2) &quot;three&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="lindex"><a href="#lindex" class="headerlink" title="lindex"></a>lindex</h1><p>LINDEX key index<br>取某个索引的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">redis&gt; LPUSH mylist &quot;World&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; LPUSH mylist &quot;Hello&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; LINDEX mylist 0                 #取第一个索引的值</div><div class="line">&quot;Hello&quot;        </div><div class="line">redis&gt; LINDEX mylist -1                #取最后一个索引的值</div><div class="line">&quot;World&quot;</div><div class="line">redis&gt; LINDEX mylist 3            #如果超出range，返回nil</div><div class="line">(nil)</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="llen"><a href="#llen" class="headerlink" title="llen"></a>llen</h1><p>返回链表的元素个数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">redis&gt; LPUSH mylist &quot;World&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; LPUSH mylist &quot;Hello&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; LLEN mylist</div><div class="line">(integer) 2</div><div class="line">redis&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="linsert"><a href="#linsert" class="headerlink" title="linsert"></a>linsert</h1><p>LINSERT key BEFORE|AFTER pivot value<br>在指定的值前/后添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">redis&gt; RPUSH mylist &quot;Hello&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; RPUSH mylist &quot;World&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; LINSERT mylist BEFORE &quot;World&quot; &quot;There&quot;        #在“World” 前面插入“There”</div><div class="line">(integer) 3</div><div class="line">redis&gt; LRANGE mylist 0 -1</div><div class="line">1) &quot;Hello&quot;</div><div class="line">2) &quot;There&quot;</div><div class="line">3) &quot;World&quot;</div><div class="line">redis&gt; </div><div class="line"></div><div class="line">&apos;在 a b c d a e d  中的链表中，在a后面插入f&apos;</div><div class="line">&apos;则：a f b c d a e d &apos;  #只会在找到的第一个元素后插入，不会插入多个</div></pre></td></tr></table></figure>
+<h1 id="rpoplpush"><a href="#rpoplpush" class="headerlink" title="rpoplpush"></a>rpoplpush</h1><p>RPOPLPUSH source destination<br>source右侧弹出元素，同时在destination 左侧添加</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/list/1.png" alt=""></p>
+<p>场景：task+bak双向链表完成安全队列</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/list/2.png" alt=""></p>
+<p>业务逻辑：</p>
+<ol>
+<li>rpoplpush task bak</li>
+<li>接受返回值，并做业务处理</li>
+<li>如果业务处理成功，那么rpop bak 清除任务，如果不成功下次从bak表中执行任务（因为该任务没有执行成功）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">&apos;</div><div class="line">source = [a,b,c]</div><div class="line">destination=[ x,y,z]</div><div class="line">RPOPLPUSH source destination            # results in source holding a,b and destination holding c,x,y,z.</div><div class="line">source = [a,b]</div><div class="line">destination=[ c,x,y,z]</div><div class="line"></div><div class="line">&apos;</div><div class="line"></div><div class="line">redis&gt; RPUSH mylist &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; RPUSH mylist &quot;two&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; RPUSH mylist &quot;three&quot;</div><div class="line">(integer) 3</div><div class="line">redis&gt; RPOPLPUSH mylist myotherlist</div><div class="line">&quot;three&quot;</div><div class="line">redis&gt; LRANGE mylist 0 -1</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">redis&gt; LRANGE myotherlist 0 -1</div><div class="line">1) &quot;three&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="brpop-blpop"><a href="#brpop-blpop" class="headerlink" title="brpop/blpop"></a>brpop/blpop</h1><p>BRPOP key [key …] timeout<br>brpop其实和rpop类似，只是当链表中没有元素的时候，他会等待timeout(指定的时间) ，0表示一直等待</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; brpop waitstr 0</div><div class="line">1) &quot;waitstr&quot;                                        #从key</div><div class="line">2) &quot;aaa&quot;                                             #pop出的元素</div><div class="line">(27.33s)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/redis的set结构/" rel="next" title="redis的set结构">
+                <i class="fa fa-chevron-left"></i> redis的set结构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/redis的hash结构及命令详解/" rel="prev" title="redis的hash结构及命令详解">
+                redis的hash结构及命令详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#lpush-rpush"><span class="nav-number">1.</span> <span class="nav-text">lpush/rpush</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lrange"><span class="nav-number">2.</span> <span class="nav-text">lrange</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rpop-lpop"><span class="nav-number">3.</span> <span class="nav-text">rpop/lpop</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lrem"><span class="nav-number">4.</span> <span class="nav-text">lrem</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ltrim"><span class="nav-number">5.</span> <span class="nav-text">ltrim</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lindex"><span class="nav-number">6.</span> <span class="nav-text">lindex</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#llen"><span class="nav-number">7.</span> <span class="nav-text">llen</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linsert"><span class="nav-number">8.</span> <span class="nav-text">linsert</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rpoplpush"><span class="nav-number">9.</span> <span class="nav-text">rpoplpush</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#brpop-blpop"><span class="nav-number">10.</span> <span class="nav-text">brpop/blpop</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

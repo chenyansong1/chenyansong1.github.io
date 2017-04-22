@@ -1,0 +1,719 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="zookeeper," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="需求:客户端能够实时洞察到服务器上下线的变化 原理图如下:   服务器端启动时就去zookeeper注册信息,如图 客户端启动就去getChildren,获取当前在服务器列表,并且注册监听 如果服务器上下线,就会有事件通知 客户端的监听机制再去重新获取服务器列表,并注册监听  服务器端实现 123456789101112131415161718192021222324252627282930313">
+<meta name="keywords" content="zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="服务器动态上下线程序的工作机制">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/zookeeper/服务器动态上下线程序的工作机制/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="需求:客户端能够实时洞察到服务器上下线的变化 原理图如下:   服务器端启动时就去zookeeper注册信息,如图 客户端启动就去getChildren,获取当前在服务器列表,并且注册监听 如果服务器上下线,就会有事件通知 客户端的监听机制再去重新获取服务器列表,并注册监听  服务器端实现 123456789101112131415161718192021222324252627282930313">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/d_on_off_line/1.png">
+<meta property="og:updated_time" content="2017-02-24T17:07:51.594Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="服务器动态上下线程序的工作机制">
+<meta name="twitter:description" content="需求:客户端能够实时洞察到服务器上下线的变化 原理图如下:   服务器端启动时就去zookeeper注册信息,如图 客户端启动就去getChildren,获取当前在服务器列表,并且注册监听 如果服务器上下线,就会有事件通知 客户端的监听机制再去重新获取服务器列表,并注册监听  服务器端实现 123456789101112131415161718192021222324252627282930313">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/d_on_off_line/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/服务器动态上下线程序的工作机制/"/>
+
+
+
+
+
+  <title> 服务器动态上下线程序的工作机制 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/服务器动态上下线程序的工作机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                服务器动态上下线程序的工作机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>需求:客户端能够实时洞察到服务器上下线的变化</p>
+<p>原理图如下:</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/d_on_off_line/1.png" alt=""></p>
+<ul>
+<li>服务器端启动时就去zookeeper注册信息,如图</li>
+<li>客户端启动就去getChildren,获取当前在服务器列表,并且注册监听</li>
+<li>如果服务器上下线,就会有事件通知</li>
+<li>客户端的监听机制再去重新获取服务器列表,并注册监听</li>
+</ul>
+<p>服务器端实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.zkdist;</div><div class="line"></div><div class="line">import org.apache.zookeeper.CreateMode;</div><div class="line">import org.apache.zookeeper.WatchedEvent;</div><div class="line">import org.apache.zookeeper.Watcher;</div><div class="line">import org.apache.zookeeper.ZooDefs.Ids;</div><div class="line">import org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line">public class DistributedServer &#123;</div><div class="line">	private static final String connectString = &quot;mini1:2181,mini2:2181,mini3:2181&quot;;</div><div class="line">	private static final int sessionTimeout = 2000;</div><div class="line">	private static final String parentNode = &quot;/servers&quot;;</div><div class="line"></div><div class="line">	private ZooKeeper zk = null;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 创建到zk的客户端连接</div><div class="line">	 * </div><div class="line">	 * @throws Exception</div><div class="line">	 */</div><div class="line">	public void getConnect() throws Exception &#123;</div><div class="line"></div><div class="line">		zk = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;</div><div class="line">			@Override</div><div class="line">			public void process(WatchedEvent event) &#123;</div><div class="line">				// 收到事件通知后的回调函数（应该是我们自己的事件处理逻辑）</div><div class="line">				System.out.println(event.getType() + &quot;---&quot; + event.getPath());</div><div class="line">				try &#123;</div><div class="line">					zk.getChildren(&quot;/&quot;, true);</div><div class="line">				&#125; catch (Exception e) &#123;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 向zk集群注册服务器信息</div><div class="line">	 * </div><div class="line">	 * @param hostname</div><div class="line">	 * @throws Exception</div><div class="line">	 */</div><div class="line">	public void registerServer(String hostname) throws Exception &#123;</div><div class="line"></div><div class="line">		String create = zk.create(parentNode + &quot;/server&quot;, hostname.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</div><div class="line">		System.out.println(hostname + &quot;is online..&quot; + create);</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 业务功能</div><div class="line">	 * </div><div class="line">	 * @throws InterruptedException</div><div class="line">	 */</div><div class="line">	public void handleBussiness(String hostname) throws InterruptedException &#123;</div><div class="line">		System.out.println(hostname + &quot;start working.....&quot;);</div><div class="line">		Thread.sleep(Long.MAX_VALUE);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line"></div><div class="line">		// 获取zk连接</div><div class="line">		DistributedServer server = new DistributedServer();</div><div class="line">		server.getConnect();</div><div class="line"></div><div class="line">		// 利用zk连接注册服务器信息</div><div class="line">		server.registerServer(args[0]);</div><div class="line"></div><div class="line">		// 启动业务功能</div><div class="line">		server.handleBussiness(args[0]);</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>客户端实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.zkdist;</div><div class="line"></div><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">import org.apache.zookeeper.KeeperException;</div><div class="line">import org.apache.zookeeper.WatchedEvent;</div><div class="line">import org.apache.zookeeper.Watcher;</div><div class="line">import org.apache.zookeeper.ZooKeeper;</div><div class="line"></div><div class="line">public class DistributedClient &#123;</div><div class="line"></div><div class="line">	private static final String connectString = &quot;mini1:2181,mini2:2181,mini3:2181&quot;;</div><div class="line">	private static final int sessionTimeout = 2000;</div><div class="line">	private static final String parentNode = &quot;/servers&quot;;</div><div class="line">	// 注意:加volatile的意义何在？</div><div class="line">	private volatile List&lt;String&gt; serverList;</div><div class="line">	private ZooKeeper zk = null;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 创建到zk的客户端连接</div><div class="line">	 * </div><div class="line">	 * @throws Exception</div><div class="line">	 */</div><div class="line">	public void getConnect() throws Exception &#123;</div><div class="line"></div><div class="line">		zk = new ZooKeeper(connectString, sessionTimeout, new Watcher() &#123;</div><div class="line">			@Override</div><div class="line">			public void process(WatchedEvent event) &#123;</div><div class="line">				// 收到事件通知后的回调函数（应该是我们自己的事件处理逻辑）</div><div class="line">				try &#123;</div><div class="line">					//重新更新服务器列表，并且注册了监听，很重要</div><div class="line">					getServerList();</div><div class="line"></div><div class="line">				&#125; catch (Exception e) &#123;</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 获取服务器信息列表</div><div class="line">	 * </div><div class="line">	 * @throws Exception</div><div class="line">	 */</div><div class="line">	public void getServerList() throws Exception &#123;</div><div class="line"></div><div class="line">		// 获取服务器子节点信息，并且对父节点进行监听</div><div class="line">		List&lt;String&gt; children = zk.getChildren(parentNode, true);</div><div class="line"></div><div class="line">		// 先创建一个局部的list来存服务器信息</div><div class="line">		List&lt;String&gt; servers = new ArrayList&lt;String&gt;();</div><div class="line">		for (String child : children) &#123;</div><div class="line">			// child只是子节点的节点名</div><div class="line">			byte[] data = zk.getData(parentNode + &quot;/&quot; + child, false, null);</div><div class="line">			servers.add(new String(data));</div><div class="line">		&#125;</div><div class="line">		// 把servers赋值给成员变量serverList，已提供给各业务线程使用</div><div class="line">		serverList = servers;</div><div class="line">		</div><div class="line">		//打印服务器列表</div><div class="line">		System.out.println(serverList);</div><div class="line">		</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 业务功能</div><div class="line">	 * </div><div class="line">	 * @throws InterruptedException</div><div class="line">	 */</div><div class="line">	public void handleBussiness() throws InterruptedException &#123;</div><div class="line">		System.out.println(&quot;client start working.....&quot;);</div><div class="line">		Thread.sleep(Long.MAX_VALUE);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	</div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line"></div><div class="line">		// 获取zk连接</div><div class="line">		DistributedClient client = new DistributedClient();</div><div class="line">		client.getConnect();</div><div class="line">		// 获取servers的子节点信息（并监听），从中获取服务器信息列表</div><div class="line">		client.getServerList();</div><div class="line"></div><div class="line">		// 业务线程启动</div><div class="line">		client.handleBussiness();</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/深入理解spark核心思想与源码分析/第1章 环境准备/" rel="next" title="第1章 环境准备">
+                <i class="fa fa-chevron-left"></i> 第1章 环境准备
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zookeeper选举及数据一致性/" rel="prev" title="zookeeper选举及数据一致性">
+                zookeeper选举及数据一致性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

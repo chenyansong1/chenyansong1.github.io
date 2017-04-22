@@ -1,0 +1,809 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.基本类型12345/*在scala中有如下的基本类型:Byte,Short,Int,Long,Char,String, Float, Double, Boolean,除了String归于java.lang包之外,其余所有的基本类型都是包scala的成员,如,Int的全名是scala.Int,然而,由于包scala和Java.lang的所有成员都被每个scala源文件自动引用,因此可以在任何地方">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第五章 基本类型和操作">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/第五章 基本类型和操作/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.基本类型12345/*在scala中有如下的基本类型:Byte,Short,Int,Long,Char,String, Float, Double, Boolean,除了String归于java.lang包之外,其余所有的基本类型都是包scala的成员,如,Int的全名是scala.Int,然而,由于包scala和Java.lang的所有成员都被每个scala源文件自动引用,因此可以在任何地方">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.029Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第五章 基本类型和操作">
+<meta name="twitter:description" content="1.基本类型12345/*在scala中有如下的基本类型:Byte,Short,Int,Long,Char,String, Float, Double, Boolean,除了String归于java.lang包之外,其余所有的基本类型都是包scala的成员,如,Int的全名是scala.Int,然而,由于包scala和Java.lang的所有成员都被每个scala源文件自动引用,因此可以在任何地方">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/第五章 基本类型和操作/"/>
+
+
+
+
+
+  <title> 第五章 基本类型和操作 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第五章 基本类型和操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第五章 基本类型和操作
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-基本类型"><a href="#1-基本类型" class="headerlink" title="1.基本类型"></a>1.基本类型</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">在scala中有如下的基本类型:Byte,Short,Int,Long,Char,String, Float, Double, Boolean,除了String归于java.lang包之外,其余所有的基本类型都是包scala的成员,如,Int的全名是scala.Int,然而,由于包scala和Java.lang的所有成员都被每个scala源文件自动引用,因此可以在任何地方只用简化名(也就是说,直接写成Boolean,Char或String)</div><div class="line"></div><div class="line">目前实际上scala值类型可以使用与Java的原始类型一致的小写化名称,比如,scala程序里可以用int替代Int,但请记住他们都是一回事,scala.Int, scala的社区实践提出的推荐风格是一直使用大写形式,这也是本书推荐的,将来scala的版本可能不再支持乃至移除小写化名称,因此跟随社区的趋势,在scala代码中使用Int而非int才是明智之举</div><div class="line">*/</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1 id="2-字面量"><a href="#2-字面量" class="headerlink" title="2.字面量"></a>2.字面量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">字面量就是直接下载代码里的常量</div><div class="line">*/</div><div class="line"></div><div class="line">/*整数字面量</div><div class="line">类型Int,Long, Short和Byte的整数字面量有三种格式,十进制,十六进制和八进制,整数字面量的开头方式说明了数值的进制,如果数开始于0x或0X,那他是十六进制,并且可能包含从0到9,及大写或小写的从A到F的数字,如下:</div><div class="line">*/</div><div class="line">val hex = 0x5</div><div class="line">val hex2 = 0x00FF</div><div class="line">val magic = 0xcafebabe</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">八进制</div><div class="line">如果数开始于0,就是八进制的,并且只可以包含数字0到7</div><div class="line">*/</div><div class="line">val oct = 035</div><div class="line">val no = 0777</div><div class="line">val dec = 0321</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">十进制</div><div class="line">如果数字开始于非零数字,并且没有被修饰过,就是十进制的,例如:</div><div class="line">*/</div><div class="line">val dec1 = 11</div><div class="line">val dec2 = 255</div><div class="line"></div><div class="line">/*</div><div class="line">长整形:Long</div><div class="line">如果整数字面量结束于L或者l</div><div class="line">*/</div><div class="line">val prog = 0xcafebael</div><div class="line">val tower = 35L</div><div class="line">val of = 31l    //小写l</div><div class="line"></div><div class="line">/*Short, Byte</div><div class="line">如果Int类型的字面量被赋值给Short或Byte类型的变量,字面量就会被当做是赋值的类型,以便让字面量值处于有效范围内,如:</div><div class="line">*/</div><div class="line">val little: Short = 367</div><div class="line">val little: Byte = 38</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">浮点数字面量</div><div class="line">浮点数字面量是由十进制数字,可选的小数点,可选的E或e及指数部分组成的,举例如下:</div><div class="line">*/</div><div class="line">val big = 1.2345</div><div class="line">val bigger = 1.2343L</div><div class="line">val biggerStill = 123E45    //123E45就是123乘以10的45次幂</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">如果浮点数字面量以F或f结束,就是Float类型的,否则就是Double类型的,可选的,Double浮点数字面量也可以是D或者d结尾的,举例如下:</div><div class="line">*/</div><div class="line">val little = 1.234F    //1.234</div><div class="line">val littleBigger = 3e5f    //300000.0</div><div class="line">val yetAnother = 3e5D</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">字符字面量,可以是在单引号之间的任何Unicode字符,如:</div><div class="line">*/</div><div class="line">val a = &apos;A&apos;</div><div class="line">val c = &apos;\101&apos;  //单引号之间除了可以摆放字符之外,还可以提供一个前缀反斜杠的八进制或十六进制的表示字符编码号的数字,八进制数必须在&apos;\0&apos; 和&apos;\377&apos;之间</div><div class="line">val d = &apos;\u0041&apos;     //\u表示十六进制</div></pre></td></tr></table></figure>
+<p> 特殊的转义字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">\n        换行</div><div class="line">\b        回退</div><div class="line">\t        制表符</div><div class="line">\f        换页</div><div class="line">\r        回车</div><div class="line">\&quot;        双引号</div><div class="line">\&apos;        单引号</div><div class="line">\\    反斜杠</div><div class="line"></div><div class="line">*/</div><div class="line"></div><div class="line">val backslash = &apos;\\&apos;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">字符串字面量:字符串字面量是由双引号包括的字符组成</div><div class="line">*/</div><div class="line"></div><div class="line">val escapes = &quot;\\\&quot;\&apos;&quot;    //字符串: \&quot;&apos;</div><div class="line"></div><div class="line">/*</div><div class="line">三引号:以一行里的三个引号作为开始和结束,内部的原始字符串可以包含无论何种任意字符,包括新行,引号,和特殊字符,举例如下:</div><div class="line">*/</div><div class="line"></div><div class="line">println(&quot;&quot;&quot;</div><div class="line">Welcome to Ultamix 3000.</div><div class="line">Type &quot;Help&quot; for help.</div><div class="line">&quot;&quot;&quot;</div><div class="line">)</div><div class="line"></div><div class="line">/*</div><div class="line">#输出如下:</div><div class="line">Welcome to Ultamix 3000.</div><div class="line">      Type &quot;Help&quot; for help.</div><div class="line">    </div><div class="line">第二行的前导的空格被包含在了字符串里,为了解决这个常见情况,字符串类引入了stripMargin方法,使用的方式是,把管道符号(|)放在每行前面,然后对整个字符串调用stripMargin,如下:</div><div class="line">*/</div><div class="line">println(</div><div class="line">  &quot;&quot;&quot;</div><div class="line">    |Welcome to Ultamix 3000.</div><div class="line">    |Type &quot;help&quot; for help</div><div class="line">  &quot;&quot;&quot;.stripMargin)</div><div class="line"></div><div class="line">/*输出如下:</div><div class="line">Welcome to Ultamix 3000.</div><div class="line">Type &quot;help&quot; for help</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="3-操作符和方法"><a href="#3-操作符和方法" class="headerlink" title="3.操作符和方法"></a>3.操作符和方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">val sum = 1+2    //scala调用了(1).+(2)</div><div class="line"></div><div class="line">/*</div><div class="line">实际上+包含了各种类型的重载方法,像+这样的操作符叫做中缀操作符,这样的操作符还有indexOf</div><div class="line">*/</div><div class="line">val s = &quot;hello, world!&quot;</div><div class="line">s indexOf &apos;0&apos;    //调用s.indexOf(&apos;o&apos;)</div><div class="line"></div><div class="line">//另外String还提供了重载的indexOf方法,带两个参数,分别是要搜索的字符和从哪个索引开始搜索</div><div class="line">s indexOf (&apos;0&apos;, 5)    //调用了s.indexOf(&apos;0&apos;, 5)</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">任何方法都可以是操作符</div><div class="line">scala里的操作符不是特殊的语法,任何方法都可以是操作符到底是方法还是操作符取决于你如何使用它,如果写成s.indexOf(&apos;o&apos;) , indexOf是方法,但是如果写成s indexOf &apos;o&apos; ,那么indexOf就是操作符,因为你以操作符标注方式使用它</div><div class="line">*/</div><div class="line"></div><div class="line">/*前缀标注和后缀标注</div><div class="line">方法名放在调用的对象之前,如, -7里的&quot;-&quot; </div><div class="line">后缀标注中,方法放在对象之后,如 7 toLong 里的&quot;toLong&quot;</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">方法名在操作符上前缀&quot;unary_&quot;,例如scala表达式-2.0 转换成方法调用 (2.0).unary_-  </div><div class="line"></div><div class="line">操作符中能作为前缀操作符用的有值+.-,!,和~ 因此,如果对类型定义了名为unary_! 的方法,就可以对值或变量用!p这样的前缀操作符方式调用方法,但是即使定义了名为unary_*的方法,也没有办法将其使用成操作符了,因为*不是四种可以当做前缀操作符用的标识符之一,你可以向平时那样调用它,如:p.unary_* ,但是如果尝试像*p这么调用,scala就会把它理解为*.p ,者或许就不是你所期望的了</div><div class="line"></div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">后缀操作符是不用点或括号调用的不带任何参数的方法,在scala里,方法调用的空括号可以省略,惯例是如果方法带有副作用就加上括号,如println(), 如果没有副作用就去掉括号,如String 的toLowerCase</div><div class="line">*/</div><div class="line">val s = &quot;hello, world&quot;</div><div class="line">s.toLowerCase        //方法里没带参数,因此还可以去掉点,采用后缀操作符标注方式</div><div class="line">s toLowerCase        //toLowerCase被当做操作数s的后缀操作符</div></pre></td></tr></table></figure>
+<h1 id="4-对象相等性"><a href="#4-对象相等性" class="headerlink" title="4.对象相等性"></a>4.对象相等性</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*如果要比较一下两个对象是否相等,可以使用==,或者他的反义 != */</div><div class="line">1 == 2    //false</div><div class="line">1 != 2 //true</div><div class="line">2 == 2 //true</div><div class="line">//以上这些操作对所有对象都起作用,而不仅仅是基本类型,</div><div class="line"></div><div class="line">List(1, 2, 3) == List(1, 2, 3)   //true</div><div class="line">List(1, 2, 3) == List(4,5,6)   //false</div><div class="line">1 == 1.0    //true</div><div class="line">List(1, 2, 3) == &quot;hello&quot;   //false</div><div class="line">List(1, 2, 3) == null   //false</div><div class="line">null == List(1, 2, 3)   //false</div><div class="line">/*</div><div class="line">== 已经被仔细加工过,因此多数情况下都可以实现合适的相等性比较,这种比较遵循一种非常简单的规则,首先检查左侧是否为null,如果不是调用左操作数的equals方法,而精确的比较取决于左操作数的equals方法定义,由于有了自动的null检查,因此不需要手动再检查一次了</div><div class="line"></div><div class="line">这种比较即使发生在不同的对象之间也会产生true,只要比较的两者内容相同并且equals方法是基于内容编写的,例如,以下是恰好都有五个同样字母的两个字符串的比较:</div><div class="line">(&quot;he&quot; + &quot;llo&quot;) == &quot;hello&quot;        //true</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p> scala的==与Java的有何区别<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">Java里==既可以比较原始类型也可以比较引用类型,对于原始类型,Java的==比较值的相等性,与scala一致,而对于引用类型,Java的==比较了引用相等性,也就是说比较的是这两个变量是否都指向JVM堆里的同一个对象,scala也提供了这种机制,scala也提供了这种机制,名字为eq, 不过eq和他的反义词ne,仅仅应用于可以直接映射到Java的对象</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<h1 id="5-操作符的优先级和相关性"><a href="#5-操作符的优先级和相关性" class="headerlink" title="5.操作符的优先级和相关性"></a>5.操作符的优先级和相关性</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">操作符的优先级决定了表达式的哪个部分先于其他部分被评估,举例来说,表达式2+2 * 7 计算得16,而不是28,因为*操作符比+操作符有更高的优先级,</div><div class="line"></div><div class="line">由于scala没有操作符,实际上,操作符只是方法的一种表达方式, 对于操作符形式使用的方法,scala根据操作符的第一个字符判断方法的优先级(这个有个例外) 比方说,如果方法名开始于* ,那么就比开始于+的方法有更高的优先级,因此2+2*7将被评估为2+(2*7), 而a+++b***c 将被看做是a+++(b***c) ,因为***方法比+++方法有更高的优先级</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p> 操作符优先级<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">(所有其他的特殊字符)</div><div class="line">* / %</div><div class="line">+</div><div class="line">:</div><div class="line">=  !</div><div class="line">&lt;&gt;</div><div class="line">&amp;</div><div class="line">^</div><div class="line">|</div><div class="line">(所有字母)</div><div class="line">(所有赋值操作符)</div><div class="line"></div><div class="line"></div><div class="line">以上以降序方式列举了以方法第一个字符判断的优先级,同一行的字符具有相同的优先级</div><div class="line">*/</div><div class="line"></div><div class="line">2 &lt;&lt; 2+2    //+比&lt;&lt;的优先级高,表达式也要先调用了+方法之后在调用&lt;&lt;方法,如: 2 &lt;&lt; (2+2)</div><div class="line"></div><div class="line">//特例: *=的操作符的优先级与赋值符号(=)相同,也就是说,他比任何其他操作符的优先级都低,类似的操作符还有 += -= /= ,虽然*比+的优先级高,但是我们这里将 *= 当做是一个整体</div><div class="line">x *= y + 1</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">当同样优先级的多个操作符并列出现在表达式里时,操作符的关联性决定了操作符分组的方式,scala里操作符的关联性取决于他的最后一个字符,例如:任何以&quot;:&quot; 字符结尾的方法由他的右操作数调用,并传入左操作数,以其他字符结尾的方法与之相反,他们都是被左操作数调用,并传入右操作数的,因此a*b 变成 a.*(b) 但是a:::b 变成b.:::(a)</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">然而不管操作符具有什么样的关联性,它的操作数总是从左到右评估的,如:a:::b将会被当做是:</div><div class="line">&#123;val x = a; b.:::(x) &#125;</div><div class="line">在这个代码块中,a仍然在b之前被评估,然后评估结果被当做操作数传给b的:::方法</div><div class="line"></div><div class="line">a:::b:::c        // a:::(b:::c)</div><div class="line">a*b*c        //(a*b)*c</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="6-富包装类"><a href="#6-富包装类" class="headerlink" title="6.富包装类"></a>6.富包装类</h1><p>&emsp;下面方法的使用要通过隐式转换,现在需要知道的是本章介绍过的每个基本类型,都对应着一个”富包装器”提供的许多额外的方法</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">代码</th>
+<th style="text-align:center">结果</th>
+<th style="text-align:center">基本类型</th>
+<th style="text-align:center">富包装</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0 max 5</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">Byte</td>
+<td style="text-align:center">scala.runtime.RichByte</td>
+</tr>
+<tr>
+<td style="text-align:center">0 min 5</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">Short</td>
+<td style="text-align:center">scala.runtime.RichShort</td>
+</tr>
+<tr>
+<td style="text-align:center">-2.7 abs</td>
+<td style="text-align:center">2.7</td>
+<td style="text-align:center">Int</td>
+<td style="text-align:center">scala.runtime.RichInt</td>
+</tr>
+<tr>
+<td style="text-align:center">-2.7 round</td>
+<td style="text-align:center">-3L</td>
+<td style="text-align:center">Long</td>
+<td style="text-align:center">scala.runtime.RichLong</td>
+</tr>
+<tr>
+<td style="text-align:center">1.5 isInfinity</td>
+<td style="text-align:center">false</td>
+<td style="text-align:center">Char</td>
+<td style="text-align:center">scala.runtime.RichChar</td>
+</tr>
+<tr>
+<td style="text-align:center">(1.0/0) isInfinity</td>
+<td style="text-align:center">true</td>
+<td style="text-align:center">String</td>
+<td style="text-align:center">scala.runtime.RichString</td>
+</tr>
+<tr>
+<td style="text-align:center">4 to 6</td>
+<td style="text-align:center">Range(4,5,6)</td>
+<td style="text-align:center">Float</td>
+<td style="text-align:center">scala.runtime.RichFloat</td>
+</tr>
+<tr>
+<td style="text-align:center">“bob” capitalize</td>
+<td style="text-align:center">“Bob”</td>
+<td style="text-align:center">Double</td>
+<td style="text-align:center">scala.runtime.RichDouble</td>
+</tr>
+<tr>
+<td style="text-align:center">“robet” drop 2</td>
+<td style="text-align:center">“bert’</td>
+<td style="text-align:center">Boolean</td>
+<td style="text-align:center">scala.runtime.RichBoolean</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第八章 函数和闭包/" rel="next" title="第八章 函数和闭包">
+                <i class="fa fa-chevron-left"></i> 第八章 函数和闭包
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第二十章 抽象成员/" rel="prev" title="第二十章 抽象成员">
+                第二十章 抽象成员 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-基本类型"><span class="nav-number">1.</span> <span class="nav-text">1.基本类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-字面量"><span class="nav-number">2.</span> <span class="nav-text">2.字面量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-操作符和方法"><span class="nav-number">3.</span> <span class="nav-text">3.操作符和方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-对象相等性"><span class="nav-number">4.</span> <span class="nav-text">4.对象相等性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-操作符的优先级和相关性"><span class="nav-number">5.</span> <span class="nav-text">5.操作符的优先级和相关性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-富包装类"><span class="nav-number">6.</span> <span class="nav-text">6.富包装类</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

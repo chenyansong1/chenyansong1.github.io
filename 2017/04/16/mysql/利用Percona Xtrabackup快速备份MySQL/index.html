@@ -1,0 +1,784 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mysql," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.了解备份方式 热备份：读写不受影响（mysqldump–&amp;gt;innodb） 温备份：仅可以执行读操作（mysqldump–&amp;gt;myisam） 冷备份：离线备份，读写都不可用 逻辑备份：将数据导出文本文件中（mysqldump） 物理备份：将数据文件拷贝（xtrabackup、mysqlhotcopy） 完整备份：备份所有数据 增量备份：仅备份上次完整备份或增量备份以来变化的数据 差异备">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用Percona Xtrabackup快速备份MySQL(转)">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/mysql/利用Percona Xtrabackup快速备份MySQL/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.了解备份方式 热备份：读写不受影响（mysqldump–&amp;gt;innodb） 温备份：仅可以执行读操作（mysqldump–&amp;gt;myisam） 冷备份：离线备份，读写都不可用 逻辑备份：将数据导出文本文件中（mysqldump） 物理备份：将数据文件拷贝（xtrabackup、mysqlhotcopy） 完整备份：备份所有数据 增量备份：仅备份上次完整备份或增量备份以来变化的数据 差异备">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/xtrabackup/1.jpg">
+<meta property="og:updated_time" content="2017-02-24T17:10:01.255Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用Percona Xtrabackup快速备份MySQL(转)">
+<meta name="twitter:description" content="1.了解备份方式 热备份：读写不受影响（mysqldump–&amp;gt;innodb） 温备份：仅可以执行读操作（mysqldump–&amp;gt;myisam） 冷备份：离线备份，读写都不可用 逻辑备份：将数据导出文本文件中（mysqldump） 物理备份：将数据文件拷贝（xtrabackup、mysqlhotcopy） 完整备份：备份所有数据 增量备份：仅备份上次完整备份或增量备份以来变化的数据 差异备">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/xtrabackup/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/mysql/利用Percona Xtrabackup快速备份MySQL/"/>
+
+
+
+
+
+  <title> 利用Percona Xtrabackup快速备份MySQL(转) | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/mysql/利用Percona Xtrabackup快速备份MySQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                利用Percona Xtrabackup快速备份MySQL(转)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-了解备份方式"><a href="#1-了解备份方式" class="headerlink" title="1.了解备份方式"></a>1.了解备份方式</h1><ul>
+<li>热备份：读写不受影响（mysqldump–&gt;innodb）</li>
+<li>温备份：仅可以执行读操作（mysqldump–&gt;myisam）</li>
+<li>冷备份：离线备份，读写都不可用</li>
+<li>逻辑备份：将数据导出文本文件中（mysqldump）</li>
+<li>物理备份：将数据文件拷贝（xtrabackup、mysqlhotcopy）</li>
+<li>完整备份：备份所有数据</li>
+<li>增量备份：仅备份上次完整备份或增量备份以来变化的数据</li>
+<li>差异备份：仅备份上次完整备份以来变化的数据</li>
+</ul>
+<h1 id="2-创建备份用户"><a href="#2-创建备份用户" class="headerlink" title="2.创建备份用户"></a>2.创建备份用户</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; grant reload,lock tables,replication client on *.* to &apos;bak&apos;@&apos;localhost&apos; identified by &apos;bak2015&apos;;</div><div class="line">mysql&gt; flush privileges;</div></pre></td></tr></table></figure>
+<h1 id="3-安装"><a href="#3-安装" class="headerlink" title="3.安装"></a>3.安装</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># rpm -ivh http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm</div><div class="line"># yum install percona-xtrabackup</div><div class="line"></div><div class="line">#xtrabackup2.2不支持MySQL5.1的Innodb引擎，如需要可安装2.0版本</div></pre></td></tr></table></figure>
+<h1 id="4-常用参数"><a href="#4-常用参数" class="headerlink" title="4.常用参数"></a>4.常用参数</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">–user=     #指定数据库备份用户</div><div class="line">–password=  #指定数据库备份用户密码</div><div class="line">–port=     #指定数据库端口</div><div class="line">–host=     #指定备份主机</div><div class="line">–socket=    #指定socket文件路径</div><div class="line">–databases=  #备份指定数据库,多个空格隔开，如–databases=”dbname1 dbname2″，不加备份所有库</div><div class="line">–defaults-file=       #指定my.cnf配置文件</div><div class="line">–apply-log         #日志回滚</div><div class="line">–incremental=          #增量备份，后跟增量备份路径</div><div class="line">–incremental-basedir=     #增量备份，指上次增量备份路径</div><div class="line">–redo-only         #合并全备和增量备份数据文件</div><div class="line">–copy-back         #将备份数据复制到数据库，数据库目录要为空</div><div class="line">–no-timestamp          #生成备份文件不以时间戳为目录名</div><div class="line">–stream=             #指定流的格式做备份，–stream=tar，将备份文件归档</div><div class="line">–remote-host=user@ip DST_DIR #备份到远程主机</div></pre></td></tr></table></figure>
+<h1 id="5-完整备份与恢复"><a href="#5-完整备份与恢复" class="headerlink" title="5.完整备份与恢复"></a>5.完整备份与恢复</h1><h2 id="5-1-完整备份"><a href="#5-1-完整备份" class="headerlink" title="5.1.完整备份"></a>5.1.完整备份</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># innobackupex --user=bak --password=&apos;bak2015&apos; /mysql_backup</div></pre></td></tr></table></figure>
+<h2 id="5-2-备份恢复"><a href="#5-2-备份恢复" class="headerlink" title="5.2.备份恢复"></a>5.2.备份恢复</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># innobackupex --defaults-file=/etc/mysql/my.cnf --copy-back /home/loongtao/mysql_backup/2015-02-08_11-56-48/</div></pre></td></tr></table></figure>
+<h2 id="5-3-备份文件说明"><a href="#5-3-备份文件说明" class="headerlink" title="5.3.备份文件说明"></a>5.3.备份文件说明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># ls 2015-02-08_11-56-48</div><div class="line"></div><div class="line">/*</div><div class="line">backup-my.cnf：记录innobackup使用到mysql参数</div><div class="line">xtrabackup_binary：备份中用到的可执行文件</div><div class="line">xtrabackup_checkpoints：记录备份的类型、开始和结束的日志序列号</div><div class="line">xtrabackup_logfile：备份中会开启一个log copy线程，用来监控innodb日志文件（ib_logfile），如果修改就会复制到这个文件</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="6-完整备份-增量备份与恢复"><a href="#6-完整备份-增量备份与恢复" class="headerlink" title="6.完整备份+增量备份与恢复"></a>6.完整备份+增量备份与恢复</h1><h2 id="6-1-完整备份"><a href="#6-1-完整备份" class="headerlink" title="6.1.完整备份"></a>6.1.完整备份</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">innobackupex --user=bak --password=&apos;bak2015&apos; /mysql_backup</div><div class="line">#备份后位置是：/mysql_backup/2015-02-08_11-56-48</div></pre></td></tr></table></figure>
+<h2 id="6-2-增量备份1"><a href="#6-2-增量备份1" class="headerlink" title="6.2.增量备份1"></a>6.2.增量备份1</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># innobackupex --user=bak --password=&apos;bak2015&apos; --incremental /data1/mysql_backup --incremental-basedir=/mysql_backup/2015-02-08_11-56-48  </div><div class="line">#指定上次完整备份目录</div></pre></td></tr></table></figure>
+<h2 id="6-3-增量备份2"><a href="#6-3-增量备份2" class="headerlink" title="6.3.增量备份2"></a>6.3.增量备份2</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">innobackupex --user=bak --password=&apos;bak2015&apos; --incremental /data1/mysql_backup --incremental-basedir=/mysql_backup/2015-02-08_12-16-06  </div><div class="line">#指定上次增量备份目录</div></pre></td></tr></table></figure>
+<h2 id="6-4-查看xtrabackup-checkpoints文件"><a href="#6-4-查看xtrabackup-checkpoints文件" class="headerlink" title="6.4.查看xtrabackup_checkpoints文件"></a>6.4.查看xtrabackup_checkpoints文件</h2><p>一目了然，可以看到根据日志序号来增量备份</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/xtrabackup/1.jpg" alt=""></p>
+<h2 id="6-5-备份恢复"><a href="#6-5-备份恢复" class="headerlink" title="6.5.备份恢复"></a>6.5.备份恢复</h2><blockquote>
+<p>备份恢复思路</p>
+</blockquote>
+<p>将增量备份1、增量备份2…合并到完整备份，加到一起出来一个新的完整备份，将新的完整备份以拷贝的形式到数据库空目录（rm /var/lib/mysql/* -rf）</p>
+<blockquote>
+<p>预备完整备份</p>
+</blockquote>
+<p>xtrabackup把备份过程中可能有尚未提交的事务或已经提交但未同步数据文件的事务，写到xtrabackup_logfile文件，所以要先通过这个日志文件回滚，把未完成的事务同步到备份文件，保证数据文件处于一致性。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># innobackup --apply-log --redo-only 2015-02-08_11-56-48</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>合并第一个增量备份</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># innobackupex --apply-log --redo-only /mysql_backup/2015-02-08_11-56-48/ --incremental-dir=mysql_backup/2015-02-08_12-16-06</div></pre></td></tr></table></figure>
+<blockquote>
+<p>合并第二个增量备份</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># innobackupex --apply-log --redo-only /mysql_backup/2015-02-08_11-56-48/ --incremental-dir=mysql_backup/2015-02-08_16-06-53</div></pre></td></tr></table></figure>
+<blockquote>
+<p>恢复完整备份</p>
+</blockquote>
+<p>这时2015-02-08_11-56-48完整备份已经包含所有增量备份，可以通过查看checkpoints来核实<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># innobackupex --defaults-file=/etc/mysql/my.cnf --copy-back /mysql_backup/2015-02-08_11-56-48/</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p> 修改恢复数据文件权限</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># chown -R mysql.mysql /var/lib/mysql</div></pre></td></tr></table></figure>
+<blockquote>
+<p>启动MySQL,查看数据库恢复情况</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># /etc/init.d/mysqld start</div></pre></td></tr></table></figure>
+<h1 id="7-备份文件归档压缩"><a href="#7-备份文件归档压缩" class="headerlink" title="7.备份文件归档压缩"></a>7.备份文件归档压缩</h1><h2 id="7-1-归档并发送到备份服务器"><a href="#7-1-归档并发送到备份服务器" class="headerlink" title="7.1.归档并发送到备份服务器"></a>7.1.归档并发送到备份服务器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> innobackupex --databases=test --user=bak --password=&apos;bak2015&apos; --stream=tar /mysql_backup 2&gt;/mysql_backup/bak.log |ssh root@192.168.18.251 &quot;cat - &gt; /mysql_backup/`date +%F`.tar&quot;</div><div class="line"></div><div class="line">#解压：tar -ixvf `date +%F`.tar</div></pre></td></tr></table></figure>
+<h2 id="7-2-归档备份"><a href="#7-2-归档备份" class="headerlink" title="7.2.归档备份"></a>7.2.归档备份</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># innobackupex --databases=test --user=bak --password=&apos;bak2015&apos; --stream=tar /mysql_backup &gt; /mysql_backup/`date +%F`.tar</div><div class="line"></div><div class="line">#解压：tar -ixvf `date +%F`.tar</div></pre></td></tr></table></figure>
+<h2 id="7-3-压缩归档备份"><a href="#7-3-压缩归档备份" class="headerlink" title="7.3.压缩归档备份"></a>7.3.压缩归档备份</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># innobackupex --databases=test --user=bak --password=&apos;bak2015&apos; --stream=tar /mysql_backup |gzip &gt;/mysql_backup/`date +%F`.tar.gz</div><div class="line"></div><div class="line">#解压：tar -izxvf `date +%F`.tar.gz</div></pre></td></tr></table></figure>
+<p><a href="http://www.saunix.cn/1559.html" target="_blank" rel="external">整理自</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/mysql/字符集/" rel="next" title="字符集">
+                <i class="fa fa-chevron-left"></i> 字符集
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/mysql/navicat for mysql 快捷键/" rel="prev" title="navicat for mysql 快捷键">
+                navicat for mysql 快捷键 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-了解备份方式"><span class="nav-number">1.</span> <span class="nav-text">1.了解备份方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-创建备份用户"><span class="nav-number">2.</span> <span class="nav-text">2.创建备份用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-安装"><span class="nav-number">3.</span> <span class="nav-text">3.安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-常用参数"><span class="nav-number">4.</span> <span class="nav-text">4.常用参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-完整备份与恢复"><span class="nav-number">5.</span> <span class="nav-text">5.完整备份与恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-完整备份"><span class="nav-number">5.1.</span> <span class="nav-text">5.1.完整备份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-备份恢复"><span class="nav-number">5.2.</span> <span class="nav-text">5.2.备份恢复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-备份文件说明"><span class="nav-number">5.3.</span> <span class="nav-text">5.3.备份文件说明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-完整备份-增量备份与恢复"><span class="nav-number">6.</span> <span class="nav-text">6.完整备份+增量备份与恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-完整备份"><span class="nav-number">6.1.</span> <span class="nav-text">6.1.完整备份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-增量备份1"><span class="nav-number">6.2.</span> <span class="nav-text">6.2.增量备份1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-增量备份2"><span class="nav-number">6.3.</span> <span class="nav-text">6.3.增量备份2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4-查看xtrabackup-checkpoints文件"><span class="nav-number">6.4.</span> <span class="nav-text">6.4.查看xtrabackup_checkpoints文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-5-备份恢复"><span class="nav-number">6.5.</span> <span class="nav-text">6.5.备份恢复</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-备份文件归档压缩"><span class="nav-number">7.</span> <span class="nav-text">7.备份文件归档压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-归档并发送到备份服务器"><span class="nav-number">7.1.</span> <span class="nav-text">7.1.归档并发送到备份服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-归档备份"><span class="nav-number">7.2.</span> <span class="nav-text">7.2.归档备份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3-压缩归档备份"><span class="nav-number">7.3.</span> <span class="nav-text">7.3.压缩归档备份</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,729 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="方案的思路图解">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spark性能优化之四十之数据倾斜解决方案之sample采样倾斜key单独进行join">
+<meta property="og:url" content="http://yoursite.com/2017/04/22/bigdata/spark从入门到精通_笔记/spark性能优化之四十之数据倾斜解决方案之sample采样倾斜key单独进行join/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="方案的思路图解">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/performance_data_skew_sample_key.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/performance_data_skew_sample_key2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/performance_data_skew_sample_key3.png">
+<meta property="og:updated_time" content="2017-04-22T07:23:06.373Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spark性能优化之四十之数据倾斜解决方案之sample采样倾斜key单独进行join">
+<meta name="twitter:description" content="方案的思路图解">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/performance_data_skew_sample_key.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/22/bigdata/spark从入门到精通_笔记/spark性能优化之四十之数据倾斜解决方案之sample采样倾斜key单独进行join/"/>
+
+
+
+
+
+  <title> spark性能优化之四十之数据倾斜解决方案之sample采样倾斜key单独进行join | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/22/bigdata/spark从入门到精通_笔记/spark性能优化之四十之数据倾斜解决方案之sample采样倾斜key单独进行join/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                spark性能优化之四十之数据倾斜解决方案之sample采样倾斜key单独进行join
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-22T10:18:31+08:00">
+                2017-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>方案的思路图解</p>
+<a id="more"></a>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/performance_data_skew_sample_key.png" alt=""></p>
+<p>这个方案的实现思路，跟大家解析一下：其实关键之处在于，将发生数据倾斜的key，单独拉出来，放到一个RDD中去；就用这个原本会倾斜的key RDD跟其他RDD，单独去join一下，这个时候，key对应的数据，可能就会分散到多个task中去进行join操作。</p>
+<p>就不至于说是，这个key跟之前其他的key混合在一个RDD中时，肯定是会导致一个key对应的所有数据，都到一个task中去，就会导致数据倾斜。如下图:</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/performance_data_skew_sample_key2.png" alt=""></p>
+<p>这种方案什么时候适合使用？</p>
+<p>优先对于join，肯定是希望能够采用上一讲讲的，reduce join转换map join。两个RDD数据都比较大，那么就不要那么搞了。</p>
+<p>针对你的RDD的数据，你可以自己把它转换成一个中间表，或者是直接用countByKey()的方式，你可以看一下这个RDD各个key对应的数据量；此时如果你发现整个RDD就一个，或者少数几个key，是对应的数据量特别多；尽量建议，比如就是一个key对应的数据量特别多。</p>
+<p>此时可以采用咱们的这种方案，单拉出来那个最多的key；单独进行join，尽可能地将key分散到各个task上去进行join操作。</p>
+<p>什么时候不适用呢？</p>
+<p>如果一个RDD中，导致数据倾斜的key，特别多；那么此时，最好还是不要这样了；还是使用我们最后一个方案，终极的join数据倾斜的解决方案。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">//假设rdd.join(rdd2)会产生数据倾斜</div><div class="line"></div><div class="line">//假设rdd的数据格式为(&quot;hell&quot;,1)这样的格式</div><div class="line">//采样10%的数据</div><div class="line">val sampleRDD = rdd.sample(false,0.1,9)</div><div class="line">//对采样数据进行reduceByKey</div><div class="line">val reduceByKeyRdd = sampleRDD.map((_,1)).reduceByKey(_+_)</div><div class="line"></div><div class="line">//反转Tuple,对key进行排序</div><div class="line">val reversedSampleRdd = reduceByKeyRdd.map(tup=&gt;(tup._2, tup._1))</div><div class="line">val wkewedKeyList = reversedSampleRdd.sortByKey(false).take(1)</div><div class="line"></div><div class="line">//take返回的是一个list,这里是去取list中Tuple,然后取Tuple的key,这样就拿到了导致倾斜的key</div><div class="line">val keyStr = wkewedKeyList.toList.get(0)._2</div><div class="line"></div><div class="line">//------------上面的过程是去拿到导致数据倾斜的key----------------</div><div class="line"></div><div class="line">//拿到产生数据倾斜key对应的RDD</div><div class="line">val skewedRdd = rdd.filter&#123;</div><div class="line">	tuple=&gt;</div><div class="line">		tuple._1.equals(keyStr)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//拿到非数据倾斜的key对应的RDD</div><div class="line">val noSkewedRdd = rdd.filter&#123;</div><div class="line">	tuple=&gt;</div><div class="line">		!tuple._1.equals(keyStr)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//------上面的过程是去拿到产生数据倾斜key对应的RDD 和非数据倾斜的key对应的RDD-----</div><div class="line"></div><div class="line"></div><div class="line">//对上面产生的RDD分别去进行join</div><div class="line">val joinedRdd1 = skewedRdd.join(rdd2)</div><div class="line">val joinedRdd2 = noSkewedRdd.join(rdd2)</div><div class="line">val joinedRdd = joinedRdd1.union(joinedRdd2)</div></pre></td></tr></table></figure>
+<p>在上面的基础上我们可以进行更进一步的优化:</p>
+<p>就是说，咱们单拉出来了，一个或者少数几个可能会产生数据倾斜的key，然后还可以进行更加优化的一个操作；</p>
+<p>对于那个key，从另外一个要join的表中，也过滤出来一份数据，比如可能就只有一条数据。userid2infoRDD，一个userid key，就对应一条数据。</p>
+<p>然后呢，采取对那个只有一条数据的RDD，进行flatMap操作，打上100个随机数，作为前缀，返回100条数据。</p>
+<p>单独拉出来的可能产生数据倾斜的RDD，给每一条数据，都打上一个100以内的随机数，作为前缀。</p>
+<p>再去进行join，是不是性能就更好了。肯定可以将数据进行打散，去进行join。join完以后，可以执行map操作，去将之前打上的随机数，给去掉，然后再和另外一个普通RDD join以后的结果，进行union操作。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/performance_data_skew_sample_key3.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line">//假设rdd.join(rdd2)会产生数据倾斜</div><div class="line"></div><div class="line">//假设rdd的数据格式为(&quot;hell&quot;,1)这样的格式</div><div class="line">//采样10%的数据</div><div class="line">val sampleRDD = rdd.sample(false,0.1,9)</div><div class="line">//对采样数据进行reduceByKey</div><div class="line">val reduceByKeyRdd = sampleRDD.map((_,1)).reduceByKey(_+_)</div><div class="line"></div><div class="line">//反转Tuple,对key进行排序</div><div class="line">val reversedSampleRdd = reduceByKeyRdd.map(tup=&gt;(tup._2, tup._1))</div><div class="line">val wkewedKeyList = reversedSampleRdd.sortByKey(false).take(1)</div><div class="line"></div><div class="line">//take返回的是一个list,这里是去取list中Tuple,然后取Tuple的key,这样就拿到了导致倾斜的key</div><div class="line">val keyStr = wkewedKeyList.toList.get(0)._2</div><div class="line"></div><div class="line">//------------上面的过程是去拿到导致数据倾斜的key----------------</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">//拿到产生数据倾斜key对应的RDD</div><div class="line">val skewedRdd = rdd.filter&#123;</div><div class="line">	tuple=&gt;</div><div class="line">		tuple._1.equals(keyStr)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//拿到非数据倾斜的key对应的RDD</div><div class="line">val noSkewedRdd = rdd.filter&#123;</div><div class="line">	tuple=&gt;</div><div class="line">		!tuple._1.equals(keyStr)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//------上面的过程是去拿到产生数据倾斜key对应的RDD 和非数据倾斜的key对应的RDD-----</div><div class="line"></div><div class="line"></div><div class="line">val skewDataInRdd2 = rdd2.filter(_.equals(keyStr)</div><div class="line"></div><div class="line">val skewData100Rdd2 = skewDataInRdd2.flatMap&#123;</div><div class="line">	tuple=&gt;</div><div class="line">		list = Array()</div><div class="line">		for(i&lt;- 1 to 100)&#123;</div><div class="line">			val prefix = Random.nextInt(100)</div><div class="line">			list.add((prefix+&quot;_&quot;+tuple._1,tuple._2))</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		list</div><div class="line">&#125;</div><div class="line"></div><div class="line">//------上面的过程对另外一个需要join的rdd进行过滤,拿到也过滤出来一份数据，比如可能就只有一条数据。然后呢，采取对那个只有一条数据的RDD，进行flatMap操作，打上100个随机数，作为前缀，返回100条数据</div><div class="line"></div><div class="line">val joinedRdd1 = skewedRdd.map&#123;</div><div class="line">	tuple=&gt;</div><div class="line">	val prefix = Random.nextInt(100)</div><div class="line">	(prefix+&quot;_&quot;+tuple._1,tuple._2)</div><div class="line">&#125;</div><div class="line">//将两个都加上前缀的RDD进行join,因为有了前缀,这样他们就能打散</div><div class="line">.join(skewData100Rdd2)</div><div class="line">//去掉前缀</div><div class="line">.map&#123;</div><div class="line">	tuple=&gt;</div><div class="line">		val arr = tuple._1.split(&quot;_&quot;)</div><div class="line">		(arr(1),tuple._2)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">val joinedRdd2 = noSkewedRdd.join(rdd2)</div><div class="line">val joinedRdd = joinedRdd1.union(joinedRdd2)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/22/bigdata/spark从入门到精通_笔记/spark性能优化之四十之数据倾斜解决方案之使用随机数以及扩容表进行join/" rel="next" title="spark性能优化之四十之数据倾斜解决方案之使用随机数以及扩容表进行join">
+                <i class="fa fa-chevron-left"></i> spark性能优化之四十之数据倾斜解决方案之使用随机数以及扩容表进行join
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/22/bigdata/spark从入门到精通_笔记/spark性能优化之三十九之数据倾斜解决方案之将reduce join转换为map join/" rel="prev" title="spark性能优化之三十九之数据倾斜解决方案之将reduce join转换为map join">
+                spark性能优化之三十九之数据倾斜解决方案之将reduce join转换为map join <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

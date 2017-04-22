@@ -1,0 +1,750 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;scala的几乎所有的控制结构都会产生某个值,这是函数式语言所采用的方式scala的if可以向Java的三元操作符一样产生值,同样for, try, match也产生值, 程序员能够用结果值来简化代码,就如同用函数的返回值那样,如果没有这种机制,程序员就必须创建零时变量来保存控制结构中的计算结果">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第七章 内建控制结构">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/第七章 内建控制结构/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="&amp;emsp;scala的几乎所有的控制结构都会产生某个值,这是函数式语言所采用的方式scala的if可以向Java的三元操作符一样产生值,同样for, try, match也产生值, 程序员能够用结果值来简化代码,就如同用函数的返回值那样,如果没有这种机制,程序员就必须创建零时变量来保存控制结构中的计算结果">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.014Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第七章 内建控制结构">
+<meta name="twitter:description" content="&amp;emsp;scala的几乎所有的控制结构都会产生某个值,这是函数式语言所采用的方式scala的if可以向Java的三元操作符一样产生值,同样for, try, match也产生值, 程序员能够用结果值来简化代码,就如同用函数的返回值那样,如果没有这种机制,程序员就必须创建零时变量来保存控制结构中的计算结果">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/第七章 内建控制结构/"/>
+
+
+
+
+
+  <title> 第七章 内建控制结构 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第七章 内建控制结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第七章 内建控制结构
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;scala的几乎所有的控制结构都会产生某个值,这是函数式语言所采用的方式scala的if可以向Java的三元操作符一样产生值,同样for, try, match也产生值, 程序员能够用结果值来简化代码,就如同用函数的返回值那样,如果没有这种机制,程序员就必须创建零时变量来保存控制结构中的计算结果</p>
+<a id="more"></a>
+<h1 id="1-if表达式"><a href="#1-if表达式" class="headerlink" title="1.if表达式"></a>1.if表达式</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">var filename = &quot;default.txt&quot;</div><div class="line">if(!args.isEmpty)</div><div class="line">  filename = args(0)</div><div class="line"></div><div class="line">//改进代码</div><div class="line">val filename =</div><div class="line">  if (!args.isEmpty) args(0)</div><div class="line">  else &quot;default.txt&quot;</div><div class="line"></div><div class="line">/*</div><div class="line">使用val是函数式的风格,并且具有与Java的final变量类型类似的效果</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="2-while循环"><a href="#2-while循环" class="headerlink" title="2.while循环"></a>2.while循环</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">def gcdLoop(x: Long, y: Long): Long = &#123;</div><div class="line">  var a = x</div><div class="line">  var b = y</div><div class="line">  while (a!=0)&#123;</div><div class="line">    val tmp = a</div><div class="line">    a = b % a</div><div class="line">    b = tmp</div><div class="line">  &#125;</div><div class="line">  b //返回b</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//或者do ..while</div><div class="line">var line = &quot;&quot;  </div><div class="line">do&#123;</div><div class="line">  line = readLine()</div><div class="line">  println(&quot;Head: &quot; + line)</div><div class="line">&#125;while(line != &quot;&quot;)</div><div class="line">/*while 和do-while结构之所以被称为&quot;循环&quot;,而不是表达式,是因为他们不能产生有意义的结果,结果的类型是Unit,是表名存在并且唯一存在类型为Unit的值,称为unit value, 写成() */</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; def greet()&#123;println(&quot;hi&quot;)&#125;</div><div class="line">greet: ()Unit</div><div class="line"></div><div class="line">scala&gt; greet() == ()                     ^</div><div class="line">hi</div><div class="line">res0: Boolean = true</div><div class="line"></div><div class="line">/*</div><div class="line">对var再赋值等式本身也是unit值,这是另一种与此类似的架构,比如:</div><div class="line">*/</div><div class="line"></div><div class="line">var line = &quot;&quot;</div><div class="line">while ((line = readLine()) != &quot;&quot;)</div><div class="line">  println(&quot;read: &quot; + line)</div><div class="line">/*</div><div class="line">虽然在Java里,赋值语句可以返回被赋予的那个值,本例中是标准输入读取的文本行,但同样的情况下scala的赋值语句只能得到unit的值(),因此赋值语句&quot; line = readLine() &quot; 的值将永远返回 ()  而不是&quot;&quot; ,结果是这个循环的状态将永远不会是假,循环永远无法结束</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">由于while循环不产生值,因此他经常被纯函数式语言所舍弃,这种语言只有表达式,没有循环,但是while的结构对指令式的程序员来说更容易读懂</div><div class="line">而对于函数式风格的话,只能使用递归实现,或许对某些代码的读者来说这就不是那么显而易见的了</div><div class="line">*/</div><div class="line">def    gcd(x: Long, y: Long): Long = </div><div class="line">    if (y == 0) x else gcd()</div><div class="line"></div><div class="line">/*</div><div class="line">上述代码是函数式风格,采用了递归写法,相对于指令式风格,函数式不需要var,因为while的指令式编程,所以建议在代码中更为审慎的使用while循环</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="3-for表达式"><a href="#3-for表达式" class="headerlink" title="3.for表达式"></a>3.for表达式</h1><p>&emsp;for表达式可以让你用不同的方式把若干简单的成分组合起来以表达各种各样的枚举,例如:枚举整数序列,枚举不同类型的多个集合,使用任意条件过滤元素,制造新的集合</p>
+<p> 枚举集合类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">for能做的最简单的事情就是把集合中所有元素都枚举一遍</div><div class="line">*/</div><div class="line">object Rational&#123;</div><div class="line">  def main(args: Array[String]): Unit = &#123;</div><div class="line">    val filesHere = (new File(&quot;.&quot;)).listFiles</div><div class="line">    for (file &lt;- filesHere)</div><div class="line">      println(file)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">new File(&quot;.&quot;) 创建指向当前目录的对象</div><div class="line">listFiles 返回File对象数组,每个元素都代表目录或文件</div><div class="line">file &lt;- filesHere 这样的语法被称之为发生器,我们遍历了filesHere的元素</div><div class="line">每一次遍历,名为file的新的val就被元素值初始化,编译器能够推断出file的类型是File,因为filesHere是Array[File]的,所以能够推断出file的类型是File</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> for中添加过滤条件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">有时你并不想要枚举集合的全部元素,而只想过滤出某个子集,这就可以通过for表达式的括号中添加过滤器(filter),即 if字句来实现</div><div class="line">*/</div><div class="line">val filesHere = (new File(&quot;.&quot;)).listFiles</div><div class="line">for (file &lt;- filesHere if file.getName.endsWith(&quot;.scala&quot;))</div><div class="line">  println(file)</div><div class="line"></div><div class="line">/*也可以有多个if条件过滤*/</div><div class="line">val filesHere = (new File(&quot;.&quot;)).listFiles</div><div class="line">for (</div><div class="line">  file &lt;- filesHere</div><div class="line">  if file.isFile;</div><div class="line">  if file.getName.endsWith(&quot;.scala&quot;)</div><div class="line">) println(file)</div><div class="line">/*</div><div class="line">如果发生器中加入超过一个过滤器,if字句必须用分号,如上代码所示</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 嵌套枚举<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">如果加入多个&lt;-字句,你就得到了嵌套的&quot;循环&quot;,如下,外层的循环是循环枚举filesHere ,内层的遍历的是所有以.scala结尾的文件</div><div class="line">*/</div><div class="line">def fileLines(file: java.io.File) =</div><div class="line">  scala.io.Source.fromFile(file).getLines().toList</div><div class="line"></div><div class="line">def grep(pattern: String) = &#123;</div><div class="line">  val filesHere = (new File(&quot;.&quot;)).listFiles</div><div class="line">  for &#123;</div><div class="line">    file &lt;- filesHere</div><div class="line">    if file.getName.endsWith(&quot;.scala&quot;)</div><div class="line">    line &lt;- fileLines(file)</div><div class="line">    if line.trim.matches(pattern)    //找到匹配的行</div><div class="line">  &#125; println(file + &quot;:&quot; + line.trim)</div><div class="line"></div><div class="line">//使用</div><div class="line">grep(&quot;.*gcd.*&quot;)</div><div class="line"></div><div class="line">/*</div><div class="line">你可以使用花括号代替小括号包裹发生器和过滤器,使用花括号的好处是可以省略使用小括号时必须加的分号</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 流间(mid-stream)变量绑定</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">前面的代码中重复出现的表达式line.trim 或许你希望只计算一遍,用等号(=)把结果绑定到新变量实现,绑定的变量被当做val引入和使用,不过不带关键字val</div><div class="line">*/</div><div class="line">def grep(pattern: String) = &#123;</div><div class="line">  val filesHere = (new File(&quot;.&quot;)).listFiles</div><div class="line">  for &#123;</div><div class="line">    file &lt;- filesHere</div><div class="line">    if file.getName.endsWith(&quot;.scala&quot;)</div><div class="line">    line &lt;- fileLines(file)</div><div class="line">    trimmed = line.trim</div><div class="line">    if trimmed.matches(pattern)</div><div class="line">  &#125; println(file + &quot;:&quot; + trimmed)</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">代码中,名为trimmed的变量被从半路引入for表达式,并被初始化为line.trim的结果值,于是之后的for表达式在两个地方使用了新的变量,一次在if中,另一次在println中</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p> 制造新集合<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">上述的例子都只是对枚举值进行操作然后就释放,你还可以创建一个值去记住每一次的迭代,只要在for表达式之前加上关键字yield,比如:下面的函数鉴别出.scala文件并保存在数组里</div><div class="line">*/</div><div class="line">def scalaFiles(pattern: String) = &#123;</div><div class="line">  val filesHere = (new File(&quot;.&quot;)).listFiles</div><div class="line">  for (</div><div class="line">    file &lt;- filesHere</div><div class="line">    if file.getName.endsWith(&quot;.scala&quot;);</div><div class="line">  ) yield file</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">for表达式在每次执行的时候都会产生一个新值,本例中是file,当for表达式完成的时候,结果将是包含了所有值的集合对象,本例中结果为Array[File]</div><div class="line">*/</div><div class="line">//for-yield表达式的语法是这样的</div><div class="line">for &#123;子句&#125; yield &#123;循环体&#125;</div><div class="line"></div><div class="line">//以下写法是错误的</div><div class="line">for (file &lt;- fileHere if file.getName.endsWith(&quot;.scala&quot;))&#123;</div><div class="line">  yield file //语法错误</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="4-使用try表达式处理异常"><a href="#4-使用try表达式处理异常" class="headerlink" title="4.使用try表达式处理异常"></a>4.使用try表达式处理异常</h1><p>&emsp;scala的异常和许多其他的语言一样,方法除了能以通常的方式返回值以外,还可以通过抛出异常中止执行,方法的调用者要么可捕获并处理这个异常,或者也可以只是简单的中止掉,并把异常上升到调用者处,异常以这种方式上升,逐层释放调用堆栈,直到某个方法接手处理或不再剩下其他的方法</p>
+<p>抛出异常<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//首先创建一个异常对象,然后用throw关键字抛出</div><div class="line">throw new IllegalArgumentException</div><div class="line"></div><div class="line">//下面代码的意思是:如果n是偶数,half将被初始化为n的一半,如果n不是偶数,那么异常将在half被初始化为任何值之前被抛出</div><div class="line">val half =</div><div class="line">  if (n%2 == 0)</div><div class="line">    n / 2</div><div class="line">  else</div><div class="line">    throw new RuntimeException(&quot;n must be event!&quot;)</div></pre></td></tr></table></figure></p>
+<p> 捕获异常<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import java.io.FileReader</div><div class="line">import java.io.FileNotFoundException</div><div class="line">import java.io.IOException</div><div class="line"></div><div class="line">try &#123;</div><div class="line">  val f = new FileReader(&quot;input.txt&quot;)</div><div class="line">  //使用了,但是并未关闭文件</div><div class="line">&#125; catch &#123;</div><div class="line">  case ex: FileNotFoundException =&gt; //处理丢失的文件</div><div class="line">  case ex: IOException =&gt; //处理其他IO错误</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">这个try-catch表达式的处理方式与其他语言中的异常处理一致,首先执行程序体,如果抛出异常,则依次尝试每个catch子句,本例中,如果异常是FileNotFoundException,那么第一个字句将被执行,如果是IOException类型,第二个字句将被执行,如果都不是,那么try-catch将终结并把异常上升出去</div><div class="line">注意:scala与Java的区别在于scala里不需要捕获异常,或者把他们声明在throws子句中</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> finally子句<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">//某些代码无论方法如何终止都要执行的话,那么可以将表达式放在finally子句里</div><div class="line">import java.io.FileReader</div><div class="line"></div><div class="line">val f = new FileReader(&quot;input.txt&quot;)</div><div class="line">try &#123;</div><div class="line">  //使用了,但是并未关闭文件</div><div class="line">&#125;finally &#123;</div><div class="line">  f.close() //确保关闭文件</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">上面的代码演示了确保非内存资源(如:文件,套接字,或者数据库链接)被关闭的惯例方式:</div><div class="line">首先,占有资源</div><div class="line">然后,开始try代码块使用资源</div><div class="line">最后,在finally代码块中关闭资源</div><div class="line">上述方式和在Java中的一样,但是在scala中还有一种被称之为出借模式的技巧将更加的简洁来到达同样的目的,出借模式在9.4节描述</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 生成值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">和其他大多数scala控制结构一样,try-catch-finally也产生值,如果没有抛出异常,返回的结果是try子句中的new URL(path),如果抛出异常并被捕获,则对应于catch中的子句</div><div class="line">*/</div><div class="line">import java.net.URL</div><div class="line">import java.net.MalformedURLException</div><div class="line"></div><div class="line">def urlFor(path: String) = </div><div class="line">  try &#123;</div><div class="line">    new URL(path)</div><div class="line">  &#125; catch &#123;</div><div class="line">    case e: MalformedURLException =&gt; new URL(&quot;http://www.scala-lang.org&quot;)</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<h1 id="5-匹配-match-表达式"><a href="#5-匹配-match-表达式" class="headerlink" title="5.匹配(match)表达式"></a>5.匹配(match)表达式</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">/*类似于其他语言中的switch语句,他可以提供给你在多个备选项中做选择*/</div><div class="line"></div><div class="line">object ScalaDemo&#123;</div><div class="line">  def main(args: Array[String]): Unit = &#123;</div><div class="line">    val firstArg = if (args.length&gt;0) args(0) else &quot;&quot;</div><div class="line">    firstArg match &#123;</div><div class="line">      case &quot;salt&quot; =&gt; println(&quot;pepper&quot;)</div><div class="line">      case &quot;chips&quot; =&gt; println(&quot;salsa&quot;)</div><div class="line">      case &quot;eggs&quot; =&gt; println(&quot;bacon&quot;)</div><div class="line">      case _ =&gt; println(&quot;huh?&quot;) //默认情况用下划线说明,这是常用在scala里作为占位符来表达未知值的通配符</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">和Java不同的是scala里的每个备选项的最后并没有break,但是在scala里并不会从上一个备选项落入到下一个备选项里面去的情况发生,</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">/*match表达式的每个备选项不但可以通过打印输出值,还可以只生成返回值而不打印*/</div><div class="line">object ScalaDemo&#123;</div><div class="line">  def main(args: Array[String]): Unit = &#123;</div><div class="line">    val firstArg = if (args.length&gt;0) args(0) else &quot;&quot;</div><div class="line">    val friend = </div><div class="line">      firstArg match &#123;</div><div class="line">        case &quot;salt&quot; =&gt; &quot;pepper&quot;</div><div class="line">        case &quot;chips&quot; =&gt; &quot;salsa&quot;</div><div class="line">        case &quot;eggs&quot; =&gt; &quot;bacon&quot;</div><div class="line">        case _ =&gt; &quot;huh?&quot;</div><div class="line">      &#125;</div><div class="line">    println(friend)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="6-不再使用break和continue"><a href="#6-不再使用break和continue" class="headerlink" title="6.不再使用break和continue"></a>6.不再使用break和continue</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">//Java写法</div><div class="line">int i = 0;</div><div class="line">boolean foundIt = false;</div><div class="line">while (i&lt;args.length)&#123;</div><div class="line">  if (args[i].startsWith(&quot;-&quot;))&#123;</div><div class="line">    i=i+1;</div><div class="line">    continue;</div><div class="line">  &#125;</div><div class="line">  if (args[i].endsWith(&quot;.scala&quot;))&#123;</div><div class="line">    foundIt = true;</div><div class="line">    break;</div><div class="line">  &#125;</div><div class="line">  i = i+1</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//scala写法(使用递归去循环,去掉var)</div><div class="line">def searchFrom(i: Int): Int =</div><div class="line">  if (i&gt;=args.length) -1</div><div class="line">  else if (args(i).startsWith(&quot;-&quot;)) searchFrom(i+1)</div><div class="line">  else if (args(i).endsWith(&quot;.scala&quot;)) i</div><div class="line">  else searchFrom(i+1)</div><div class="line"></div><div class="line">val i = searchFrom(0) //输入整数值做输入,从该值向前搜索,并返回想要的参数的索引</div><div class="line"></div><div class="line">/*</div><div class="line">用递归替换了循环,每个continue都被带有i+1做参数的递归调用替换掉了,并快速跳转处理下一个整数</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="7-变量范围"><a href="#7-变量范围" class="headerlink" title="7.变量范围"></a>7.变量范围</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">scala的变量的作用域和Java的基本相同</div><div class="line">*/</div><div class="line">//一旦变量被定义了,在同一个范围内就无法定义同样的名字了</div><div class="line">val a = 1</div><div class="line">val a = 1//编译不过</div><div class="line"></div><div class="line">//然而,你可以在内部范围内定义与外部范围里名称相同的变量</div><div class="line">val a = 1;</div><div class="line">&#123;</div><div class="line">  val a = 2 //编译通过,仅在花括号内有效</div><div class="line">  println(a)</div><div class="line">&#125;</div><div class="line">println(a)</div><div class="line">/*</div><div class="line">在内部变量被认为是遮蔽了同名的外部变量,因为在内部范围内中外部变量变得不可见,</div><div class="line">虽然可以在内部定义和外部同名的变量,但是不建议这样做,因为这样做对读者来说会很混乱,通常,选择新的,有意义的变量名比不时遮蔽外部变量的做法更为妥当</div><div class="line">*/</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第九章 控制抽象/" rel="next" title="第九章 控制抽象">
+                <i class="fa fa-chevron-left"></i> 第九章 控制抽象
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/Scala简介/" rel="prev" title="第一章 scala简介">
+                第一章 scala简介 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-if表达式"><span class="nav-number">1.</span> <span class="nav-text">1.if表达式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-while循环"><span class="nav-number">2.</span> <span class="nav-text">2.while循环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-for表达式"><span class="nav-number">3.</span> <span class="nav-text">3.for表达式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-使用try表达式处理异常"><span class="nav-number">4.</span> <span class="nav-text">4.使用try表达式处理异常</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-匹配-match-表达式"><span class="nav-number">5.</span> <span class="nav-text">5.匹配(match)表达式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-不再使用break和continue"><span class="nav-number">6.</span> <span class="nav-text">6.不再使用break和continue</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-变量范围"><span class="nav-number">7.</span> <span class="nav-text">7.变量范围</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

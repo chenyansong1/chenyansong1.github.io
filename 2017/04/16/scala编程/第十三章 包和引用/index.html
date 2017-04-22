@@ -1,0 +1,773 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;做程序的时候,尤其是很大的程序,使耦合最小化是很重要的,低耦合能降低程序一部分的细微改变影响到另一部分的正常执行这样的风险,减少耦合的方式之一是使用模块化风格编写代码,把程序分解成若干比较小的模块,把每块分成内部和外部,在模块的内部(即:模块的实现部分) 工作时,你只需要和同样工作于这个模块的程序员交互,只有当你必须改变模块的外部(即模块的接口)时,才需要和工作于其他模块的开发人员交互">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十三章 包和引用">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/第十三章 包和引用/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="&amp;emsp;做程序的时候,尤其是很大的程序,使耦合最小化是很重要的,低耦合能降低程序一部分的细微改变影响到另一部分的正常执行这样的风险,减少耦合的方式之一是使用模块化风格编写代码,把程序分解成若干比较小的模块,把每块分成内部和外部,在模块的内部(即:模块的实现部分) 工作时,你只需要和同样工作于这个模块的程序员交互,只有当你必须改变模块的外部(即模块的接口)时,才需要和工作于其他模块的开发人员交互">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第十三章 包和引用">
+<meta name="twitter:description" content="&amp;emsp;做程序的时候,尤其是很大的程序,使耦合最小化是很重要的,低耦合能降低程序一部分的细微改变影响到另一部分的正常执行这样的风险,减少耦合的方式之一是使用模块化风格编写代码,把程序分解成若干比较小的模块,把每块分成内部和外部,在模块的内部(即:模块的实现部分) 工作时,你只需要和同样工作于这个模块的程序员交互,只有当你必须改变模块的外部(即模块的接口)时,才需要和工作于其他模块的开发人员交互">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/第十三章 包和引用/"/>
+
+
+
+
+
+  <title> 第十三章 包和引用 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第十三章 包和引用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第十三章 包和引用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;做程序的时候,尤其是很大的程序,使耦合最小化是很重要的,低耦合能降低程序一部分的细微改变影响到另一部分的正常执行这样的风险,减少耦合的方式之一是使用模块化风格编写代码,把程序分解成若干比较小的模块,把每块分成内部和外部,在模块的内部(即:模块的实现部分) 工作时,你只需要和同样工作于这个模块的程序员交互,只有当你必须改变模块的外部(即模块的接口)时,才需要和工作于其他模块的开发人员交互</p>
+<a id="more"></a>
+<h1 id="1-包"><a href="#1-包" class="headerlink" title="1.包"></a>1.包</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">你可以用两种方式把代码放在命名包中,一种是通过把package子句放在文件顶端的方式把整个文件内容放进包里,如下:</div><div class="line">*/</div><div class="line">package bobsrockets.navigation</div><div class="line">class Navigator</div><div class="line"></div><div class="line">/*</div><div class="line">由于scala代码是Java生态系统的一部分,在你发布到公开场合的时候,推荐遵循Java的反域名习惯设置scala包名,因此,更好的Navigator包名应该是: com.bobsrockets.navigation ,然而在本章里我们是为了让例子容易理解我们去掉了&quot;com.&quot; </div><div class="line">*/</div><div class="line"></div><div class="line">//scala里另一种把代码放进包里的方式更像C#的命名空间,可以在package子句之后把要放到包里的定义用花括号括起来,除此之外,这种语法还能让你把文件的不同部分放在不同的包里,例如:你或许会把类的测试与原始代码一起放在同一个文件,但在不同的包里,如下:</div><div class="line">package bobsrockets &#123;</div><div class="line">  package navigation &#123;</div><div class="line">    class Navigator //bobsrockets.navigation包中</div><div class="line">    package tests &#123;</div><div class="line">      class NavigatorSuite  //bobsrockets.navigation.tests包中</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//实际上如果一个包只是用来嵌入另一个包的话,你可以使用如下的方式:</div><div class="line">package bobsrockets.navigation &#123;</div><div class="line">    class Navigator //bobsrockets.navigation包中</div><div class="line">    package tests &#123;</div><div class="line">      class NavigatorSuite  //bobsrockets.navigation.tests包中</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">正如你看到的一样,scala的包的确是嵌套的,也就是说,包navigation从语义上讲在包bobsrockets的内部,Java包尽管是分级的,却不是嵌套的,在Java里,当你命名一个包的时候,你必须从包层级的根开始</div><div class="line">*/</div><div class="line">package bobsrockets &#123;</div><div class="line">  package navigation &#123;</div><div class="line">    class Navigator //bobsrockets.navigation包中</div><div class="line">  &#125;</div><div class="line">  package launch &#123;</div><div class="line">    class Booster&#123;</div><div class="line">      //不用写bobsrockets.navigation.Navigator</div><div class="line">      val nav = new navigation.Navigator</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">上面的方式之所以不用写全路径,是因为Booster类包含在bobsrockets包汇总,而这个包又含有navigationy</div><div class="line">成员,因此可以直接写navigation,务必使用前缀,就好像类方法里的代码可以直接用类的其他方法而不用前缀</div><div class="line">*/</div><div class="line"></div><div class="line">//文件launch.scala</div><div class="line">package launch &#123;</div><div class="line">  class Booster3</div><div class="line">&#125;</div><div class="line"></div><div class="line">//文件bobsrockets.scala</div><div class="line">package bobsrockets &#123;</div><div class="line">  package navigation &#123;</div><div class="line">    package launch &#123;</div><div class="line">      class Booster1</div><div class="line">    &#125;</div><div class="line">    class MissionControl &#123;</div><div class="line">      val booster1 = new launch.Booster1</div><div class="line">      val booster2 = new bobsrockets.launch.Booster2</div><div class="line">      val booster3 = new _root_.launch.Booster3</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  package launch &#123;</div><div class="line">    class Booster2</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">为了处理这种情况,scala在所有用户可创建的包之外提供了一个名为_root_的包,换句话说,任何你能写出来的顶层包都被当做是_root_包的成员,例如上述代码中的launch和bobsrockets都是_root_包的成员,因此,_root_.launch让你能访问顶层的launch包,_root_.launch.Booster3指向的就是最外面的booster类 </div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="2-引用"><a href="#2-引用" class="headerlink" title="2.引用"></a>2.引用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">在scala里,包和其他成员可以用import子句来引用,之后引用的项目就可以用File这样的简单名访问,否则就要用Java.io.File这样的全称</div><div class="line">*/</div><div class="line">package bobsdelights</div><div class="line">abstract class Fruit(val name: String, val color: String)</div><div class="line">object Fruits &#123;</div><div class="line">  object Apple extends Fruit(&quot;apple&quot;, &quot;red&quot;)</div><div class="line">  object Orange extends Fruit(&quot;orange&quot;, &quot;orange&quot;)</div><div class="line">  object Pear extends Fruit(&quot;pear&quot;, &quot;yellowish&quot;)</div><div class="line"></div><div class="line">  val menu = List(Apple, Orange, Pear)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//易于访问Fruit</div><div class="line">import bobsdelights.Fruit</div><div class="line"></div><div class="line">//易于访问bobsdelights的所有成员,在Java中使用的是*号,在scala里使用的是_</div><div class="line">import bobsdelights._</div><div class="line"></div><div class="line">//易于访问Fruits的所有成员</div><div class="line">import bobsdelights.Fruits._</div><div class="line"></div><div class="line">/*</div><div class="line">scala引用可以出现在任何地方,而不是仅仅在编译单元的开始处,同样,他们可以指向任意值,例如,</div><div class="line">*/</div><div class="line"></div><div class="line">def showFruit(fruit: Fruit) &#123;</div><div class="line">  import fruit._</div><div class="line">  println(name + &quot;s are &quot; + color)</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">方法showFruit引用了他的参数(fruit)的所有成员,之后println语句就可以直接使用name和color了,这两个引用值等价于fruit.name 和fruit.color,当你把对象当做模块使用时这种语法尤其有用</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">scala的import子句比Java的更为灵活,在他们之间存在三点主要差异,在scala中,引用:</div><div class="line">1.可以出现在任何地方</div><div class="line">2.可以指的是(单例或正统的)对象及包</div><div class="line">3.可以重命名或隐藏一些被引用的成员</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">scala的引用还可以重命名或隐藏成员,这可以在被引用成员的对象之后加上括号里的引用选择器子句来做到</div><div class="line">*/</div><div class="line"></div><div class="line">//此例只引用了对象Fruits的Apple和Orange成员</div><div class="line">import Fruits.&#123;Apple, Orange&#125;</div><div class="line"></div><div class="line">//此例从对象Fruits引用了Apple和Orange两个成员,不过,Apple对象重命名MacIntosh,重命名子句的格式&quot;&lt;原始名&gt; =&gt; &lt;新名&gt;&quot;</div><div class="line">import Fruits.&#123;Apple =&gt;McIntosh, Orange&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">此例以SDate的名字引用了sql的日期类,以便同时以Date的名字引用普通的Java日期类</div><div class="line"> */</div><div class="line">import java.sql.&#123;Date =&gt; SDate&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">此例以名称S引用了Java.sql包,这样你就可以写成S.Date</div><div class="line"> */</div><div class="line">import java.&#123;sql =&gt; S&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">此例引用了对象Fruits的所有成员,这与import Fruits._同义</div><div class="line"> */</div><div class="line">import Fruits.&#123;_&#125;</div><div class="line"></div><div class="line">//此例从Fruits对象引用所有成员,不过重命名Apple为McIntosh</div><div class="line">import Fruits.&#123;Apple =&gt; McIntosh, _&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">此例引用了Fruits的所有成员,Pear除外,&quot; &lt;原始名&gt; =&gt; _ &quot; 格式的子句会从被引用的名字</div><div class="line">中排除&lt;原始名&gt; ,从某种意义上来说,把某样东西重命名为 &quot;_&quot; 就是表示把它隐藏掉,这对避免出现</div><div class="line">混淆的局面有所帮助,比如说你有两个包,Fruits和Notebooks ,他们都定义了类Apple</div><div class="line">如果你只是想得到名为Apple的笔记本,而不是水果,你可以使用如下的方式:</div><div class="line"> */</div><div class="line">import Fruits.&#123;Pear =&gt; _, _&#125;</div><div class="line"></div><div class="line">import Notebooks._</div><div class="line">import Fruits.&#123;Apple =&gt; _, _&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">总结:</div><div class="line">1.简单名x,把x包含进引用名集</div><div class="line">2.重命名子句x=&gt;y 让名为x的程艳以名称y出现</div><div class="line">3.隐藏子句x=&gt;_ 把x排除在引用名集之外</div><div class="line">4.全包括 &apos;_&quot; 引用除了前面子句提到的之外的全体成员,如果存在全包括,那么必须是引用选择的最后一个</div><div class="line"></div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="3-隐式引用"><a href="#3-隐式引用" class="headerlink" title="3.隐式引用"></a>3.隐式引用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">scala为每个程序隐式的添加了一些引用,就好像每个以&quot;.scala&quot;为扩展名的源文件的顶端都加在了下列的三个引用子句</div><div class="line">*/</div><div class="line">import Java.lang._   //java.lang包的所有东西</div><div class="line">import scala._      //scala包的所有东西</div><div class="line">import Predef._       //Predef对象的所有东西</div><div class="line"></div><div class="line">/*</div><div class="line">因为Java.lang是隐式引用的,所以说你就可以直接使用Thread而不需要写成java.lang.Thread</div><div class="line">又如:scala包被隐式引用, 你可以直接写LIst, 而不用写成scala.LIst</div><div class="line">Predef对象包含了许多scala程序中常用到的类型,方法和隐式的定义,比方说:因为Predef是隐式引用,所以你可以直接写assert而不用写成Predef.assert</div><div class="line"></div><div class="line"></div><div class="line">上面的这三个引用子句与其他的稍有不同,出现在靠后位置的引用将覆盖靠前的引用,例如:StringBuilder类被定义在scala包及包java.lang中,因为scala引用覆盖了java.lang引用,所以StringBuilder简单名被看做scala.StringBuilder,而不是java.lang.StringBuilder</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="4-访问修饰符"><a href="#4-访问修饰符" class="headerlink" title="4.访问修饰符"></a>4.访问修饰符</h1><p>&emsp;包/类或对象的成员可以访问修饰符private和protected做标记,这些修饰符把对成员的访问限制在代码确定的区域中,scala大体上遵守java对访问修饰符的对待方式,但也有一些重要的差异</p>
+<p> 私有成员<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">私有成员的处理方式与java的相同,标记为private的成员仅在包含了成员定义的类或对象内部可见</div><div class="line">*/</div><div class="line"></div><div class="line">class Outer &#123;</div><div class="line">  class Inner &#123;</div><div class="line">    private def f() &#123; println(&quot;f&quot;)&#125;</div><div class="line">    class InnerMost &#123;</div><div class="line">      f() //Ok</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  (new Inner).f() //f不可访问</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">在scala里, (new Inner).f() 访问非法,因if在Inner中被声明为private而访问不再类Inner之内,相反,在类InnerMost里访问f没有问题,因为这个访问包含在Inner类之内,java允许这两种访问,因为他允许外部类访问其内部类的私有成员</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 保护成员<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">scala里,保护成员只在定义了成员的类的子类中可以被访问,而在java中还允许同一个包的其他类中进行这种访问</div><div class="line">*/</div><div class="line">package p&#123;</div><div class="line">  class Super&#123;</div><div class="line">    protected def f() &#123; println(&quot;f&quot;)&#125;</div><div class="line">  &#125;</div><div class="line">  class Sub extends Super &#123;</div><div class="line">    f()</div><div class="line">  &#125;</div><div class="line">  class Other &#123;</div><div class="line">    (new Super).f()  //error ,f不可访问</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">例子中,Sub类对f的访问没有问题,因为f在Super中被声明为protected,而Sub是Super的子类,相反Other对f的访问不被允许,因为Other没有继承自Super,java里,后者同样会被认可,因为Other和Sub在同一个包里</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 公开成员<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">任何默认标记为private或protected的成员都是公开的,公开成员没有显示的修饰符,这样的成员可以在任何地方被访问</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 保护的作用域<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">在scala里的访问修饰符可以通过使用限定词强调,格式为private[X] ,或protected[X] 的修饰符表示 &quot;直到&quot; X的私有或保护,这里X指代某个所属的包,类或单例对象</div><div class="line">在这段代码中,类Navigator被标记为private[bobsrockets] ,就是说这个类对包含在bobsrockets包里的所有的类和对象可见</div><div class="line"></div><div class="line">这种技巧在横跨若干包的大型项目中非常有用,他允许你定义一些在你项目的若干子包中可见但对于项目外部的客户却始终不可见的东西</div><div class="line">*/</div><div class="line">package bobsrockets &#123;</div><div class="line">  package navigation &#123;</div><div class="line">    private [bobsrockets] class Navigator &#123;//可以在bobsrockets包中访问</div><div class="line">      protected [navigation] def useStarChar()&#123;&#125;//该方法能被Navigator所有子类及包含在navigation包里的所有代码访问</div><div class="line">      class LegOfJourney &#123;</div><div class="line">        private[Navigator] val distance = 100 //在类Navigator的任何地方都可见</div><div class="line">      &#125;</div><div class="line">      private[this] var speed = 200 //仅能在包含了定义的同一个对象中被访问</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  package launch &#123;</div><div class="line">    import navigation._</div><div class="line">    object Vehicle &#123;</div><div class="line">      private[launch] val guide = new Navigator</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;下表罗列了private限定字的效果,每一行说明了一个被限定的私有修饰符及如果这个修饰符被附加在LegOfJourney类里声明的distance变量上意味着什么</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">没有修饰符</th>
+<th style="text-align:left">公开访问</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">private[bobsrockets]</td>
+<td style="text-align:left">在外部包中访问</td>
+</tr>
+<tr>
+<td style="text-align:left">private[navigation]</td>
+<td style="text-align:left">与java的包可见度相同</td>
+</tr>
+<tr>
+<td style="text-align:left">private[Navigator]</td>
+<td style="text-align:left">与java的private相同</td>
+</tr>
+<tr>
+<td style="text-align:left">private[LegOfJourney]</td>
+<td style="text-align:left">与scala的private相同</td>
+</tr>
+<tr>
+<td style="text-align:left">private[this]</td>
+<td style="text-align:left">仅在同一个对象中可以访问</td>
+</tr>
+</tbody>
+</table>
+<p> 可见性和伴生对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">java里,静态成员和实例成员属于同一个类,因此访问修饰符可以统一的应用在他们之上,你已经知道在scala里没有静态成员,作为替代,可以拥有包含成员的单例的伴生对象</div><div class="line">*/</div><div class="line"></div><div class="line">class Rocket &#123;</div><div class="line">  import Rocket.fuel</div><div class="line">  private def canGoHomeAgain = fuel &gt; 20</div><div class="line">&#125;</div><div class="line"></div><div class="line">object Rocket &#123;</div><div class="line">  private def fuel = 10</div><div class="line">  def chooseStrategy(rocket: Rocket)&#123; </div><div class="line">    if (rocket.canGoHomeAgain)</div><div class="line">      goHome()</div><div class="line">    else </div><div class="line">      pickAstar()</div><div class="line">  &#125;</div><div class="line">  def goHome()&#123;&#125;</div><div class="line">  def pickAstar()&#123;&#125;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">对于私有或保护访问来说,scala的访问规则给予了伴生对象和类一些特权,类的所有访问权限都对伴生对象开放,反过来也是如此,具体的说,就是对象可以访问所有他的伴生类的私有成员,就好像类也可以访问伴生对象的所有私有成员一样</div><div class="line"></div><div class="line">如上面的例子:Rocket类可以访问fuel方法,而他在Rocket对象中是被声明为private的,类似的,Rocket对象也可以访问Rocket类里面的私有方法canGetHome</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十九章 类型参数化/" rel="next" title="第十九章 类型参数化">
+                <i class="fa fa-chevron-left"></i> 第十九章 类型参数化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十七章 集合类型/" rel="prev" title="第十七章 集合类型">
+                第十七章 集合类型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-包"><span class="nav-number">1.</span> <span class="nav-text">1.包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-引用"><span class="nav-number">2.</span> <span class="nav-text">2.引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-隐式引用"><span class="nav-number">3.</span> <span class="nav-text">3.隐式引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-访问修饰符"><span class="nav-number">4.</span> <span class="nav-text">4.访问修饰符</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

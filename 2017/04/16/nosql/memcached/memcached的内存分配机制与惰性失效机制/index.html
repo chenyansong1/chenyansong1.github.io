@@ -1,0 +1,773 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="memcached," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.内存的碎片化如果用C语言直接 malloc free来向操作系统申请和释放内存时，在不断的申请和释放过程中，形成了一些很小的内存片段，无法再利用，这就是内存碎片  2.memcached的内存分配机制2.1.Slab Allocator分配机制memcached用slab allocator来管理内存的， 其基本原理：把内存划分成数个slab仓库，各个仓库切分不同的尺寸的小块（chunk)，需">
+<meta name="keywords" content="memcached">
+<meta property="og:type" content="article">
+<meta property="og:title" content="memcached的内存分配机制与惰性失效机制">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/memcached/memcached的内存分配机制与惰性失效机制/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.内存的碎片化如果用C语言直接 malloc free来向操作系统申请和释放内存时，在不断的申请和释放过程中，形成了一些很小的内存片段，无法再利用，这就是内存碎片  2.memcached的内存分配机制2.1.Slab Allocator分配机制memcached用slab allocator来管理内存的， 其基本原理：把内存划分成数个slab仓库，各个仓库切分不同的尺寸的小块（chunk)，需">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/2.jpg">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/3.jpg">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/4.jpg">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/5.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/6.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/7.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/8.png">
+<meta property="og:updated_time" content="2017-02-24T17:10:16.887Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="memcached的内存分配机制与惰性失效机制">
+<meta name="twitter:description" content="1.内存的碎片化如果用C语言直接 malloc free来向操作系统申请和释放内存时，在不断的申请和释放过程中，形成了一些很小的内存片段，无法再利用，这就是内存碎片  2.memcached的内存分配机制2.1.Slab Allocator分配机制memcached用slab allocator来管理内存的， 其基本原理：把内存划分成数个slab仓库，各个仓库切分不同的尺寸的小块（chunk)，需">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/memcached/memcached的内存分配机制与惰性失效机制/"/>
+
+
+
+
+
+  <title> memcached的内存分配机制与惰性失效机制 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/memcached/memcached的内存分配机制与惰性失效机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                memcached的内存分配机制与惰性失效机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/memcached/" itemprop="url" rel="index">
+                    <span itemprop="name">memcached</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-内存的碎片化"><a href="#1-内存的碎片化" class="headerlink" title="1.内存的碎片化"></a>1.内存的碎片化</h1><p>如果用C语言直接 malloc free来向操作系统申请和释放内存时，在不断的申请和释放过程中，形成了一些很小的内存片段，无法再利用，这就是内存碎片</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/1.png" alt=""></p>
+<h1 id="2-memcached的内存分配机制"><a href="#2-memcached的内存分配机制" class="headerlink" title="2.memcached的内存分配机制"></a>2.memcached的内存分配机制</h1><h2 id="2-1-Slab-Allocator分配机制"><a href="#2-1-Slab-Allocator分配机制" class="headerlink" title="2.1.Slab Allocator分配机制"></a>2.1.Slab Allocator分配机制</h2><p>memcached用slab allocator来管理内存的，<font color="red"> 其基本原理：把内存划分成数个slab仓库，各个仓库切分不同的尺寸的小块（chunk)，需要存储内容时，判断内存的大小，为其选取合理的仓库 </font>，但是如果有100byte的内容要存储，但距离100byte最近的122大小的仓库中你的chunk满了，此时并不会寻找更大的chunk，而是将122中不常用的数据踢掉</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/2.jpg" alt=""></p>
+<h2 id="2-2-Slab-Allocator缓存原理"><a href="#2-2-Slab-Allocator缓存原理" class="headerlink" title="2.2.Slab Allocator缓存原理"></a>2.2.Slab Allocator缓存原理</h2><p> memcached根据收到的数据的大小， 选择最适合数据大小的slab。memcached中保存着slab内空闲chunk的列表， 根据该列表选择chunk， 然后将数据缓存于其中。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/3.jpg" alt=""></p>
+<h2 id="2-3-lab-Allocator的缺点"><a href="#2-3-lab-Allocator的缺点" class="headerlink" title="2.3.lab Allocator的缺点"></a>2.3.lab Allocator的缺点</h2><p>chunks为固定大小,造成浪费. 这个问题 不能克服,只能缓解</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/4.jpg" alt=""></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/5.png" alt=""></p>
+<h2 id="2-4-grow-factor-增长因子"><a href="#2-4-grow-factor-增长因子" class="headerlink" title="2.4.grow factor(增长因子)"></a>2.4.grow factor(增长因子)</h2><p>memcached在启动时指定Growth Factor因子（通过­f选项）， 就可以在某种程度上控制slab之间的差异。默认值为1.25。 但是，在该选项出现之前，这个因子曾经固定为2，称为“powers of 2”策略<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#如下图：112/88=1.25 也就是增长因子，一般而言，观察缓存数据大小的变化规律，设置合理的生长因子，可以根据自己网站的缓存数据的大小来调整增长因子</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/6.png" alt=""><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/7.png" alt=""><br><br></p>
+<h1 id="3-惰性失效机制（Lazy-Expiration）"><a href="#3-惰性失效机制（Lazy-Expiration）" class="headerlink" title="3.惰性失效机制（Lazy Expiration）"></a>3.惰性失效机制（Lazy Expiration）</h1><p>memcached内部不会监视记录是否过期，而是在get时会查看记录的时间戳（和设定的时间比较），检查记录是否过期。这种技术被称为lazy（惰性）expiration。 因此，<font color="red">memcached不会在过期监视上耗费CPU时间</font></p>
+<ol>
+<li>当某个值过期后，并没有从内存删除，因此stats统计的时候，curr_item有其信息</li>
+<li>当某个新值去占用他的位置的时候，当成空chunk来占用</li>
+<li>当get值时，判断是否过期，如果过期返回空，并且清空，此时在stats，curr_item就减少了</li>
+<li>即：这个过期只是让用户看不到这个数据而已并没有真正删除数据</li>
+</ol>
+<p>为什么说节省了CPU？<br>实际上设置5s之后失效，如果是主动的使数据失效的话，就会在5s的时候去主动的触发数据失效，这样系统本身还要去检查，5s到了吗，哦，没到，那等一下再去检查，系统会一直这样检查，这样就会消耗CPU的时间，但是惰性机制就是，在get的时候，直接取检查，当前时间是否和数据建立的时间之间的时间差，然后，超过了我设定的过期时间间隔，此时才正式的将数据删除，新增数据的时候也是这样去检查，</p>
+<h1 id="4-memcached的删除机制"><a href="#4-memcached的删除机制" class="headerlink" title="4.memcached的删除机制"></a>4.memcached的删除机制</h1><p>Least Recently Used（LRU）——最近最少使用，memcached会优先使用已超时的记录的空间，但即使如此，也会发生追加新记录时空间不 足的情况，此时就要使用名为 Least Recently Used（LRU）机制来分配空间<br>如果chunk满了，又有新的加入，旧数据会被踢掉。踢掉可以设置两种FIFO（先进先出）、LRU(最近最少使用)。下面是一个LRU的demo:</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/memcached/LRU/8.png" alt=""></p>
+<font color="green">注意：get、inrc、decr等可以使数据变成最近使用</font>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/memcached/" rel="tag"># memcached</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/memcached/memcached缓存的无底洞现象/" rel="next" title="memcached缓存的无底洞现象">
+                <i class="fa fa-chevron-left"></i> memcached缓存的无底洞现象
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/memcached/Memcached参数含义及CRUD、自增、stats、flush_all等语句/" rel="prev" title="Memcached参数含义及CRUD、自增、stats、flush_all等语句">
+                Memcached参数含义及CRUD、自增、stats、flush_all等语句 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-内存的碎片化"><span class="nav-number">1.</span> <span class="nav-text">1.内存的碎片化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-memcached的内存分配机制"><span class="nav-number">2.</span> <span class="nav-text">2.memcached的内存分配机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Slab-Allocator分配机制"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.Slab Allocator分配机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-Slab-Allocator缓存原理"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.Slab Allocator缓存原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-lab-Allocator的缺点"><span class="nav-number">2.3.</span> <span class="nav-text">2.3.lab Allocator的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-grow-factor-增长因子"><span class="nav-number">2.4.</span> <span class="nav-text">2.4.grow factor(增长因子)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-惰性失效机制（Lazy-Expiration）"><span class="nav-number">3.</span> <span class="nav-text">3.惰性失效机制（Lazy Expiration）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-memcached的删除机制"><span class="nav-number">4.</span> <span class="nav-text">4.memcached的删除机制</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

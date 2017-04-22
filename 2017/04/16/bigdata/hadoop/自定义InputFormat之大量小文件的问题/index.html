@@ -1,0 +1,742 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop,mapreduce," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="默认情况下，TextInputFormat对任务的切片机制是按文件规划切片，不管文件多小，都会是一个单独的切片，都会交给一个maptask，这样，如果有大量小文件，就会产生大量的maptask，处理效率极其低下">
+<meta name="keywords" content="hadoop,mapreduce">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义InputFormat之大量小文件的问题">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/hadoop/自定义InputFormat之大量小文件的问题/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="默认情况下，TextInputFormat对任务的切片机制是按文件规划切片，不管文件多小，都会是一个单独的切片，都会交给一个maptask，这样，如果有大量小文件，就会产生大量的maptask，处理效率极其低下">
+<meta property="og:updated_time" content="2017-02-27T05:55:04.798Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义InputFormat之大量小文件的问题">
+<meta name="twitter:description" content="默认情况下，TextInputFormat对任务的切片机制是按文件规划切片，不管文件多小，都会是一个单独的切片，都会交给一个maptask，这样，如果有大量小文件，就会产生大量的maptask，处理效率极其低下">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/hadoop/自定义InputFormat之大量小文件的问题/"/>
+
+
+
+
+
+  <title> 自定义InputFormat之大量小文件的问题 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/hadoop/自定义InputFormat之大量小文件的问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                自定义InputFormat之大量小文件的问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>默认情况下，TextInputFormat对任务的切片机制是按文件规划切片，不管文件多小，都会是一个单独的切片，都会交给一个maptask，这样，如果有大量小文件，就会产生大量的maptask，处理效率极其低下</p>
+<a id="more"></a>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>小文件的优化无非以下几种方式：<br>1、在数据采集的时候，就将小文件或小批数据合成大文件再上传HDFS<br>2、在业务处理之前，在HDFS上使用mapreduce程序对小文件进行合并<br>3、在mapreduce处理时，可采用combineInputFormat提高效率</p>
+<h1 id="采用combineInputFormat"><a href="#采用combineInputFormat" class="headerlink" title="采用combineInputFormat"></a>采用combineInputFormat</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/*如果不设置InputFormat，它默认用的是TextInputformat.class</div><div class="line">   * 只是将多个小文件放在一个切片中，即一个maptask中</div><div class="line">  */</div><div class="line">  job.setInputFormatClass(CombineTextInputFormat.class);</div><div class="line">  CombineTextInputFormat.setMaxInputSplitSize(job, 4194304);</div><div class="line">  CombineTextInputFormat.setMinInputSplitSize(job, 2097152);</div></pre></td></tr></table></figure>
+<h1 id="自定义InputFormat"><a href="#自定义InputFormat" class="headerlink" title="自定义InputFormat"></a>自定义InputFormat</h1><p>实现方式:<br>1.自定义一个InputFormat<br>2.改写RecordReader，实现一次读取一个完整文件封装为KV<br>3.在输出时使用SequenceFileOutPutFormat输出合并文件</p>
+<p>代码如下：<br>自定义InputFromat</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.combinefile;</div><div class="line"> </div><div class="line">import java.io.IOException;</div><div class="line"> </div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.BytesWritable;</div><div class="line">import org.apache.hadoop.io.NullWritable;</div><div class="line">import org.apache.hadoop.mapreduce.InputSplit;</div><div class="line">import org.apache.hadoop.mapreduce.JobContext;</div><div class="line">import org.apache.hadoop.mapreduce.RecordReader;</div><div class="line">import org.apache.hadoop.mapreduce.TaskAttemptContext;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line"> </div><div class="line">public class WholeFileInputFormat extends FileInputFormat&lt;NullWritable, BytesWritable&gt;&#123;</div><div class="line"> </div><div class="line">@Override</div><div class="line">protected boolean isSplitable(JobContext context, Path file) &#123;</div><div class="line">  return false;</div><div class="line">&#125;</div><div class="line"> </div><div class="line">@Override</div><div class="line">public RecordReader&lt;NullWritable, BytesWritable&gt; createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException,InterruptedException &#123;</div><div class="line">  WholeFileRecordReader reader = new WholeFileRecordReader();</div><div class="line">  reader.initialize(split, context);</div><div class="line">  return reader;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>自定义RecordReader</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.combinefile;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.FSDataInputStream;</div><div class="line">import org.apache.hadoop.fs.FileSystem;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.BytesWritable;</div><div class="line">import org.apache.hadoop.io.IOUtils;</div><div class="line">import org.apache.hadoop.io.NullWritable;</div><div class="line">import org.apache.hadoop.mapreduce.InputSplit;</div><div class="line">import org.apache.hadoop.mapreduce.RecordReader;</div><div class="line">import org.apache.hadoop.mapreduce.TaskAttemptContext;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileSplit;</div><div class="line"></div><div class="line">/**</div><div class="line"> * </div><div class="line"> * RecordReader的核心工作逻辑：</div><div class="line"> * 通过nextKeyValue()方法去读取数据构造将返回的key   value</div><div class="line"> * 通过getCurrentKey 和 getCurrentValue来返回上面构造好的key和value</div><div class="line"> */</div><div class="line">class WholeFileRecordReader extends RecordReader&lt;NullWritable, BytesWritable&gt; &#123;</div><div class="line">	private FileSplit fileSplit;</div><div class="line">	private Configuration conf;</div><div class="line">	private BytesWritable value = new BytesWritable();</div><div class="line">	private boolean processed = false;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void initialize(InputSplit split, TaskAttemptContext context)</div><div class="line">			throws IOException, InterruptedException &#123;</div><div class="line">		this.fileSplit = (FileSplit) split;</div><div class="line">		this.conf = context.getConfiguration();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public boolean nextKeyValue() throws IOException, InterruptedException &#123;</div><div class="line">		if (!processed) &#123;</div><div class="line">			byte[] contents = new byte[(int) fileSplit.getLength()];</div><div class="line">			Path file = fileSplit.getPath();</div><div class="line">			FileSystem fs = file.getFileSystem(conf);</div><div class="line">			FSDataInputStream in = null;</div><div class="line">			try &#123;</div><div class="line">				in = fs.open(file);</div><div class="line">				IOUtils.readFully(in, contents, 0, contents.length);</div><div class="line">				value.set(contents, 0, contents.length);</div><div class="line">			&#125; finally &#123;</div><div class="line">				IOUtils.closeStream(in);</div><div class="line">			&#125;</div><div class="line">			processed = true;//设置为true，那么将只会读取一次，也就是只是返回一个keyValue，一个文件读取完毕</div><div class="line">			</div><div class="line">			return true;</div><div class="line">		&#125;</div><div class="line">		return false;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line">	@Override</div><div class="line">	public NullWritable getCurrentKey() throws IOException,</div><div class="line">			InterruptedException &#123;</div><div class="line">		return NullWritable.get();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public BytesWritable getCurrentValue() throws IOException,</div><div class="line">			InterruptedException &#123;</div><div class="line">		return value;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 返回当前进度</div><div class="line">	 */</div><div class="line">	@Override</div><div class="line">	public float getProgress() throws IOException &#123;</div><div class="line">		//框架会调用该方法，返回读取的进度，因为只是读取一次（读完整个文件），所以是要么读完了，要么没有读完</div><div class="line">		return processed ? 1.0f : 0.0f;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void close() throws IOException &#123;</div><div class="line">		// do nothing</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>定义mapreduce处理流程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.combinefile;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.conf.Configured;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.BytesWritable;</div><div class="line">import org.apache.hadoop.io.NullWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.InputSplit;</div><div class="line">import org.apache.hadoop.mapreduce.Job;</div><div class="line">import org.apache.hadoop.mapreduce.Mapper;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileSplit;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;</div><div class="line">import org.apache.hadoop.util.GenericOptionsParser;</div><div class="line">import org.apache.hadoop.util.Tool;</div><div class="line">import org.apache.hadoop.util.ToolRunner;</div><div class="line"></div><div class="line">public class SmallFilesToSequenceFileConverter extends Configured implements Tool &#123;</div><div class="line">	static class SequenceFileMapper extends	Mapper&lt;NullWritable, BytesWritable, Text, BytesWritable&gt; &#123;</div><div class="line">		private Text filenameKey;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		protected void setup(Context context) throws IOException, InterruptedException &#123;</div><div class="line">			InputSplit split = context.getInputSplit();</div><div class="line">			Path path = ((FileSplit) split).getPath();</div><div class="line">			//拿到文件的路径，作为key</div><div class="line">			filenameKey = new Text(path.toString());</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		@Override</div><div class="line">		protected void map(NullWritable key, BytesWritable value, Context context) throws IOException, InterruptedException &#123;</div><div class="line">			//以文件路径作为key，以RecordReader.nextKeyValue()读取的一行（其实是整个文件）作为value</div><div class="line">			context.write(filenameKey, value);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public int run(String[] args) throws Exception &#123;</div><div class="line">		Configuration conf = new Configuration();</div><div class="line">		/*System.setProperty(&quot;HADOOP_USER_NAME&quot;, &quot;hadoop&quot;);*/</div><div class="line">		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();</div><div class="line">		if (otherArgs.length != 2) &#123;</div><div class="line">			System.err.println(&quot;Usage: combinefiles &lt;in&gt; &lt;out&gt;&quot;);</div><div class="line">			System.exit(2);</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		Job job = Job.getInstance(conf,&quot;combine small files to sequencefile&quot;);</div><div class="line">		job.setJarByClass(SmallFilesToSequenceFileConverter.class);</div><div class="line">		</div><div class="line">		//默认是 TextInputFormat</div><div class="line">		job.setInputFormatClass(WholeFileInputFormat.class);</div><div class="line">		</div><div class="line">		/**</div><div class="line">		 * 这里没有指定reduce，所以会调用默认的reduce，但是如果输出的格式仍然是文本的话，那么value.toString()就会</div><div class="line">		 * 是一个对象的hash地址，所以这里指定输出value的格式为字节序列：SequenceFileOutputFormat</div><div class="line">		 * 这样输出的文件中的格式：文件名（key)	字节序列（value）</div><div class="line">		 * 问题：</div><div class="line">		 * 1.将所以的小文件最后都以 &quot; 文件名（key)	字节序列（value） &quot;的方式输出到了一个文件中，那么最后这个文件将非常的大</div><div class="line">		 * 2.最后输出的文件是字节文件，那么我们再不能使用默认的InputFormat的方式（TextInputformat）来读取文件了</div><div class="line">		 */</div><div class="line">		job.setOutputFormatClass(SequenceFileOutputFormat.class);</div><div class="line">		job.setOutputKeyClass(Text.class);</div><div class="line">		job.setOutputValueClass(BytesWritable.class);</div><div class="line">		</div><div class="line">		job.setMapperClass(SequenceFileMapper.class);</div><div class="line">		</div><div class="line">		FileInputFormat.setInputPaths(job, new Path(args[0]));</div><div class="line">		FileOutputFormat.setOutputPath(job, new Path(args[1]));</div><div class="line">		</div><div class="line">		return job.waitForCompletion(true) ? 0 : 1;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line">		args=new String[]&#123;&quot;c:/wordcount/smallinput&quot;,&quot;c:/wordcount/smallout&quot;&#125;;</div><div class="line">		int exitCode = ToolRunner.run(new SmallFilesToSequenceFileConverter(), args);</div><div class="line">		System.exit(exitCode);</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+            <a href="/tags/mapreduce/" rel="tag"># mapreduce</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/自定义可序列化的Bean/" rel="next" title="自定义可序列化的Bean">
+                <i class="fa fa-chevron-left"></i> 自定义可序列化的Bean
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/自定义GroupingComparator/" rel="prev" title="自定义GroupingComparator">
+                自定义GroupingComparator <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分析"><span class="nav-number">1.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#采用combineInputFormat"><span class="nav-number">2.</span> <span class="nav-text">采用combineInputFormat</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义InputFormat"><span class="nav-number">3.</span> <span class="nav-text">自定义InputFormat</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

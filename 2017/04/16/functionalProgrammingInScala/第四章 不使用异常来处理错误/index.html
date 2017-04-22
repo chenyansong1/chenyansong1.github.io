@@ -1,0 +1,818 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala函数式编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.异常的优点与劣势&amp;emsp;为什么异常破坏了引用透明,会有怎样的问题?让我们看一个简单的例子,我们定义一个会抛出异常的函数,并且调用他123456789def failingFn(i: Int): Int = &amp;#123;  val y: Int = throw new Exception(&amp;quot;fail!&amp;quot;)  try&amp;#123;    val x = 42 + 5    x">
+<meta name="keywords" content="scala,scala函数式编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第四章 不使用异常来处理错误">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第四章 不使用异常来处理错误/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.异常的优点与劣势&amp;emsp;为什么异常破坏了引用透明,会有怎样的问题?让我们看一个简单的例子,我们定义一个会抛出异常的函数,并且调用他123456789def failingFn(i: Int): Int = &amp;#123;  val y: Int = throw new Exception(&amp;quot;fail!&amp;quot;)  try&amp;#123;    val x = 42 + 5    x">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/4/1.png">
+<meta property="og:updated_time" content="2017-02-24T17:08:20.402Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第四章 不使用异常来处理错误">
+<meta name="twitter:description" content="1.异常的优点与劣势&amp;emsp;为什么异常破坏了引用透明,会有怎样的问题?让我们看一个简单的例子,我们定义一个会抛出异常的函数,并且调用他123456789def failingFn(i: Int): Int = &amp;#123;  val y: Int = throw new Exception(&amp;quot;fail!&amp;quot;)  try&amp;#123;    val x = 42 + 5    x">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/4/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第四章 不使用异常来处理错误/"/>
+
+
+
+
+
+  <title> 第四章 不使用异常来处理错误 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第四章 不使用异常来处理错误/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第四章 不使用异常来处理错误
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-异常的优点与劣势"><a href="#1-异常的优点与劣势" class="headerlink" title="1.异常的优点与劣势"></a>1.异常的优点与劣势</h1><p>&emsp;为什么异常破坏了引用透明,会有怎样的问题?让我们看一个简单的例子,我们定义一个会抛出异常的函数,并且调用他<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def failingFn(i: Int): Int = &#123;</div><div class="line">  val y: Int = throw new Exception(&quot;fail!&quot;)</div><div class="line">  try&#123;</div><div class="line">    val x = 42 + 5</div><div class="line">    x+y</div><div class="line">  &#125;catch &#123;</div><div class="line">    case e: Exception =&gt;43</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在REPL下调用failingFn会预期错误<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">scala&gt; failingFn(12)</div><div class="line">java.lang.Exception: fail!</div><div class="line">        at .failingFn(&lt;console&gt;:8)</div></pre></td></tr></table></figure></p>
+<p>&emsp;可以证明y不是引用透明的,回忆一下引用透明的例子,表达式可以被他引用的值替代,这种替代保持程序的含义,如果我们对x+y表达式中的y替代为throw newException(“fail!”) 会产生不同的结果,因为try代码块内部的异常会被捕获并返回43<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">def failingFn(i: Int): Int = &#123;</div><div class="line">  try&#123;</div><div class="line">    val x = 42 + 5</div><div class="line">    x+((throw new Exception(&quot;fail!&quot;)): Int)</div><div class="line">  &#125;catch &#123;</div><div class="line">    case e: Exception =&gt;43</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;在REPL下展示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala&gt; failingFn(12)</div><div class="line">res2: Int = 43</div></pre></td></tr></table></figure></p>
+<p>&emsp;理解这种引用透明的另一种方式是引用透明的表达式不依赖上下文,可以本地推导,而那些非引用透明的表达式是依赖上下文的,并且需要全局推导,举例来说,引用透明的表达式42+5如果嵌入一个更大的表达式中,并不会对这个更大的表达式产生依赖,他总是等于47,但throw new Exception(“fail!”) 表达式是取决于上下文的,他可能呈现不同的含义,取决于他嵌入的try代码块<br>&emsp;异常存在的两个主要问题:</p>
+<ul>
+<li>正如我们所讨论的,异常破坏了引用透明并引入了上下文依赖,让代换模型的简单推导无法适用,并可能写成令人困惑的代码,源自坊间的一个习惯是建议异常应该只用于错误处理而非流程控制</li>
+<li>异常不是类型安全的,failingFn,Int =&gt; Int 类型没有告诉我们可能会发生什么样的异常,编译器当然不会强迫failingFn的调用者决定如何处理这些异常,如果我们忘记检测failingFn的异常,那么将会直到运行时才会被检测到</li>
+</ul>
+<blockquote>
+<p>检测异常</p>
+</blockquote>
+<p>&emsp;Java的异常检测最低限度的强制了是处理还是抛出异常,但他们导致了调用者对签名模板的修改,更重要的是他们不适用于高阶函数,因为高阶函数不可能感知由他的参数引起的特定的异常,例如,考虑对List定义的map函数:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">def map[A, B](l: List[A])(f: A=&gt;B): List[B]</div></pre></td></tr></table></figure></p>
+<p>&emsp;这个函数很清晰,高度泛化,与使用检测异常不一样的是—–我们不能对每一个f抛出的异常的检测都有一个版本的map<br>&emsp;我们希望其他选择能刨除异常的缺点,但我们又不希望他会失去异常最主要的一个好处—–整合集中的错误处理逻辑,而非被迫在整个代码库发布这个逻辑,这里用的技术基于一个早已存在的理念:替代抛出异常,返回一个值来指示异常情况发生,这种理念或许对使用过C的返回码处理异常的人很熟悉,但这里不是使用错误码,我们引入了一种新的泛型类型来描述这些”可能存在定义的值”,并使用高阶函数来封装这种处理和传播异常的通用模式,不像C风格的错误码,我们使用的错误处理策略是完全类型安全的,并且能得到类型检测的帮助,以最小的语法噪音让我们有效的处理错误</p>
+<h1 id="2-异常的其他选择"><a href="#2-异常的其他选择" class="headerlink" title="2.异常的其他选择"></a>2.异常的其他选择</h1><p>&emsp;这里有一个函数的实现:计算列表的平均值,他没有定义空列表的情况:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def mean(xs: Seq[Double]): Double = </div><div class="line">  if (xs.isEmpty)</div><div class="line">    throw new ArithmeticException(&quot;mean of mepty list&quot;)</div><div class="line">  else xs.sum / xs.length</div></pre></td></tr></table></figure></p>
+<p>&emsp;mean函数是一个部分函数:它对一些输入没有定义,如果一个函数对那些非隐式的输入类型做了一些假设,那他是一个典型的部分函数,这种情况下可以抛出异常,但我们还有其他的选择,来看下对mean使用这种选择的例子:<br>&emsp;第一种方案:返回某个伪造的Double类型的值,可以对所有情况简单的返回xs.sum / xs.length ,对输入为空的情况,0.0/0.0 返回Double.NaN,或其他的报警值,但是我们有以下几个理由拒绝这种方案:</p>
+<ul>
+<li>他允许错误”无声”的传播—–调用者可能忘了检测这种情况也不会被编译器警告,可能导致后续的代码不能正常工作</li>
+<li>除了易错性,使用显示的if声明来检测是否调用者收到了”真正”的结果(因为返回的不同伪造的值),还导致在调用点产生一堆代码模板,如果调用多个函数,代码模板将被放大,每个使用错误码的地方都得检查并以某种方式聚合起来</li>
+<li>他不适用于多态代码,对某些输出类型,甚至没有我们想要的报警值,例如max函数,按照自定义的比较从列表中找出最大的值,def max<a href="xs: Seq[A]" target="_blank" rel="external">A</a>(greater: (A,A)=&gt;Boolean):A ,  如果输入为空,无法发明一个A类型的值,null也不能用在这里,因为null只对非基础数据类型有效,而A可能是一个基础类型数据,如Int或Double</li>
+<li>他需要一个特定的策略或调用约定—–合理使用mean函数需要调用者做一些事情,像这种特定策略的方法,将很难把它传递给高阶函数,因为高阶函数对待所有参数都是一致的</li>
+</ul>
+<p>&emsp;第二种方案:针对那些输入不知道怎么处理的情况,强迫调用者提供一个参数告诉我们该如何处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def mean(xs: Seq[Double], onEmpty: Double): Double =</div><div class="line">  if (xs.isEmpty) onEmpty</div><div class="line">  else xs.sum / xs.length</div></pre></td></tr></table></figure></p>
+<p>&emsp;这样让mean函数成为了一个完整函数,但有一些缺点——-他需要调用者知道如何处理未定义的情况,限制他们返回一个Double(因为onEmpty是Double类型的)</p>
+<h1 id="3-Option数据类型"><a href="#3-Option数据类型" class="headerlink" title="3.Option数据类型"></a>3.Option数据类型</h1><p>&emsp;解决方案是在返回值类型时明确表示函数并不总是有答案,可以认为这是用于推迟调用者的错误处理策略,我们引入一种新的类型Option,如之前提到过的,这个类型在scala标准库中存在,但我们出于教学的目的在这里重新创建一个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sealed trait Option[+A]</div><div class="line">case class Some[+A](get: A) extends Option[A]</div><div class="line">case object None extends Option[Nothing]</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/4/1.png" alt="picture" title="picture"></p>
+<p>&emsp;Option有两种情况,已被定义的情况对应的是Some,未被定义的情况对应的是None<br>&emsp;我们可以用Option来定义mean函数,比如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def mean(xs: Seq[Double]): Option[Double] =</div><div class="line">  if (xs.isEmpty) None</div><div class="line">  else Some(xs.sum / xs.length)</div></pre></td></tr></table></figure></p>
+<h2 id="3-1-Option的使用模式"><a href="#3-1-Option的使用模式" class="headerlink" title="3.1.Option的使用模式"></a>3.1.Option的使用模式</h2><p>&emsp;部分函数在编程中大量存在,Option在函数式编程中常被用于处理部分函数,你会看到Option的使用贯穿整个scala标准库,例如:</p>
+<ul>
+<li>在Map中查找一个key,返回Option</li>
+<li>在List和其他可迭代集合中定义的headOption和lastOption返回包含第一个或最后一个元素的Option,如果这个集合不为空的话</li>
+</ul>
+<blockquote>
+<p>基础函数中的Option</p>
+</blockquote>
+<p>&emsp;Option是一个最多只包含一个元素的List,第3章中把所有List函数都放在了List伴生对象中,这里的做法稍微不同,尽可能的把函数都放在Option接口里,这样就可以使用语法obj.fn(arg1)或 obj fn arg1替代fn(obj,arg1) ,下面是Option的一些函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">sealed trait Option[+A] &#123;</div><div class="line">  def map[B](f: A =&gt; B): Option[B] = this match &#123;</div><div class="line">    case None =&gt; None</div><div class="line">    case Some(a) =&gt; Some(f(a))</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def getOrElse[B&gt;:A](default: =&gt; B): B = this match &#123;    //B&gt;:A表示B类型参数必须是A的父类型</div><div class="line">    case None =&gt; default</div><div class="line">    case Some(a) =&gt; a</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def flatMap[B](f: A =&gt; Option[B]): Option[B] =</div><div class="line">    map(f) getOrElse None</div><div class="line"></div><div class="line">  /*</div><div class="line">  Of course, we can also implement `flatMap` with explicit pattern matching.</div><div class="line">  */</div><div class="line">  def flatMap_1[B](f: A =&gt; Option[B]): Option[B] = this match &#123;</div><div class="line">    case None =&gt; None</div><div class="line">    case Some(a) =&gt; f(a)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def orElse[B&gt;:A](ob: =&gt; Option[B]): Option[B] =</div><div class="line">    this map (Some(_)) getOrElse ob</div><div class="line"></div><div class="line">  /*</div><div class="line">  Again, we can implement this with explicit pattern matching.</div><div class="line">  */</div><div class="line">  def orElse_1[B&gt;:A](ob: =&gt; Option[B]): Option[B] = this match &#123;</div><div class="line">    case None =&gt; ob</div><div class="line">    case _ =&gt; this</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def filter(f: A =&gt; Boolean): Option[A] = this match &#123;</div><div class="line">    case Some(a) if f(a) =&gt; this</div><div class="line">    case _ =&gt; None</div><div class="line">  &#125;</div><div class="line">  /*</div><div class="line">  This can also be defined in terms of `flatMap`.</div><div class="line">  */</div><div class="line">  def filter_1(f: A =&gt; Boolean): Option[A] =</div><div class="line">    flatMap(a =&gt; if (f(a)) Some(a) else None)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;上面的代码中有一些新的语法,在getOrElse(还有orElse中的相似标注)中的default:=&gt;B类型表示参数类型是B,但不立即求值,而是函数需要时才求值</p>
+<blockquote>
+<p>基础Option函数的使用场景</p>
+</blockquote>
+<p>&emsp;让我们从map函数开始,map函数可用于转换Option内部的结果(如果存在结果的话),假设没有错误发生,我们可以考虑继续下一个运算,这也是将错误处理延迟到后续代码的一种方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">case class Employee(name: String, department: String)</div><div class="line">def lookupByName(name: String): Option[Employee] = &#123;//..&#125;</div><div class="line">val joeDepartment: Option[String] = lookupByName(&quot;Joe&quot;).map(_.department)</div></pre></td></tr></table></figure></p>
+<p>&emsp;这里lookupByName(“Joe”)返回一个Option[Employee] ,我们为了了解部门信息用map转成Option[String], 注意不需要显示的检测lookupByName(“Joe”)的结果,继续下一步运算,就当做在map的参数内部没有错误发生,如果employeesByName.get(“Joe”)返回None,他会终止后续的运算,这种情况map根本不会调用_.department(因为None map xx, 返回的就是None, 参见Option中的map方法)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">lookupByName(&quot;Joe&quot;).map(_.department)</div><div class="line">//如果Joe是员工,返回Joe的部门,否则返回None</div><div class="line"></div><div class="line">lookupByName(&quot;Joe&quot;).flatMap(_.manager)</div><div class="line">//如果Joe是一个经理,返回Some(manager),否则返回None(此时Joe是一个员工或者不是经理)</div><div class="line"></div><div class="line">lookupByName(&quot;Joe&quot;).map(_.department).getOrElse(&quot;Default Dept.&quot;)</div><div class="line">//如果Joe的部门存在返回的是部门,否则返回的是缺省的部门</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习</p>
+</blockquote>
+<p>&emsp;根据flatMap实现一个variance(方差)函数,如果一个序列的平均值是m, 那么方差的公式为:  1/n[(x1-m)2+…..(xn-m)2]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">  def mean(xs: Seq[Double]): Option[Double] =</div><div class="line">    if (xs.isEmpty) None</div><div class="line">    else Some(xs.sum / xs.length)</div><div class="line"></div><div class="line">  def variance(xs: Seq[Double]): Option[Double] =</div><div class="line">    mean(xs) flatMap (m =&gt; mean(xs.map(x =&gt; math.pow(x - m, 2))))    </div><div class="line"></div><div class="line">//第一次mean(xs)是计算序列的平均值m,</div><div class="line">//xs.map是对序列的每一个元素求math.pow(x - m, 2) ,</div><div class="line">//第二个mean是平方差之后求均值</div><div class="line">//不明白为什么要用flatMap,用map不行吗???</div></pre></td></tr></table></figure>
+<p>&emsp;用flatMap可以对多个阶段构造成一个运算,每个阶段都可能失败,运算中遇到第一个失败便会马上终止,因为None.flatMap(f)会立即返回None,不会再运行f<br>&emsp;如果成功的结果不匹配给定的预判,可以用filter将成功的结果转换成失败的结果,一个通用的模式是调用map,flatMap(或filter)来转换Option,在最后用getOrElse,不会再运行f<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">val dept: String = </div><div class="line">    lookupByName(&quot;Joe&quot;).</div><div class="line">   map(_.department).</div><div class="line">   filter(_ != &quot;Accounting&quot;).   </div><div class="line">   getOrElse(&quot;Default Dept.&quot;)   //用于将Option[String]转成一个String</div></pre></td></tr></table></figure></p>
+<p>&emsp;orElse与getOrElse相似,不同之处在于如果第一个Option没有定义将返回另一个,当我们需要将可能的失败串联起来的时候,如果第一个失败尝试第二个,这会很有用</p>
+<p>&emsp;一个常见的用法是o.getOrElse(throw new Exception(“fail”)) , 将结果是None的Option转回一个异常,一般的经验则是在没有合理的方案能捕获异常时将其抛出,如果异常是一种可恢复的错误,使用Option会更加的灵活<br>&emsp;如你所见,将错误作为一个普通的值返回便于我们使用高阶函数实现与使用异常相似的某种错误逻辑的合并,注意,不必在运算的每个阶段都检测None,可以进行一些转换,等准备好了再检测和处理None,除此之外还获得了一个好处:类型安全,因为Option[A]与A类型是不同的类型,编译器不会忘记显示的让我们推迟处理None的问题(因为最终我们想要得到的是A类型,所以最后,我们肯定要将Option[A]转成A)</p>
+<h2 id="3-2-Option的组合-提升及对面向异常的API的包装"><a href="#3-2-Option的组合-提升及对面向异常的API的包装" class="headerlink" title="3.2.Option的组合,提升及对面向异常的API的包装"></a>3.2.Option的组合,提升及对面向异常的API的包装</h2><p>&emsp;一旦开始使用Option,可能很容易产生一个看法:他对当前整个代码库都会造成影响,想象一下有多少方法的调用者接收或返回Option,不得不修改成处理Some和None的情况,但这并不会发生,因为我们可以把普通函数提升(lift)为一个对Option操作的函数<br>&emsp;举个例子,map函数让我们用一个类型为A=&gt;B的函数对类型为Option[A]的值进行操作,并返回Option[B],从另一个视角可以看做是map把一个A=&gt;B的函数f变成类型为Option[A]=&gt;Option[B]的函数<br>&emsp;也就说任何已经存在的普通函数都可以转换成(通过提升)在一个Option值的上下文里进行操作的函数,举个例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">val abs0: Option[Double] =&gt; Option[Double] = lift(math.abs)</div><div class="line">//lift将math.abs转换成为Option[Double] =&gt; Option[Double]类型的abs0,这就是对已经存在的普通函数转换成一个Option值的函数</div></pre></td></tr></table></figure></p>
+<p>&emsp;math对象包含abs,sqrt,exp等各种独立的数学函数,我们不需要重写math.abs函数来处理存在可选性(option)的值,只需要将其提升到Option上下文,可以对任何函数都这么干</p>
+<p>&emsp;看另外一个例子,假设我们对一个汽车保险公司的网站实现一段逻辑,用户可以在一个页面提交请求一个即时在线报价,我们将从表单里解析信息,最后调用换算函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">age:车龄</div><div class="line">numberOfSpeedingTickets:超速罚款单号码</div><div class="line">功能:根据两个关键因子计算每年汽车保险费的绝密配方</div><div class="line">*/</div><div class="line">def insurnaceRateQuote(age: Int, numberOfSpeedingTickets: Int): Double</div></pre></td></tr></table></figure></p>
+<p>&emsp;我们希望能够调用刚刚定义的这个函数,不过用户从页面表单上锁提交的年龄和超速罚款单号码都是字符串,需要将他们解析为整数,而解析可能会失败,对于给定的字符串s,可以用s.toInt解析为整数,如果他不是一个有效的整数将抛出NumberFormatException<br>&emsp;让我们把这个基于异常的API转换成Option,看看是否可以实现一个parseInsuranceRateQuote函数,它以字符串方式接受年龄和超速罚款号码,如果解析成功在试图调用insuranceRateQuote函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">def parseInsuranceRateQuote(age: String, numberOfSpeedingTickets: String): Option[Double] = &#123;</div><div class="line">  val optAge: Option[Int] = Try(age.toInt)</div><div class="line">  val optTickets: Option[Int] = Try(numberOfSpeedingTickets.toInt)</div><div class="line">  insurnaceRateQuote(optAge, optTickets) //编译不通过,因为参数类型不匹配</div><div class="line">&#125;</div><div class="line">def Try[A](a: =&gt;A):Option[A] =</div><div class="line">  try Some(a)//接收一个非严格求值的A参数,我们可以在对a求值时捕获任何异常并转换为None</div><div class="line">  catch &#123;case e: Exception =&gt; None &#125;//注意:这会丢弃掉错误信息,我们会在本章的后面改进</div></pre></td></tr></table></figure></p>
+<p>&emsp;Try函数是一个通用目的的函数,用于将一个基于异常的API转成为一个面向Option的API,参数a的类型=&gt;表示他是一个非严格(或惰性)求值参数,在第5章有讲到<br>&emsp;但是这里有个问题—-我们在解析optAge和optTickets为Option[Int]之后,如何调用接收两个Int参数的insurnaceRateQuote函数?需要把insurnaceRateQuote重写为接收Option[Int]吗?不,修改insurnaceRateQuote会让关注点混乱,会强迫他意识到之前的运算可能会失败,更不必说我们没法去修改——他可能定义在一个我们无法修改的独立模块里,我们更偏向提升insurnaceRateQuote为对两个存在可选值的上下文进行操作的函数</p>
+<blockquote>
+<p>练习</p>
+</blockquote>
+<p>&emsp;写一个泛型函数map2,使用一个二元函数来组合两个Option值,如果两个Option都为None,也返回None,签名如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">  def map2[A,B,C](a: Option[A], b: Option[B])(f: (A, B) =&gt; C): Option[C] =</div><div class="line">    a flatMap (aa =&gt; b map (bb =&gt; f(aa, bb)))</div><div class="line">//aa = this.get    参看下面的Option中的flatMap</div><div class="line">//bb = this.get    参看下面的Option中的map </div><div class="line">//所以aa,bb就是Some(x) 中的x,所以f(aa,bb)此时是成立的</div></pre></td></tr></table></figure></p>
+<p>Option中的flatMap<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@inline final def flatMap[B](f: A =&gt; Option[B]): Option[B] =</div><div class="line">  if (isEmpty) None else f(this.get)</div></pre></td></tr></table></figure></p>
+<p>Option中的map<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@inline final def map[B](f: A =&gt; B): Option[B] =</div><div class="line">  if (isEmpty) None else Some(f(this.get))</div></pre></td></tr></table></figure></p>
+<p>&emsp;现在可以用map2来实现parseInsuranceRateQuote<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def parseInsuranceRateQuote(age: String, numberOfSpeedingTickets: String): Option[Double] = &#123;</div><div class="line">  val optAge: Option[Int] = Try(age.toInt)</div><div class="line">  val optTickets: Option[Int] = Try(numberOfSpeedingTickets.toInt)</div><div class="line">  map2(optAge, optTickets)(insurnaceRateQuote)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;有了map2函数,意味着我们不需要修改任何已存在函数,让他们感知Option,可以提升他们操作Option上下文,同理,你可以定义map3,map4,map5</p>
+<blockquote>
+<p>练习:</p>
+</blockquote>
+<p>&emsp;写一个sequence函数,将一个Option列表结合为一个Option,这个结果Option包含原Option列表中的所有元素值,如果原Option列表中出现一个None,函数结果也应该返回None,否则结果应该返回所有(使用Some包装的)元素值的列表,签名如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  def sequence[A](a: List[Option[A]]): Option[List[A]] =</div><div class="line">    a match &#123;</div><div class="line">      case Nil =&gt; Some(Nil)</div><div class="line">      case h :: t =&gt; h flatMap (hh =&gt; sequence(t) map (hh :: _))</div><div class="line">    &#125;</div><div class="line">/*</div><div class="line">sequence(t)  返回的是一个Option[List[A]],</div><div class="line">那么map遍历的时候取到的是List[A],也就是_ ,所以hh::_是返回的组合的List</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="4-Either数据类型"><a href="#4-Either数据类型" class="headerlink" title="4.Either数据类型"></a>4.Either数据类型</h1><p>&emsp;Option不会告诉我们在异常条件下发生了什么错误,他只是给我们一个None,表示没有可用的值,但有时我们想要知道更多,比如想要一个字符串给出更多消息或者当异常发生时想知道实际错误是什么<br>&emsp;可以创建一个数据类型,能对我们想要的失败信息进行编码,有些时候只需要知道是否发生了失败,这种情况可以使用Option,而有些时候则想知道更多信息,这一节我们将示范一个对Option的简单扩展:Either数据类型,他可以跟踪失败原因,看一下他的定义:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sealed trait Either[+E, +A]</div><div class="line">case class Left[+E](value: E) extends Either[E, Nothing]</div><div class="line">case class Right[A](value: A) extends Either[Nothing, A]</div></pre></td></tr></table></figure></p>
+<p>&emsp;就像Option,Either只有两种情况,他们的实质区别是Either的两种情况都有值,当我们用来表示成功或失败时,习惯上Right构造器用于表示成功(right有双关的意思,既表示右边,又表示正确), Left构造器用于表示失败,建议给Left的类型参数命名为E(代表错误)</p>
+<p>&emsp;再看一下mean函数的例子,这次在失败的情况下返回一个字符串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def mean(xs: IndexedSeq[Double]): Either[String, Double] =</div><div class="line">  if (xs.isEmpty)</div><div class="line">    Left(&quot;mean of empty list&quot;)</div><div class="line">  else</div><div class="line">    Right(xs.sum / xs.length)</div></pre></td></tr></table></figure></p>
+<p>&emsp;有时我们想要对错误包含更多的信息,比如堆栈调用信息,以便在源码中定位错误,这种情况下也可以对Either的Left返回一个异常<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def safeDiv(x: Int, y: Int): Either[Exception, Int] = </div><div class="line">  try Right(x/y)</div><div class="line">  catch &#123;case e: Exception =&gt; Left(e)&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>练习:</p>
+</blockquote>
+<p>&emsp;实现Either版本的map,flatMap,orElse和map2函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">sealed trait Either[+E,+A] &#123;</div><div class="line"> def map[B](f: A =&gt; B): Either[E, B] = </div><div class="line">   this match &#123;</div><div class="line">     case Right(a) =&gt; Right(f(a))</div><div class="line">     case Left(e) =&gt; Left(e)</div><div class="line">   &#125;</div><div class="line">   </div><div class="line"> def flatMap[EE &gt;: E, B](f: A =&gt; Either[EE, B]): Either[EE, B] =</div><div class="line">   this match &#123;</div><div class="line">     case Left(e) =&gt; Left(e)</div><div class="line">     case Right(a) =&gt; f(a)</div><div class="line">   &#125;</div><div class="line"> def orElse[EE &gt;: E, AA &gt;: A](b: =&gt; Either[EE, AA]): Either[EE, AA] =</div><div class="line">   this match &#123;</div><div class="line">     case Left(_) =&gt; b</div><div class="line">     case Right(a) =&gt; Right(a)</div><div class="line">   &#125;</div><div class="line"> def map2[EE &gt;: E, B, C](b: Either[EE, B])(f: (A, B) =&gt; C): Either[EE, C] = </div><div class="line">   for &#123; a &lt;- this; b1 &lt;- b &#125; yield f(a,b1)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>练习</p>
+</blockquote>
+<p>&emsp;对Either实现sequence和traverse,如果遇到错误返回第一个错误<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">  def traverse[E,A,B](es: List[A])(f: A =&gt; Either[E, B]): Either[E, List[B]] = </div><div class="line">    es match &#123;</div><div class="line">      case Nil =&gt; Right(Nil)</div><div class="line">      case h::t =&gt; (f(h) map2 traverse(t)(f))(_ :: _)</div><div class="line">//map2是取两个参数,然后应用到函数(_::_)中</div><div class="line">//这里是B和List[B] ,所以是B::List[B]</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">  def sequence[E,A](es: List[Either[E,A]]): Either[E,List[A]] = </div><div class="line">    traverse(es)(x =&gt; x)</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>练习</p>
+</blockquote>
+<p>&emsp;最后一个例子,这儿有一个map2的应用,用于mkPerson函数在构造一个有效的Person之前校验name和age<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">def mkName(name: String,): Either[String, Name] =</div><div class="line">  if (name==&quot;&quot;||name==null) Left(&quot;Name is empty&quot;)</div><div class="line">  else Right(new Name(name))</div><div class="line"></div><div class="line">def mkAge(age: Int): Either[String, Age] =</div><div class="line">  if (age&lt;0) Left(&quot;Age is out of range &quot;)</div><div class="line">  else Right(new Age(age))</div><div class="line"></div><div class="line">def mkPerson(name: String, age: Int): Either[String, Person] =</div><div class="line">  mkName(name).map2(mkAge(age))(Person(_, _))</div><div class="line">//map2就是将Name和Age传给Person(_, _)</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala函数式编程/" rel="tag"># scala函数式编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/java/netty/netty中handler的执行顺序/" rel="next" title="netty中handler的执行顺序">
+                <i class="fa fa-chevron-left"></i> netty中handler的执行顺序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/functionalProgrammingInScala/第五章 严格求值和惰性求值/" rel="prev" title="第五章 严格求值和惰性求值">
+                第五章 严格求值和惰性求值 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-异常的优点与劣势"><span class="nav-number">1.</span> <span class="nav-text">1.异常的优点与劣势</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-异常的其他选择"><span class="nav-number">2.</span> <span class="nav-text">2.异常的其他选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Option数据类型"><span class="nav-number">3.</span> <span class="nav-text">3.Option数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Option的使用模式"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.Option的使用模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Option的组合-提升及对面向异常的API的包装"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.Option的组合,提升及对面向异常的API的包装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Either数据类型"><span class="nav-number">4.</span> <span class="nav-text">4.Either数据类型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

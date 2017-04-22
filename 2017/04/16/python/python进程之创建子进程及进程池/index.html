@@ -1,0 +1,758 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.python创建进程12345678910import osret = os.fork()        #创建进程,返回两个值,(如果是子进程,那么返回0,如果是父进程,那么返回子进程的pid)if(ret == 0):    print &amp;quot;child process&amp;quot;    print os.getpid()        #子进程的pidelse:    print">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python进程之创建子进程及进程池">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/python/python进程之创建子进程及进程池/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.python创建进程12345678910import osret = os.fork()        #创建进程,返回两个值,(如果是子进程,那么返回0,如果是父进程,那么返回子进程的pid)if(ret == 0):    print &amp;quot;child process&amp;quot;    print os.getpid()        #子进程的pidelse:    print">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/process/3.png">
+<meta property="og:updated_time" content="2017-02-24T17:10:36.886Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python进程之创建子进程及进程池">
+<meta name="twitter:description" content="1.python创建进程12345678910import osret = os.fork()        #创建进程,返回两个值,(如果是子进程,那么返回0,如果是父进程,那么返回子进程的pid)if(ret == 0):    print &amp;quot;child process&amp;quot;    print os.getpid()        #子进程的pidelse:    print">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/process/3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/python/python进程之创建子进程及进程池/"/>
+
+
+
+
+
+  <title> python进程之创建子进程及进程池 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/python/python进程之创建子进程及进程池/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python进程之创建子进程及进程池
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-python创建进程"><a href="#1-python创建进程" class="headerlink" title="1.python创建进程"></a>1.python创建进程</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">import os</div><div class="line">ret = os.fork()        #创建进程,返回两个值,(如果是子进程,那么返回0,如果是父进程,那么返回子进程的pid)</div><div class="line">if(ret == 0):</div><div class="line">    print &quot;child process&quot;</div><div class="line">    print os.getpid()        #子进程的pid</div><div class="line">else:</div><div class="line">    print &quot;Parent process ret=%d&quot; % ret</div><div class="line">    print os.getpid()</div><div class="line"></div><div class="line">print os.getpid()        #父进程和子进程都执行的代码</div></pre></td></tr></table></figure>
+<ul>
+<li>父进程创建子进程后，子进程会继承父进程的代码段，数据空间、堆和栈</li>
+<li>通过fork()函数的返回值区分父进程和子进程</li>
+<li>如果父进程没有回收子进程，那么当父进程退出后，由系统回收子进程资源</li>
+</ul>
+<h1 id="2-子进程回收函数：os-wait"><a href="#2-子进程回收函数：os-wait" class="headerlink" title="2.子进程回收函数：os.wait()"></a>2.子进程回收函数：os.wait()</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">import os</div><div class="line">ret = os.fork()        #创建进程,返回两个值,(如果是子进程,那么返回0,如果是父进程,那么返回子进程的pid)</div><div class="line">if(ret == 0):</div><div class="line">    print &quot;child process&quot;</div><div class="line">    print os.getpid()        #子进程的pid</div><div class="line">else:</div><div class="line">    print &quot;Parent process ret=%d&quot; % ret</div><div class="line">    print os.getpid()</div><div class="line">    os.wait()        #父进程等待子进程退出</div><div class="line"></div><div class="line">print os.getpid()        #父进程和子进程都执行的代码</div></pre></td></tr></table></figure>
+<ol>
+<li>父进程不显示调用os.wait()，当父进程退出，系统的第一个进程会把子进程回收</li>
+<li>父进程显示的调用os.wait()，子进程退出后，就会被父进程回收</li>
+<li>父进程没有显示调用os.wait()，而且父进程是一个守护或者死循环（如果父进程退出，那么子进程会由系统进程回收，但是此时父进程没有退出，所以系统就不会管理子进程），那么他创建的子进程退出后，就会成为僵尸进程，当父进程不断的创建进程的时候，就会出现错误</li>
+<li>如果父进程先于子进程退出，那么守护进程init会将子进程回收，但是如果父进程在子进程的后面退出，并且此时在父进程中没有os.wait()，那么就会使子进程成为僵尸进程，即子进程的内存将不会被回收。<br>os.wait函数用于等待子进程结束(只适用于UNIX兼容系统)。该函数返回包含两个元素的元组，包括已完成的子进程号pid，以及子进程的退出状态，返回状态为0，表明子进程成功完成。返回状态为正整数表明子进程终止时出错。如没有子进程，会引发OSError错误。os.wait要求父进程等待它的任何一个子进程结束执行，然后唤醒父进程。</li>
+</ol>
+<p>要指示父进程等候一个指定的子进程终止，可在父进程中使用os.waitpid函数(只适用于unix兼容系统)。它可等候一个指定进程结束，然后返回一个双元素元组，其中包括子进程的pid和子进程的退出状态。函数调用将pid作为第一个参数传递，并将一个选项作为第二个选项，如果第一个参数大于 0，则waitpid会等待该pid结束，如果第一个参数是-1，则会等候所有子进程，也就和os.wait一样</p>
+<h1 id="3-图形展示父进程和子进程的执行过程"><a href="#3-图形展示父进程和子进程的执行过程" class="headerlink" title="3.图形展示父进程和子进程的执行过程"></a>3.图形展示父进程和子进程的执行过程</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/python/process/3.png" alt=""></p>
+<h1 id="4-multiprocessing-方式创建子进程"><a href="#4-multiprocessing-方式创建子进程" class="headerlink" title="4.multiprocessing 方式创建子进程"></a>4.multiprocessing 方式创建子进程</h1><p>fork 方式是仅在linux 下才有的接口， 在windows下并没有， 那么在windows下如何实现多进程呢， 这就用到了multiprocessing<br>multiprocessing 模块的Process 对象表示的是一个进程对象， 可以创建子进程并执行制定的函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">from multiprocessing import Process</div><div class="line">import os</div><div class="line"> </div><div class="line">def pro_do(name, func):</div><div class="line">    print &quot;This is child process %d from parent process %d, and name is  %s which is used for %s&quot; %(os.getpid(), os.getppid(), name, func)</div><div class="line"> </div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line">    print &quot;Parent process id %d&quot; %(os.getpid())</div><div class="line">    #process 对象指定子进程将要执行的操作方法(pro_do), 以及该函数的对象列表args(必须是tuple格式， 且元素与pro_do的参数一一对应)</div><div class="line">    pro = Process(target=pro_do, args=(&quot;test&quot;, &quot;dev&quot;))</div><div class="line">    print &quot;start child process&quot;</div><div class="line">    #启动子进程</div><div class="line">    pro.start()</div><div class="line">    #是否阻塞方式执行， 如果有， 则阻塞方式， 否则非阻塞</div><div class="line">    pro.join() #if has this, it&apos;s synchronous operation or asynchronous operation</div><div class="line">    print &quot;Process end&quot;</div></pre></td></tr></table></figure>
+<p>执行结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Parent process id 4878</div><div class="line">start child process</div><div class="line">This is child process 4879 from parent process 4878, and name is  test which is used for dev</div><div class="line">Process end</div></pre></td></tr></table></figure></p>
+<p>如果没有pro.join()， 则表示非阻塞方式运行， 那么最终的Process end的输出位置就有可能出现在pro_do 方法执行之前了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Parent process id 4903</div><div class="line">start child process</div><div class="line">Process end</div><div class="line">This is child process 4904 from parent process 4903, and name is  test which is used for dev</div></pre></td></tr></table></figure></p>
+<p>通过multiprocessing 的process对象创建多进程， 还可以从主进程中向子进程传递参数， 例如上面例子中的pro_do的参数</p>
+<h1 id="5-Pool-进程池"><a href="#5-Pool-进程池" class="headerlink" title="5.Pool 进程池"></a>5.Pool 进程池</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">from multiprocessing import Pool</div><div class="line">import os, time</div><div class="line"> </div><div class="line">def pro_do(process_num):</div><div class="line">    print &quot;child process id is %d&quot; %(os.getpid())</div><div class="line">    time.sleep(6 - process_num)</div><div class="line">    print &quot;this is process %d&quot; %(process_num)</div><div class="line"> </div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line">    print &quot;Current process is %d&quot; %(os.getpid())</div><div class="line">    p = Pool()</div><div class="line">    for i in range(5):</div><div class="line">        p.apply_async(pro_do, (i,))  #增加新的进程</div><div class="line">    p.close() # 禁止在增加新的进程</div><div class="line">    p.join()</div><div class="line">    print &quot;pool process done&quot;</div></pre></td></tr></table></figure>
+<p>输出:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Current process is 19138</div><div class="line">child process id is 19139</div><div class="line">child process id is 19140</div><div class="line">this is process 1</div><div class="line">child process id is 19140</div><div class="line">this is process 0</div><div class="line">child process id is 19139</div><div class="line">this is process 2</div><div class="line">child process id is 19140</div><div class="line">this is process 3</div><div class="line">this is process 4</div><div class="line">pool process done</div></pre></td></tr></table></figure></p>
+<p>其中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">child process id is 19139</div><div class="line">child process id is 19140</div></pre></td></tr></table></figure></p>
+<p>是立即输出的， 后面的依次在等待了sleep的时间后输出 ， 之所以立即输出了上面两个是因为诶Pool 进程池默认是按照cpu的数量开启子进程的， 我是在虚拟机中运行， 只分配了两核， 所以先立即启动两个子进程， 剩下的进程要等到前面的进程执行完成后才能启动。 不过也可以在p=Poo() 中使用Pool(5)来指定启动的子进程数量， 这样输出就是下面的了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Current process is 19184</div><div class="line">child process id is 19185</div><div class="line">child process id is 19186</div><div class="line">child process id is 19188</div><div class="line">child process id is 19189</div><div class="line">child process id is 19187</div><div class="line">this is process 4</div><div class="line">this is process 3</div><div class="line">this is process 2</div><div class="line">this is process 1</div><div class="line">this is process 0</div><div class="line">pool process done</div></pre></td></tr></table></figure>
+<p>且<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Current process is 19184</div><div class="line">child process id is 19185</div><div class="line">child process id is 19186</div><div class="line">child process id is 19188</div><div class="line">child process id is 19189</div><div class="line">child process id is 19187</div></pre></td></tr></table></figure></p>
+<p>都是立即输出的</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/python/python进程之进程基本概念/" rel="next" title="python进程之进程基本概念">
+                <i class="fa fa-chevron-left"></i> python进程之进程基本概念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/python进程之IPC-管道(pipe)/" rel="prev" title="python进程之IPC-管道(pipe)">
+                python进程之IPC-管道(pipe) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-python创建进程"><span class="nav-number">1.</span> <span class="nav-text">1.python创建进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-子进程回收函数：os-wait"><span class="nav-number">2.</span> <span class="nav-text">2.子进程回收函数：os.wait()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-图形展示父进程和子进程的执行过程"><span class="nav-number">3.</span> <span class="nav-text">3.图形展示父进程和子进程的执行过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-multiprocessing-方式创建子进程"><span class="nav-number">4.</span> <span class="nav-text">4.multiprocessing 方式创建子进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Pool-进程池"><span class="nav-number">5.</span> <span class="nav-text">5.Pool 进程池</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

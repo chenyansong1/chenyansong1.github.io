@@ -1,0 +1,760 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="nginx," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.应用场景&amp;emsp;在企业中，有事希望只用一个域名对外提供服务，不希望使用多个域名对应同一个产品业务，此时就需要在代理服务器上通过配置规则，使得匹配不同规则的请求会交给不同的服务器池处理，这类业务有：  业务的域名没有拆分或者不希望拆分，但是希望实现动静分离，多业务分离。 不同的客户端设备（例如：手机和PC端）使用同一个域名访问同一个业务网站，就需要根据规则将不同设备的用户请求交给后端不同的服">
+<meta name="keywords" content="nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx实现动静分离">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/Linux/nginx/nginx实现动静分离/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.应用场景&amp;emsp;在企业中，有事希望只用一个域名对外提供服务，不希望使用多个域名对应同一个产品业务，此时就需要在代理服务器上通过配置规则，使得匹配不同规则的请求会交给不同的服务器池处理，这类业务有：  业务的域名没有拆分或者不希望拆分，但是希望实现动静分离，多业务分离。 不同的客户端设备（例如：手机和PC端）使用同一个域名访问同一个业务网站，就需要根据规则将不同设备的用户请求交给后端不同的服">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/5.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/6.png">
+<meta property="og:updated_time" content="2017-02-24T17:09:32.456Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx实现动静分离">
+<meta name="twitter:description" content="1.应用场景&amp;emsp;在企业中，有事希望只用一个域名对外提供服务，不希望使用多个域名对应同一个产品业务，此时就需要在代理服务器上通过配置规则，使得匹配不同规则的请求会交给不同的服务器池处理，这类业务有：  业务的域名没有拆分或者不希望拆分，但是希望实现动静分离，多业务分离。 不同的客户端设备（例如：手机和PC端）使用同一个域名访问同一个业务网站，就需要根据规则将不同设备的用户请求交给后端不同的服">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/Linux/nginx/nginx实现动静分离/"/>
+
+
+
+
+
+  <title> nginx实现动静分离 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/Linux/nginx/nginx实现动静分离/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                nginx实现动静分离
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-应用场景"><a href="#1-应用场景" class="headerlink" title="1.应用场景"></a>1.应用场景</h1><p>&emsp;在企业中，有事希望只用一个域名对外提供服务，不希望使用多个域名对应同一个产品业务，此时就需要在代理服务器上通过配置规则，使得匹配不同规则的请求会交给不同的服务器池处理，这类业务有：</p>
+<ol>
+<li>业务的域名没有拆分或者不希望拆分，但是希望实现动静分离，多业务分离。</li>
+<li>不同的客户端设备（例如：手机和PC端）使用同一个域名访问同一个业务网站，就需要根据规则将不同设备的用户请求交给后端不同的服务器处理，以便得到最佳的用户体验。</li>
+</ol>
+<h1 id="2-拆分"><a href="#2-拆分" class="headerlink" title="2.拆分"></a>2.拆分</h1><p>&emsp;将文件上传程序、动态web程序和静态数据请求程序分别放在不同的服务器中，这样实现业务拆分上传服务器：将上传文件的地址放到数据库中，将文件存储到NFS中</p>
+<ul>
+<li>动态web服务器：直接和数据库打交道</li>
+<li>静态数据请求服务器：直接请求NFS数据</li>
+</ul>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/1.png" alt="图片来自老男孩"></p>
+<h1 id="3-程序没有拆分"><a href="#3-程序没有拆分" class="headerlink" title="3.程序没有拆分"></a>3.程序没有拆分</h1><p>&emsp;如果：文件上传程序、动态web程序和静态数据请求程序没有拆分，那么将所有的程序在下面三种服务器中都存放一份，然后，对于负载均衡器中的请求，要根据条件过滤是找静态数据请求服务器，还是找动态程序服务器（此时上传程序和动态web程序一起了）</p>
+<h1 id="4-实战1"><a href="#4-实战1" class="headerlink" title="4.实战1"></a>4.实战1</h1><h2 id="4-1-先进行企业案例需求梳理"><a href="#4-1-先进行企业案例需求梳理" class="headerlink" title="4.1.先进行企业案例需求梳理"></a>4.1.先进行企业案例需求梳理</h2><ol>
+<li>当用户请求www.etiantian.org/upload/xx地址时实现由upload上传服务器池处理请求</li>
+<li>当用户请求www.etiantian.org/static/xx地址时实现由静态服务器池处理请求</li>
+<li>除此之外，对于其他访问请求，全都由默认的动态服务器池处理请求</li>
+</ol>
+<h2 id="4-2配置说明"><a href="#4-2配置说明" class="headerlink" title="4.2配置说明"></a>4.2配置说明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">#static_pools 为静态服务器池，有一个服务器，地址为10.0.0.9，端口为80</div><div class="line">upload static_pools &#123;</div><div class="line">    server 10.0.0.9:80 weight=1</div><div class="line">&#125;</div><div class="line"></div><div class="line">#upload_pools为上传服务器池，有一个服务器，地址为10.0.0.10，端口为80</div><div class="line">upload upload_pools &#123;</div><div class="line">    server 10.0.0.10:80 weight=1</div><div class="line">&#125;</div><div class="line"></div><div class="line">#default_pools为动态服务器池，有一个服务器，地址为10.0.0.9，端口为8000</div><div class="line">upload default_pools &#123;</div><div class="line">    server 10.0.0.9:8000 weight=1</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/2.png" alt=""></p>
+<h2 id="4-3-location正则匹配"><a href="#4-3-location正则匹配" class="headerlink" title="4.3.location正则匹配"></a>4.3.location正则匹配</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/3.png" alt=""></p>
+<h2 id="4-4-if判断"><a href="#4-4-if判断" class="headerlink" title="4.4.if判断"></a>4.4.if判断</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/4.png" alt=""></p>
+<h1 id="5-实战2"><a href="#5-实战2" class="headerlink" title="5.实战2"></a>5.实战2</h1><h2 id="5-1根据PC端浏览器的不同设置对应的匹配规则"><a href="#5-1根据PC端浏览器的不同设置对应的匹配规则" class="headerlink" title="5.1根据PC端浏览器的不同设置对应的匹配规则"></a>5.1根据PC端浏览器的不同设置对应的匹配规则</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">location / &#123;</div><div class="line">   if ($http_user_agent ~* “MSIE”)&#123;   #如果请求的浏览器为IE（MSIE），请求有static_pools池处理</div><div class="line">         proxy_pass http://static_pools;</div><div class="line">      &#125;</div><div class="line">   if ($http_user_agent ~* “Chrome”)&#123;    #如果请求的浏览器为谷歌，请求有upload_pools池处理</div><div class="line">         proxy_pass http://upload_pools;</div><div class="line">      &#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line">#$http_user_agent  是客户端代理，即客户端是使用的什么来访问的</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/5.png" alt=""></p>
+<h2 id="5-2根据移动端设备拆分"><a href="#5-2根据移动端设备拆分" class="headerlink" title="5.2根据移动端设备拆分"></a>5.2根据移动端设备拆分</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/static-dam/6.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/Linux/nginx/Nginx日志/" rel="next" title="Nginx日志">
+                <i class="fa fa-chevron-left"></i> Nginx日志
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/Linux/nginx/nginx官方文档指南/" rel="prev" title="nginx官方文档指南">
+                nginx官方文档指南 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-应用场景"><span class="nav-number">1.</span> <span class="nav-text">1.应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-拆分"><span class="nav-number">2.</span> <span class="nav-text">2.拆分</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-程序没有拆分"><span class="nav-number">3.</span> <span class="nav-text">3.程序没有拆分</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-实战1"><span class="nav-number">4.</span> <span class="nav-text">4.实战1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-先进行企业案例需求梳理"><span class="nav-number">4.1.</span> <span class="nav-text">4.1.先进行企业案例需求梳理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2配置说明"><span class="nav-number">4.2.</span> <span class="nav-text">4.2配置说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-location正则匹配"><span class="nav-number">4.3.</span> <span class="nav-text">4.3.location正则匹配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-if判断"><span class="nav-number">4.4.</span> <span class="nav-text">4.4.if判断</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-实战2"><span class="nav-number">5.</span> <span class="nav-text">5.实战2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1根据PC端浏览器的不同设置对应的匹配规则"><span class="nav-number">5.1.</span> <span class="nav-text">5.1根据PC端浏览器的不同设置对应的匹配规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2根据移动端设备拆分"><span class="nav-number">5.2.</span> <span class="nav-text">5.2根据移动端设备拆分</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

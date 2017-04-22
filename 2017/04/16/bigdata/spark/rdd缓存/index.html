@@ -1,0 +1,739 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.Spark RDD缓存源码分析我们知道,spark相比Hadoop最大的一个优势就是可以将数据cache到内存,以供后面的计算使用,我们可以通过rdd.persist()或rdd.cache()来缓存RDD中的数据cache()其实就是调用的persist()实现的,persist()支持下面的几种存储级别:123456789101112val NONE = new StorageLevel(">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rdd缓存">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark/rdd缓存/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.Spark RDD缓存源码分析我们知道,spark相比Hadoop最大的一个优势就是可以将数据cache到内存,以供后面的计算使用,我们可以通过rdd.persist()或rdd.cache()来缓存RDD中的数据cache()其实就是调用的persist()实现的,persist()支持下面的几种存储级别:123456789101112val NONE = new StorageLevel(">
+<meta property="og:updated_time" content="2017-03-04T11:21:27.110Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rdd缓存">
+<meta name="twitter:description" content="1.Spark RDD缓存源码分析我们知道,spark相比Hadoop最大的一个优势就是可以将数据cache到内存,以供后面的计算使用,我们可以通过rdd.persist()或rdd.cache()来缓存RDD中的数据cache()其实就是调用的persist()实现的,persist()支持下面的几种存储级别:123456789101112val NONE = new StorageLevel(">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark/rdd缓存/"/>
+
+
+
+
+
+  <title> rdd缓存 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark/rdd缓存/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                rdd缓存
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-Spark-RDD缓存源码分析"><a href="#1-Spark-RDD缓存源码分析" class="headerlink" title="1.Spark RDD缓存源码分析"></a>1.Spark RDD缓存源码分析</h1><p>我们知道,spark相比Hadoop最大的一个优势就是可以将数据cache到内存,以供后面的计算使用,我们可以通过rdd.persist()或rdd.cache()来缓存RDD中的数据<br>cache()其实就是调用的persist()实现的,persist()支持下面的几种存储级别:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">val NONE = new StorageLevel(false, false, false, false)</div><div class="line">val DISK_ONLY = new StorageLevel(true, false, false, false)</div><div class="line">val DISK_ONLY_2 = new StorageLevel(true, false, false, false, 2)</div><div class="line">val MEMORY_ONLY = new StorageLevel(false, true, false, true)</div><div class="line">val MEMORY_ONLY_2 = new StorageLevel(false, true, false, true, 2)</div><div class="line">val MEMORY_ONLY_SER = new StorageLevel(false, true, false, false)</div><div class="line">val MEMORY_ONLY_SER_2 = new StorageLevel(false, true, false, false, 2)</div><div class="line">val MEMORY_AND_DISK = new StorageLevel(true, true, false, true)</div><div class="line">val MEMORY_AND_DISK_2 = new StorageLevel(true, true, false, true, 2)</div><div class="line">val MEMORY_AND_DISK_SER = new StorageLevel(true, true, false, false)</div><div class="line">val MEMORY_AND_DISK_SER_2 = new StorageLevel(true, true, false, false, 2)</div><div class="line">val OFF_HEAP = new StorageLevel(false, false, true, false)</div></pre></td></tr></table></figure></p>
+<p>&emsp;而cache()最终调用的是persist(StorageLevel.MEMORY_ONLY)，也就是默认的缓存级别。我们可以根据自己的需要去设置不同的缓存级别，这里各种缓存级别的含义我就不介绍了，可以参见官方文档说明。<br>通过调用rdd.persist()来缓存RDD中的数据，其最终调用的都是下面的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">private def persist(newLevel: StorageLevel, allowOverride: Boolean): this.type = &#123;</div><div class="line">  // TODO: Handle changes of StorageLevel</div><div class="line">  if (storageLevel != StorageLevel.NONE &amp;&amp; newLevel != storageLevel &amp;&amp; !allowOverride) &#123;</div><div class="line">    throw new UnsupportedOperationException(</div><div class="line">      &quot;Cannot change storage level of an RDD after it was already assigned a level&quot;)</div><div class="line">  &#125;</div><div class="line">  // If this is the first time this RDD is marked for persisting, register it</div><div class="line">  if (storageLevel == StorageLevel.NONE) &#123;</div><div class="line">    sc.cleaner.foreach(_.registerRDDForCleanup(this))</div><div class="line">    sc.persistRDD(this)</div><div class="line">  &#125;</div><div class="line">  storageLevel = newLevel</div><div class="line">  this</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>&emsp; 这段代码的最主要作用其实就是将storageLevel设置为persist()函数传进来的存储级别，而且一旦设置好RDD的存储级别之后就不能再对相同RDD设置别的存储级别，否则将会出现异常。<font color="red">设置好存储级别在之后除非触发了action操作，否则不会真正地执行缓存操作</font>。当我们触发了action，它会调用sc.runJob方法来真正的计算，而这个方法最终会调用org.apache.spark.scheduler.Task#run，而这个方法最后会调用ResultTask或者ShuffleMapTask的runTask方法，runTask方法最后会调用org.apache.spark.rdd.RDD#iterator方法，iterator的代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">final def iterator(split: Partition, context: TaskContext): Iterator[T] = &#123;</div><div class="line">  if (storageLevel != StorageLevel.NONE) &#123;</div><div class="line">    SparkEnv.get.cacheManager.getOrCompute(this, split, context, storageLevel)</div><div class="line">  &#125; else &#123;</div><div class="line">    computeOrReadCheckpoint(split, context)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;如果当前RDD设置了存储级别（也就是通过上面的rdd.persist()设置的），那么会从cacheManager中判断是否有缓存数据。如果有，则直接获取，如果没有则计算。getOrCompute的代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">def getOrCompute[T](</div><div class="line">    rdd: RDD[T],</div><div class="line">    partition: Partition,</div><div class="line">    context: TaskContext,</div><div class="line">    storageLevel: StorageLevel): Iterator[T] = &#123;</div><div class="line"> </div><div class="line">  val key = RDDBlockId(rdd.id, partition.index)</div><div class="line">  logDebug(s&quot;Looking for partition $key&quot;)</div><div class="line">  blockManager.get(key) match &#123;</div><div class="line">    case Some(blockResult) =&gt;</div><div class="line">      // Partition is already materialized, so just return its values</div><div class="line">      val existingMetrics = context.taskMetrics</div><div class="line">        .getInputMetricsForReadMethod(blockResult.readMethod)</div><div class="line">      existingMetrics.incBytesRead(blockResult.bytes)</div><div class="line"> </div><div class="line">      val iter = blockResult.data.asInstanceOf[Iterator[T]]</div><div class="line">      new InterruptibleIterator[T](context, iter) &#123;</div><div class="line">        override def next(): T = &#123;</div><div class="line">          existingMetrics.incRecordsRead(1)</div><div class="line">          delegate.next()</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    case None =&gt;</div><div class="line">      // Acquire a lock for loading this partition</div><div class="line">      // If another thread already holds the lock, wait for it to finish return its results</div><div class="line">      val storedValues = acquireLockForPartition[T](key)</div><div class="line">      if (storedValues.isDefined) &#123;</div><div class="line">        return new InterruptibleIterator[T](context, storedValues.get)</div><div class="line">      &#125;</div><div class="line"> </div><div class="line">      // Otherwise, we have to load the partition ourselves</div><div class="line">      try &#123;</div><div class="line">        logInfo(s&quot;Partition $key not found, computing it&quot;)</div><div class="line">        val computedValues = rdd.computeOrReadCheckpoint(partition, context)</div><div class="line"> </div><div class="line">        // If the task is running locally, do not persist the result</div><div class="line">        if (context.isRunningLocally) &#123;</div><div class="line">          return computedValues</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">        // Otherwise, cache the values and keep track of any updates in block statuses</div><div class="line">        val updatedBlocks = new ArrayBuffer[(BlockId, BlockStatus)]</div><div class="line">        val cachedValues = putInBlockManager(key, computedValues, storageLevel, updatedBlocks)</div><div class="line">        val metrics = context.taskMetrics</div><div class="line">        val lastUpdatedBlocks = metrics.updatedBlocks.getOrElse(Seq[(BlockId, BlockStatus)]())</div><div class="line">        metrics.updatedBlocks = Some(lastUpdatedBlocks ++ updatedBlocks.toSeq)</div><div class="line">        new InterruptibleIterator(context, cachedValues)</div><div class="line"> </div><div class="line">      &#125; finally &#123;</div><div class="line">        loading.synchronized &#123;</div><div class="line">          loading.remove(key)</div><div class="line">          loading.notifyAll()</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>&emsp;首先通过RDD的ID和当前计算的分区ID构成一个key，并向blockManager中查找是否存在相关的block信息。如果能够获取得到，说明当前分区已经被缓存了；否者需要重新计算。如果重新计算，我们需要获取到相关的锁，因为可能有多个线程对请求同一分区的数据。如果获取到相关的锁，则会调用rdd.computeOrReadCheckpoint(partition, context)计算当前分区的数据，并放计算完的数据放到BlockManager中，如果有相关的线程等待该分区的计算，那么在计算完数据之后还得通知它们（loading.notifyAll()）。</p>
+<p>&emsp;如果获取锁失败，则说明已经有其他线程在计算该分区中的数据了，那么我们就得等（loading.wait()），获取锁的代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">private def acquireLockForPartition[T](id: RDDBlockId): Option[Iterator[T]] = &#123;</div><div class="line">  loading.synchronized &#123;</div><div class="line">    if (!loading.contains(id)) &#123;</div><div class="line">      // If the partition is free, acquire its lock to compute its value</div><div class="line">      loading.add(id)</div><div class="line">      None</div><div class="line">    &#125; else &#123;</div><div class="line">      // Otherwise, wait for another thread to finish and return its result</div><div class="line">      logInfo(s&quot;Another thread is loading $id, waiting for it to finish...&quot;)</div><div class="line">      while (loading.contains(id)) &#123;</div><div class="line">        try &#123;</div><div class="line">          loading.wait()</div><div class="line">        &#125; catch &#123;</div><div class="line">          case e: Exception =&gt;</div><div class="line">            logWarning(s&quot;Exception while waiting for another thread to load $id&quot;, e)</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">      logInfo(s&quot;Finished waiting for $id&quot;)</div><div class="line">      val values = blockManager.get(id)</div><div class="line">      if (!values.isDefined) &#123;</div><div class="line">        /* The block is not guaranteed to exist even after the other thread has finished.</div><div class="line">         * For instance, the block could be evicted after it was put, but before our get.</div><div class="line">         * In this case, we still need to load the partition ourselves. */</div><div class="line">        logInfo(s&quot;Whoever was loading $id failed; we&apos;ll try it ourselves&quot;)</div><div class="line">        loading.add(id)</div><div class="line">      &#125;</div><div class="line">      values.map(_.data.asInstanceOf[Iterator[T]])</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;等待的线程（也就是没有获取到锁的线程）是通过获取到锁的线程调用loading.notifyAll()唤醒的，唤醒之后之后调用new InterruptibleIterator<a href="context, storedValues.get">T</a>获取已经缓存的数据。以后后续RDD需要这个RDD的数据我们就可以直接在缓存中获取了，而不需要再计算了。后面我会对checkpoint相关代码进行分析。</p>
+<h1 id="2-示例代码"><a href="#2-示例代码" class="headerlink" title="2.示例代码"></a>2.示例代码</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">  def main(args: Array[String]) &#123;</div><div class="line"></div><div class="line">    val conf = new SparkConf().setAppName(&quot;UrlCountPartition&quot;).setMaster(&quot;local[2]&quot;)</div><div class="line">    val sc = new SparkContext(conf)</div><div class="line"></div><div class="line">    //rdd1将数据切分，元组中放的是（URL， 1）</div><div class="line">    val rdd1 = sc.textFile(&quot;c://itcast.log&quot;).map(line =&gt; &#123;</div><div class="line">      val f = line.split(&quot;\t&quot;)</div><div class="line">      (f(1), 1)</div><div class="line">    &#125;)</div><div class="line">    val rdd2 = rdd1.reduceByKey(_ + _)</div><div class="line"></div><div class="line">   &apos;步骤1&apos;</div><div class="line">    val rdd3 = rdd2.map(t =&gt; &#123;</div><div class="line">      val url = t._1</div><div class="line">      val host = new URL(url).getHost</div><div class="line">      (host, (url, t._2))</div><div class="line">    &#125;).cache()//cache会将数据缓存到内存当中，cache是一个Transformation，lazy</div><div class="line"></div><div class="line">   &apos;步骤2&apos;</div><div class="line">    val ints = rdd3.map(_._1).distinct().collect()</div><div class="line"></div><div class="line">    val hostParitioner = new HostParitioner(ints)</div><div class="line"></div><div class="line">   &apos;步骤3&apos;</div><div class="line">    val rdd4 = rdd3.partitionBy(hostParitioner).mapPartitions(it =&gt; &#123;</div><div class="line">      it.toList.sortBy(_._2._2).reverse.take(2).iterator</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">    rdd4.saveAsTextFile(&quot;c://out4&quot;)</div><div class="line"></div><div class="line"></div><div class="line">    //println(rdd4.collect().toBuffer)</div><div class="line">    sc.stop()</div><div class="line"></div><div class="line">  &#125;</div><div class="line"></div><div class="line">/*</div><div class="line">因为transaction是延迟加载,transaction只是保存了所有动作的执行轨迹,并没有真正的执行,所以只有当有action的动作的时候,才会有真正的执行的动作,</div><div class="line">在步骤1的最后进行了cache()标记,在进行步骤2(action)的时候会将步骤1中的结果进行缓存,所以在进行步骤3操作的时候,会利用步骤1的缓存的结果直接进行计算,但是如果步骤1没有进行cache操作,那么在进行步骤3的时候,会重新计算前面所有的结果</div><div class="line"></div><div class="line">*/</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark/Spark On Hive/" rel="next" title="Spark On Hive">
+                <i class="fa fa-chevron-left"></i> Spark On Hive
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark/RDD的依赖关系以及DAG/" rel="prev" title="RDD的依赖关系以及DAG">
+                RDD的依赖关系以及DAG <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Spark-RDD缓存源码分析"><span class="nav-number">1.</span> <span class="nav-text">1.Spark RDD缓存源码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-示例代码"><span class="nav-number">2.</span> <span class="nav-text">2.示例代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

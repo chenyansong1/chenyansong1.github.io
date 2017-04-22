@@ -1,0 +1,737 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="标准化SQL支持以及更合理的APISpark最引以为豪的几个特点就是简单、直观、表达性好。Spark 2.0为了继续加强这几个特点，做了两件事情：1、提供标准化的SQL支持；2、统一了Dataframe和Dataset两套API。">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark2.0新特性之标准化的SQL支持以及更合理的API">
+<meta property="og:url" content="http://yoursite.com/2017/04/18/bigdata/spark从入门到精通_笔记/Spark2.0新特性之标准化的SQL支持以及更合理的API/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="标准化SQL支持以及更合理的APISpark最引以为豪的几个特点就是简单、直观、表达性好。Spark 2.0为了继续加强这几个特点，做了两件事情：1、提供标准化的SQL支持；2、统一了Dataframe和Dataset两套API。">
+<meta property="og:updated_time" content="2017-04-18T06:33:29.493Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark2.0新特性之标准化的SQL支持以及更合理的API">
+<meta name="twitter:description" content="标准化SQL支持以及更合理的APISpark最引以为豪的几个特点就是简单、直观、表达性好。Spark 2.0为了继续加强这几个特点，做了两件事情：1、提供标准化的SQL支持；2、统一了Dataframe和Dataset两套API。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/18/bigdata/spark从入门到精通_笔记/Spark2.0新特性之标准化的SQL支持以及更合理的API/"/>
+
+
+
+
+
+  <title> Spark2.0新特性之标准化的SQL支持以及更合理的API | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/18/bigdata/spark从入门到精通_笔记/Spark2.0新特性之标准化的SQL支持以及更合理的API/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark2.0新特性之标准化的SQL支持以及更合理的API
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-18T14:21:43+08:00">
+                2017-04-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="标准化SQL支持以及更合理的API"><a href="#标准化SQL支持以及更合理的API" class="headerlink" title="标准化SQL支持以及更合理的API"></a>标准化SQL支持以及更合理的API</h1><p>Spark最引以为豪的几个特点就是简单、直观、表达性好。Spark 2.0为了继续加强这几个特点，做了两件事情：1、提供标准化的SQL支持；2、统一了Dataframe和Dataset两套API。</p>
+<a id="more"></a>
+<p>在标准化SQL支持方面，引入了新的ANSI-SQL解析器，提供标准化SQL的解析功能，而且还提供了子查询的支持。Spark现在可以运行完整的99个TPC-DS查询，这就要求Spark包含大多数SQL 2003标准的特性。这么做的好处在于，SQL一直是大数据应用领域的一个最广泛接受的标准，比如说Hadoop，做大数据的企业90%的时间都在用Hive，写SQL做各种大数据的统计和分析。因此Spark SQL提升对SQL的支持，可以大幅度减少用户将应用从其他技术（比如Oracle、Hive等）迁移过来的成本。</p>
+<h1 id="统一Dataframe和Dataset-API"><a href="#统一Dataframe和Dataset-API" class="headerlink" title="统一Dataframe和Dataset API"></a>统一Dataframe和Dataset API</h1><p>从Spark 2.0开始，Dataframe就只是Dataset[Row]的一个别名，不再是一个单独的类了。无论是typed方法（map、filter、groupByKey等）还是untyped方法（select、groupBy等），都通过Dataset来提供。而且Dataset API将成为Spark的新一代流式计算框架——structured streaming的底层计算引擎。但是由于Python和R这两个语言都不具备compile-time type-safety的特性，所以就没有引入Dataset API，所以这两种语言中的主要编程接口还是Dataframe。</p>
+<h1 id="SparkSession"><a href="#SparkSession" class="headerlink" title="SparkSession"></a>SparkSession</h1><p>SparkSession是新的Spark上下文以及入口，用于合并SQLContext和HiveContext，并替代它们。因为以前提供了SQLContext和HiveContext两种上下文入口，因此用户有时会有些迷惑，到底该使用哪个接口。现在好了，只需要使用一个统一的SparkSession即可。但是为了向后兼容性，SQLContext和HiveContext还是保留下来了。</p>
+<h1 id="新版本Accumulator-API"><a href="#新版本Accumulator-API" class="headerlink" title="新版本Accumulator API"></a>新版本Accumulator API</h1><p>Spark 2.0提供了新版本的Accumulator，提供了各种方便的方法，比如说直接通过一个方法的调用，就可以创建各种primitive data type（原始数据类型，int、long、double）的Accumulator。并且在spark web ui上也支持查看spark application的accumulator，性能也得到了提升。老的Accumulator API还保留着，主要是为了向后兼容性。</p>
+<h1 id="基于Dataframe-Dataset的Spark-MLlib"><a href="#基于Dataframe-Dataset的Spark-MLlib" class="headerlink" title="基于Dataframe/Dataset的Spark MLlib"></a>基于Dataframe/Dataset的Spark MLlib</h1><p>Spark 2.0中，spark.ml包下的机器学习API，主要是基于Dataframe/Dataset来实现的，未来将会成为主要发展的API接口。原先老的基于RDD的spark.mllib包的机器学习API还会保留着，为了向后兼容性，但是未来主要会基于spark.ml包下的接口来进行开发。而且用户使用基于Dataframe/Dataset的新API，还能够对算法模型和pipeline进行持久化保存以及加载。</p>
+<h1 id="SparkR中的分布式机器学习算法以及UDF函数"><a href="#SparkR中的分布式机器学习算法以及UDF函数" class="headerlink" title="SparkR中的分布式机器学习算法以及UDF函数"></a>SparkR中的分布式机器学习算法以及UDF函数</h1><p>Spark 2.0中，为SparkR提供了分布式的机器学习算法，包括经典的Generalized Linear Model，朴素贝叶斯，Survival Regression，K-means等。此外SparkR还支持用户自定义的函数，即UDF。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/18/bigdata/spark从入门到精通_笔记/Spark2.0新特性之高性能/" rel="next" title="Spark2.0新特性之高性能">
+                <i class="fa fa-chevron-left"></i> Spark2.0新特性之高性能
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/18/bigdata/spark从入门到精通_笔记/Spark2.0新特性之介绍/" rel="prev" title="Spark2.0新特性之介绍">
+                Spark2.0新特性之介绍 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#标准化SQL支持以及更合理的API"><span class="nav-number">1.</span> <span class="nav-text">标准化SQL支持以及更合理的API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#统一Dataframe和Dataset-API"><span class="nav-number">2.</span> <span class="nav-text">统一Dataframe和Dataset API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkSession"><span class="nav-number">3.</span> <span class="nav-text">SparkSession</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#新版本Accumulator-API"><span class="nav-number">4.</span> <span class="nav-text">新版本Accumulator API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于Dataframe-Dataset的Spark-MLlib"><span class="nav-number">5.</span> <span class="nav-text">基于Dataframe/Dataset的Spark MLlib</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkR中的分布式机器学习算法以及UDF函数"><span class="nav-number">6.</span> <span class="nav-text">SparkR中的分布式机器学习算法以及UDF函数</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

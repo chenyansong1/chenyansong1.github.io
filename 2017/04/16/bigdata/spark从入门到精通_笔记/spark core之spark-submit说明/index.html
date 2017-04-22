@@ -1,0 +1,768 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="将我们的spark工程打包好之后，就可以使用spark-submit脚本提交工程中的spark应用了spark-submit脚本会设置好spark的classpath环境变量（用于类加载）和相关的依赖，而且还可以支持多种不同的集群管理器和不同的部署模式">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spark core之spark-submit说明">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark-submit说明/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="将我们的spark工程打包好之后，就可以使用spark-submit脚本提交工程中的spark应用了spark-submit脚本会设置好spark的classpath环境变量（用于类加载）和相关的依赖，而且还可以支持多种不同的集群管理器和不同的部署模式">
+<meta property="og:updated_time" content="2017-04-13T10:07:41.065Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spark core之spark-submit说明">
+<meta name="twitter:description" content="将我们的spark工程打包好之后，就可以使用spark-submit脚本提交工程中的spark应用了spark-submit脚本会设置好spark的classpath环境变量（用于类加载）和相关的依赖，而且还可以支持多种不同的集群管理器和不同的部署模式">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark-submit说明/"/>
+
+
+
+
+
+  <title> spark core之spark-submit说明 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark-submit说明/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                spark core之spark-submit说明
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>将我们的spark工程打包好之后，就可以使用spark-submit脚本提交工程中的spark应用了spark-submit脚本会设置好spark的classpath环境变量（用于类加载）和相关的依赖，而且还可以支持多种不同的集群管理器和不同的部署模式</p>
+<a id="more"></a>
+<h1 id="spark-submit脚本参数说明"><a href="#spark-submit脚本参数说明" class="headerlink" title="spark-submit脚本参数说明"></a>spark-submit脚本参数说明</h1><p>一般会将执行spark-submit脚本的命令，放置在一个自定义的shell脚本里面，所以说这是比较灵活的一种做法,推荐使用</p>
+<p>wordcount.sh<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">/usr/local/spark/bin/spark-submit \</div><div class="line">--class org.leo.spark.study.WordCount \</div><div class="line">--master spark://192.168.0.101:7077 \</div><div class="line">--deploy-mode client \</div><div class="line">--conf &lt;key&gt;=&lt;value&gt; \</div><div class="line">/usr/local/spark-study/spark-study.jar \</div><div class="line">$&#123;1&#125;</div></pre></td></tr></table></figure></p>
+<p>以下是上面的spark-submit参数说明</p>
+<p>–class: spark应用程序对应的主类，也就是spark应用运行的主入口，通常是一个包含了main方法的java类或scala类，需要包含全限定包名，比如org.leo.spark.study.WordCount<br>–master: spark集群管理器的master URL，standalone模式下，就是ip地址+端口号，比如spark://192.168.0.101:7077，standalone默认端口号就是7077<br>–deploy-mode: 部署模式，决定了将driver进程在worker节点上启动，还是在当前本地机器上启动；默认是client模式，就是在当前本地机器上启动driver进程，如果是cluster，那么就会在worker上启动<br>–conf: 配置所有spark支持的配置属性，使用key=value的格式；如果value中包含了空格，那么需要将key=value包裹的双引号中<br>application-jar: 打包好的spark工程jar包，在当前机器上的全路径名<br>application-arguments: 传递给主类的main方法的参数; 在shell中用${1}这种格式获取传递给shell的参数；然后在比如java中，可以通过main方法的args[0]等参数获取</p>
+<h1 id="spark-submit给main类传递参数"><a href="#spark-submit给main类传递参数" class="headerlink" title="spark-submit给main类传递参数"></a>spark-submit给main类传递参数</h1><p>下面是伪代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">main(String[] args)&#123;</div><div class="line">	val conf = new SparkConf().setAppName(&quot;WordCount&quot;)</div><div class="line">	val sc = new SparkContext(conf)</div><div class="line"></div><div class="line">	val file = _</div><div class="line">	if(args!=null &amp;&amp; args.length&gt;0)&#123;</div><div class="line">		println(&quot;=====接收到了参数:&quot;+args(0))</div><div class="line">		file = args(0)</div><div class="line">	&#125;else&#123;</div><div class="line">		file=&quot;hdfs://hadoop-node1:9000/text/hello.txt&quot;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	val rdd = sc.textFile(file)</div><div class="line">	</div><div class="line">	//....</div><div class="line">	</div><div class="line"></div><div class="line">	sc.close</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>spark-submit提交脚本</p>
+<p>wordcount.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">/usr/local/spark/bin/spark-submit \</div><div class="line">--class org.leo.spark.study.WordCount \</div><div class="line">--master spark://192.168.0.101:7077 \</div><div class="line">--deploy-mode client \</div><div class="line">--conf &lt;key&gt;=&lt;value&gt; \</div><div class="line">/usr/local/spark-study/spark-study.jar \</div><div class="line">$&#123;1&#125;</div></pre></td></tr></table></figure>
+<p>执行脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wordcount.sh hdfs://hadoop-node1:9000/test/hello.txt</div></pre></td></tr></table></figure></p>
+<h1 id="spark-submit多个示例-及常用参数详解"><a href="#spark-submit多个示例-及常用参数详解" class="headerlink" title="spark-submit多个示例,及常用参数详解"></a>spark-submit多个示例,及常用参数详解</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># 使用local本地模式，以及8个线程运行</div><div class="line"># --class 指定要执行的main类</div><div class="line"># --master 指定集群模式，local，本地模式，local[8]，进程中用几个线程来模拟集群的执行</div><div class="line">./bin/spark-submit \</div><div class="line">  --class org.leo.spark.study.WordCount \</div><div class="line">  --master local[8] \</div><div class="line">  /usr/local/spark-study.jar \</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 使用standalone client模式运行</div><div class="line"># executor-memory，指定每个executor的内存量，这里每个executor内存是2G</div><div class="line"># total-executor-cores，指定所有executor的总cpu core数量，这里所有executor的总cpu core数量是100个</div><div class="line">./bin/spark-submit \</div><div class="line">  --class org.leo.spark.study.WordCount \</div><div class="line">  --master spark://192.168.0.101:7077 \</div><div class="line">  --executor-memory 2G \</div><div class="line">  --total-executor-cores 100 \</div><div class="line">  /usr/local/spark-study.jar \</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># 使用standalone cluster模式运行</div><div class="line"># supervise参数，指定了spark监控driver节点，如果driver挂掉，自动重启driver</div><div class="line">./bin/spark-submit \</div><div class="line">  --class org.leo.spark.study.WordCount \</div><div class="line">  --master spark://192.168.0.101:7077 \</div><div class="line">  --deploy-mode cluster \</div><div class="line">  --supervise \</div><div class="line">  --executor-memory 2G \</div><div class="line">  --total-executor-cores 100 \</div><div class="line">  /usr/local/spark-study.jar \</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 使用yarn-cluster模式运行</div><div class="line"># num-executors，指定总共使用多少个executor运行spark应用</div><div class="line">./bin/spark-submit \</div><div class="line">  --class org.leo.spark.study.WordCount \</div><div class="line">  --master yarn-cluster \  </div><div class="line">  --executor-memory 20G \</div><div class="line">  --num-executors 50 \</div><div class="line">  /usr/local/spark-study.jar \</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"># 使用standalone client模式，运行一个python应用</div><div class="line">./bin/spark-submit \</div><div class="line">  --master spark://192.168.0.101:7077 \</div><div class="line">  /usr/local/python-spark-wordcount.py \</div><div class="line"></div><div class="line">--class</div><div class="line">application jar</div><div class="line">--master</div><div class="line">--num-executors</div><div class="line">--executor-cores </div><div class="line">--total-executor-cores</div><div class="line">--executor-memory</div><div class="line">--driver-memory </div><div class="line">--supervise</div><div class="line"></div><div class="line"></div><div class="line">在实际生产环境中的配置如下:</div><div class="line">./bin/spark-submit \</div><div class="line">  --class org.leo.spark.study.WordCount \</div><div class="line">  --master yarn-cluster \</div><div class="line">  --num-executors 100 \</div><div class="line">  --executor-cores 2 \</div><div class="line">  --executor-memory 6G \</div><div class="line">  --driver-memory  1G \</div><div class="line">  /usr/local/spark-study.jar \</div></pre></td></tr></table></figure>
+<h1 id="sparkConf-spark-submit以及spark-defaultconf优先级"><a href="#sparkConf-spark-submit以及spark-defaultconf优先级" class="headerlink" title="sparkConf,spark-submit以及spark-defaultconf优先级"></a>sparkConf,spark-submit以及spark-defaultconf优先级</h1><p>默认的配置属性</p>
+<p>spark-submit脚本会自动加载conf/spark-defaults.conf文件中的配置属性，并传递给我们的spark应用程序<br>加载默认的配置属性，一大好处就在于，我们不需要在spark-submit脚本中设置所有的属性<br>比如说，默认属性中有一个spark.master属性，所以我们的spark-submit脚本中，就不一定要显式地设置–master，默认就是local<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">SparkConf.getOrElse(&quot;spark.master&quot;, &quot;local&quot;)</div><div class="line"></div><div class="line">spark配置的优先级如下: SparkConf、spark-submit、spark-defaults.conf</div><div class="line"></div><div class="line">spark.default.parallelism</div><div class="line"></div><div class="line">SparkConf.set(&quot;spark.default.parallelism&quot;, &quot;100&quot;)</div><div class="line">spark-submit: --conf spark.default.parallelism=50</div><div class="line">spark-defaults.conf: spark.default.parallelism 10</div></pre></td></tr></table></figure></p>
+<p>如果想要了解更多关于配置属性的信息，可以在spark-submit脚本中，使用–verbose，打印详细的调试信息</p>
+<p>使用spark-submit设置属性</p>
+<p>虽然说SparkConf设置属性的优先级是最高的，但是有的时候咱们可能不希望在代码中硬编码一些配置属性，否则每次修改了参数以后,还得去代码里修改，然后得重新打包应用程序，再部署到生产机器上去，非常得麻烦</p>
+<p>对于上述的情况，我们可以在代码中仅仅创建一个空的SparkConf对象，比如: val sc = new SparkContext(new SparkConf())</p>
+<p>然后可以在spark-submit脚本中，配置各种属性的值，比如</p>
+<p>./bin/spark-submit \<br>  –name “My app” \<br>  –master local[4] \<br>  –conf spark.shuffle.spill=false \<br>  –conf “spark.executor.extraJavaOptions=-XX:+PrintGCDetails -XX:+PrintGCTimeStamps” \<br>  myApp.jar</p>
+<p>这里的spark.shuffle.spill属性，我们本来如果是在代码中，SparkConf.set(“spark.shuffle.spill”, “false”)来配置的<br>此时在spark-submit中配置了，不需要更改代码，就可以更改属性，非常得方便，<br>尤其是对于spark程序的调优，格外方便，因为调优说白了，就是不断地调整各种各样的参数，然后反复跑反复试的过程</p>
+<p>spark的属性配置方式</p>
+<p>spark-shell和spark-submit两个工具，都支持两种加载配置的方式<br>一种是基于命令行参数，比如上面的–master，spark-submit可以通过–conf参数，接收所有spark属性<br>另一种是从conf/spark-defaults.conf文件中加载，其中每一行都包括了一个key和value<br>比如spark.executor.memory 4g</p>
+<p>所有在SparkConf、spark-submit和spark-defaults.conf中配置的属性，在运行的时候，都会被综合使用<br>直接通过SparkConf设置的属性，优先级是最高的，会覆盖其余两种方式设置的属性<br>其次是spark-submit脚本中通过–conf设置的属性<br>最后是spark-defaults.conf中设置的属性</p>
+<p>通常来说，如果你要对所有的spark作业都生效的配置，放在spark-defaults.conf文件中，只要将spark-defaults.conf.template拷贝成那个文，然后在其中编辑即可<br>然后呢，对于某个spark作业比较特殊的配置，推荐放在spark-submit脚本中，用–conf配置，比较灵活<br>SparkConf配置属性，有什么用呢？也有用，在eclipse中用local模式执行运行的时候，那你就只能在SparkConf中设置属性了</p>
+<p>这里还有一种特例，就是说，在新的spark版本中，可能会将一些属性的名称改变，那些旧的属性名称就变成过期的了<br>此时旧的属性名称还是会被接受的，但是新的属性名称会覆盖掉旧的属性名称，并且优先级是比旧属性名称更高的</p>
+<p>举例来说<br>shuffle reduce read操作的内存缓冲块儿<br>spark 1.3.0: spark.reducer.maxMbInFlight<br>spark 1.5.0: spark.reducer.maxSizeInFlight</p>
+<h1 id="spark-submit配置第三方依赖"><a href="#spark-submit配置第三方依赖" class="headerlink" title="spark-submit配置第三方依赖"></a>spark-submit配置第三方依赖</h1><p>使用spark-submit脚本提交spark application时，application jar，还有我们使用–jars命令绑定的其他jar，都会自动被发送到集群上去<br><strong>–jar</strong><br>spark支持以下几种URL来指定关联的其他jar<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">file: 是由driver的http文件服务提供支持的，所有的executor都会通过driver的HTTP服务来拉取文件</div><div class="line">hdfs:，http:，https:，ftp:，这种文件，就是直接根据URI，从指定的地方去拉取，比如hdfs、或者http链接、或者ftp服务器</div><div class="line">local: 这种格式的文件必须在每个worker节点上都要存在，所以不需要通过网络io去拉取文件，这对于特别大的文件或者jar包特别适用，可以提升作业的执行性能</div><div class="line"></div><div class="line">--jars，比如，mysql驱动包，或者是其他的一些包</div></pre></td></tr></table></figure></p>
+<p><strong>文件清理</strong></p>
+<p>文件和jar都会被拷贝到每个executor的工作目录中，这就会占用很大一片磁盘空间，因此需要在之后清理掉这些文件,在yarn上运行spark作业时，依赖文件的清理都是自动进行的,适用standalone模式，需要配置spark.worker.cleanup.appDataTtl属性，来开启自动清理依赖文件和jar包,在spark-env.sh中如下配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">SPARK_WORKER_OPTS				worker的额外参数，使用&quot;-Dx=y&quot;设置各个参数</div><div class="line"></div><div class="line">参数名											默认值						含义</div><div class="line">spark.worker.cleanup.enabled					false						是否启动自动清理worker工作目录，默认是false</div><div class="line">spark.worker.cleanup.interval					1800						单位秒，自动清理的时间间隔，默认是30分钟</div><div class="line">spark.worker.cleanup.appDataTtl					7 * 24 * 3600				默认将一个spark作业的文件在worker工作目录保留多少时间，默认是7天</div></pre></td></tr></table></figure>
+<p><strong>–file</strong></p>
+<p>用户还可以通过在spark-submit中，使用–packages，绑定一些maven的依赖包,此外，还可以通过–repositories来绑定过一些额外的仓库,但是说实话，这两种情况还的确不太常见</p>
+<p>–files，比如，最典型的就是hive-site.xml配置文件</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark算子汇总/" rel="next" title="spark core之spark算子汇总">
+                <i class="fa fa-chevron-left"></i> spark core之spark算子汇总
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之shuffle/" rel="prev" title="spark core之shuffle">
+                spark core之shuffle <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spark-submit脚本参数说明"><span class="nav-number">1.</span> <span class="nav-text">spark-submit脚本参数说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#spark-submit给main类传递参数"><span class="nav-number">2.</span> <span class="nav-text">spark-submit给main类传递参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#spark-submit多个示例-及常用参数详解"><span class="nav-number">3.</span> <span class="nav-text">spark-submit多个示例,及常用参数详解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sparkConf-spark-submit以及spark-defaultconf优先级"><span class="nav-number">4.</span> <span class="nav-text">sparkConf,spark-submit以及spark-defaultconf优先级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#spark-submit配置第三方依赖"><span class="nav-number">5.</span> <span class="nav-text">spark-submit配置第三方依赖</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

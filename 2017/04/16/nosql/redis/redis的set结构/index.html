@@ -1,0 +1,754 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="官网http://redis.io/commands#set 集合的特点 无序性 唯一性  sadd 添加SADD key member [member …] 12345678910redis&amp;gt; SADD myset &amp;quot;Hello&amp;quot;(integer) 1redis&amp;gt; SADD myset &amp;quot;World&amp;quot;(integer) 1redis&amp;gt; S">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis的set结构">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/redis/redis的set结构/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="官网http://redis.io/commands#set 集合的特点 无序性 唯一性  sadd 添加SADD key member [member …] 12345678910redis&amp;gt; SADD myset &amp;quot;Hello&amp;quot;(integer) 1redis&amp;gt; SADD myset &amp;quot;World&amp;quot;(integer) 1redis&amp;gt; S">
+<meta property="og:updated_time" content="2017-02-24T17:10:17.028Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis的set结构">
+<meta name="twitter:description" content="官网http://redis.io/commands#set 集合的特点 无序性 唯一性  sadd 添加SADD key member [member …] 12345678910redis&amp;gt; SADD myset &amp;quot;Hello&amp;quot;(integer) 1redis&amp;gt; SADD myset &amp;quot;World&amp;quot;(integer) 1redis&amp;gt; S">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/redis/redis的set结构/"/>
+
+
+
+
+
+  <title> redis的set结构 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/redis/redis的set结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                redis的set结构
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h1><p><a href="http://redis.io/commands#set" target="_blank" rel="external">http://redis.io/commands#set</a></p>
+<h1 id="集合的特点"><a href="#集合的特点" class="headerlink" title="集合的特点"></a>集合的特点</h1><ol>
+<li>无序性</li>
+<li>唯一性</li>
+</ol>
+<h1 id="sadd-添加"><a href="#sadd-添加" class="headerlink" title="sadd 添加"></a>sadd 添加</h1><p>SADD key member [member …]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">redis&gt; SADD myset &quot;Hello&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;World&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;World&quot;        #不能重复添加</div><div class="line">(integer) 0</div><div class="line">redis&gt; SMEMBERS myset</div><div class="line">1) &quot;Hello&quot;</div><div class="line">2) &quot;World&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="smemberes-查看"><a href="#smemberes-查看" class="headerlink" title="smemberes 查看"></a>smemberes 查看</h1><p>SMEMBERS key<br>Return value        all elements of the set.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">redis&gt; SADD myset &quot;Hello&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;World&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SMEMBERS myset</div><div class="line">1) &quot;Hello&quot;</div><div class="line">2) &quot;World&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="srem-删除"><a href="#srem-删除" class="headerlink" title="srem 删除"></a>srem 删除</h1><p>SREM key member [member …]<br>Return value：<br>            the number of members that were removed from the set, not including non existing members<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"> redis&gt; SADD myset &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SREM myset &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SREM myset &quot;four&quot;            #没有就返回0</div><div class="line">(integer) 0</div><div class="line">redis&gt; SMEMBERS myset</div><div class="line">1) &quot;three&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="spop-随机删除元素"><a href="#spop-随机删除元素" class="headerlink" title="spop 随机删除元素"></a>spop 随机删除元素</h1><p>SPOP key [count]<br>Removes and returns one or more random elements from the set value store at key.<br>Return value： the removed element, or nil when key does not exist.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"> redis&gt; SADD myset &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SPOP myset            #随机删除一个</div><div class="line">&quot;three&quot;</div><div class="line">redis&gt; SMEMBERS myset</div><div class="line">1) &quot;two&quot;</div><div class="line">2) &quot;one&quot;</div><div class="line">redis&gt; SADD myset &quot;four&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;five&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SPOP myset 3        #随机删除3个</div><div class="line">1) &quot;five&quot;</div><div class="line">2) &quot;four&quot;</div><div class="line">3) &quot;two&quot;</div><div class="line">redis&gt; SMEMBERS myset</div><div class="line">1) &quot;one&quot;</div></pre></td></tr></table></figure>
+<h1 id="srandommember-随机得到一个或多个元素"><a href="#srandommember-随机得到一个或多个元素" class="headerlink" title="srandommember 随机得到一个或多个元素"></a>srandommember 随机得到一个或多个元素</h1><p>SRANDMEMBER key [count]<br>count&gt;0 返回一个元素不重复的数组<br>count&lt;0 返回的数组中元素可能重复<br>如果不指定count，那么随机的得到一个元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"> redis&gt; SADD myset one two three</div><div class="line">(integer) 3</div><div class="line">redis&gt; SRANDMEMBER myset</div><div class="line">&quot;one&quot;</div><div class="line">redis&gt; SRANDMEMBER myset 2</div><div class="line">1) &quot;two&quot;</div><div class="line">2) &quot;three&quot;</div><div class="line">redis&gt; SRANDMEMBER myset -5        #返回了随机的重复元素</div><div class="line">1) &quot;two&quot;</div><div class="line">2) &quot;three&quot;</div><div class="line">3) &quot;one&quot;</div><div class="line">4) &quot;two&quot;</div><div class="line">5) &quot;one&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="sismember-是否在集合中"><a href="#sismember-是否在集合中" class="headerlink" title="sismember 是否在集合中"></a>sismember 是否在集合中</h1><p>SISMEMBER key member<br>存在返回1，否返回0<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> redis&gt; SADD myset &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SISMEMBER myset &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SISMEMBER myset &quot;two&quot;</div><div class="line">(integer) 0</div><div class="line">redis&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="scard-集合元素的个数"><a href="#scard-集合元素的个数" class="headerlink" title="scard 集合元素的个数"></a>scard 集合元素的个数</h1><p>SCARD key<br>返回集合中元素的个数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">redis&gt; SADD myset &quot;Hello&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;World&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SCARD myset</div><div class="line">(integer) 2</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="smove-移动集合中的某个元素"><a href="#smove-移动集合中的某个元素" class="headerlink" title="smove 移动集合中的某个元素"></a>smove 移动集合中的某个元素</h1><p>SMOVE source destination member<br> 从源集合中移动元素到目标集合中，这个操作是原子性的<br>如果源集合不存在或者是源集合中没有指定的元素，什么也不操作，返回0<br>如果元素在目标集合中存在，那么只是删除源集合中的元素，目标集合不动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">redis&gt; SADD myset &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myset &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD myotherset &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SMOVE myset myotherset &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SMEMBERS myset</div><div class="line">1) &quot;one&quot;</div><div class="line">redis&gt; SMEMBERS myotherset</div><div class="line">1) &quot;two&quot;</div><div class="line">2) &quot;three&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="sinter-求交集"><a href="#sinter-求交集" class="headerlink" title="sinter 求交集"></a>sinter 求交集</h1><p>SINTER key [key …]<br>如果一个集合的为空，或者改集合不存在（会被当做空集合），那么求的并集为空（因为任何集合和一个空集合求交集都是空集合）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">key1 = &#123;a,b,c,d&#125;</div><div class="line">key2 = &#123;c&#125;</div><div class="line">key3 = &#123;a,c,e&#125;</div><div class="line">SINTER key1 key2 key3 = &#123;c&#125;</div><div class="line"></div><div class="line"></div><div class="line">redis&gt; SADD key1 &quot;a&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key1 &quot;b&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key1 &quot;c&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key2 &quot;c&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key2 &quot;d&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key2 &quot;e&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SINTER key1 key2</div><div class="line">1) &quot;c&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="sunion-求并集"><a href="#sunion-求并集" class="headerlink" title="sunion 求并集"></a>sunion 求并集</h1><p>SUNION key [key …]<br> return : list with members of the resulting set.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"> key1 = &#123;a,b,c,d&#125;</div><div class="line">key2 = &#123;c&#125;</div><div class="line">key3 = &#123;a,c,e&#125;</div><div class="line">SUNION key1 key2 key3 = &#123;a,b,c,d,e&#125;</div><div class="line"></div><div class="line">&apos;Keys that do not exist are considered to be empty sets.&apos;</div><div class="line"></div><div class="line"></div><div class="line">redis&gt; SADD key1 &quot;a&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key1 &quot;b&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key1 &quot;c&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key2 &quot;c&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key2 &quot;d&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key2 &quot;e&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SUNION key1 key2</div><div class="line">1) &quot;b&quot;</div><div class="line">2) &quot;a&quot;</div><div class="line">3) &quot;c&quot;</div><div class="line">4) &quot;e&quot;</div><div class="line">5) &quot;d&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="sdiff-求集合的差"><a href="#sdiff-求集合的差" class="headerlink" title="sdiff  求集合的差"></a>sdiff  求集合的差</h1><p>SDIFF key [key …]<br>返回：list with members of the resulting set.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"> key1 = &#123;a,b,c,d&#125;</div><div class="line">key2 = &#123;c&#125;</div><div class="line">key3 = &#123;a,c,e&#125;</div><div class="line">SDIFF key1 key2 key3 = &#123;b,d&#125;</div><div class="line"></div><div class="line"></div><div class="line">redis&gt; SADD key1 &quot;a&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key1 &quot;b&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key1 &quot;c&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key2 &quot;c&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key2 &quot;d&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SADD key2 &quot;e&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; SDIFF key1 key2</div><div class="line">1) &quot;b&quot;</div><div class="line">2) &quot;a&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="sinterstore-sunionstore-sdiffstore"><a href="#sinterstore-sunionstore-sdiffstore" class="headerlink" title="sinterstore/sunionstore/sdiffstore"></a>sinterstore/sunionstore/sdiffstore</h1><p>SINTERSTORE destination key [key …]<br>SUNIONSTORE destination key [key …]<br>SDIFFSTORE destination key [key …]<br> 只是将结果存储在了destination  中，使用方法见上面</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/redis的shell启动脚本/" rel="next" title="redis的shell启动脚本">
+                <i class="fa fa-chevron-left"></i> redis的shell启动脚本
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/redis的list结构/" rel="prev" title="redis的list结构">
+                redis的list结构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#官网"><span class="nav-number">1.</span> <span class="nav-text">官网</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集合的特点"><span class="nav-number">2.</span> <span class="nav-text">集合的特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sadd-添加"><span class="nav-number">3.</span> <span class="nav-text">sadd 添加</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#smemberes-查看"><span class="nav-number">4.</span> <span class="nav-text">smemberes 查看</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#srem-删除"><span class="nav-number">5.</span> <span class="nav-text">srem 删除</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#spop-随机删除元素"><span class="nav-number">6.</span> <span class="nav-text">spop 随机删除元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#srandommember-随机得到一个或多个元素"><span class="nav-number">7.</span> <span class="nav-text">srandommember 随机得到一个或多个元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sismember-是否在集合中"><span class="nav-number">8.</span> <span class="nav-text">sismember 是否在集合中</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#scard-集合元素的个数"><span class="nav-number">9.</span> <span class="nav-text">scard 集合元素的个数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#smove-移动集合中的某个元素"><span class="nav-number">10.</span> <span class="nav-text">smove 移动集合中的某个元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sinter-求交集"><span class="nav-number">11.</span> <span class="nav-text">sinter 求交集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sunion-求并集"><span class="nav-number">12.</span> <span class="nav-text">sunion 求并集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sdiff-求集合的差"><span class="nav-number">13.</span> <span class="nav-text">sdiff  求集合的差</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sinterstore-sunionstore-sdiffstore"><span class="nav-number">14.</span> <span class="nav-text">sinterstore/sunionstore/sdiffstore</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

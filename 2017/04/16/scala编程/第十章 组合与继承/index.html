@@ -1,0 +1,754 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;组合是指一个类持有另一个的引用,借助被引用的类完成任务,继承是超类/子类的关系">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十章 组合与继承">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/第十章 组合与继承/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="&amp;emsp;组合是指一个类持有另一个的引用,借助被引用的类完成任务,继承是超类/子类的关系">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/10/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/10/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/10/3.png">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.091Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第十章 组合与继承">
+<meta name="twitter:description" content="&amp;emsp;组合是指一个类持有另一个的引用,借助被引用的类完成任务,继承是超类/子类的关系">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/10/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/第十章 组合与继承/"/>
+
+
+
+
+
+  <title> 第十章 组合与继承 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第十章 组合与继承/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第十章 组合与继承
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;组合是指一个类持有另一个的引用,借助被引用的类完成任务,继承是超类/子类的关系</p>
+<a id="more"></a>
+<h1 id="1-二维布局库"><a href="#1-二维布局库" class="headerlink" title="1.二维布局库"></a>1.二维布局库</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">如下:Element是二维布局中的元素,该元素可以通过名为&quot;elem&quot;的工厂方法来通过传入的数据构造新的元素</div><div class="line">*/</div><div class="line">elem(s: String): Element</div><div class="line"></div><div class="line">//如上,你可以对名为Element的类型建模,可以对元素调用above或beside方法,并传入第二个元素来获取一个合并了前两个元素的新的元素</div><div class="line">val column1 = elem(&quot;hello&quot;) above elem(&quot;****&quot;)</div><div class="line">val column2 = elem(&quot;****&quot;) above elem(&quot;world&quot;)</div><div class="line"></div><div class="line">//该表达式的显示结果为:</div><div class="line">hello ****</div><div class="line">**** world</div></pre></td></tr></table></figure>
+<h1 id="2-抽象类"><a href="#2-抽象类" class="headerlink" title="2.抽象类"></a>2.抽象类</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">abstract class Element&#123;</div><div class="line">  def contents: Array[String]</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">contents被声明为没有实现的方法,他是Element类的抽象成员,具有抽象成员的类本省必须被声明为抽象的,要声明一个类是抽象的,那么只要在类的class之前加上abstract关键字即可</div><div class="line">抽象类是不能实例化的</div><div class="line"></div><div class="line">注意:Element类的contents方法并没带abstract修饰符,一个方法只要没有实现(即没有等号或方法体),他就是抽象的</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="3-定义无参数方法"><a href="#3-定义无参数方法" class="headerlink" title="3.定义无参数方法"></a>3.定义无参数方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">接下来,我们向Element添加显示宽度和高度的方法,height方法返回contents里的行数,width方法返回第一行的长度,如果元素没有行则返回零</div><div class="line">*/</div><div class="line">abstract class Element&#123;</div><div class="line">  def contents: Array[String]</div><div class="line">  def height: Int = contents.length</div><div class="line">  def width: Int = if (height==0) 0 else contents(0).length</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">注意:Element的三个方法都没有参数列表,甚至连空列表都没有,例如:不同于方法:</div><div class="line">*/</div><div class="line">def width():Int</div><div class="line">//以下的方法定义中不含括号:</div><div class="line">def width: Int</div><div class="line"></div><div class="line">/*</div><div class="line">scala的使用惯例是:只要方法中没有参数并且方法仅能通过读取所包含对象的属性方法区访问可变状态,就使用无参数方法,这个惯例支持统一访问原则,就是说客户端代码不应由属性是通过字段实现还是方法实现而受到影响,以下是将width和height作为字段而不是方法来实现,只要简单的将def修改成val,即可:</div><div class="line">*/</div><div class="line">abstract class Element&#123;</div><div class="line">  def contents: Array[String]</div><div class="line">  val height: Int = contents.length</div><div class="line">  val width: Int = if (height==0) 0 else contents(0).length</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">到底是使用字段还是方法,这取决于类的使用情况</div><div class="line">访问字段比调用方法略快,因为字段值在类初始化的时候被预计算,而方法调用在每次调用的时候都要计算</div><div class="line">使用字段需要为每个Element对象分配更多的内存空间</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">特别地,如果类的字段变为了访问方法,只要访问方法是纯的,即没有副作用且不依赖可变状态,那么Element类的客户端代码就不需要重写,客户端代码不应该关心到底用哪种方式实现的</div><div class="line">*/</div><div class="line"></div><div class="line">//统一访问原则:</div><div class="line">str.length    //可以说是调用了str的对象的一个字段(属性)</div><div class="line">str.length    //也可以说是调用了str对象的无参数方法</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">scala在遇到混合了无参数和空括号方法的情况时很自由,特别是,你可以用空括号方法重写无参数方法,反之亦然,你还可以在调用任何不带参数的方法时省略空的括号,如下:</div><div class="line">*/</div><div class="line">Array(2, 3, 4).toString</div><div class="line">&quot;abc&quot;.length</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">原则上,scala的函数调用中可以省略所有的空括号,然而,在调用的方法超出其调用者对象的属性时(即:不能看做是调用者的属性的空参数函数),推荐仍然写一对空的括号,例如:如果方法执行了I/O,或写入了可重新赋值的变量(var),或读取不是调用者字段你的var,总之无论是直接还是非直接的使用可变对象,都应该添加空括号</div><div class="line">*/</div><div class="line">&quot;hello&quot;.length    //没有副作用,所以无需()</div><div class="line">println()    //最好别省略()    , 因为他的副作用就是打印</div><div class="line"></div><div class="line">//如果你调用的函数执行了操作就使用括号,但如果仅提供了对某个属性的访问,那么省略括号</div></pre></td></tr></table></figure>
+<h1 id="4-扩展类"><a href="#4-扩展类" class="headerlink" title="4.扩展类"></a>4.扩展类</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">上面创建的抽象类,我们不能实例化,所以需要创建一个新的类,继承了上面的抽象类</div><div class="line">*/</div><div class="line">class ArrayElement(conts: Array[String]) extends Element &#123;</div><div class="line">  def contents = conts</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">extends子句有两个效果,使得ArrayElement类继承Element类的所有非私有的成员,并且让ArrayElement类型成为Element类型的子类型,因为ArrayElement扩展了Element,所以ArrayElement类被称为Element类的子类,反过来,Element是ArrayElement的超类</div><div class="line">如果你省略extends的子句,scala编译器将隐式的假设你的类扩展子scala.AnyRef,这与Java平台上的Java.lang.Object 相同</div><div class="line"> */</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/10/1.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">哪些超类的成员不会被继承:</div><div class="line">1.超类的私有成员不会被子类继承,</div><div class="line">2.超类中的成员若与子类中实现的成员具有相同的名称和参数则不会被子类继承,这种情况下被称为子类的成员重写了超类的成员,</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">如果子类的成员是具体的而超类的中是抽象的,我们可以具体的成员实现了抽象的成员</div><div class="line">*/</div><div class="line">val ae = new ArrayElement(Array(&quot;hello&quot;, &quot;world&quot;))</div><div class="line">ae.width  //使用</div><div class="line"></div><div class="line"></div><div class="line">//子类型化:指子类的值可以在任何需要其超类的值的地方使用</div><div class="line">val e: Element = new ArrayElement(Array(&quot;hello&quot;, &quot;world&quot;))</div><div class="line">//其实类似于Java中的多态</div></pre></td></tr></table></figure>
+<h1 id="5-重写方法和字段"><a href="#5-重写方法和字段" class="headerlink" title="5.重写方法和字段"></a>5.重写方法和字段</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">统一访问原则只是scala在对待字段和方法上比Java更统一的一个方面,另一个差异是scala里的字段和方法属于相同的命名空间,这让字段可以重写无参数方法,例如,你可以通过改变ArrayElement类中的contents的实现将其从一个方法变成一个字段,而无需修改类Element中的contents的抽象方法定义,如下:</div><div class="line">*/</div><div class="line">class ArrayElement(conts: Array[String]) extends Element &#123;</div><div class="line">  val contents:Array[String] = conts</div><div class="line">&#125;</div><div class="line"></div><div class="line">//在scala里禁止在同一个类里用同样的名称定义字段和方法,尽管Java中可以允许你这样做,但是scala中将不能编译通过</div><div class="line"></div><div class="line"></div><div class="line">class WontCompile(conts: Array[String]) extends Element &#123;</div><div class="line">  private var f = 0    //不能编译通过,因为字段和方法同名</div><div class="line">  def f = 1</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">命名空间:</div><div class="line">Java准备了四个命名空间(分别是字段/方法/类型和包)</div><div class="line">scala仅有两个命名空间:</div><div class="line">值(字段,方法,包还有单例对象)</div><div class="line">类型(类和特质)</div><div class="line"></div><div class="line">scala把字段和方法放进同一个命名空间的理由很明确,因为这样你就可以实现使用val重写无参数方法这种你在Java里做不到的事情</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="6-定义参数化字段"><a href="#6-定义参数化字段" class="headerlink" title="6.定义参数化字段"></a>6.定义参数化字段</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">class ArrayElement(conts: Array[String]) extends Element &#123;</div><div class="line">  def contents = conts</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">在上述代码中需要定义字段contents时需要将conts再重新赋值给contents,这样的做法有点不必要的累赘和重复,可以采用如下的定义:</div><div class="line">*/</div><div class="line">class ArrayElement(val contents: Array[String]) extends Element  //注意contents参数的前缀是val,ArrayElement类现在拥有了一个可以从类外部访问的字段contents,字段使用参数值初始化</div><div class="line">//与下面的写法类似</div><div class="line">class ArrayElement(x123: Array[String]) extends Element&#123;</div><div class="line">  val contents: Array[String] = x123</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">类的参数同样也可以使用var做前缀,这种情况下相应的字段可以被重新赋值,这些参数化字段还可以添加如:private,protected,或override这类的修饰符</div><div class="line">*/</div><div class="line">class Tiger (</div><div class="line">  override val dangerous:Boolean,</div><div class="line">  private var age:Int</div><div class="line">)extends Cat</div><div class="line"></div><div class="line">/*</div><div class="line">Tiger的定义是下面另一种类定义方式的简写,其中包含了重写成员dangerous和私有成员age</div><div class="line">*/</div><div class="line">class Tiger2(param1: Boolean, param2: Int) extends Cat&#123;</div><div class="line">  override val dangerous = param1</div><div class="line">  private var age = param2</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="7-调用超类构造器"><a href="#7-调用超类构造器" class="headerlink" title="7.调用超类构造器"></a>7.调用超类构造器</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//需求:现在想要创造由给定的单行字符串构成的布局元素</div><div class="line">class LineElement(s: String) extends ArrayElement(Array(s))&#123;</div><div class="line">  override def width = s.length</div><div class="line">  override def height = 1   //因为是单行,所以设置为1</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/10/2.png" alt=""></p>
+<h1 id="8-使用override修饰符"><a href="#8-使用override修饰符" class="headerlink" title="8.使用override修饰符"></a>8.使用override修饰符</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">若子类成员重写了父类的具体成员则必须带有这个修饰符,</div><div class="line">若成员实现的是同名的抽象成员时,则这个修饰符是可选的,</div><div class="line">若成员并未重写或实现什么其他基类里的成员则禁用这个修饰符</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="9-多态"><a href="#9-多态" class="headerlink" title="9.多态"></a>9.多态</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">在上面的例子中可以看到Element类型的变量可以指向ArrayElement类型的对象,这种现象叫做多态,Element对象可以有许多形式,目前为止,你已经看到了两种形式:ArrayElement,和LineElement,你可以定义新的Element子类创造Element的更多形式,例如:下面给出了如何定义拥有给定长度和高度并充满指定字符的新的Element</div><div class="line">*/</div><div class="line">class UniformElement(</div><div class="line">  ch:Char,</div><div class="line">  override val width: Int, </div><div class="line">  override val height: Int</div><div class="line">) extends Element&#123;</div><div class="line">  private val line = ch.toString * width</div><div class="line">  def contents = Array.make(height, line)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/10/3.png" alt=""></p>
+<h1 id="10-定义final成员"><a href="#10-定义final成员" class="headerlink" title="10.定义final成员"></a>10.定义final成员</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*有时你想要确保一个成员不被子类重写,在scala中可以和Java一样通过给成员添加final修饰符来实现</div><div class="line">*/</div><div class="line">//如果不想子类重写父类的方法,可以在方法上添加final</div><div class="line">class ArrayElement extends Element&#123;</div><div class="line">  final override def demo(): Unit =&#123;</div><div class="line">    println(&quot;ArrayElement&apos;s implementation invoked&quot;)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">//这样如果ArrayElement的子类如果想要重写demo方法,是无法编译通过的</div><div class="line"></div><div class="line">//如果想要确保整个类都不会有子类,那么需要在类的声明上添加final</div><div class="line">final class ArrayElement extends Element&#123;</div><div class="line">  final override def demo(): Unit =&#123;</div><div class="line">    println(&quot;ArrayElement&apos;s implementation invoked&quot;)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//class LineElement extends ArrayElement  将编译不通过</div></pre></td></tr></table></figure>
+<h1 id="11-使用组合与继承"><a href="#11-使用组合与继承" class="headerlink" title="11.使用组合与继承"></a>11.使用组合与继承</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">组合和继承是利用其它现存类定义新类的两个方法,</div><div class="line">如果你追求的是根本上的代码重用,那么通常更推荐采用组合而不是继承,</div><div class="line">只有继承才受累于脆基类问题,因为你可能在改造超类时无意中破坏了子类</div><div class="line">*/</div><div class="line"></div><div class="line">class LineElement(s: String) extends Element&#123;</div><div class="line">  val contents = Array(s)</div><div class="line">  override def width = s.length</div><div class="line">  override def height = 1</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">在前一个版本中,LineElement与ArrayElement间是继承关系,LineElement从ArrayElement那里继承了contents,现在他与Array是组合关系,在它自己的contents字段中持有字符串数组的引用</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="12-实现above-beside-和toString"><a href="#12-实现above-beside-和toString" class="headerlink" title="12.实现above,beside,和toString"></a>12.实现above,beside,和toString</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">//above是将两个Element上下连接在一起</div><div class="line">def above(that: Element): Element = &#123;</div><div class="line">  new ArrayElement(this.contents ++ that.contents) // ++操作符是连接两个数组,</div><div class="line">&#125;</div><div class="line"></div><div class="line">//beside将创造出一个新的元素,新元素的每一行都来自两个原始元素的相应行的串联,为简单起见,我们首先假设两个元素高度相同,这样就可以如下设计beside方法:</div><div class="line">def beside(that: Element):Element =&#123;</div><div class="line">  val contents = new Array[String](this.contents.length)</div><div class="line">  for (i &lt;- 0 until this.contents.length)</div><div class="line">    contents(i) = this.contents(i) + that.contents(i)</div><div class="line">  new ArrayElement(contents)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//上面的代码是指令式的,如下的采用的是函数式</div><div class="line"></div><div class="line">new ArrayElement(</div><div class="line">  for(</div><div class="line">    (line1, line2) &lt;- this.contents zip that.contents</div><div class="line">  ) yield line1+line2</div><div class="line">)</div><div class="line">//上述代码避免了显示的数组索引(使用索引可能有角标越界的情况出现),因此出错的机会更少</div><div class="line"></div><div class="line">//toString方法</div><div class="line">override def toString: String = contents.mkString(&quot;\n&quot;)</div><div class="line">//注意:toString没有带空参数列表,这遵循了统一访问原则的建议,因为toString是一个不带任何参数的纯方法</div></pre></td></tr></table></figure>
+<h1 id="13-定义工厂对象"><a href="#13-定义工厂对象" class="headerlink" title="13.定义工厂对象"></a>13.定义工厂对象</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">工厂对象包含了构建其他对象的方法,客户端将使用这些工厂方法构造对象而不是直接使用new构造对象,这种方式的一个好处就是可以将对象的创建集中化并且隐藏对象实际代表的类的细节</div><div class="line">这种隐藏一方面可以让客户端更容易理解你的库,因为暴露的细节更少了,另一方面,你更多的机会可以在不破坏客户端代码的前提下改变库的实现</div><div class="line">*/</div><div class="line"></div><div class="line">//工厂方法应该放在何处?</div><div class="line">//一种直接的方法是创建Element类的伴生对象并把它作为布局元素的工厂方法,使用这种方式,你唯一要暴露给客户端的就是Element的类/对象的组合,隐藏ArrayElement,LineElement,和UniformElement三个类的实现</div><div class="line"></div><div class="line">object Element&#123;</div><div class="line">  def elem(contents:Array[String]):Element =</div><div class="line">    new ArrayElement(contents)</div><div class="line">  def elem(chr:Char, width: Int, height: Int ): Element =</div><div class="line">    new UniformElement(chr,width,height)</div><div class="line">  def elem(line: String): Element =</div><div class="line">    new LineElement(line)</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">为了直接调用工厂方法而不必使用单例对象的名臣Element做限定,我们将在源文件的开始引用Element.elem,那么在Element类的内部,只要使用elem就可以调用工厂方法</div><div class="line">*/</div><div class="line"></div><div class="line">import Element.elem</div><div class="line">abstract class Element&#123;</div><div class="line">  def contents: Array[String]</div><div class="line">  def height: Int = contents.length</div><div class="line">  def width: Int = if (height==0) 0 else contents(0).length</div><div class="line">  def above(that: Element): Element = &#123;</div><div class="line">    elem(this.contents ++ that.contents)</div><div class="line">  &#125;</div><div class="line">  def beside(that: Element):Element =&#123;</div><div class="line">    elem(</div><div class="line">      for(</div><div class="line">        (line1, line2) &lt;- this.contents zip that.contents</div><div class="line">      ) yield line1+line2      </div><div class="line">    )</div><div class="line">  &#125;</div><div class="line">  override def toString: String = contents.mkString(&quot;\n&quot;)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">有了上述的工厂方法之后,子类ArrayElement,LineElement,和UniformElement就可以是私有的,因为他们不再需要直接被客户访问,在scala中,你可以在类和单例对象的内部定义其他的类和单例对象,因此一种让Element的子类私有化的方式就是把他们放在Element单例对象中并在那里声明他们为私有的,如下:</div><div class="line">*/</div><div class="line"></div><div class="line">object Element&#123;</div><div class="line">  private class ArrayElement(x123: Array[String]) extends Element&#123;</div><div class="line">    val contents: Array[String] = x123</div><div class="line">  &#125;</div><div class="line">  private class LineElement(s: String) extends Element&#123;</div><div class="line">    val contents = Array(s)</div><div class="line">    override def width = s.length</div><div class="line">    override def height = 1</div><div class="line">  &#125;</div><div class="line">  private class UniformElement(</div><div class="line">    ch:Char,</div><div class="line">    override val width: Int,</div><div class="line">    override val height: Int</div><div class="line">  ) extends Element&#123;</div><div class="line">    private val line = ch.toString * width</div><div class="line">    def contents = Array.make(height, line)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def elem(contents:Array[String]):Element =</div><div class="line">    new ArrayElement(contents)</div><div class="line">  def elem(chr:Char, width: Int, height: Int ): Element =</div><div class="line">    new UniformElement(chr,width,height)</div><div class="line">  def elem(line: String): Element =</div><div class="line">    new LineElement(line)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第四章 类和对象/" rel="next" title="第四章 类和对象">
+                <i class="fa fa-chevron-left"></i> 第四章 类和对象
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十六章 使用列表/" rel="prev" title="第十六章 使用列表">
+                第十六章 使用列表 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-二维布局库"><span class="nav-number">1.</span> <span class="nav-text">1.二维布局库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-抽象类"><span class="nav-number">2.</span> <span class="nav-text">2.抽象类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-定义无参数方法"><span class="nav-number">3.</span> <span class="nav-text">3.定义无参数方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-扩展类"><span class="nav-number">4.</span> <span class="nav-text">4.扩展类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-重写方法和字段"><span class="nav-number">5.</span> <span class="nav-text">5.重写方法和字段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-定义参数化字段"><span class="nav-number">6.</span> <span class="nav-text">6.定义参数化字段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-调用超类构造器"><span class="nav-number">7.</span> <span class="nav-text">7.调用超类构造器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-使用override修饰符"><span class="nav-number">8.</span> <span class="nav-text">8.使用override修饰符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-多态"><span class="nav-number">9.</span> <span class="nav-text">9.多态</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-定义final成员"><span class="nav-number">10.</span> <span class="nav-text">10.定义final成员</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-使用组合与继承"><span class="nav-number">11.</span> <span class="nav-text">11.使用组合与继承</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-实现above-beside-和toString"><span class="nav-number">12.</span> <span class="nav-text">12.实现above,beside,和toString</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-定义工厂对象"><span class="nav-number">13.</span> <span class="nav-text">13.定义工厂对象</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,742 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.queue函数式队列123456789//函数式队列是一种具有以下三种操作方式的数据结构head     //返回队列的第一个元素tail    //返回除第一个元素之外的队列append    //返回尾部添加了指定元素的新队列//不像可变队列,函数式队列在添加元素的时候不会改变其内容,而是返回包含了这个元素的新队列scala&amp;gt; import scala.collection.immu">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十九章 类型参数化">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/第十九章 类型参数化/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.queue函数式队列123456789//函数式队列是一种具有以下三种操作方式的数据结构head     //返回队列的第一个元素tail    //返回除第一个元素之外的队列append    //返回尾部添加了指定元素的新队列//不像可变队列,函数式队列在添加元素的时候不会改变其内容,而是返回包含了这个元素的新队列scala&amp;gt; import scala.collection.immu">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.067Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第十九章 类型参数化">
+<meta name="twitter:description" content="1.queue函数式队列123456789//函数式队列是一种具有以下三种操作方式的数据结构head     //返回队列的第一个元素tail    //返回除第一个元素之外的队列append    //返回尾部添加了指定元素的新队列//不像可变队列,函数式队列在添加元素的时候不会改变其内容,而是返回包含了这个元素的新队列scala&amp;gt; import scala.collection.immu">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/第十九章 类型参数化/"/>
+
+
+
+
+
+  <title> 第十九章 类型参数化 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第十九章 类型参数化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第十九章 类型参数化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-queue函数式队列"><a href="#1-queue函数式队列" class="headerlink" title="1.queue函数式队列"></a>1.queue函数式队列</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//函数式队列是一种具有以下三种操作方式的数据结构</div><div class="line">head     //返回队列的第一个元素</div><div class="line">tail    //返回除第一个元素之外的队列</div><div class="line">append    //返回尾部添加了指定元素的新队列</div><div class="line"></div><div class="line">//不像可变队列,函数式队列在添加元素的时候不会改变其内容,而是返回包含了这个元素的新队列</div><div class="line">scala&gt; import scala.collection.immutable.Queue</div><div class="line">scala&gt; val q = Queue(1,2,3)</div><div class="line">scala&gt; val q1 = q append 4</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1 id="2-信息隐藏"><a href="#2-信息隐藏" class="headerlink" title="2.信息隐藏"></a>2.信息隐藏</h1><p> 私有构造器及工厂方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">Java中,你可以把构造器声明为私有的使其不可见,scala中,主构造器无需明确定义,不过虽然他的定义隐含于类参数及方法体中,还是可以通过private修饰符添加在类参数列表的前边把主构造器隐藏起来</div><div class="line">*/</div><div class="line">class Queue[T] private (</div><div class="line">   private val leading: List[T],</div><div class="line">   private val trailing: List[T]</div><div class="line"> )</div><div class="line"></div><div class="line">//夹在类名与其参数之间的private修饰符表名Queue的构造器是私有的,他只能被类本身及伴生对象访问,类名Queue仍然是公开的,因此你可以继续使用这个类,但不能调用他的构造器</div><div class="line">scala&gt; new Queue(List(1,2), List(3))</div><div class="line">&lt;console&gt;:24: error: constructor Queue in class Queue cannot be accessed in object $iw</div><div class="line">              new Queue(List(1,2), List(3))</div><div class="line">              ^</div><div class="line"></div><div class="line">//上面的代码的主构造器不能调用,那么可以使用辅助构造器,如下:</div><div class="line">def    this() = this(Nil, Nil)</div><div class="line"></div><div class="line">//上面的辅助构造器可以构建空队列,通过改良,他可以带上初始化队列元素列表:</div><div class="line">def    this(elems: T*) = this(elems.toList, Nil)    //T*是重复参数的标注</div><div class="line"></div><div class="line"></div><div class="line">//另一种可能性是添加可以用初始元素序列创建队列的工厂方法,比较简洁的做法是定义与类同名的Queue对象及apply方法</div><div class="line"></div><div class="line">object Queue &#123;</div><div class="line">  //用初始化元素&quot;xs&quot;构造队列</div><div class="line">  def apply[T](xs: T*) = new Queue[T](xs.toList, Nil)</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">再把这个对象放在类Queue的同一个源文件中,你就把他变成了类的伴生对象,在13,4节已经知道,伴生对象与类具有相同的访问权,据此,即使Queue类的构造器是私有的,对象Queue的apply方法也可以创建新的Queue对象</div><div class="line"> */</div><div class="line"></div><div class="line">/*</div><div class="line">注意:工厂方法名为apply,因此客户可以使用类似于Queue(1,2,3) 这样的表达式创建队列,由于/Queue是对象而不是函数,这个表达式会被扩展为Queue.apply(1,2,3) , 结果,对于客户来说,Queue就好像是全局定义的工厂方法,实际上,scala没有全局可见的方法,每个方法都必须被包含在对象或类中,然而,使用定义在全局对象中的名为apply的方法,你就能够提供这种看上去好像是对全局方法调用的使用模式了</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 可选方案: 私有类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">私有构造器和私有成员是隐藏类的初始化代码和表达代码的一种方式,另一种更为彻底的方式是直接把类本身隐藏掉,仅提供能够暴露类公共接口的特质</div><div class="line">*/</div><div class="line">trait Queue[T] &#123;</div><div class="line">  def head: T</div><div class="line">  def tail: Queue[T]</div><div class="line">  def append(x: T): Queue[T]</div><div class="line">&#125;</div><div class="line"></div><div class="line">object Queue&#123;</div><div class="line">  def apply[T](xs: T*): Queue[T] = new QueueImpl[T](xs.toList, Nil)</div><div class="line"></div><div class="line">  private class QueueImpl[T](private val leading: List[T], private val trailing: List[T]) extends Queue[T]&#123;</div><div class="line">    def mirror =</div><div class="line">      if (leading.isEmpty)</div><div class="line">        new QueueImpl(trailing.reverse, Nil)</div><div class="line">      else</div><div class="line">        this</div><div class="line"></div><div class="line">    def head: T = mirror.leading.head</div><div class="line"></div><div class="line">    def tail: QueueImpl[T] = &#123;</div><div class="line">      val q = mirror</div><div class="line">      new QueueImpl(q.leading.tail, q.trailing)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    def append(x: T) =</div><div class="line">      new QueueImpl(leading, x::trailing)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">//这个版本隐藏的是全体实现类</div></pre></td></tr></table></figure></p>
+<h1 id="3-变化型注解"><a href="#3-变化型注解" class="headerlink" title="3.变化型注解"></a>3.变化型注解</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">//在上面的代码中Queue是特质,因为他带类型参数,结果,你将不能创建类型为Queue的变量</div><div class="line"></div><div class="line">scala&gt; def doenNotCompile(q: Queue)&#123;&#125;</div><div class="line">&lt;console&gt;:23: error: trait Queue takes type parameters</div><div class="line">       def doenNotCompile(q: Queue)&#123;&#125;</div><div class="line">                             ^</div><div class="line"></div><div class="line">//取而代之,特质Queue能够制定参数化的类型,如:Queue[String], Queue[Int], 或Queue[AnyRef], 也就是说,Queue是特质,而Queue[String]是类型,Queue也被称为类型构造器,因为有了他你就能够通过指定参数类型构造新的类型</div><div class="line"></div><div class="line">scala&gt; def doenNotCompile(q: Queue[AnyRef])&#123;&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">你也可以认为Queue是泛型的特质,</div><div class="line">类型参数的组合与子类型化产生了一些有趣的问题,例如:在Queue[T] 产生的类型家族的成员之间是否有任何特定的子类型关系?更具体的说就是:是否把Queue[String] 当做是Queue[AnyRef] 的子类型?</div><div class="line">或从更广泛的意义上来说,如果S是类型T的子类型,那么是否可以把Queue[S] 当做Queue[T]的子类型?如果是,你可以认为Queue特质是与他的类型参数T保持协变的,由于他只有一个类型参数,你可以简单的说Queue是协变的,协变的Queue将意味着,你可以把,比方说Queue[String] ,传递给之前看到过的值参数类型为Queue[AnyRef] 的doesCompile方法</div><div class="line"></div><div class="line">直观上,这些看上去都很合理,因为String队列似乎就是AnyRef的特例,然而在scala中,泛型类型缺省的是非协变的,子类型化,也就是说,根据定义的Queue,不同元素类型的队列之间没有子类型关系,Queue[String] 对象不能被用作Queue[AnyRef], 然而,可以用如下方式改变Queue类定义的第一行,以要求队列协变的子类型化</div><div class="line">*/</div><div class="line">trait Queue[+T] &#123;....&#125;</div><div class="line">/*</div><div class="line">在正常的类型参数前加上+号标明这个参数的子类型是协变的,这个符号是向scala说明你希望可以把,比方说Queue[String] ,当做Queue[AnyRef] 的子类型</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">除了+号以外,还可以前缀加上-号,这标明是需要逆变的子类型化,如果Queue定义如下:</div><div class="line">*/</div><div class="line">trait Queue[-T] &#123; ....&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">那么如果T是类型S的子类型,这将意味着Queue[S] 是Queue[T]的子类型,无论类型参数是协变的,逆变的,还是非协变的,都被称为参数的变化型,可以放在类型参数前的+号和-号被称为变化型注解</div><div class="line">*/</div><div class="line"></div><div class="line">class Cell[T](init: T) &#123;</div><div class="line">  private[this] var current = init</div><div class="line">  def get = current</div><div class="line">  def set(x: T) &#123; current = x&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">代码中的cell类型被声明为非协变的,为了方便讨论,假设暂时声明为协变的--也就是说,声明为Cell[+T] , 并发给scala编译器,(实际上没有,我们会在之后解释),</div><div class="line">*/</div><div class="line">class Cell[+T](init: T) &#123;</div><div class="line">  private[this] var current = init</div><div class="line">  def get = current</div><div class="line">  def set(x: T) &#123; current = x&#125;</div><div class="line">&#125;</div><div class="line">//报如下错误:</div><div class="line">&lt;console&gt;:24: error: covariant type T occurs in contravariant position in type T</div><div class="line"> of value x</div><div class="line">         def set(x: T) &#123; current = x&#125;</div><div class="line"></div><div class="line">//下面是测试代码</div><div class="line">val c1 = new Cell[String](&quot;abc&quot;)</div><div class="line">val c2 = Cell[Any] = c1</div><div class="line">c2.set(1)</div><div class="line">val s:String = c1.get</div><div class="line">/*</div><div class="line">上面的四条语句从自身来看,每条都很正常,第一行创建String单元格并保存在c1中,第二行定义c2类型是Cell[Any],并初始化为c1,这没问题,因为前提设定Cell为协变的,第三行把c2的值设为1,这也没问题,因为被赋予的值1是c2的元素类型Any的实例,最后,第四行把c1的元素值赋给字符串,这没什么奇怪的,两边的值都是同样的类型,但把他们放在一起,这四行代码要完成的是把整数1赋给字符串s,这明显是对类型声明的破坏</div><div class="line">根本的原因是:String类型的Cell并不是Any类型的Cell,因为有些事可以对Any的Cell做,但不能对String的cell做,比如:不能以Int类型的入参调用String的Cell的set方法</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p> 变化型和数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">与java数组比较会很有趣,基本上,除了数组可以有超过一个元素之外,他与单元格没什么差别,然而,java中数组被认为是协变的,例如下面是用Java数组模拟了上面的单元格交互操作</div><div class="line">*/</div><div class="line"></div><div class="line">//在java里</div><div class="line">String[] a1 = &#123;&quot;abc&quot;&#125;</div><div class="line">Object[] a2 = a1</div><div class="line">a2[0] = new Integer(17)    //执行程序会在把Integer对象赋值给a2[0]时引发异常</div><div class="line">String s = a1[0]</div><div class="line"></div><div class="line"></div><div class="line">//下面是使用scala的方式去翻译上面的代码</div><div class="line"></div><div class="line">scala&gt; val a1 = Array(&quot;abc&quot;)</div><div class="line">a1: Array[String] = Array(abc)</div><div class="line"></div><div class="line">scala&gt; val a2: Array[Any] = a1</div><div class="line">&lt;console&gt;:22: error: type mismatch;</div><div class="line"> found   : Array[String]</div><div class="line"> required: Array[Any]</div><div class="line">Note: String &lt;: Any, but class Array is invariant in type T.</div><div class="line">You may wish to investigate a wildcard type such as `_ &lt;: Any`. (SLS 3.2.10)</div><div class="line">       val a2: Array[Any] = a1</div><div class="line">                            ^</div><div class="line">/*</div><div class="line">这里的情况是scala把数组当做是非协变的,因此Array[String] 对象不能被当做与Array[Any] 一致,然而,有时需要使用对象数组作为模拟泛型数组的手段与java的遗留方法执行交互</div><div class="line">*/</div><div class="line"></div><div class="line">val a2: Array[Object] = a1.asInstanceOf[Array[Object]]</div></pre></td></tr></table></figure></p>
+<h1 id="4-检查变化型注解"><a href="#4-检查变化型注解" class="headerlink" title="4.检查变化型注解"></a>4.检查变化型注解</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">class StrangeIntQueue extends Queue[Int] &#123;</div><div class="line">  override def append(x: Int) = &#123;</div><div class="line">    println(Math.sqrt(x))</div><div class="line">    super.append(x)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//测试如下:</div><div class="line">val x:Queue[Any] = new StrangeIntQueue</div><div class="line">x.append(&quot;abc&quot;)</div><div class="line"></div><div class="line">/*</div><div class="line">第一行是有效的,因为StrangeIntQueue是Queue[Int]子类,并且假设队列是协变的,即Queue[Int]是Queue[Any]的子类型,第二行是有效的因为你可以对Queue[Any]添加String对象,然而,这两行放在一起的效果就是取字符串的平方根,毫无意义</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">只要泛型的参数类型被当做方法参数的类型,那么包含他的类或特质就有可能不能与这个类型参数一起协变,对于对垒来说,append方法违反了以下情况:</div><div class="line">*/</div><div class="line">class Queue[+T] &#123;</div><div class="line">    def append(x: T) = </div><div class="line">        //...</div><div class="line">&#125;</div><div class="line"></div><div class="line">//编译上面的代码将报错</div><div class="line"></div><div class="line">/*</div><div class="line">可重新赋值的字段是&quot; 不允许使用+号注解的类型参数用作方法参数类型&quot; 这条规则的具体例子,如在18.2节提到过可重新赋值的字段, &quot; var x:T&quot;在scala里被看做一种getter方法,&quot; def x:T&quot; 和setter方法,&quot; def x_ = (y:T) , 正如你所见,setter方法带有字段类型为T的参数,因此类型将不是协变的</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">为了核实变化型注解的正确性,scala编译器会把类或特质结构体的所有位置分类为正,负,或中立,所谓的&quot;位置&quot; 是指类(或特质)的结构体内可能会用到类型参数的地方,例如,任何方法的值参数都是这种位置,因为方法值参数具有类型,所以类型参数可以出现在这个位置上,编译器检查的类型参数的每一个用法,注解了+号的类型参数只能被用在正的位置上,而注解了-号的类型参数只能用在负的位置上,没有变化型注解的类型参数可以用于任何位置,因此它是唯一能被用在类结构体的中性位置上的类型参数</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="5-下界"><a href="#5-下界" class="headerlink" title="5.下界"></a>5.下界</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">回到Queue类中来,你已经看到了前面演示的Queue[T]定义中不能实现对T的协变,因为T作为参数类型出现在append方法中,而这里是负的位置</div><div class="line">有一个办法可以打开这个结: 可以通过把append变为多态以使其泛型化,并使用他的类型参数的下界</div><div class="line">*/</div><div class="line"></div><div class="line">class Queue[+T](private val leading:List[T],private  val trailing:List[T])&#123;</div><div class="line">  def append[U&gt;:T](x: U)</div><div class="line">    new Queue[U](leading, x::trailing)</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">新的定义指定了append的类型参数U,并通过语法&quot;U&gt;:T&quot;, 定义了T为U的下界,结果U必须是T的超类型,append的参数现在变为类型U而不是类型T,而方法的返回值现在也变为Queue[T] ,取代了Queue[T]</div><div class="line"></div><div class="line">假设存在类Fruit及两个子类,Apple和Orange,通过使用Queue类的新定义,现在可以把Orange对象加入到Queue[Apple],而返回的结果为Queue[Fruit]类型</div><div class="line"></div><div class="line">append的改进定义是类型正确的,直观的看,如果T比预期的类型更为特化(例如:用Apple替代Fruit),那么append的调用就仍然正确,因为U(Fruit)是T(Apple)的超类型</div><div class="line"></div><div class="line">上述情况说明:变化型注解与下界可以相互协作,这是很好的类型驱动设计的例子,由接口的类型引导其细节的设计和实现</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="6-逆变"><a href="#6-逆变" class="headerlink" title="6.逆变"></a>6.逆变</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">trait OutputChannel[-T] &#123;</div><div class="line">  def write(x: T)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//同时存在逆变和协变</div><div class="line">trait Function1(-S, +T)&#123;</div><div class="line">  def apply(x: S): T</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="7-对象私有数据-略"><a href="#7-对象私有数据-略" class="headerlink" title="7.对象私有数据(略)"></a>7.对象私有数据(略)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<h1 id="8-上界"><a href="#8-上界" class="headerlink" title="8.上界"></a>8.上界</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">class Person(val firstName: String, val lastName: String) extends Ordered[Person] &#123;</div><div class="line">  def compare(that: Person) = &#123;</div><div class="line">    val lastNameComparison = lastName.compareToIgnoreCase(that.lastName)</div><div class="line">    if (lastNameComparison != 0)</div><div class="line">      lastNameComparison</div><div class="line">    else</div><div class="line">      firstName.compareToIgnoreCase(that.firstName)</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  override def toString = firstName + &quot; &quot; + lastName</div><div class="line">&#125;</div><div class="line"></div><div class="line">//测试</div><div class="line">scala&gt; val robert = new Person(&quot;Robert&quot;, &quot;Jones&quot;)</div><div class="line">robert: Person = Robert Jones</div><div class="line"></div><div class="line">scala&gt; val sally = new Person(&quot;Sally&quot;, &quot;Smith&quot;)</div><div class="line">sally: Person = Sally Smith</div><div class="line"></div><div class="line">scala&gt; robert &lt; sally</div><div class="line">res0: Boolean = true</div><div class="line"></div><div class="line"></div><div class="line">def orderedMergeSort[T &lt;: Ordered[T]](xs: List[T]):List[T] = &#123;</div><div class="line">  def merge(xs: List[T], ys: List[T]): List[T] = (xs, ys) match &#123;</div><div class="line">    case (Nil, _) =&gt; ys</div><div class="line">    case (_, Nil) =&gt; xs</div><div class="line">    case (x::xs1, y::ys1) =&gt;</div><div class="line">      if (x&lt;y) x::merge(xs1,ys)</div><div class="line">      else y::merge(xs,ys1)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  val n = xs.length/2</div><div class="line">  if (n == 0) xs</div><div class="line">  else&#123;</div><div class="line">    val (ys, zs) = xs splitAt n</div><div class="line">    merge(orderedMergeSort(ys), orderedMergeSort(zs))</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//测试</div><div class="line">val people = List(</div><div class="line">  new Person(&quot;Larry&quot;, &quot;Wail&quot;),</div><div class="line">  new Person(&quot;Anders&quot;, &quot;Hejlsberg&quot;),</div><div class="line">  new Person(&quot;Guide&quot;, &quot;van Rossum&quot;),</div><div class="line">  new Person(&quot;Alan&quot;, &quot;Kay&quot;),</div><div class="line">  new Person(&quot;Yukihiro&quot;, &quot;matsumoto&quot;)</div><div class="line">)</div><div class="line">orderedMergeSort(people)</div><div class="line"></div><div class="line">/*</div><div class="line">尽管上述代码很好的诠释了上界的用法,但他实际上并非scala中设计能够充分利用Ordered特质的排序函数的通用方式,比方说,你不能够用OrderedMergeSort函数对整数列表做排序,因为Int类不是Ordered[Int]的子类型</div><div class="line">*/</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十二章 特质/" rel="next" title="第十二章 特质">
+                <i class="fa fa-chevron-left"></i> 第十二章 特质
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十三章 包和引用/" rel="prev" title="第十三章 包和引用">
+                第十三章 包和引用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-queue函数式队列"><span class="nav-number">1.</span> <span class="nav-text">1.queue函数式队列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-信息隐藏"><span class="nav-number">2.</span> <span class="nav-text">2.信息隐藏</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-变化型注解"><span class="nav-number">3.</span> <span class="nav-text">3.变化型注解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-检查变化型注解"><span class="nav-number">4.</span> <span class="nav-text">4.检查变化型注解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-下界"><span class="nav-number">5.</span> <span class="nav-text">5.下界</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-逆变"><span class="nav-number">6.</span> <span class="nav-text">6.逆变</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-对象私有数据-略"><span class="nav-number">7.</span> <span class="nav-text">7.对象私有数据(略)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-上界"><span class="nav-number">8.</span> <span class="nav-text">8.上界</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

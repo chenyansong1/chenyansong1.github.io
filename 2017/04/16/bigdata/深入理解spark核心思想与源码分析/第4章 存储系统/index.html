@@ -1,0 +1,782 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="spark为了避免Hadoop读写磁盘的I/O操作成为性能瓶颈,优先将配置信息,计算结果等数据存入内存,这极大的提升了系统的执行效率,正是因为这一关键决策,才让spark能在大数据应用中表现出优秀的计算能力">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第4章 存储系统">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/深入理解spark核心思想与源码分析/第4章 存储系统/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="spark为了避免Hadoop读写磁盘的I/O操作成为性能瓶颈,优先将配置信息,计算结果等数据存入内存,这极大的提升了系统的执行效率,正是因为这一关键决策,才让spark能在大数据应用中表现出优秀的计算能力">
+<meta property="og:image" content="http://yoursite.com/assert/img/bigdata/深入理解spark核心思想与源码分析/4/spark_store.png">
+<meta property="og:image" content="http://yoursite.com/assert/img/bigdata/深入理解spark核心思想与源码分析/4/spark_store_class.png">
+<meta property="og:updated_time" content="2017-03-28T01:02:47.456Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第4章 存储系统">
+<meta name="twitter:description" content="spark为了避免Hadoop读写磁盘的I/O操作成为性能瓶颈,优先将配置信息,计算结果等数据存入内存,这极大的提升了系统的执行效率,正是因为这一关键决策,才让spark能在大数据应用中表现出优秀的计算能力">
+<meta name="twitter:image" content="http://yoursite.com/assert/img/bigdata/深入理解spark核心思想与源码分析/4/spark_store.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/深入理解spark核心思想与源码分析/第4章 存储系统/"/>
+
+
+
+
+
+  <title> 第4章 存储系统 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/深入理解spark核心思想与源码分析/第4章 存储系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第4章 存储系统
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>spark为了避免Hadoop读写磁盘的I/O操作成为性能瓶颈,优先将配置信息,计算结果等数据存入内存,这极大的提升了系统的执行效率,正是因为这一关键决策,才让spark能在大数据应用中表现出优秀的计算能力</p>
+<a id="more"></a>
+<h1 id="1-存储系统概述"><a href="#1-存储系统概述" class="headerlink" title="1.存储系统概述"></a>1.存储系统概述</h1><h2 id="1-1-块管理器BlockManager的实现"><a href="#1-1-块管理器BlockManager的实现" class="headerlink" title="1.1.块管理器BlockManager的实现"></a>1.1.块管理器BlockManager的实现</h2><p>块管理器BlockManager是spark存储体系中的核心组件,因此本章主要围绕BlockManager展开,Driver Application和Executor都会穿件BlockManager,BlockManager的实现见代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">  val diskBlockManager = new DiskBlockManager(this, conf)</div><div class="line"></div><div class="line">  private val blockInfo = new TimeStampedHashMap[BlockId, BlockInfo]</div><div class="line"></div><div class="line">  private val futureExecutionContext = ExecutionContext.fromExecutorService(</div><div class="line">    ThreadUtils.newDaemonCachedThreadPool(&quot;block-manager-future&quot;, 128))</div><div class="line"></div><div class="line">  // Actual storage of where blocks are kept</div><div class="line">  private var externalBlockStoreInitialized = false</div><div class="line">  private[spark] val memoryStore = new MemoryStore(this, memoryManager)</div><div class="line">  private[spark] val diskStore = new DiskStore(this, diskBlockManager)</div><div class="line">  private[spark] lazy val externalBlockStore: ExternalBlockStore = &#123;</div><div class="line">    externalBlockStoreInitialized = true</div><div class="line">    new ExternalBlockStore(this, executorId)</div><div class="line">  &#125;</div><div class="line">  memoryManager.setMemoryStore(memoryStore)</div><div class="line"></div><div class="line">  // Note: depending on the memory manager, `maxStorageMemory` may actually vary over time.</div><div class="line">  // However, since we use this only for reporting and logging, what we actually want here is</div><div class="line">  // the absolute maximum value that `maxStorageMemory` can ever possibly reach. We may need</div><div class="line">  // to revisit whether reporting this value as the &quot;max&quot; is intuitive to the user.</div><div class="line">  private val maxMemory = memoryManager.maxStorageMemory</div><div class="line"></div><div class="line">  private[spark]</div><div class="line">  val externalShuffleServiceEnabled = conf.getBoolean(&quot;spark.shuffle.service.enabled&quot;, false)</div><div class="line"></div><div class="line">  // Port used by the external shuffle service. In Yarn mode, this may be already be</div><div class="line">  // set through the Hadoop configuration as the server is launched in the Yarn NM.</div><div class="line">  private val externalShuffleServicePort = &#123;</div><div class="line">    val tmpPort = Utils.getSparkOrYarnConfig(conf, &quot;spark.shuffle.service.port&quot;, &quot;7337&quot;).toInt</div><div class="line">    if (tmpPort == 0) &#123;</div><div class="line">      // for testing, we set &quot;spark.shuffle.service.port&quot; to 0 in the yarn config, so yarn finds</div><div class="line">      // an open port.  But we still need to tell our spark apps the right port to use.  So</div><div class="line">      // only if the yarn config has the port set to 0, we prefer the value in the spark config</div><div class="line">      conf.get(&quot;spark.shuffle.service.port&quot;).toInt</div><div class="line">    &#125; else &#123;</div><div class="line">      tmpPort</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  var blockManagerId: BlockManagerId = _</div><div class="line"></div><div class="line">  // Address of the server that serves this executor&apos;s shuffle files. This is either an external</div><div class="line">  // service, or just our own Executor&apos;s BlockManager.</div><div class="line">  private[spark] var shuffleServerId: BlockManagerId = _</div><div class="line"></div><div class="line">  // Client to read other executors&apos; shuffle files. This is either an external service, or just the</div><div class="line">  // standard BlockTransferService to directly connect to other Executors.</div><div class="line">  private[spark] val shuffleClient = if (externalShuffleServiceEnabled) &#123;</div><div class="line">    val transConf = SparkTransportConf.fromSparkConf(conf, &quot;shuffle&quot;, numUsableCores)</div><div class="line">    new ExternalShuffleClient(transConf, securityManager, securityManager.isAuthenticationEnabled(),</div><div class="line">      securityManager.isSaslEncryptionEnabled())</div><div class="line">  &#125; else &#123;</div><div class="line">    blockTransferService</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Whether to compress broadcast variables that are stored</div><div class="line">  private val compressBroadcast = conf.getBoolean(&quot;spark.broadcast.compress&quot;, true)</div><div class="line">  // Whether to compress shuffle output that are stored</div><div class="line">  private val compressShuffle = conf.getBoolean(&quot;spark.shuffle.compress&quot;, true)</div><div class="line">  // Whether to compress RDD partitions that are stored serialized</div><div class="line">  private val compressRdds = conf.getBoolean(&quot;spark.rdd.compress&quot;, false)</div><div class="line">  // Whether to compress shuffle output temporarily spilled to disk</div><div class="line">  private val compressShuffleSpill = conf.getBoolean(&quot;spark.shuffle.spill.compress&quot;, true)</div><div class="line"></div><div class="line">  private val slaveEndpoint = rpcEnv.setupEndpoint(</div><div class="line">    &quot;BlockManagerEndpoint&quot; + BlockManager.ID_GENERATOR.next,</div><div class="line">    new BlockManagerSlaveEndpoint(rpcEnv, this, mapOutputTracker))</div><div class="line"></div><div class="line">  // Pending re-registration action being executed asynchronously or null if none is pending.</div><div class="line">  // Accesses should synchronize on asyncReregisterLock.</div><div class="line">  private var asyncReregisterTask: Future[Unit] = null</div><div class="line">  private val asyncReregisterLock = new Object</div><div class="line"></div><div class="line">  private val metadataCleaner = new MetadataCleaner(</div><div class="line">    MetadataCleanerType.BLOCK_MANAGER, this.dropOldNonBroadcastBlocks, conf)</div><div class="line">  private val broadcastCleaner = new MetadataCleaner(</div><div class="line">    MetadataCleanerType.BROADCAST_VARS, this.dropOldBroadcastBlocks, conf)</div><div class="line"></div><div class="line">  // Field related to peer block managers that are necessary for block replication</div><div class="line">  @volatile private var cachedPeers: Seq[BlockManagerId] = _</div><div class="line">  private val peerFetchLock = new Object</div><div class="line">  private var lastPeerFetchTime = 0L</div><div class="line"></div><div class="line">  /* The compression codec to use. Note that the &quot;lazy&quot; val is necessary because we want to delay</div><div class="line">   * the initialization of the compression codec until it is first used. The reason is that a Spark</div><div class="line">   * program could be using a user-defined codec in a third party jar, which is loaded in</div><div class="line">   * Executor.updateDependencies. When the BlockManager is initialized, user level jars hasn&apos;t been</div><div class="line">   * loaded yet. */</div><div class="line">  private lazy val compressionCodec: CompressionCodec = CompressionCodec.createCodec(conf)</div><div class="line"></div><div class="line">//...</div></pre></td></tr></table></figure></p>
+<p>上面的代码中声明的BlockInfo:TimeStampedHashMap[BlockId, BlockInfo],用于BlockManager缓存BlockId以及对应的BlockInfo,从上面的代码可以看到,BlockManager主要由以下部分组成:<br>1.shuffle客户端ShuffleClient<br>2.BlockManagerMaster(对存在于所有Executor上的BlockManager统一管理)<br>3.磁盘块管理器DiskBlockManager<br>4.内存存储MemoryStore<br>5.磁盘存储DiskStore<br>6.Tachyon存储TachyonStore<br>7.非广播block清理器metadataCleaner和广播Block清理器BroadcastCleaner<br>8.压缩算法实现CompressionCodec</p>
+<p>BlockManager要生效,必须要初始化,他的初始化方法如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line"> * Initializes the BlockManager with the given appId. This is not performed in the constructor as</div><div class="line"> * the appId may not be known at BlockManager instantiation time (in particular for the driver,</div><div class="line"> * where it is only learned after registration with the TaskScheduler).</div><div class="line"> *</div><div class="line"> * This method initializes the BlockTransferService and ShuffleClient, registers with the</div><div class="line"> * BlockManagerMaster, starts the BlockManagerWorker endpoint, and registers with a local shuffle</div><div class="line"> * service if configured.</div><div class="line"> */</div><div class="line">def initialize(appId: String): Unit = &#123;</div><div class="line">  blockTransferService.init(this)</div><div class="line">  shuffleClient.init(appId)</div><div class="line"></div><div class="line">  blockManagerId = BlockManagerId(</div><div class="line">    executorId, blockTransferService.hostName, blockTransferService.port)</div><div class="line"></div><div class="line">  shuffleServerId = if (externalShuffleServiceEnabled) &#123;</div><div class="line">    logInfo(s&quot;external shuffle service port = $externalShuffleServicePort&quot;)</div><div class="line">    BlockManagerId(executorId, blockTransferService.hostName, externalShuffleServicePort)</div><div class="line">  &#125; else &#123;</div><div class="line">    blockManagerId</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  master.registerBlockManager(blockManagerId, maxMemory, slaveEndpoint)</div><div class="line"></div><div class="line">  // Register Executors&apos; configuration with the local shuffle service, if one should exist.</div><div class="line">  if (externalShuffleServiceEnabled &amp;&amp; !blockManagerId.isDriver) &#123;</div><div class="line">    registerWithExternalShuffleServer()</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>BlockManager的初始化步骤如下:<br>1.BlockTransferService的初始化和ShuffleClient的初始化,参见本章第2节,ShuffleClient默认是BlockTransferService,当有外部的ShuffleService时,调用外部ShuffleService的初始化方法<br>2.BlockManagerId和ShuffleServerId的创建,当有外部的ShuffleService时,创建新的BlockManagerId,否则ShuffleServiceId默认使用当前BlockManager的BlockManagerId<br>3.向BlockManagerMaster注册BlockManagerId,具体实现见本章3.3节(当有外部的ShuffleService时,还需要向BlockManagerMaster注册ShuffleServerId)</p>
+<h2 id="1-2-spark存储体系架构"><a href="#1-2-spark存储体系架构" class="headerlink" title="1.2.spark存储体系架构"></a>1.2.spark存储体系架构</h2><p>在详细介绍存储体系之前,我们先用图说明Spark存储体系的架构</p>
+<p><img src="/assert/img/bigdata/深入理解spark核心思想与源码分析/4/spark_store.png" alt=""></p>
+<ul>
+<li>标号1表示Executor的BlockManager与Driver的BlockManager进行消息通信,例如,注册BlockManager,更新Block信息,获取Block所在的BlockManager,删除Executor等</li>
+<li>标号2表示BlockManager的读操作(例如get,doGetLocal,BlockManager内部进行的MemoryStore,DiskStore,Tachyon的getgetBytes,getValues等操作)和写操作(例如doPut,putSingle,putBytes以及BlockManager内部进行的MemoryStore,DiskStore,Tachyon的getgetBytes,putArray,putIterator等操作)</li>
+<li>标号3表示当memoryStore的内存不足时,写入DiskStore,而DiskStore实际依赖于DiskBlockManager</li>
+<li>标号4表示通过访问远端节点的Executor的BlockManager中的TransportServer提供的RPC服务下载或者上传Block</li>
+<li>标号4表示远端节点的Executor的BlockManager访问本地Executor的BlockManager中的TransportServer提供的RPC服务下载或者上传Block</li>
+<li>标号6表示当存储系统选择Tachyon作为存储时,对于BlockManager的读写操作实际调用了TachyonStore的putBytes,putArray,putIterator,getBytes,getValues等</li>
+</ul>
+<p>spark目前支持HDFS,Amazon S3两种主流的分布式存储系统,还使用也诞生于UCBerkeley的AMP实验室的Tachyon这种高效的分布式文件系统作为缓存</p>
+<p>spark定义了抽象类BlockStore,用于指定所有存储类型的规范,目前BlockStore的具体实现包括MemoryStore,DiskStore和TachyonStore,BlockStore的继承系统如下</p>
+<p><img src="/assert/img/bigdata/深入理解spark核心思想与源码分析/4/spark_store_class.png" alt=""></p>
+<h1 id="2-shuffle服务与客户端"><a href="#2-shuffle服务与客户端" class="headerlink" title="2.shuffle服务与客户端"></a>2.shuffle服务与客户端</h1><p>有人可能为问?为何要将Netty实现的网络服务组件也放到存储体系里面,这是由于spark是分布式部署的,每个Task最终都运行在不同的机器节点上,map任务的输出结构直接存储到map任务所在机器的存储体系中,reduce任务极有可能不再同一机器上运行,所以需要远程下载map任务的中间输出,因此将ShuffleClient放到存储体系是最合适的</p>
+<p>ShuffleClient并不像他的名字一样,是shuffle的客户端,他不光是将shuffle文件上传到其他Executor或者下载到本地的客户端,也提供了可以被其他Executor访问的shuffle服务,从第1节的代码中可以知道:当有外部的ShuffleClient时,新建ExternalShuffleClient,否则默认为BlockTransferService,BlockTransferService只有在其init方法被调用,即被初始化才提供服务,以默认的NettyBlockTransferService的init方法为例,如下代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">override def init(blockDataManager: BlockDataManager): Unit = &#123;</div><div class="line">  val rpcHandler = new NettyBlockRpcServer(conf.getAppId, serializer, blockDataManager)</div><div class="line">  var serverBootstrap: Option[TransportServerBootstrap] = None</div><div class="line">  var clientBootstrap: Option[TransportClientBootstrap] = None</div><div class="line">  if (authEnabled) &#123;</div><div class="line">    serverBootstrap = Some(new SaslServerBootstrap(transportConf, securityManager))</div><div class="line">    clientBootstrap = Some(new SaslClientBootstrap(transportConf, conf.getAppId, securityManager,</div><div class="line">      securityManager.isSaslEncryptionEnabled()))</div><div class="line">  &#125;</div><div class="line">  transportContext = new TransportContext(transportConf, rpcHandler)</div><div class="line">  clientFactory = transportContext.createClientFactory(clientBootstrap.toSeq.asJava)</div><div class="line">  server = createServer(serverBootstrap.toList)</div><div class="line">  appId = conf.getAppId</div><div class="line">  logInfo(&quot;Server created on &quot; + server.getPort)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>NettyBlockTransferService的初始化步骤如下:<br>1.创建RpcServer<br>2.构造TransportContext<br>3.创建RPC客户端工厂TransportClientFactory<br>4.创建Netty服务器TransportServer</p>
+<p>接下来我们逐步讲解Block的RPC服务,构造TransportContext,创建RPC客户端工厂TransportClientFactory,创建Netty服务器TransportServer的实现,此外还会介绍reduce任务是如何拉取map任务中间结果的(即shuffle过程的数传输)</p>
+<h2 id="2-1-Block的RPC服务"><a href="#2-1-Block的RPC服务" class="headerlink" title="2.1.Block的RPC服务"></a>2.1.Block的RPC服务</h2><p>当map任务和reduce任务处于不同节点时,reduce任务需要从远端节点下载map任务的中间输出结果,因此NettyBlockRpcServer提供打开,即下载Block文件的功能,一些情况下,为了容错,需要将Block的数据备份到其他节点上,所以NettyBlockRPCServer还提供了上传Block文件的RPC服务,NettyBlockRPCServer的实现代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">class NettyBlockRpcServer(</div><div class="line">    appId: String,</div><div class="line">    serializer: Serializer,</div><div class="line">    blockManager: BlockDataManager)</div><div class="line">  extends RpcHandler with Logging &#123;</div><div class="line"></div><div class="line">  private val streamManager = new OneForOneStreamManager()</div><div class="line"></div><div class="line">  override def receive(</div><div class="line">      client: TransportClient,</div><div class="line">      rpcMessage: ByteBuffer,</div><div class="line">      responseContext: RpcResponseCallback): Unit = &#123;</div><div class="line">    val message = BlockTransferMessage.Decoder.fromByteBuffer(rpcMessage)</div><div class="line">    logTrace(s&quot;Received request: $message&quot;)</div><div class="line"></div><div class="line">    message match &#123;</div><div class="line">      case openBlocks: OpenBlocks =&gt;</div><div class="line">        val blocks: Seq[ManagedBuffer] =</div><div class="line">          openBlocks.blockIds.map(BlockId.apply).map(blockManager.getBlockData)</div><div class="line">        val streamId = streamManager.registerStream(appId, blocks.iterator.asJava)</div><div class="line">        logTrace(s&quot;Registered streamId $streamId with $&#123;blocks.size&#125; buffers&quot;)</div><div class="line">        responseContext.onSuccess(new StreamHandle(streamId, blocks.size).toByteBuffer)</div><div class="line"></div><div class="line">      case uploadBlock: UploadBlock =&gt;</div><div class="line">        // StorageLevel is serialized as bytes using our JavaSerializer.</div><div class="line">        val level: StorageLevel =</div><div class="line">          serializer.newInstance().deserialize(ByteBuffer.wrap(uploadBlock.metadata))</div><div class="line">        val data = new NioManagedBuffer(ByteBuffer.wrap(uploadBlock.blockData))</div><div class="line">        blockManager.putBlockData(BlockId(uploadBlock.blockId), data, level)</div><div class="line">        responseContext.onSuccess(ByteBuffer.allocate(0))</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  override def getStreamManager(): StreamManager = streamManager</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="2-2-构造传输上下文TransportContext"><a href="#2-2-构造传输上下文TransportContext" class="headerlink" title="2.2.构造传输上下文TransportContext"></a>2.2.构造传输上下文TransportContext</h2><p>TransportContext用于维护传输上下文,他的构造器如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public TransportContext(</div><div class="line">    TransportConf conf,</div><div class="line">    RpcHandler rpcHandler,</div><div class="line">    boolean closeIdleConnections) &#123;</div><div class="line">  this.conf = conf;</div><div class="line">  this.rpcHandler = rpcHandler;</div><div class="line">  this.encoder = new MessageEncoder();</div><div class="line">  this.decoder = new MessageDecoder();</div><div class="line">  this.closeIdleConnections = closeIdleConnections;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>TransportContext既可以创建Netty服务,也可以创建Netty访问客户端,TransportContext的组成如下:<br>1.TransportConf:主要控制Netty框架提供的shuffle的I/O交互的客户端和服务端线程数量<br>2.RpcHandler:负责shuffle的I/O服务端在接收到客户端的RPC请求后,提供打开Block或者上传Block的RPC处理,此处即为NettyBlockRPCServer<br>3.decoder:在shuffle的I/O服务器端对客户端传来的ByteBuff进行行解析,防止丢包和解析错误<br>4.encoder:在shuffle的I/O客户端对消息内容进行编码的时候,防止服务端丢包和解析错误</p>
+<p>问题:为什么需要MessageEncoder和MessageDecode?<br>因为在基于流的传输里(比如TCP/IP),接收到的数据首先会被存储到一个socket接收缓冲里,不幸的是,基于流的传输并不是一个数据包队列的,而是一个字节队列的,即使发送了2个独立的数据包,操作系统也不会作为2个消息处理,而仅仅认为是一连串的字节,因此不能保证远程写入的数据会被准确的读取,举个例子,假设操作系统的TCP/IP协议栈已经接收到3个数据包,ABC,DEF,GHI,由于基于流传输的协议的这种统一的性质,在应用程序读取数据时很可能性被分成下面的片段:AB,CDEFG,H,I,因此接受方不管是客户端还是服务端,都应该把接收到的数据整理成一个或者多个更有意义并且让程序的逻辑更好理解的数据,这才有了编码和解码</p>
+<h2 id="2-3-RPC客户端工厂TransportClientFactory"><a href="#2-3-RPC客户端工厂TransportClientFactory" class="headerlink" title="2.3.RPC客户端工厂TransportClientFactory"></a>2.3.RPC客户端工厂TransportClientFactory</h2><p>TransportClientFactory是创建Netty客户端TransportClient的工厂类,TransportClient用于向Netty服务器端发送RPC请求,TransportContext的createClientFactory方法用于创建TransportClientFactory<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public TransportClientFactory createClientFactory(List&lt;TransportClientBootstrap&gt; bootstraps) &#123;</div><div class="line">  return new TransportClientFactory(this, bootstraps);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>TransportClientFactory的实现如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">public TransportClientFactory(</div><div class="line">    TransportContext context,</div><div class="line">    List&lt;TransportClientBootstrap&gt; clientBootstraps) &#123;</div><div class="line">  this.context = Preconditions.checkNotNull(context);</div><div class="line">  this.conf = context.getConf();</div><div class="line">  this.clientBootstraps = Lists.newArrayList(Preconditions.checkNotNull(clientBootstraps));</div><div class="line">  this.connectionPool = new ConcurrentHashMap&lt;SocketAddress, ClientPool&gt;();</div><div class="line">  this.numConnectionsPerPeer = conf.numConnectionsPerPeer();</div><div class="line">  this.rand = new Random();</div><div class="line"></div><div class="line">  IOMode ioMode = IOMode.valueOf(conf.ioMode());</div><div class="line">  this.socketChannelClass = NettyUtils.getClientChannelClass(ioMode);</div><div class="line">  // TODO: Make thread pool name configurable.</div><div class="line">  this.workerGroup = NettyUtils.createEventLoop(ioMode, conf.clientThreads(), &quot;shuffle-client&quot;);</div><div class="line">  this.pooledAllocator = NettyUtils.createPooledByteBufAllocator(</div><div class="line">    conf.preferDirectBufs(), false /* allowCache */, conf.clientThreads());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>TransportClientFactory由以下部分组成:<br>1.clientBootstraps:用于缓存客户端列表<br>2.connectionPool:用于缓存客户端连接<br>3.numConnectionsPerPeer:节点之前取数据的连接数,可以使用属性spark.shuffle.io.numConnectionsPerPeer来配置,默认为1<br>4.socketChannelClass:客户端channel被创建时使用的类,可以使用属性spark.shuffle.io.mode来配置,默认为NioSocketChannel<br>5.workerGroup:根据Netty的规范,客户端只有work组,所以此处创建workerGroup,实际上是NioEventLoopGroup<br>6.pooledAllocator:汇集ByteBuff但对本地线程缓存禁用的分配器</p>
+<h2 id="2-4-Netty服务器TransportServer"><a href="#2-4-Netty服务器TransportServer" class="headerlink" title="2.4.Netty服务器TransportServer"></a>2.4.Netty服务器TransportServer</h2><p>TransportServer提供了Netty实现的服务器端,用于提供RPC服务(比如上传,下载等),创建TransportServer的代码如下在NettyBlockTransferService的init方法中:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">server = createServer(serverBootstrap.toList)</div><div class="line"></div><div class="line">//具体方法实现</div><div class="line">  /** Creates and binds the TransportServer, possibly trying multiple ports. */</div><div class="line">  private def createServer(bootstraps: List[TransportServerBootstrap]): TransportServer = &#123;</div><div class="line">    def startService(port: Int): (TransportServer, Int) = &#123;</div><div class="line">      val server = transportContext.createServer(port, bootstraps.asJava)</div><div class="line">      (server, server.getPort)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    val portToTry = conf.getInt(&quot;spark.blockManager.port&quot;, 0)</div><div class="line">    Utils.startServiceOnPort(portToTry, startService, conf, getClass.getName)._1</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>TransportServer的构造器实现如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">public TransportServer(</div><div class="line">    TransportContext context,</div><div class="line">    String hostToBind,</div><div class="line">    int portToBind,</div><div class="line">    RpcHandler appRpcHandler,</div><div class="line">    List&lt;TransportServerBootstrap&gt; bootstraps) &#123;</div><div class="line">  this.context = context;</div><div class="line">  this.conf = context.getConf();</div><div class="line">  this.appRpcHandler = appRpcHandler;</div><div class="line">  this.bootstraps = Lists.newArrayList(Preconditions.checkNotNull(bootstraps));</div><div class="line"></div><div class="line">  try &#123;</div><div class="line">    init(hostToBind, portToBind);</div><div class="line">  &#125; catch (RuntimeException e) &#123;</div><div class="line">    JavaUtils.closeQuietly(this);</div><div class="line">    throw e;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面的init方法用于对TransportServer初始化,通过使用Netty框架的EventLoopGroup,ServerBootstrap等API创建shuffle的I/O交互的服务器端,init的主要代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">private void init(String hostToBind, int portToBind) &#123;</div><div class="line"></div><div class="line">  IOMode ioMode = IOMode.valueOf(conf.ioMode());</div><div class="line">  EventLoopGroup bossGroup =</div><div class="line">    NettyUtils.createEventLoop(ioMode, conf.serverThreads(), &quot;shuffle-server&quot;);</div><div class="line">  EventLoopGroup workerGroup = bossGroup;</div><div class="line"></div><div class="line">  PooledByteBufAllocator allocator = NettyUtils.createPooledByteBufAllocator(</div><div class="line">    conf.preferDirectBufs(), true /* allowCache */, conf.serverThreads());</div><div class="line"></div><div class="line">  bootstrap = new ServerBootstrap()</div><div class="line">    .group(bossGroup, workerGroup)</div><div class="line">    .channel(NettyUtils.getServerChannelClass(ioMode))</div><div class="line">    .option(ChannelOption.ALLOCATOR, allocator)</div><div class="line">    .childOption(ChannelOption.ALLOCATOR, allocator);</div><div class="line"></div><div class="line">  if (conf.backLog() &gt; 0) &#123;</div><div class="line">    bootstrap.option(ChannelOption.SO_BACKLOG, conf.backLog());</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  if (conf.receiveBuf() &gt; 0) &#123;</div><div class="line">    bootstrap.childOption(ChannelOption.SO_RCVBUF, conf.receiveBuf());</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  if (conf.sendBuf() &gt; 0) &#123;</div><div class="line">    bootstrap.childOption(ChannelOption.SO_SNDBUF, conf.sendBuf());</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  bootstrap.childHandler(new ChannelInitializer&lt;SocketChannel&gt;() &#123;</div><div class="line">    @Override</div><div class="line">    protected void initChannel(SocketChannel ch) throws Exception &#123;</div><div class="line">      RpcHandler rpcHandler = appRpcHandler;</div><div class="line">      for (TransportServerBootstrap bootstrap : bootstraps) &#123;</div><div class="line">        rpcHandler = bootstrap.doBootstrap(ch, rpcHandler);</div><div class="line">      &#125;</div><div class="line">      context.initializePipeline(ch, rpcHandler);</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  InetSocketAddress address = hostToBind == null ?</div><div class="line">      new InetSocketAddress(portToBind): new InetSocketAddress(hostToBind, portToBind);</div><div class="line">  channelFuture = bootstrap.bind(address);</div><div class="line">  channelFuture.syncUninterruptibly();</div><div class="line"></div><div class="line">  port = ((InetSocketAddress) channelFuture.channel().localAddress()).getPort();</div><div class="line">  logger.debug(&quot;Shuffle server started on port :&quot; + port);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>ServerBootstrap的childHandler方法调用了TransportContext的initializePipeline,initializePipeline中创建了TransportChannelHandler,并将它绑定到SocketChannel的pipeline的handler中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public TransportChannelHandler initializePipeline(</div><div class="line">    SocketChannel channel,</div><div class="line">    RpcHandler channelRpcHandler) &#123;</div><div class="line">  try &#123;</div><div class="line">    TransportChannelHandler channelHandler = createChannelHandler(channel, channelRpcHandler);</div><div class="line">    channel.pipeline()</div><div class="line">      .addLast(&quot;encoder&quot;, encoder)</div><div class="line">      .addLast(TransportFrameDecoder.HANDLER_NAME, NettyUtils.createFrameDecoder())</div><div class="line">      .addLast(&quot;decoder&quot;, decoder)</div><div class="line">      .addLast(&quot;idleStateHandler&quot;, new IdleStateHandler(0, 0, conf.connectionTimeoutMs() / 1000))</div><div class="line">      // NOTE: Chunks are currently guaranteed to be returned in the order of request, but this</div><div class="line">      // would require more logic to guarantee if this were not part of the same event loop.</div><div class="line">      .addLast(&quot;handler&quot;, channelHandler);</div><div class="line">    return channelHandler;</div><div class="line">  &#125; catch (RuntimeException e) &#123;</div><div class="line">    logger.error(&quot;Error while initializing Netty pipeline&quot;, e);</div><div class="line">    throw e;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2-5-获取远程shuffle文件"><a href="#2-5-获取远程shuffle文件" class="headerlink" title="2.5.获取远程shuffle文件"></a>2.5.获取远程shuffle文件</h2><p>NettyBlockTransferService的fetchBlock方法用于获取远程shuffle文件,实际是利用NettyBlockTransferService中创建的Netty服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">override def fetchBlocks(</div><div class="line">    host: String,</div><div class="line">    port: Int,</div><div class="line">    execId: String,</div><div class="line">    blockIds: Array[String],</div><div class="line">    listener: BlockFetchingListener): Unit = &#123;</div><div class="line">  logTrace(s&quot;Fetch blocks from $host:$port (executor id $execId)&quot;)</div><div class="line">  try &#123;</div><div class="line">    val blockFetchStarter = new RetryingBlockFetcher.BlockFetchStarter &#123;</div><div class="line">      override def createAndStart(blockIds: Array[String], listener: BlockFetchingListener) &#123;</div><div class="line">        val client = clientFactory.createClient(host, port)</div><div class="line">        new OneForOneBlockFetcher(client, appId, execId, blockIds.toArray, listener).start()</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    val maxRetries = transportConf.maxIORetries()</div><div class="line">    if (maxRetries &gt; 0) &#123;</div><div class="line">      // Note this Fetcher will correctly handle maxRetries == 0; we avoid it just in case there&apos;s</div><div class="line">      // a bug in this code. We should remove the if statement once we&apos;re sure of the stability.</div><div class="line">      new RetryingBlockFetcher(transportConf, blockFetchStarter, blockIds, listener).start()</div><div class="line">    &#125; else &#123;</div><div class="line">      blockFetchStarter.createAndStart(blockIds, listener)</div><div class="line">    &#125;</div><div class="line">  &#125; catch &#123;</div><div class="line">    case e: Exception =&gt;</div><div class="line">      logError(&quot;Exception while beginning fetchBlocks&quot;, e)</div><div class="line">      blockIds.foreach(listener.onBlockFetchFailure(_, e))</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2-6-上传shuffle文件"><a href="#2-6-上传shuffle文件" class="headerlink" title="2.6.上传shuffle文件"></a>2.6.上传shuffle文件</h2><p>NettyBlockTransferService的uploadBlock方法用于上传shuffle文件到远程Executor,实际也是利用NettyBlockTransferService中创建的Netty服务,代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">override def uploadBlock(</div><div class="line">    hostname: String,</div><div class="line">    port: Int,</div><div class="line">    execId: String,</div><div class="line">    blockId: BlockId,</div><div class="line">    blockData: ManagedBuffer,</div><div class="line">    level: StorageLevel): Future[Unit] = &#123;</div><div class="line">  val result = Promise[Unit]()</div><div class="line">  val client = clientFactory.createClient(hostname, port)</div><div class="line"></div><div class="line">  // StorageLevel is serialized as bytes using our JavaSerializer. Everything else is encoded</div><div class="line">  // using our binary protocol.</div><div class="line">  val levelBytes = serializer.newInstance().serialize(level).array()</div><div class="line"></div><div class="line">  // Convert or copy nio buffer into array in order to serialize it.</div><div class="line">  val nioBuffer = blockData.nioByteBuffer()</div><div class="line">  val array = if (nioBuffer.hasArray) &#123;</div><div class="line">    nioBuffer.array()</div><div class="line">  &#125; else &#123;</div><div class="line">    val data = new Array[Byte](nioBuffer.remaining())</div><div class="line">    nioBuffer.get(data)</div><div class="line">    data</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  client.sendRpc(new UploadBlock(appId, execId, blockId.toString, levelBytes, array).toByteBuffer,</div><div class="line">    new RpcResponseCallback &#123;</div><div class="line">      override def onSuccess(response: ByteBuffer): Unit = &#123;</div><div class="line">        logTrace(s&quot;Successfully uploaded block $blockId&quot;)</div><div class="line">        result.success((): Unit)</div><div class="line">      &#125;</div><div class="line">      override def onFailure(e: Throwable): Unit = &#123;</div><div class="line">        logError(s&quot;Error while uploading block $blockId&quot;, e)</div><div class="line">        result.failure(e)</div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">  result.future</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>NettyBlockTransferService上传Block的步骤如下:<br>1.创建Netty服务的客户端,客户端连接的hostname和port正是我们随机选择的BlockManager的hostname和port<br>2.将Block的存储级别StorageLevel序列化<br>3.将Block的ByteBuff转换为数组,便于序列化<br>4.将appId,execId,blockId,序列化的StorageLevel,转换为数组的Block封装为uploadBlock,并将UploadBlock序列化为字节数组<br>5.最终调用Netty客户端的sendRPC方法将字节数组上传,回调函数RPCResponseCallback根据RPC的结果更改上传状态</p>
+<h1 id="3-BlockManagerMaster对BlockManager的管理"><a href="#3-BlockManagerMaster对BlockManager的管理" class="headerlink" title="3.BlockManagerMaster对BlockManager的管理"></a>3.BlockManagerMaster对BlockManager的管理</h1><p>Driver山的BlockManagerMaster对存在于Executor山的BlockManager统一管理,比如Executor需要向Driver发送注册BlockManager,更新Executor山的Block的最新信息,询问所需要Block目前所在位置以及当Executor运行结束需要将此Executor移除等,但是Driver与Executor却位于不同机器中,该怎么实现呢?Driver上的BlockManagerMaster会持有driverEndpoint,所有Executor也会中的BlockManager中也会持有slaveEndpoint,所以Executor与Driver才可以进行关于BlockManager的交互</p>
+<h2 id="3-1-driverEndpoint"><a href="#3-1-driverEndpoint" class="headerlink" title="3.1.driverEndpoint"></a>3.1.driverEndpoint</h2><p>driverEndpoint只是存在于Driver上,Executor从rpcEnv获取slaveEndpoint,然后给driverEndpoint发送消息,实现和Driver的交互,在BlockManagerMaster.driverEndpoint的各种操作代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">//get操作,通过driverEndpoint去获取BlockManager的信息</div><div class="line">  def getMemoryStatus: Map[BlockManagerId, (Long, Long)] = &#123;</div><div class="line">    driverEndpoint.askWithRetry[Map[BlockManagerId, (Long, Long)]](GetMemoryStatus)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def getStorageStatus: Array[StorageStatus] = &#123;</div><div class="line">    driverEndpoint.askWithRetry[Array[StorageStatus]](GetStorageStatus)</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">//remove操作,也是通过操作driverEndpoint</div><div class="line">  def removeRdd(rddId: Int, blocking: Boolean) &#123;</div><div class="line">    val future = driverEndpoint.askWithRetry[Future[Seq[Int]]](RemoveRdd(rddId))</div><div class="line"></div><div class="line">	//...</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>##　3.2.询问Driver并获取恢复方法</p>
+<p>在Executor的BlockManageMaster中,所有与Driver上BlockManagerMaster的交互方法最终都调用了askWithRetry,可见他是一个最基础的方法,因为代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">def askWithRetry[T: ClassTag](message: Any, timeout: RpcTimeout): T = &#123;</div><div class="line">  // TODO: Consider removing multiple attempts</div><div class="line">  var attempts = 0</div><div class="line">  var lastException: Exception = null</div><div class="line">  while (attempts &lt; maxRetries) &#123;</div><div class="line">    attempts += 1</div><div class="line">    try &#123;</div><div class="line">      val future = ask[T](message, timeout)</div><div class="line">      val result = timeout.awaitResult(future)</div><div class="line">      if (result == null) &#123;</div><div class="line">        throw new SparkException(&quot;RpcEndpoint returned null&quot;)</div><div class="line">      &#125;</div><div class="line">      return result</div><div class="line">    &#125; catch &#123;</div><div class="line">      case ie: InterruptedException =&gt; throw ie</div><div class="line">      case e: Exception =&gt;</div><div class="line">        lastException = e</div><div class="line">        logWarning(s&quot;Error sending message [message = $message] in $attempts attempts&quot;, e)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (attempts &lt; maxRetries) &#123;</div><div class="line">      Thread.sleep(retryWaitMs)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  throw new SparkException(</div><div class="line">    s&quot;Error sending message [message = $message]&quot;, lastException)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其中的ask方法(RpcEndpointRef中是抽象的)在NettyRpcEndpointRef类中你的实现为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">override def ask[T: ClassTag](message: Any, timeout: RpcTimeout): Future[T] = &#123;</div><div class="line">  nettyEnv.ask(RequestMessage(nettyEnv.address, this, message), timeout)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="3-3-向BlockManagerMaster注册BlockManagerId"><a href="#3-3-向BlockManagerMaster注册BlockManagerId" class="headerlink" title="3.3.向BlockManagerMaster注册BlockManagerId"></a>3.3.向BlockManagerMaster注册BlockManagerId</h2><p>Executor或者Driver自身的BlockManager在初始化时,需要向Driver的BlockManager注册BlockManager信息,代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">/** Register the BlockManager&apos;s id with the driver. */</div><div class="line">def registerBlockManager(</div><div class="line">    blockManagerId: BlockManagerId, maxMemSize: Long, slaveEndpoint: RpcEndpointRef): Unit = &#123;</div><div class="line">  logInfo(&quot;Trying to register BlockManager&quot;)</div><div class="line">  tell(RegisterBlockManager(blockManagerId, maxMemSize, slaveEndpoint))</div><div class="line">  logInfo(&quot;Registered BlockManager&quot;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从上面的代码可以看到,小心内容包括BlockManagerId,最大内存,slaveEndpoint,消息体带有slaveEndpoint是为了便于接收driverEndpoint回复的消息,这些消息被封装为RegisterBlockManager,并调用刚刚在3.2节介绍的tell方法,根据之前的分析,RegisterBlockManager消息会被driverEndpoint匹配并执行register方法注册BlockManager,并在register方法自行结束后向发送者driverEndpoint发送一个简单的消息true(在spark1.6中没有看到,????)</p>
+<h1 id="4-磁盘块管理器DiskBlockManager"><a href="#4-磁盘块管理器DiskBlockManager" class="headerlink" title="4.磁盘块管理器DiskBlockManager"></a>4.磁盘块管理器DiskBlockManager</h1><h2 id="4-1-DiskBlockManager的构造过程"><a href="#4-1-DiskBlockManager的构造过程" class="headerlink" title="4.1.DiskBlockManager的构造过程"></a>4.1.DiskBlockManager的构造过程</h2><p>BlockManager在new的时候会创建DiskBlockManager,可以看BlockManager类,DiskBlockManager的构造步骤如下:<br>1.调用createLocalDirs方法创建本地文件目录,然后创建二维数组subDirs,用来缓存一级目录localDirs及二级目录</p>
+<h1 id="5-磁盘存储DiskStore"><a href="#5-磁盘存储DiskStore" class="headerlink" title="5.磁盘存储DiskStore"></a>5.磁盘存储DiskStore</h1><h1 id="6-内存存储MemeoryStore"><a href="#6-内存存储MemeoryStore" class="headerlink" title="6.内存存储MemeoryStore"></a>6.内存存储MemeoryStore</h1><h1 id="7-Tachyon存储TachyonStore"><a href="#7-Tachyon存储TachyonStore" class="headerlink" title="7.Tachyon存储TachyonStore"></a>7.Tachyon存储TachyonStore</h1><h1 id="8-块管理BlockManager"><a href="#8-块管理BlockManager" class="headerlink" title="8.块管理BlockManager"></a>8.块管理BlockManager</h1><h1 id="9-metadataCleaner和broadcastCleaner"><a href="#9-metadataCleaner和broadcastCleaner" class="headerlink" title="9.metadataCleaner和broadcastCleaner"></a>9.metadataCleaner和broadcastCleaner</h1><h1 id="10-缓存管理器CacheManager"><a href="#10-缓存管理器CacheManager" class="headerlink" title="10.缓存管理器CacheManager"></a>10.缓存管理器CacheManager</h1><h1 id="11-压缩算法"><a href="#11-压缩算法" class="headerlink" title="11.压缩算法"></a>11.压缩算法</h1><h1 id="12-磁盘写入实现DiskBlockObjectWriter"><a href="#12-磁盘写入实现DiskBlockObjectWriter" class="headerlink" title="12.磁盘写入实现DiskBlockObjectWriter"></a>12.磁盘写入实现DiskBlockObjectWriter</h1><h1 id="13-块索引shuffle管理器IndexShuffleBlockManager"><a href="#13-块索引shuffle管理器IndexShuffleBlockManager" class="headerlink" title="13.块索引shuffle管理器IndexShuffleBlockManager"></a>13.块索引shuffle管理器IndexShuffleBlockManager</h1><h1 id="14-shuffle内存管理器ShuffleMemoryManager"><a href="#14-shuffle内存管理器ShuffleMemoryManager" class="headerlink" title="14.shuffle内存管理器ShuffleMemoryManager"></a>14.shuffle内存管理器ShuffleMemoryManager</h1>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/echarts/5 分钟上手 ECharts/" rel="next" title="5 分钟上手 ECharts">
+                <i class="fa fa-chevron-left"></i> 5 分钟上手 ECharts
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/深入理解spark核心思想与源码分析/第3章 SparkContext的初始化/" rel="prev" title="第3章 SparkContext的初始化">
+                第3章 SparkContext的初始化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-存储系统概述"><span class="nav-number">1.</span> <span class="nav-text">1.存储系统概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-块管理器BlockManager的实现"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.块管理器BlockManager的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-spark存储体系架构"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.spark存储体系架构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-shuffle服务与客户端"><span class="nav-number">2.</span> <span class="nav-text">2.shuffle服务与客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Block的RPC服务"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.Block的RPC服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-构造传输上下文TransportContext"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.构造传输上下文TransportContext</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-RPC客户端工厂TransportClientFactory"><span class="nav-number">2.3.</span> <span class="nav-text">2.3.RPC客户端工厂TransportClientFactory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-Netty服务器TransportServer"><span class="nav-number">2.4.</span> <span class="nav-text">2.4.Netty服务器TransportServer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-获取远程shuffle文件"><span class="nav-number">2.5.</span> <span class="nav-text">2.5.获取远程shuffle文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-上传shuffle文件"><span class="nav-number">2.6.</span> <span class="nav-text">2.6.上传shuffle文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-BlockManagerMaster对BlockManager的管理"><span class="nav-number">3.</span> <span class="nav-text">3.BlockManagerMaster对BlockManager的管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-driverEndpoint"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.driverEndpoint</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-向BlockManagerMaster注册BlockManagerId"><span class="nav-number">3.2.</span> <span class="nav-text">3.3.向BlockManagerMaster注册BlockManagerId</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-磁盘块管理器DiskBlockManager"><span class="nav-number">4.</span> <span class="nav-text">4.磁盘块管理器DiskBlockManager</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-DiskBlockManager的构造过程"><span class="nav-number">4.1.</span> <span class="nav-text">4.1.DiskBlockManager的构造过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-磁盘存储DiskStore"><span class="nav-number">5.</span> <span class="nav-text">5.磁盘存储DiskStore</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-内存存储MemeoryStore"><span class="nav-number">6.</span> <span class="nav-text">6.内存存储MemeoryStore</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-Tachyon存储TachyonStore"><span class="nav-number">7.</span> <span class="nav-text">7.Tachyon存储TachyonStore</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-块管理BlockManager"><span class="nav-number">8.</span> <span class="nav-text">8.块管理BlockManager</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-metadataCleaner和broadcastCleaner"><span class="nav-number">9.</span> <span class="nav-text">9.metadataCleaner和broadcastCleaner</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-缓存管理器CacheManager"><span class="nav-number">10.</span> <span class="nav-text">10.缓存管理器CacheManager</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-压缩算法"><span class="nav-number">11.</span> <span class="nav-text">11.压缩算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-磁盘写入实现DiskBlockObjectWriter"><span class="nav-number">12.</span> <span class="nav-text">12.磁盘写入实现DiskBlockObjectWriter</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-块索引shuffle管理器IndexShuffleBlockManager"><span class="nav-number">13.</span> <span class="nav-text">13.块索引shuffle管理器IndexShuffleBlockManager</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14-shuffle内存管理器ShuffleMemoryManager"><span class="nav-number">14.</span> <span class="nav-text">14.shuffle内存管理器ShuffleMemoryManager</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

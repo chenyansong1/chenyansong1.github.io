@@ -1,0 +1,757 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Standalone client模式提交作业通常情况来说,部署在测试机器上去,进行测试运行spark作业的时候,都是使用的是client模式,client模式下,提交作业以后,driver在本地启动,可以实时看到详细的日志信息,方便你追踪和排查错误 client的三种模式:1.硬编码:SparkConf.setMaster(“spark://IP:PORT”)2.spark-submit提交的时">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spark core之Standalone模式">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之Standalone模式/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="Standalone client模式提交作业通常情况来说,部署在测试机器上去,进行测试运行spark作业的时候,都是使用的是client模式,client模式下,提交作业以后,driver在本地启动,可以实时看到详细的日志信息,方便你追踪和排查错误 client的三种模式:1.硬编码:SparkConf.setMaster(“spark://IP:PORT”)2.spark-submit提交的时">
+<meta property="og:updated_time" content="2017-04-13T06:58:38.666Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spark core之Standalone模式">
+<meta name="twitter:description" content="Standalone client模式提交作业通常情况来说,部署在测试机器上去,进行测试运行spark作业的时候,都是使用的是client模式,client模式下,提交作业以后,driver在本地启动,可以实时看到详细的日志信息,方便你追踪和排查错误 client的三种模式:1.硬编码:SparkConf.setMaster(“spark://IP:PORT”)2.spark-submit提交的时">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之Standalone模式/"/>
+
+
+
+
+
+  <title> spark core之Standalone模式 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之Standalone模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                spark core之Standalone模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Standalone-client模式提交作业"><a href="#Standalone-client模式提交作业" class="headerlink" title="Standalone client模式提交作业"></a>Standalone client模式提交作业</h1><p>通常情况来说,部署在测试机器上去,进行测试运行spark作业的时候,都是使用的是client模式,client模式下,提交作业以后,driver在本地启动,可以实时看到详细的日志信息,方便你追踪和排查错误</p>
+<p>client的三种模式:<br>1.硬编码:SparkConf.setMaster(“spark://IP:PORT”)<br>2.spark-submit提交的时候设置一下:–master spark://IP:PORT<br>3.spark-shell去启动的时候可以指定:–master spark://IP:PORT</p>
+<p>上面三种写法,使用第二种,是最合适的</p>
+<p>在Standalone模式下中,在spark-submit提交脚本中,用–master指定Master的URL的,使用Standalone client模式或者是cluster模式,是要在spark-submit中使用–deploy-mode client/cluster来设置,但是如果不设置,默认的–deploy-mode为client模式</p>
+<p>使用spark-submit脚本来提交application时，application jar是会自动被分发到所有worker节点上去的,对于你的application依赖的额外jar包，可以通过spark-submit脚本中的–jars标识，来指定，可以使用逗号分隔多个jar,比如说，你写spark-sql的时候，有的时候，在作业中，要往mysql中写数据，此时可能会出现找不到mysql驱动jar包的情况,此时，就需要你手动在spark-submit脚本中，使用–jars，加入一些依赖的jar包</p>
+<p>提交的脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/export/servers/spark/bin/spark-submit \</div><div class="line">--master spark://hdp-node-01:7077 \</div><div class="line">--deploy-mode client \</div><div class="line">--class cn.spark.study.core.WordCount \</div><div class="line">--num-executors 1 \</div><div class="line">--driver-memory 100m \</div><div class="line">--executor-memory 100m \</div><div class="line">--executor-cores 1 \</div><div class="line">/usr/xx/spark-study-java-0.0.1-SNAPSHOT-jar-with-dependencies.jar \</div></pre></td></tr></table></figure>
+<p>提交Standalone client模式的作业<br>1.–master 和 –deploy-mode 来提交作业<br>2.在web UI查看,可以看到completed applications一栏中,有刚刚提交的作业,对比一下UI上的ApplicationID和driver机器上打印的日志的ApplicationID<br>3.使用jps查看进程,看Standalone client模式提交作业的时候,当前机器上会有哪些进程(会看到一个sparksubmit相当于driver进程,还是一个进程是CoarseGrainedExecutorBackend进程,这个进程就是在worker机器上的executor进程)</p>
+<h1 id="Standalone-cluster模式提交作业"><a href="#Standalone-cluster模式提交作业" class="headerlink" title="Standalone cluster模式提交作业"></a>Standalone cluster模式提交作业</h1><p>Standalone cluster模式,通常用于,spark作业部署到生产环境中去使用,Standalone client模式下,在spark-submit脚本执行的机器上,会启动driver进程,然后去进行整个作业的调度,通常来说,你的spark-submit脚本能够执行的机器,也就是,作为一个开发人员能够登录的机器,通常不会直接是spark集群部署的机器,因为不是随便谁都能够登录到spark集群中某个机器上去执行一个脚本,这是没有安全性可言的,用client模式,你的机器可能与spark集群部署的机器,都不在一个机房,或者是举例很远,那么此时远距离的频繁的网络通信会影响整个作业的执行性能,所以在生产环境中是使用的Standalone cluster模式,因为在这种模式下,会由master在集群中的一个节点上来启动driver,然后driver会进行频繁的作业调度,此时driver和集群是在一起的,这样性能是比较高的</p>
+<p>此外,在Standalone cluster模式下,还支持监控你的driver进程,并且在driver进程挂掉的时候,自动重启该进程,要使用这个功能,在spark-submit脚本中,使用–supervise参数即可,这个参数其实在spark streaming中作为HA高可用来的,配置driver的高可用</p>
+<p>如果想要杀掉反复挂掉的driver进程,使用以下即可:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">bin/spark-class org.apache.spark.deploy.Client kill &lt;master url&gt; &lt;driver ID&gt;</div><div class="line"></div><div class="line">#如果要查看driver id，通过http://&lt;maser url&gt;:8080即可查看到</div></pre></td></tr></table></figure></p>
+<p>提交的脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/export/servers/spark/bin/spark-submit \</div><div class="line">--master spark://hdp-node-01:7077 \</div><div class="line">--deploy-mode cluster \</div><div class="line">--class cn.spark.study.core.WordCount \</div><div class="line">--num-executors 1 \</div><div class="line">--driver-memory 100m \</div><div class="line">--executor-memory 100m \</div><div class="line">--executor-cores 1 \</div><div class="line">/usr/xx/spark-study-java-0.0.1-SNAPSHOT-jar-with-dependencies.jar \</div></pre></td></tr></table></figure>
+<h1 id="Standalone模式下的多作业资源调度"><a href="#Standalone模式下的多作业资源调度" class="headerlink" title="Standalone模式下的多作业资源调度"></a>Standalone模式下的多作业资源调度</h1><p>Standalone集群对于同时提交上来的多个作业(Application),仅仅支持FIFO调度策略,也就是先入先出</p>
+<p>默认情况下,集群对多作业同时执行的支持是不好的,没有办法同时执行多个作业,因为先提交上来的每一个作业都会尝试使用集群中的所有可用的cpu资源(spreadOut),此时相当于只能支持Application串行一个一个运行了,因此如果我们希望能够支持多作业同时运行,那么就需要调整一些资源参数了</p>
+<p>我们需要调整的资源参数是:spark.cores.max,来限制每个作业能够使用的最大的cpu core数量,这样先提交上来的作业不会使用所有的cpu资源,后面提交上来的作业就可以获取到资源了,这样就可以同时运行多个Application</p>
+<p>比如说,如果集群一共有20个节点，每个节点是8核，160 cpu core,那么，如果你不限制每个作业获取的最大cpu资源大小，而且在你spark-submit的时候，或者说，你就设置了num-executors，total-cores，160 此时，你的作业是会使用所有的cpu core资源的,所以，如果我们可以通过设置全局的一个参数，让每个作业最多只能获取到一部分cpu core资源,那么，后面提交上来的作业，就也可以获取到一部分资源,standalone集群，才可以支持同时执行多个作业</p>
+<p>使用SparkConf或spark-submit中的–conf标识，设置参数即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">SparkConf conf = new SparkConf()</div><div class="line">		.set(&quot;spark.cores.max&quot;, &quot;10&quot;)</div></pre></td></tr></table></figure>
+<p>通常不建议使用SparkConf，硬编码，来设置一些属性，不够灵活,建议使用spark-submit来设置属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--conf spark.cores.max=10</div></pre></td></tr></table></figure></p>
+<p>此外，还可以直接通过spark-env.sh配置每个application默认能使用的最大cpu数量来进行限制，默认是无限大，此时就不需要每个application都自己手动设置了<br>在spark-env.sh中配置spark.deploy.defaultCores即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export SPARK_MASTER_OPTS=&quot;-Dspark.deploy.defaultCores=10&quot;</div></pre></td></tr></table></figure></p>
+<h1 id="Standalone模式下的作业监控与日志记录"><a href="#Standalone模式下的作业监控与日志记录" class="headerlink" title="Standalone模式下的作业监控与日志记录"></a>Standalone模式下的作业监控与日志记录</h1><p>spark standalone模式，提供了一个web界面来让我们监控集群，并监控所有的作业的运行,web界面上,提供了master和worker的相关信息,默认的话,我们的web界面运行在master机器上的8080端口</p>
+<p>spark web ui<br>1.哪些作业在跑<br>2.哪些作业跑完了,花了多长时间,使用了多少资源<br>3.哪些作业跑失败了</p>
+<p>Application web ui<br>1.可以看到job,stage,task的详细运行信息<br>2.shuffle read,shuffle write,gc,运行时间,每个task分配的数据量<br>3.定位很多性能问题、troubleshooting等等，如task数据分布不允许，那么就是数据倾斜<br>4.哪个stage运行的时间最慢，通过之前讲解的stage划分算法，去你的代码里定位到，那个stage对应的是哪一块儿代码，你的那段代码为什么会运行太慢,使用优化策略去优化性能</p>
+<p>但是有个问题，作业运行完了以后，我们就看不到了,此时跟history server有关，需要我们开启</p>
+<p>日志记录<br>1、系统级别的，spark自己的日志记录<br>2、我们在程序里面，用log4j，或者System.out.println打印出来的日志</p>
+<p>spark web ui中可以看到<br>1、看每个application在每个executor上的日志<br>2、stdout，可以显示我们用System.out.println打印出来的日志，stderr，可以显示我们用System.err.println打印出来的日志</p>
+<p>此外，我们自己在spark作业代码中，打出来的日志，比如用System.out.println()等，是打到每个作业在每个节点的工作目录中去的,默认是SPARK_HOME/work目录下,这个目录下，每个作业都有两个文件，一个是stdout，一个是stderr，分别代表了标准输出流和异常输出流</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之standalone集群架构/" rel="next" title="spark core之standalone集群架构">
+                <i class="fa fa-chevron-left"></i> spark core之standalone集群架构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark算子的闭包原理详解/" rel="prev" title="spark core之spark算子的闭包原理详解">
+                spark core之spark算子的闭包原理详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Standalone-client模式提交作业"><span class="nav-number">1.</span> <span class="nav-text">Standalone client模式提交作业</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Standalone-cluster模式提交作业"><span class="nav-number">2.</span> <span class="nav-text">Standalone cluster模式提交作业</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Standalone模式下的多作业资源调度"><span class="nav-number">3.</span> <span class="nav-text">Standalone模式下的多作业资源调度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Standalone模式下的作业监控与日志记录"><span class="nav-number">4.</span> <span class="nav-text">Standalone模式下的作业监控与日志记录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

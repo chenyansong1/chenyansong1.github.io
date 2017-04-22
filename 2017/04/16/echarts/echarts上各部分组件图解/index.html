@@ -1,0 +1,785 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="echarts," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="下图标注了一个普通的echarts图表的各个组成部分,如下:在学习echarts之前,需要了解echarts的整体结构以及各个部分的组件有大概的了解,下面是对echarts的组件进行图解,说明各名词的含义">
+<meta name="keywords" content="echarts">
+<meta property="og:type" content="article">
+<meta property="og:title" content="echarts上各部分组件图解">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/echarts/echarts上各部分组件图解/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="下图标注了一个普通的echarts图表的各个组成部分,如下:在学习echarts之前,需要了解echarts的整体结构以及各个部分的组件有大概的了解,下面是对echarts的组件进行图解,说明各名词的含义">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/all.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/grid.jpg">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/axisDetail.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/lineTheme.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/legend.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/title.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/toolbox.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/tooltip2.jpg">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/dataZoom.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/dataRange.png">
+<meta property="og:updated_time" content="2017-02-27T06:05:57.033Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="echarts上各部分组件图解">
+<meta name="twitter:description" content="下图标注了一个普通的echarts图表的各个组成部分,如下:在学习echarts之前,需要了解echarts的整体结构以及各个部分的组件有大概的了解,下面是对echarts的组件进行图解,说明各名词的含义">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/all.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/echarts/echarts上各部分组件图解/"/>
+
+
+
+
+
+  <title> echarts上各部分组件图解 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/echarts/echarts上各部分组件图解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                echarts上各部分组件图解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/echarts/" itemprop="url" rel="index">
+                    <span itemprop="name">echarts</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>下图标注了一个普通的echarts图表的各个组成部分,如下:<br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/all.png" alt=""><br>在学习echarts之前,需要了解echarts的整体结构以及各个部分的组件有大概的了解,下面是对echarts的组件进行图解,说明各名词的含义</p>
+<a id="more"></a>
+<h1 id="grid（绘图网格）"><a href="#grid（绘图网格）" class="headerlink" title="grid（绘图网格）"></a>grid（绘图网格）</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/grid.jpg" alt=""></p>
+<h1 id="axis（坐标轴）"><a href="#axis（坐标轴）" class="headerlink" title="axis（坐标轴）"></a>axis（坐标轴）</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/axisDetail.png" alt=""></p>
+<h1 id="line（折线图）"><a href="#line（折线图）" class="headerlink" title="line（折线图）"></a>line（折线图）</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/lineTheme.png" alt=""></p>
+<h1 id="legend（图例）"><a href="#legend（图例）" class="headerlink" title="legend（图例）"></a>legend（图例）</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/legend.png" alt=""></p>
+<h1 id="title（标题）"><a href="#title（标题）" class="headerlink" title="title（标题）"></a>title（标题）</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/title.png" alt=""></p>
+<h1 id="toolbox（工具箱）"><a href="#toolbox（工具箱）" class="headerlink" title="toolbox（工具箱）"></a>toolbox（工具箱）</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/toolbox.png" alt=""></p>
+<h1 id="tooltip（提示）"><a href="#tooltip（提示）" class="headerlink" title="tooltip（提示）"></a>tooltip（提示）</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/tooltip2.jpg" alt=""></p>
+<h1 id="dataZoom（数据区域缩放）"><a href="#dataZoom（数据区域缩放）" class="headerlink" title="dataZoom（数据区域缩放）"></a>dataZoom（数据区域缩放）</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/dataZoom.png" alt=""></p>
+<h1 id="dataRange（值域）"><a href="#dataRange（值域）" class="headerlink" title="dataRange（值域）"></a>dataRange（值域）</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/echarts/combiner/dataRange.png" alt=""></p>
+<p><strong>名词解析</strong></p>
+<ul>
+<li>chart     是指一个完整的图表，如折线图，饼图等“基本”图表类型或由基本图表组合而成的“混搭”图表，可能包括坐标轴、图例等</li>
+<li>axis     直角坐标系中的一个坐标轴，坐标轴可分为类目型、数值型或时间型</li>
+<li>xAxis     直角坐标系中的横轴，通常并默认为类目型</li>
+<li>yAxis     直角坐标系中的纵轴，通常并默认为数值型</li>
+<li>grid     直角坐标系中除坐标轴外的绘图网格，用于定义直角系整体布局</li>
+<li>legend     图例，表述数据和图形的关联</li>
+<li></li>
+<li>dataRange     值域选择，常用于展现地域数据时选择值域范围</li>
+<li>dataZoom     数据区域缩放，常用于展现大量数据时选择可视范围</li>
+<li>roamController     缩放漫游组件，搭配地图使用</li>
+<li>toolbox     辅助工具箱，辅助功能，如添加标线，框选缩放等</li>
+<li>tooltip     气泡提示框，常用于展现更详细的数据</li>
+<li>timeline     时间轴，常用于展现同一系列数据在时间维度上的多份数据</li>
+<li>series     数据系列，一个图表可能包含多个系列，每一个系列可能包含多个数据 </li>
+<li>line     折线图，堆积折线图，区域图，堆积区域图。</li>
+<li>bar     柱形图（纵向），堆积柱形图，条形图（横向），堆积条形图。</li>
+<li>scatter     散点图，气泡图。散点图至少需要横纵两个数据，更高维度数据加入时可以映射为颜色或大小，当映射到大小时则为气泡图</li>
+<li>k     K线图，蜡烛图。常用于展现股票交易数据。</li>
+<li>pie     饼图，圆环图。饼图支持两种（半径、面积）南丁格尔玫瑰图模式</li>
+<li>radar     雷达图，填充雷达图。高维度数据展现的常用图表。</li>
+<li>chord     和弦图。常用于展现关系数据，外层为圆环图，可体现数据占比关系，内层为各个扇形间相互连接的弦，可体现关系数据</li>
+<li>force     力导布局图。常用于展现复杂关系网络聚类布局。</li>
+<li>map     地图。内置世界地图、中国及中国34个省市自治区地图数据、可通过标准GeoJson扩展地图类型。支持svg扩展类地图应用，如室内地图、运动场、物件构造等。</li>
+<li>gauge     仪表盘。用于展现关键指标数据，常见于BI类系统。</li>
+<li>funnel     漏斗图。用于展现数据经过筛选、过滤等流程处理后发生的数据变化，常见于BI类系统。</li>
+<li>evnetRiver     事件河流图。常用于展示具有时间属性的多个事件，以及事件随时间的演化。</li>
+<li>funnel     漏斗图。用于展现数据经过筛选、过滤等流程处理后发生的数据变化，常见于BI类系统。</li>
+<li>evnetRiver     事件河流图。常用于展示具有时间属性的多个事件，以及事件随时间的演化。</li>
+<li>treemap     矩形式树状结构图，简称：矩形树图。用于展示树形数据结构，优势是能最大限度展示节点的尺寸特征。</li>
+<li>venn     韦恩图。用于展示集合以及它们的交集。</li>
+</ul>
+<p>整理自:<br><a href="http://echarts.baidu.com/echarts2/doc/example/themeDesigner.html#" target="_blank" rel="external">echarts2</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/echarts/" rel="tag"># echarts</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/echarts/直角坐标系之axis(xAsix和yAxis)/" rel="next" title="直角坐标系之axis(xAsix/yAxis)">
+                <i class="fa fa-chevron-left"></i> 直角坐标系之axis(xAsix/yAxis)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/echarts/5 分钟上手 ECharts/" rel="prev" title="5 分钟上手 ECharts">
+                5 分钟上手 ECharts <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#grid（绘图网格）"><span class="nav-number">1.</span> <span class="nav-text">grid（绘图网格）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#axis（坐标轴）"><span class="nav-number">2.</span> <span class="nav-text">axis（坐标轴）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#line（折线图）"><span class="nav-number">3.</span> <span class="nav-text">line（折线图）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#legend（图例）"><span class="nav-number">4.</span> <span class="nav-text">legend（图例）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#title（标题）"><span class="nav-number">5.</span> <span class="nav-text">title（标题）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#toolbox（工具箱）"><span class="nav-number">6.</span> <span class="nav-text">toolbox（工具箱）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tooltip（提示）"><span class="nav-number">7.</span> <span class="nav-text">tooltip（提示）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dataZoom（数据区域缩放）"><span class="nav-number">8.</span> <span class="nav-text">dataZoom（数据区域缩放）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dataRange（值域）"><span class="nav-number">9.</span> <span class="nav-text">dataRange（值域）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

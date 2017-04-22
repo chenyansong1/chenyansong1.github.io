@@ -1,0 +1,791 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="zookeeper," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="定义长度为4个英文字母的管理命令,比如stat就是其中一个  使用方式  Telnet Telnet ip port 命令执行   nc echo 命令|nc ip port      conf用于输出基本配置信息,也可以查看某些运行时参数123telnet localhost 2181 ,然后执行conf#或者echo conf|nc localhost 2181  cons用于输出当前客户端">
+<meta name="keywords" content="zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeper四字命令">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper四字命令/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="定义长度为4个英文字母的管理命令,比如stat就是其中一个  使用方式  Telnet Telnet ip port 命令执行   nc echo 命令|nc ip port      conf用于输出基本配置信息,也可以查看某些运行时参数123telnet localhost 2181 ,然后执行conf#或者echo conf|nc localhost 2181  cons用于输出当前客户端">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/5.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/6.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/7.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/8.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/9.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/10.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/11.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/12.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/13.png">
+<meta property="og:updated_time" content="2017-02-24T17:07:51.547Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zookeeper四字命令">
+<meta name="twitter:description" content="定义长度为4个英文字母的管理命令,比如stat就是其中一个  使用方式  Telnet Telnet ip port 命令执行   nc echo 命令|nc ip port      conf用于输出基本配置信息,也可以查看某些运行时参数123telnet localhost 2181 ,然后执行conf#或者echo conf|nc localhost 2181  cons用于输出当前客户端">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper四字命令/"/>
+
+
+
+
+
+  <title> zookeeper四字命令 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper四字命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                zookeeper四字命令
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><p>定义<br>长度为4个英文字母的管理命令,比如stat就是其中一个</p>
+</li>
+<li><p>使用方式</p>
+<ul>
+<li>Telnet<ul>
+<li>Telnet ip port</li>
+<li>命令执行</li>
+</ul>
+</li>
+<li>nc<ul>
+<li>echo 命令|nc ip port</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="conf"><a href="#conf" class="headerlink" title="conf"></a>conf</h1><p>用于输出基本配置信息,也可以查看某些运行时参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行conf</div><div class="line">#或者</div><div class="line">echo conf|nc localhost 2181</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/1.png" alt=""></p>
+<h1 id="cons"><a href="#cons" class="headerlink" title="cons"></a>cons</h1><p>用于输出当前客户端所有连接的详细信息,包括客户端ip,会话id等<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行cons</div><div class="line">#or</div><div class="line">echo cons | nc localhost 2181</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/2.png" alt=""></p>
+<h1 id="crst"><a href="#crst" class="headerlink" title="crst"></a>crst</h1><p>用于重置客户端连接统计信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行 crst</div><div class="line">#or</div><div class="line">echo crst | nc localhost 2181</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/3.png" alt=""></p>
+<h1 id="dump"><a href="#dump" class="headerlink" title="dump"></a>dump</h1><p>用于输出当前集群的所有会话信息,包括会话id以及临时节点等信息<br>如果dump的是leader节点,则还会有会话的超时时间<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181  ,然后执行dump</div><div class="line">#or</div><div class="line">echo dump | nc localhost 2181</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/4.png" alt=""></p>
+<h1 id="envi"><a href="#envi" class="headerlink" title="envi"></a>envi</h1><p>用于输出运行时的环境信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行envi</div><div class="line">#or</div><div class="line">echo envi | nc localhost 2181</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/5.png" alt=""></p>
+<h1 id="ruok"><a href="#ruok" class="headerlink" title="ruok"></a>ruok</h1><p>用于输出当前zk服务器运行时是否正常,仅仅代表2181端口和四字命令流程执行正常,不能完全代表zk运行正常,最有效的命令是stat<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行ruok</div><div class="line">#or</div><div class="line">echo ruok | nc localhost 2181</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/6.png" alt=""></p>
+<h1 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h1><p>用于获取服务器端的运行状态:zk版本 打包信息,运行时角色,集群节点等</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行stat</div><div class="line">#or</div><div class="line">echo stat | nc localhost 2181</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/7.png" alt=""></p>
+<h1 id="srvr"><a href="#srvr" class="headerlink" title="srvr"></a>srvr</h1><p>与stat功能类似,但是不输出连接信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行srvr</div><div class="line">#or</div><div class="line">echo srvr | nc localhost 2181</div></pre></td></tr></table></figure></p>
+<h1 id="srst"><a href="#srst" class="headerlink" title="srst"></a>srst</h1><p>重置服务器的统计信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行srst</div><div class="line">#or</div><div class="line">echo srst | nc localhost 2181</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/8.png" alt=""></p>
+<h1 id="wchs"><a href="#wchs" class="headerlink" title="wchs"></a>wchs</h1><p>用于输出当前服务器上管理的watcher的概要信息,通过zk构造器创建的默认watcher不在此统计范围</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行wchs</div><div class="line">#or</div><div class="line">echo wchs | nc localhost 2181</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/9.png" alt=""></p>
+<h1 id="wchc"><a href="#wchc" class="headerlink" title="wchc"></a>wchc</h1><p>用于输出当前服务器上管理的watcher的详细信息，以会话单位为组，通过zk构造器创建的默认watcher,不在此统计范围</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行wchc</div><div class="line">#or</div><div class="line">echo wchc | nc localhost 2181</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/10.png" alt=""></p>
+<h1 id="wchp"><a href="#wchp" class="headerlink" title="wchp"></a>wchp</h1><p>与wchc类似，但是以节点路径分组，通过zk构造器创建的默认watcher不在此统计范围</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行wchp</div><div class="line">#or</div><div class="line">echo wchp | nc localhost 2181</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/11.png" alt=""></p>
+<h1 id="mntr"><a href="#mntr" class="headerlink" title="mntr"></a>mntr</h1><p>与stat类似，但是比stat更详细，包括请求的延迟情况,服务区内存数据库大小,集群同步等情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">telnet localhost 2181 ,然后执行mntr</div><div class="line">#or</div><div class="line">echo mntr | nc localhost 2181</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/12.png" alt=""></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/4_command/13.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zookeeper安装配置(单机，伪分布式、集群)/" rel="next" title="zookeeper安装配置(单机，伪分布式、集群)">
+                <i class="fa fa-chevron-left"></i> zookeeper安装配置(单机，伪分布式、集群)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zookeeper命令行简单的CRUD命令/" rel="prev" title="zookeeper命令行简单的CRUD命令">
+                zookeeper命令行简单的CRUD命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#conf"><span class="nav-number">1.</span> <span class="nav-text">conf</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cons"><span class="nav-number">2.</span> <span class="nav-text">cons</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#crst"><span class="nav-number">3.</span> <span class="nav-text">crst</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dump"><span class="nav-number">4.</span> <span class="nav-text">dump</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#envi"><span class="nav-number">5.</span> <span class="nav-text">envi</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ruok"><span class="nav-number">6.</span> <span class="nav-text">ruok</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#stat"><span class="nav-number">7.</span> <span class="nav-text">stat</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#srvr"><span class="nav-number">8.</span> <span class="nav-text">srvr</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#srst"><span class="nav-number">9.</span> <span class="nav-text">srst</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#wchs"><span class="nav-number">10.</span> <span class="nav-text">wchs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#wchc"><span class="nav-number">11.</span> <span class="nav-text">wchc</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#wchp"><span class="nav-number">12.</span> <span class="nav-text">wchp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mntr"><span class="nav-number">13.</span> <span class="nav-text">mntr</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

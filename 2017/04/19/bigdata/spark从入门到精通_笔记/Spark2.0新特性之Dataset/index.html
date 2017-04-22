@@ -1,0 +1,742 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="DataFrame的基本操作实例12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364#employee.json&amp;#123;&amp;quot;name&amp;quot;: &amp;quot;Leo&amp;quot;, &amp;quot;age&amp;">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark2.0新特性之Dataset">
+<meta property="og:url" content="http://yoursite.com/2017/04/19/bigdata/spark从入门到精通_笔记/Spark2.0新特性之Dataset/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="DataFrame的基本操作实例12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364#employee.json&amp;#123;&amp;quot;name&amp;quot;: &amp;quot;Leo&amp;quot;, &amp;quot;age&amp;">
+<meta property="og:updated_time" content="2017-04-19T09:26:18.065Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark2.0新特性之Dataset">
+<meta name="twitter:description" content="DataFrame的基本操作实例12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364#employee.json&amp;#123;&amp;quot;name&amp;quot;: &amp;quot;Leo&amp;quot;, &amp;quot;age&amp;">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/19/bigdata/spark从入门到精通_笔记/Spark2.0新特性之Dataset/"/>
+
+
+
+
+
+  <title> Spark2.0新特性之Dataset | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/19/bigdata/spark从入门到精通_笔记/Spark2.0新特性之Dataset/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark2.0新特性之Dataset
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-19T10:23:11+08:00">
+                2017-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="DataFrame的基本操作实例"><a href="#DataFrame的基本操作实例" class="headerlink" title="DataFrame的基本操作实例"></a>DataFrame的基本操作实例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">#employee.json</div><div class="line">&#123;&quot;name&quot;: &quot;Leo&quot;, &quot;age&quot;: 25, &quot;depId&quot;: 1, &quot;gender&quot;: &quot;male&quot;, &quot;salary&quot;: 20000&#125;</div><div class="line">&#123;&quot;name&quot;: &quot;Marry&quot;, &quot;age&quot;: 30, &quot;depId&quot;: 2, &quot;gender&quot;: &quot;female&quot;, &quot;salary&quot;: 25000&#125;</div><div class="line"></div><div class="line">#department.json</div><div class="line">&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;Technical Department&quot;&#125;</div><div class="line">&#123;&quot;id&quot;: 2, &quot;name&quot;: &quot;Financial Department&quot;&#125;</div><div class="line">&#123;&quot;id&quot;: 3, &quot;name&quot;: &quot;HR Department&quot;&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">需求:</div><div class="line">1.只统计年龄在20岁以上的员工</div><div class="line">2.根据部门和员工性别进行分组,统计出每个部门分性别的平均薪资和年龄</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">    // 构造SparkSession,基于builder</div><div class="line">    val spark = SparkSession</div><div class="line">      .builder()</div><div class="line">      .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">      .master(&quot;local&quot;)</div><div class="line">      .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">      .getOrCreate()</div><div class="line"></div><div class="line">    //导入spark的隐式转换</div><div class="line">    import spark.implicits._</div><div class="line">    //导入spark sql的functions</div><div class="line">    import org.apache.spark.sql.functions._</div><div class="line"></div><div class="line">    //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line">    val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line">    val department = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\department.json&quot;)</div><div class="line"></div><div class="line">    //进行计算操作</div><div class="line">    employee</div><div class="line">      //首先对employee进行过滤,只统计20岁以上的员工</div><div class="line">      .filter($&quot;age&quot; &gt; 20)</div><div class="line">      //需要跟department数据进行join,注意:untyped join,两个表的字段的连接条件,需要使用三个等号</div><div class="line">      .join(department, $&quot;depId&quot; === $&quot;id&quot;)</div><div class="line">      //根据部门名称和员工性别进行分组</div><div class="line">      .groupBy(department(&quot;name&quot;), employee(&quot;gender&quot;))</div><div class="line">      //执行聚合函数</div><div class="line">      .agg(avg(employee(&quot;salary&quot;)), avg(employee(&quot;age&quot;)))</div><div class="line">     //最后将结构显示出来</div><div class="line">      .show</div><div class="line"></div><div class="line">/*</div><div class="line">+--------------------+------+-----------+--------+</div><div class="line">|                name|gender|avg(salary)|avg(age)|</div><div class="line">+--------------------+------+-----------+--------+</div><div class="line">|       HR Department|female|    21000.0|    21.0|</div><div class="line">|Technical Department|  male|    17500.0|    30.0|</div><div class="line">|Financial Department|female|    26500.0|    30.0|</div><div class="line">|       HR Department|  male|    18000.0|    42.0|</div><div class="line">+--------------------+------+-----------+--------+</div><div class="line"> */</div><div class="line">/*</div><div class="line">总结:</div><div class="line">1.DataFrame==dataset[Row]</div><div class="line">2.DataFrame的类型是Row,所以untyped类型,弱类型</div><div class="line">3.dataset的类型通常是我们自定义的case class ,所以是type类型,强类型</div><div class="line">4.dataset开发,与rdd开发有很多的共同点</div><div class="line">  dataset API也分成transformation和action,transformation是lazy</div><div class="line"> */</div></pre></td></tr></table></figure>
+<h1 id="dataset的action操作-collect-count-foreach-reduce"><a href="#dataset的action操作-collect-count-foreach-reduce" class="headerlink" title="dataset的action操作(collect,count,foreach,reduce)"></a>dataset的action操作(collect,count,foreach,reduce)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">// 构造SparkSession,基于builder</div><div class="line">val spark = SparkSession</div><div class="line">  .builder()</div><div class="line">  .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">  .master(&quot;local&quot;)</div><div class="line">  .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">  .getOrCreate()</div><div class="line"></div><div class="line">//导入spark的隐式转换</div><div class="line">import spark.implicits._</div><div class="line"></div><div class="line">//首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line">val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line"></div><div class="line">//collect:将存储在集群上的分布式数据集(比如dataset)中的所有数据获取到driver端</div><div class="line">employee.collect.foreach(print)</div><div class="line">//[25,1,male,Leo,20000][30,2,female,Marry,25000][35,1,male,Jack,15000]</div><div class="line"></div><div class="line">//count:对dataset中的记录进行统计个数</div><div class="line">println(employee.count)</div><div class="line"></div><div class="line">//first:获取数据集中的第一条数据</div><div class="line">println(employee.first)</div><div class="line"></div><div class="line">//foreach:遍历数据集中的每一条数据,对数据进行操作,这个跟collect不同,</div><div class="line">//collect是将数据获取到driver端进行操作,而foreach是将计算操作推到集群上去分布式的执行</div><div class="line">//foreach(println(_))这种操作,最终的结果是打印在集群中的各个节点上的</div><div class="line">employee.foreach(println(_))</div><div class="line"></div><div class="line">//reduce:对数据集中的所有的数据进行规约的操作</div><div class="line">employee.map(employee=&gt;1).reduce(_ + _)</div><div class="line"></div><div class="line">//take:从数据集中获取指定条数</div><div class="line">employee.take(3).foreach(println(_))</div></pre></td></tr></table></figure>
+<h1 id="基础操作-持久化-临时视图-执行计划-ds-df互转换-写数据"><a href="#基础操作-持久化-临时视图-执行计划-ds-df互转换-写数据" class="headerlink" title="基础操作(持久化,临时视图,执行计划,ds/df互转换,写数据)"></a>基础操作(持久化,临时视图,执行计划,ds/df互转换,写数据)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line">// 构造SparkSession,基于builder</div><div class="line">val spark = SparkSession</div><div class="line">  .builder()</div><div class="line">  .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">  .master(&quot;local&quot;)</div><div class="line">  .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">  .getOrCreate()</div><div class="line"></div><div class="line">//导入spark的隐式转换</div><div class="line">import spark.implicits._</div><div class="line"></div><div class="line">//首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line">val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line"></div><div class="line">//如果要对一个dataset重复计算两次的话,那么建议先对这个dataset进行持久化在进行操作,避免重复计算</div><div class="line">employee.cache</div><div class="line">println(employee.count)</div><div class="line">println(employee.count)</div><div class="line">/*</div><div class="line">17/04/19 15:25:43 INFO DAGScheduler: Job 1 finished: count at TopNBasic.scala:35, took 0.733971 s</div><div class="line">17/04/19 15:25:44 INFO CodeGenerator: Code generated in 18.156697 ms</div><div class="line">7</div><div class="line"></div><div class="line">// ....</div><div class="line"></div><div class="line">17/04/19 15:25:44 INFO DAGScheduler: ResultStage 4 (count at TopNBasic.scala:36) finished in 0.015 s</div><div class="line">17/04/19 15:25:44 INFO DAGScheduler: Job 2 finished: count at TopNBasic.scala:36, took 0.118242 s</div><div class="line">7</div><div class="line"> */</div><div class="line"></div><div class="line">//创建临时视图,主要为了可以直接对数据执行sql语句</div><div class="line">employee.createTempView(&quot;employee&quot;)</div><div class="line">spark.sql(&quot;select * from employee where age&gt;30&quot;).show</div><div class="line">/*</div><div class="line">+---+-----+------+----+------+</div><div class="line">|age|depId|gender|name|salary|</div><div class="line">+---+-----+------+----+------+</div><div class="line">| 35|    1|  male|Jack| 15000|</div><div class="line">| 42|    3|  male| Tom| 18000|</div><div class="line">+---+-----+------+----+------+</div><div class="line"> */</div><div class="line"></div><div class="line">//获取spark sql的执行计划</div><div class="line">spark.sql(&quot;select * from employee where age&gt;30&quot;).explain</div><div class="line">/*</div><div class="line">== Physical Plan ==</div><div class="line">*Filter (isnotnull(age#0L) &amp;&amp; (age#0L &gt; 30))</div><div class="line">+- InMemoryTableScan [age#0L, depId#1L, gender#2, name#3, salary#4L], [isnotnull(age#0L), (age#0L &gt; 30)]</div><div class="line">      +- InMemoryRelation [age#0L, depId#1L, gender#2, name#3, salary#4L], true, 10000, StorageLevel(disk, memory, deserialized, 1 replicas)</div><div class="line">            +- *FileScan json [age#0L,depId#1L,gender#2,name#3,salary#4L] Batched: false, Format: JSON, Location: InMemoryFileIndex[file:/C:/Users/Administrator/Desktop/employee.json], PartitionFilters: [], PushedFilters: [], ReadSchema: struct&lt;age:bigint,depId:bigint,gender:string,name:string,salary:bigint&gt;</div><div class="line">//我们知道带*号的都是自动化生成的(whole-stage-code-generation)</div><div class="line"> */</div><div class="line"></div><div class="line">//查看scheme</div><div class="line">employee.printSchema</div><div class="line">/*</div><div class="line">root</div><div class="line"> |-- age: long (nullable = true)</div><div class="line"> |-- depId: long (nullable = true)</div><div class="line"> |-- gender: string (nullable = true)</div><div class="line"> |-- name: string (nullable = true)</div><div class="line"> |-- salary: long (nullable = true)</div><div class="line"> */</div><div class="line"></div><div class="line">//写数据</div><div class="line">val employeeWithAgeDF = spark.sql(&quot;select * from employee where age&gt;30&quot;)</div><div class="line">employeeWithAgeDF.write.json(&quot;C:\\Users\\Administrator\\Desktop\\employeeWithAge.txt&quot;)</div><div class="line"></div><div class="line">/*在C:\Users\Administrator\Desktop\employeeWithAge.txt目录下</div><div class="line">._SUCCESS.crc</div><div class="line">.part-00000-d683f074-b191-49e4-9725-c92002f25c9f.json.crc</div><div class="line">_SUCCESS</div><div class="line">part-00000-d683f074-b191-49e4-9725-c92002f25c9f.json</div><div class="line"> */</div><div class="line"></div><div class="line">//DataFrame转换成dataset</div><div class="line">//case class Employee(name: String, age:Long, depId:Long, gender:String, salary:Long)</div><div class="line">val employeeDS = employee.as[Employee]</div><div class="line">employeeDS.show()</div><div class="line">employeeDS.printSchema()</div><div class="line">/*</div><div class="line">+---+-----+------+------+------+</div><div class="line">|age|depId|gender|  name|salary|</div><div class="line">+---+-----+------+------+------+</div><div class="line">| 25|    1|  male|   Leo| 20000|</div><div class="line">| 30|    2|female| Marry| 25000|</div><div class="line">| 35|    1|  male|  Jack| 15000|</div><div class="line">| 42|    3|  male|   Tom| 18000|</div><div class="line">| 21|    3|female|Kattie| 21000|</div><div class="line">| 30|    2|female|   Jen| 28000|</div><div class="line">| 19|    2|female|   Jen|  8000|</div><div class="line">+---+-----+------+------+------+</div><div class="line"></div><div class="line">root</div><div class="line"> |-- age: long (nullable = true)</div><div class="line"> |-- depId: long (nullable = true)</div><div class="line"> |-- gender: string (nullable = true)</div><div class="line"> |-- name: string (nullable = true)</div><div class="line"> |-- salary: long (nullable = true)</div><div class="line"> */</div><div class="line"></div><div class="line">//dataset转成DataFrame</div><div class="line">employeeDS.toDF</div></pre></td></tr></table></figure>
+<h1 id="type操作-coalesce-reparation"><a href="#type操作-coalesce-reparation" class="headerlink" title="type操作(coalesce,reparation)"></a>type操作(coalesce,reparation)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">// 构造SparkSession,基于builder</div><div class="line">val spark = SparkSession</div><div class="line">  .builder()</div><div class="line">  .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">  .master(&quot;local&quot;)</div><div class="line">  .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">  .getOrCreate()</div><div class="line"></div><div class="line">//导入spark的隐式转换</div><div class="line">import spark.implicits._</div><div class="line"></div><div class="line">//首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line">val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line">val employeeDS = employee.as[Employee]</div><div class="line"></div><div class="line">println(employeeDS.rdd.partitions.size)</div><div class="line"></div><div class="line">//coalesce和reparation操作,都是用来重新定义分区的</div><div class="line">//区别在于:coalesce只能用于减少分区数据量,而且可以选择不发生shuffle</div><div class="line">//reparation可以增加分区,也可以减少分区,必须会发生shuffle,相当于进行了一次重分区操作</div><div class="line">val employeeDSRepartitioned = employeeDS.repartition(7)</div><div class="line">println(employeeDSRepartitioned.rdd.partitions.size)</div><div class="line"></div><div class="line">val employeeDSCoalesced = employeeDS.coalesce(3)</div><div class="line">println(employeeDSRepartitioned.rdd.partitions.size)</div><div class="line"></div><div class="line">employeeDSCoalesced.show()</div></pre></td></tr></table></figure>
+<h1 id="typed操作-distinct和dropDuplicates"><a href="#typed操作-distinct和dropDuplicates" class="headerlink" title="typed操作(distinct和dropDuplicates)"></a>typed操作(distinct和dropDuplicates)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">  // 构造SparkSession,基于builder</div><div class="line">  val spark = SparkSession</div><div class="line">    .builder()</div><div class="line">    .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">    .master(&quot;local&quot;)</div><div class="line">    .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">    .getOrCreate()</div><div class="line"></div><div class="line">  //导入spark的隐式转换</div><div class="line">  import spark.implicits._</div><div class="line"></div><div class="line">//case class Employee(name: String, age:Long, depId:Long, gender:String, salary:Long)</div><div class="line">  //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line">  val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line">  val employeeDS = employee.as[Employee]</div><div class="line"></div><div class="line">  //distinct和dropDuplicates都是用来去重的</div><div class="line">  //区别在于:</div><div class="line">  //  distinct:是根据每一条数据进行完整内容的对比和去重</div><div class="line">  //  dropDuplicates可以根据指定的字段进行去重</div><div class="line">  employeeDS.distinct.show</div><div class="line">  employeeDS.dropDuplicates(Seq(&quot;name&quot;)).show</div><div class="line">/*</div><div class="line">+---+-----+------+------+------+</div><div class="line">|age|depId|gender|  name|salary|</div><div class="line">+---+-----+------+------+------+</div><div class="line">| 30|    2|female| Marry| 25000|</div><div class="line">| 21|    3|female|Kattie| 21000|</div><div class="line">| 42|    3|  male|   Tom| 18000|</div><div class="line">| 35|    1|  male|  Jack| 15000|</div><div class="line">| 30|    2|female|   Jen| 28000|</div><div class="line">| 19|    2|female|   Jen|  8000|</div><div class="line">| 25|    1|  male|   Leo| 20000|</div><div class="line">+---+-----+------+------+------+</div><div class="line"></div><div class="line"></div><div class="line">+---+-----+------+------+------+</div><div class="line">|age|depId|gender|  name|salary|</div><div class="line">+---+-----+------+------+------+</div><div class="line">| 35|    1|  male|  Jack| 15000|</div><div class="line">| 42|    3|  male|   Tom| 18000|</div><div class="line">| 30|    2|female|   Jen| 28000|</div><div class="line">| 30|    2|female| Marry| 25000|</div><div class="line">| 21|    3|female|Kattie| 21000|</div><div class="line">| 25|    1|  male|   Leo| 20000|</div><div class="line">+---+-----+------+------+------+</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="typed操作-except-filter-interset"><a href="#typed操作-except-filter-interset" class="headerlink" title="typed操作(except,filter,interset)"></a>typed操作(except,filter,interset)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> // 构造SparkSession,基于builder</div><div class="line"> val spark = SparkSession</div><div class="line">   .builder()</div><div class="line">   .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">   .master(&quot;local&quot;)</div><div class="line">   .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">   .getOrCreate()</div><div class="line"></div><div class="line"> //导入spark的隐式转换</div><div class="line"> import spark.implicits._</div><div class="line"></div><div class="line">//case class Employee(name: String, age:Long, depId:Long, gender:String, salary:Long)</div><div class="line"> //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line"> val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line"> val employee2 = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee2.json&quot;)</div><div class="line"> val employeeDS = employee.as[Employee]</div><div class="line"> val employeeDS2 = employee2.as[Employee]</div><div class="line"></div><div class="line"> //except:获取当前dataset中有,但是另外一个dataset中没有的元素</div><div class="line"> //filter:根据我们自己的逻辑,如果返回true,那么就保留该元素,否则就过滤掉</div><div class="line"> //intersect:求两个数据集的交集</div><div class="line"> employeeDS.except(employeeDS2).show</div><div class="line"></div><div class="line"> employeeDS.filter(employee =&gt; employee.age &gt; 20)</div><div class="line"></div><div class="line"> employeeDS.intersect(employeeDS2)</div></pre></td></tr></table></figure>
+<h1 id="typed-map-flatMap-mapPartitions"><a href="#typed-map-flatMap-mapPartitions" class="headerlink" title="typed(map,flatMap,mapPartitions)"></a>typed(map,flatMap,mapPartitions)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">case class Employee(name: String, age:Long, depId:Long, gender:String, salary:Long)</div><div class="line">case class Department(id:Long, name:String)</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"> // 构造SparkSession,基于builder</div><div class="line"> val spark = SparkSession</div><div class="line">   .builder()</div><div class="line">   .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">   .master(&quot;local&quot;)</div><div class="line">   .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">   .getOrCreate()</div><div class="line"></div><div class="line"> //导入spark的隐式转换</div><div class="line"> import spark.implicits._</div><div class="line"></div><div class="line"> //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line"> val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line"> val department = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\department.json&quot;)</div><div class="line"></div><div class="line"> val employeeDS = employee.as[Employee]</div><div class="line"> val departmentDS = department.as[Department]</div><div class="line"> //map:将数据集中的每条数据都做一个映射,返回一条新数据</div><div class="line"> //flatMap:数据集中的每条数据都可以返回多条数据,然后进行压平</div><div class="line"> //mapPartitions:一次性对一个partition中的数据进行处理</div><div class="line"></div><div class="line"> employeeDS.map(employee =&gt; (employee.name, employee.age, employee.salary+1000))</div><div class="line"></div><div class="line"> departmentDS.flatMap&#123;</div><div class="line">   department=&gt;</div><div class="line">     Seq(Department(department.id+1, department.name+&quot;_1&quot;), Department(department.id+2, department.name+&quot;_2&quot;))</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> employeeDS.mapPartitions&#123;</div><div class="line">   employeeIter=&gt;</div><div class="line">     val result = mutable.ArrayBuffer[(String,Long)]()</div><div class="line">     while(employeeIter.hasNext)&#123;</div><div class="line">       var emp = employeeIter.next</div><div class="line">       result += ((emp.name, emp.salary+1000))</div><div class="line">     &#125;</div><div class="line">     //需要将集合转成迭代器返回</div><div class="line">     result.toIterator</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<h1 id="typed-joinwith-sort"><a href="#typed-joinwith-sort" class="headerlink" title="typed(joinwith,sort)"></a>typed(joinwith,sort)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">case class Employee(name: String, age:Long, depId:Long, gender:String, salary:Long)</div><div class="line">case class Department(id:Long, name:String)</div><div class="line"></div><div class="line"></div><div class="line">    // 构造SparkSession,基于builder</div><div class="line">    val spark = SparkSession</div><div class="line">      .builder()</div><div class="line">      .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">      .master(&quot;local&quot;)</div><div class="line">      .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">      .getOrCreate()</div><div class="line"></div><div class="line">    //导入spark的隐式转换</div><div class="line">    import spark.implicits._</div><div class="line"></div><div class="line">    //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line">    val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line">    val department = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\department.json&quot;)</div><div class="line"></div><div class="line">    val employeeDS = employee.as[Employee]</div><div class="line">    val departmentDS = department.as[Department]</div><div class="line"></div><div class="line">    employeeDS.joinWith(departmentDS, $&quot;depId&quot;===$&quot;id&quot;).show</div><div class="line"></div><div class="line">	employeeDS.sort($&quot;salary&quot;.desc).show</div></pre></td></tr></table></figure>
+<h1 id="typed-randomSplit-sample"><a href="#typed-randomSplit-sample" class="headerlink" title="typed(randomSplit,sample)"></a>typed(randomSplit,sample)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">randomSplit:将一个数据集随机切分成几份数据集</div><div class="line">sample:按照指定的比例随机抽取出来一些数据</div><div class="line"></div><div class="line"></div><div class="line">    // 构造SparkSession,基于builder</div><div class="line">    val spark = SparkSession</div><div class="line">      .builder()</div><div class="line">      .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">      .master(&quot;local&quot;)</div><div class="line">      .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">      .getOrCreate()</div><div class="line"></div><div class="line">    //导入spark的隐式转换</div><div class="line">    import spark.implicits._</div><div class="line"></div><div class="line">    //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line">    val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line">    val department = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\department.json&quot;)</div><div class="line"></div><div class="line">    val employeeDS = employee.as[Employee]</div><div class="line">    val departmentDS = department.as[Department]</div><div class="line"></div><div class="line">    //切成3分,每份的权重为2,10,20</div><div class="line">    employeeDS.randomSplit(Array(2,10,20))</div><div class="line"></div><div class="line">    //随机抽取数据总量的0.3的比率</div><div class="line">    employeeDS.sample(false, 0.3).show</div></pre></td></tr></table></figure>
+<h1 id="untyped操作-select-where-groupBy-agg-col-join"><a href="#untyped操作-select-where-groupBy-agg-col-join" class="headerlink" title="untyped操作(select,where,groupBy,agg,col,join)"></a>untyped操作(select,where,groupBy,agg,col,join)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">untyped操作:实际上就涵盖了普通sql语法的全部了</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    // 构造SparkSession,基于builder</div><div class="line">    val spark = SparkSession</div><div class="line">      .builder()</div><div class="line">      .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">      .master(&quot;local&quot;)</div><div class="line">      .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">      .getOrCreate()</div><div class="line"></div><div class="line">    //导入spark的隐式转换</div><div class="line">    import spark.implicits._</div><div class="line">    import org.apache.spark.sql.functions._</div><div class="line"></div><div class="line">    //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line">    val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line">    val department = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\department.json&quot;)</div><div class="line"></div><div class="line">    employee</div><div class="line">      .where(&quot;age &gt; 20&quot;)</div><div class="line">      .join(department, $&quot;depId&quot; === $&quot;id&quot;)</div><div class="line">      .groupBy(department(&quot;name&quot;), employee(&quot;gender&quot;))</div><div class="line">      //要使用avg函数,需要导入org.apache.spark.sql.functions._</div><div class="line">      .agg(avg(employee(&quot;salary&quot;)))</div><div class="line">      .show</div><div class="line"></div><div class="line">    employee</div><div class="line">      .select($&quot;name&quot;, $&quot;depId&quot;, $&quot;salary&quot;)</div><div class="line">      .where(&quot;age&gt;30&quot;)</div><div class="line">      .show</div></pre></td></tr></table></figure>
+<h1 id="聚合函数-avg-sum-max-min-count-countDistinct"><a href="#聚合函数-avg-sum-max-min-count-countDistinct" class="headerlink" title="聚合函数(avg,sum,max,min,count,countDistinct)"></a>聚合函数(avg,sum,max,min,count,countDistinct)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"> // 构造SparkSession,基于builder</div><div class="line"> val spark = SparkSession</div><div class="line">   .builder()</div><div class="line">   .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">   .master(&quot;local&quot;)</div><div class="line">   .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">   .getOrCreate()</div><div class="line"></div><div class="line"> //导入spark的隐式转换</div><div class="line"> import spark.implicits._</div><div class="line"> import org.apache.spark.sql.functions._</div><div class="line"></div><div class="line"> //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line"> val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line"> val department = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\department.json&quot;)</div><div class="line"></div><div class="line"> employee</div><div class="line">   .join(department, $&quot;depId&quot;===$&quot;id&quot;)</div><div class="line">   .groupBy(department(&quot;name&quot;))</div><div class="line">   //要使用avg函数,需要导入org.apache.spark.sql.functions._</div><div class="line">   .agg(avg(employee(&quot;salary&quot;)), sum(employee(&quot;salary&quot;)), max(employee(&quot;salary&quot;)), min(employee(&quot;salary&quot;)), count(employee(&quot;name&quot;)), countDistinct(employee(&quot;name&quot;)))</div><div class="line">   .show</div><div class="line"></div><div class="line">/*</div><div class="line">+--------------------+------------------+-----------+-----------+-----------+-----------+--------------------+</div><div class="line">|                name|       avg(salary)|sum(salary)|max(salary)|min(salary)|count(name)|count(DISTINCT name)|</div><div class="line">+--------------------+------------------+-----------+-----------+-----------+-----------+--------------------+</div><div class="line">|Technical Department|           17500.0|      35000|      20000|      15000|          2|                   2|</div><div class="line">|       HR Department|           19500.0|      39000|      21000|      18000|          2|                   2|</div><div class="line">|Financial Department|20333.333333333332|      61000|      28000|       8000|          3|                   2|</div><div class="line">+--------------------+------------------+-----------+-----------+-----------+-----------+--------------------+</div><div class="line"> */</div></pre></td></tr></table></figure>
+<h1 id="聚合函数-collect-list-collect-set"><a href="#聚合函数-collect-list-collect-set" class="headerlink" title="聚合函数(collect_list, collect_set)"></a>聚合函数(collect_list, collect_set)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">collect_list:就是将一个分组内,指定字段的值都收集到一起变成一个数组,不去重</div><div class="line">collect_set:同上,唯一的区别是,会去重</div><div class="line"></div><div class="line">常用于行转列</div><div class="line">例如:</div><div class="line">depId=1,employe=leo</div><div class="line">depId=1,employe=jack</div><div class="line">depId=1,employe=[leo,jack]</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"> // 构造SparkSession,基于builder</div><div class="line"> val spark = SparkSession</div><div class="line">   .builder()</div><div class="line">   .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">   .master(&quot;local&quot;)</div><div class="line">   .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">   .getOrCreate()</div><div class="line"></div><div class="line"> //导入spark的隐式转换</div><div class="line"> import spark.implicits._</div><div class="line"> import org.apache.spark.sql.functions._</div><div class="line"></div><div class="line"> //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line"> val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line"> val department = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\department.json&quot;)</div><div class="line"></div><div class="line"> employee</div><div class="line">   .groupBy(employee(&quot;depId&quot;))</div><div class="line">   .agg(collect_list(employee(&quot;name&quot;)), collect_set(employee(&quot;name&quot;)))</div><div class="line">   .show</div><div class="line"></div><div class="line"> /*</div><div class="line"> +-----+------------------+-----------------+</div><div class="line"> |depId|collect_list(name)|collect_set(name)|</div><div class="line"> +-----+------------------+-----------------+</div><div class="line"> |    1|       [Leo, Jack]|      [Jack, Leo]|</div><div class="line"> |    3|     [Tom, Kattie]|    [Tom, Kattie]|</div><div class="line"> |    2| [Marry, Jen, Jen]|     [Marry, Jen]|</div><div class="line"> +-----+------------------+-----------------+</div><div class="line">  */</div></pre></td></tr></table></figure>
+<h1 id="其他常用的函数"><a href="#其他常用的函数" class="headerlink" title="其他常用的函数"></a>其他常用的函数</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">日期函数:current_date, current_timestamp</div><div class="line">数学函数:round</div><div class="line">随机函数:rand</div><div class="line">字符串函数:concat, concat_ws</div><div class="line">自定义函数udf和自定义聚合函数udaf</div><div class="line"></div><div class="line">需要的时候去查看官网的API</div><div class="line">http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.functions$</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"> // 构造SparkSession,基于builder</div><div class="line"> val spark = SparkSession</div><div class="line">   .builder()</div><div class="line">   .appName(&quot;DepartmentAvgSalaryAndAgeStat&quot;)</div><div class="line">   .master(&quot;local&quot;)</div><div class="line">   .config(&quot;spark.sql.warehouse.dir&quot;, &quot;C:\\Users\\Administrator\\Desktop\\spark-warehouse&quot;)</div><div class="line">   .getOrCreate()</div><div class="line"></div><div class="line"> //导入spark的隐式转换</div><div class="line"> import spark.implicits._</div><div class="line"> import org.apache.spark.sql.functions._</div><div class="line"></div><div class="line"> //首先将两份数据文件加载进行,形成两个DataFrame</div><div class="line"> val employee = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\employee.json&quot;)</div><div class="line"> val department = spark.read.json(&quot;C:\\Users\\Administrator\\Desktop\\department.json&quot;)</div><div class="line"></div><div class="line"> employee</div><div class="line">   .select(employee(&quot;name&quot;),</div><div class="line">     current_date,</div><div class="line">     current_timestamp,</div><div class="line">     rand,</div><div class="line">     round(employee(&quot;salary&quot;),2),</div><div class="line">     concat(employee(&quot;gender&quot;), employee(&quot;age&quot;)),</div><div class="line">     concat_ws(&quot;|&quot;,employee(&quot;gender&quot;), employee(&quot;age&quot;))</div><div class="line">   ).show</div><div class="line"></div><div class="line">/*</div><div class="line">+------+--------------+--------------------+-------------------------+----------------+-------------------+-------------------------+</div><div class="line">|  name|current_date()| current_timestamp()|rand(9062034925792708500)|round(salary, 2)|concat(gender, age)|concat_ws(|, gender, age)|</div><div class="line">+------+--------------+--------------------+-------------------------+----------------+-------------------+-------------------------+</div><div class="line">|   Leo|    2017-04-19|2017-04-19 17:25:...|       0.8536958083571142|           20000|             male25|                  male|25|</div><div class="line">| Marry|    2017-04-19|2017-04-19 17:25:...|      0.10866516208665833|           25000|           female30|                female|30|</div><div class="line">|  Jack|    2017-04-19|2017-04-19 17:25:...|       0.6128816303412895|           15000|             male35|                  male|35|</div><div class="line">|   Tom|    2017-04-19|2017-04-19 17:25:...|       0.9614274109004534|           18000|             male42|                  male|42|</div><div class="line">|Kattie|    2017-04-19|2017-04-19 17:25:...|      0.10936129046706444|           21000|           female21|                female|21|</div><div class="line">|   Jen|    2017-04-19|2017-04-19 17:25:...|      0.25947595067767937|           28000|           female30|                female|30|</div><div class="line">|   Jen|    2017-04-19|2017-04-19 17:25:...|      0.12866036956519833|            8000|           female19|                female|19|</div><div class="line">+------+--------------+--------------------+-------------------------+----------------+-------------------+-------------------------+</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/19/bigdata/spark从入门到精通_笔记/Spark2.0新特性之Structured Streaming/" rel="next" title="Spark2.0新特性之Structured Streaming">
+                <i class="fa fa-chevron-left"></i> Spark2.0新特性之Structured Streaming
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/19/bigdata/spark从入门到精通_笔记/Spark2.0新特性之SparkSession,DataFrame,Dataset/" rel="prev" title="Spark2.0新特性之SparkSession,DataFrame,Dataset">
+                Spark2.0新特性之SparkSession,DataFrame,Dataset <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DataFrame的基本操作实例"><span class="nav-number">1.</span> <span class="nav-text">DataFrame的基本操作实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dataset的action操作-collect-count-foreach-reduce"><span class="nav-number">2.</span> <span class="nav-text">dataset的action操作(collect,count,foreach,reduce)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基础操作-持久化-临时视图-执行计划-ds-df互转换-写数据"><span class="nav-number">3.</span> <span class="nav-text">基础操作(持久化,临时视图,执行计划,ds/df互转换,写数据)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#type操作-coalesce-reparation"><span class="nav-number">4.</span> <span class="nav-text">type操作(coalesce,reparation)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#typed操作-distinct和dropDuplicates"><span class="nav-number">5.</span> <span class="nav-text">typed操作(distinct和dropDuplicates)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#typed操作-except-filter-interset"><span class="nav-number">6.</span> <span class="nav-text">typed操作(except,filter,interset)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#typed-map-flatMap-mapPartitions"><span class="nav-number">7.</span> <span class="nav-text">typed(map,flatMap,mapPartitions)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#typed-joinwith-sort"><span class="nav-number">8.</span> <span class="nav-text">typed(joinwith,sort)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#typed-randomSplit-sample"><span class="nav-number">9.</span> <span class="nav-text">typed(randomSplit,sample)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#untyped操作-select-where-groupBy-agg-col-join"><span class="nav-number">10.</span> <span class="nav-text">untyped操作(select,where,groupBy,agg,col,join)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#聚合函数-avg-sum-max-min-count-countDistinct"><span class="nav-number">11.</span> <span class="nav-text">聚合函数(avg,sum,max,min,count,countDistinct)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#聚合函数-collect-list-collect-set"><span class="nav-number">12.</span> <span class="nav-text">聚合函数(collect_list, collect_set)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他常用的函数"><span class="nav-number">13.</span> <span class="nav-text">其他常用的函数</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

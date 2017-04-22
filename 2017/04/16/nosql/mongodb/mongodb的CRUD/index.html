@@ -1,0 +1,740 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mongodb," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="mongodb的官方文档12#在文档上都有详细的示例https://docs.mongodb.com/manual/ 1.增加12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849#语法db.collectionName.insert(document)#增加单篇文档&amp;gt;">
+<meta name="keywords" content="mongodb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mongodb的CRUD">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/mongodb/mongodb的CRUD/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="mongodb的官方文档12#在文档上都有详细的示例https://docs.mongodb.com/manual/ 1.增加12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849#语法db.collectionName.insert(document)#增加单篇文档&amp;gt;">
+<meta property="og:updated_time" content="2017-02-24T17:10:16.918Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mongodb的CRUD">
+<meta name="twitter:description" content="mongodb的官方文档12#在文档上都有详细的示例https://docs.mongodb.com/manual/ 1.增加12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849#语法db.collectionName.insert(document)#增加单篇文档&amp;gt;">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/mongodb/mongodb的CRUD/"/>
+
+
+
+
+
+  <title> mongodb的CRUD | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/mongodb的CRUD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                mongodb的CRUD
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>mongodb的官方文档<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#在文档上都有详细的示例</div><div class="line">https://docs.mongodb.com/manual/</div></pre></td></tr></table></figure></p>
+<h1 id="1-增加"><a href="#1-增加" class="headerlink" title="1.增加"></a>1.增加</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">#语法</div><div class="line">db.collectionName.insert(document)</div><div class="line"></div><div class="line">#增加单篇文档</div><div class="line">&gt; db.student.insert(&#123;sn:&apos;001&apos;,name:&apos;xiaoming&apos;&#125;)</div><div class="line">WriteResult(&#123; &quot;nInserted&quot; : 1 &#125;)</div><div class="line">&gt; db.student.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff1837abf4c31796f90449&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming&quot; &#125;</div><div class="line">&gt;</div><div class="line"></div><div class="line"></div><div class="line">#增加单篇文档,并指定_id</div><div class="line">&gt; db.student.insert(&#123;_id:2,sn:&apos;002&apos;,name:&apos;xiaogang&apos;&#125;)</div><div class="line">WriteResult(&#123; &quot;nInserted&quot; : 1 &#125;)</div><div class="line">&gt; db.student.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff1837abf4c31796f90449&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 2, &quot;sn&quot; : &quot;002&quot;, &quot;name&quot; : &quot;xiaogang&quot; &#125;</div><div class="line">&gt;</div><div class="line"></div><div class="line">#增加多个文档</div><div class="line">添加：一个数组对象</div><div class="line">&gt; db.student.insert([&#123;_id:3,sn:&apos;003&apos;,name:&apos;zhangfei&apos;&#125;,&#123;sn:&apos;004&apos;,name:&apos;guanyu&apos;&#125;])</div><div class="line">BulkWriteResult(&#123;</div><div class="line">        &quot;writeErrors&quot; : [ ],</div><div class="line">        &quot;writeConcernErrors&quot; : [ ],</div><div class="line">        &quot;nInserted&quot; : 2,</div><div class="line">        &quot;nUpserted&quot; : 0,</div><div class="line">        &quot;nMatched&quot; : 0,</div><div class="line">        &quot;nModified&quot; : 0,</div><div class="line">        &quot;nRemoved&quot; : 0,</div><div class="line">        &quot;upserted&quot; : [ ]</div><div class="line">&#125;)</div><div class="line">&gt; db.student.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff1837abf4c31796f90449&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 2, &quot;sn&quot; : &quot;002&quot;, &quot;name&quot; : &quot;xiaogang&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 3, &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;zhangfei&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff18d2abf4c31796f9044a&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;guanyu&quot; &#125;</div><div class="line">&gt; </div><div class="line"></div><div class="line"></div><div class="line">#插入复杂的结构</div><div class="line">&gt; db.student.insert([&#123;_id:4,sn:&apos;003&apos;,name:&apos;zhangfei&apos;,class:[&apos;math&apos;,&apos;chinese&apos;]&#125;])</div><div class="line">&gt; db.student.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff1837abf4c31796f90449&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 2, &quot;sn&quot; : &quot;002&quot;, &quot;name&quot; : &quot;xiaogang&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 3, &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;zhangfei&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff18d2abf4c31796f9044a&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;guanyu&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 4, &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;zhangfei&quot;, &quot;class&quot; : [ &quot;math&quot;, &quot;chinese&quot; ] &#125;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+<h1 id="2-删除"><a href="#2-删除" class="headerlink" title="2.删除"></a>2.删除</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line">#语法</div><div class="line">db.collection.remove(查询表达式, 选项)</div><div class="line">#选项是指: &#123;justOne: true/ false&#125;    是否只删一行,默认是false</div><div class="line"></div><div class="line">&gt; db.student.find()</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff1837abf4c31796f90449&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 2, &quot;sn&quot; : &quot;002&quot;, &quot;name&quot; : &quot;xiaogang&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 3, &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;zhangfei&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff18d2abf4c31796f9044a&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;guanyu&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 4, &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;zhangfei&quot;, &quot;class&quot; : [ &quot;math&quot;, &quot;chinese&quot; ] &#125;</div><div class="line">&gt;</div><div class="line"></div><div class="line">&gt; db.student.remove(&#123;sn:&apos;002&apos;&#125;)        #删除student表中sn属性值为&quot;002&quot;的文档</div><div class="line">WriteResult(&#123; &quot;nRemoved&quot; : 1 &#125;)</div><div class="line">&gt; db.student.find()</div><div class="line">&#123; &quot;_id&quot; : 3, &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;zhangfei&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff18d2abf4c31796f9044a&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;guanyu&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 4, &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;zhangfei&quot;, &quot;class&quot; : [ &quot;math&quot;, &quot;chinese&quot; ] &#125;</div><div class="line">&gt;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#删除student表中gender属性为m的文档,只删除1行</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088ab1ba35a73d3b4275&quot;), &quot;sn&quot; : &quot;002&quot;, &quot;name&quot; : &quot;xiaoming2&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;xiaoming3&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&gt; db.student.remove(&#123;gender:&quot;m&quot;&#125;,true)</div><div class="line">WriteResult(&#123; &quot;nRemoved&quot; : 1 &#125;)</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;xiaoming3&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&gt;</div><div class="line"></div><div class="line"> </div><div class="line"></div><div class="line">#删除所有的记录</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a8fe12b1ba35a73d3b426e&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a903a9b1ba35a73d3b426f&quot;), &quot;sn&quot; : &quot;002&quot;, &quot;name&quot; : &quot;xiaoming2&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a903c3b1ba35a73d3b4270&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;xiaoming3&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a903ccb1ba35a73d3b4271&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;xiaoming4&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line"> </div><div class="line">&gt; db.student.remove(&#123;&#125;);</div><div class="line">WriteResult(&#123; &quot;nRemoved&quot; : 4 &#125;)</div><div class="line">&gt; db.student.find();</div><div class="line">&gt;</div><div class="line"></div><div class="line"></div><div class="line">#drop是删除整个表,而remove是删除表中的记录</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a90683b1ba35a73d3b4272&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;xiaoming4&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9068db1ba35a73d3b4273&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a90693b1ba35a73d3b4274&quot;), &quot;sn&quot; : &quot;002&quot;, &quot;name&quot; : &quot;xiaoming2&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&gt; show collections;</div><div class="line">student</div><div class="line">user</div><div class="line">&gt; db.student.drop();</div><div class="line">true</div><div class="line">&gt; db.student.find();</div><div class="line">&gt; show collections;</div><div class="line">user</div><div class="line">&gt; </div><div class="line"></div><div class="line">/*</div><div class="line">To delete all records from a table, uses db.tablename.remove().</div><div class="line">To drop the table, uses db.tablename.drop().</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p>注意:</p>
+<ul>
+<li>查询表达式依然是个json对象</li>
+<li>查询表达式匹配的行,将被删除</li>
+<li>如果不写查询表达式,collections中的所有文档将被删除 </li>
+</ul>
+<h1 id="3-更新"><a href="#3-更新" class="headerlink" title="3.更新"></a>3.更新</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div></pre></td><td class="code"><pre><div class="line">#语法</div><div class="line">db.collection.update(查询表达式, 新值, Option)</div><div class="line"></div><div class="line"> </div><div class="line">&gt; db.student.find()</div><div class="line">&#123; &quot;_id&quot; : 3, &quot;name&quot; : &quot;zhangfei2222&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff18d2abf4c31796f9044a&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;guanyu&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 4, &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;zhangfei&quot;, &quot;class&quot; : [ &quot;math&quot;, &quot;chinese&quot; ] &#125;</div><div class="line"> </div><div class="line">&gt; db.student.update(&#123;name:&apos;zhangfei&apos;&#125;,&#123;name:&apos;zhangfei2222&apos;&#125;)</div><div class="line">WriteResult(&#123; &quot;nMatched&quot; : 1, &quot;nUpserted&quot; : 0, &quot;nModified&quot; : 1 &#125;)</div><div class="line"> </div><div class="line">&gt; db.student.find()</div><div class="line">&#123; &quot;_id&quot; : 3, &quot;name&quot; : &quot;zhangfei2222&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;57ff18d2abf4c31796f9044a&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;guanyu&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 4, &quot;name&quot; : &quot;zhangfei2222&quot; &#125;                #文档中除了_id没有变之外，其他字段都被覆盖,即新文档直接替换了旧文档,而不是修改</div><div class="line"></div><div class="line"></div><div class="line">#如果是想修改文档的某列, 使用$set关键字</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;xiaoming3&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line"></div><div class="line">&gt; db.student.update(&#123;name:&quot;xiaoming3&quot;&#125;,&#123;$set:&#123;name:&quot;QQ&quot;&#125;&#125;)</div><div class="line">WriteResult(&#123; &quot;nMatched&quot; : 1, &quot;nUpserted&quot; : 0, &quot;nModified&quot; : 1 &#125;)</div><div class="line"></div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;QQ&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&gt; </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"> /*</div><div class="line">除了$set还有如下的选项:</div><div class="line">$inc    #增长</div><div class="line">$rename    #重命名</div><div class="line">$setOnInsert    #当upsert时,设置字段的值</div><div class="line">$set        #设置字段的新值</div><div class="line">$unset        #删除指定的列</div><div class="line">$push # 将一个数字存入一个数组,分为三种情况,如果该字段存在,则直接将数字存入数组.如果该字段不存在,创建字段并且将数字插入该数组.如果更新的字段不是数组,会报错的.</div><div class="line">$pop #删除数组最后一个元素</div><div class="line">$pull # 删除数组中的指定的元素,如果删除的字段不是数组,会报错</div><div class="line"></div><div class="line">*/</div><div class="line">&gt; db.stu.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a90e08b1ba35a73d3b4278&quot;), &quot;name&quot; : &quot;wukong&quot;, &quot;jingu&quot; : true, &quot;sex&quot; : &quot;m&quot;, &quot;age&quot; : 500 &#125;</div><div class="line"> </div><div class="line">&gt; db.stu.update(&#123;name:&quot;wukong&quot;&#125;,&#123;$set:&#123;name:&quot;shitou&quot;&#125;,$unset:&#123;jingu:1&#125;,$rename:&#123;sex:&quot;gender&quot;&#125;,$inc:&#123;age:16&#125;&#125;);</div><div class="line"></div><div class="line">&gt; db.stu.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a90e08b1ba35a73d3b4278&quot;), &quot;name&quot; : &quot;shitou&quot;, &quot;age&quot; : 516, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&gt;</div><div class="line"> </div><div class="line"></div><div class="line">#数组操作</div><div class="line"># $push</div><div class="line">db.test.find()</div><div class="line">&#123; &quot;_id&quot; : 1, &quot;ary&quot; : [ 1, 2, 3, 4 ] &#125;</div><div class="line">&#123; &quot;_id&quot; : 2, &quot;text&quot; : &quot;test&quot; &#125;</div><div class="line"> </div><div class="line">db.test.update(&#123;_id:1&#125;,&#123;$push:&#123;ary:5&#125;&#125;) # 数组存在 直接压入，但是这个地方如果是数组的话就压入一个数组，并非是合并数组中的元素</div><div class="line"> </div><div class="line">db.test.update(&#123;_id:1&#125;,&#123;$push:&#123;ary:[8,9,10]&#125;&#125;)</div><div class="line"> </div><div class="line">db.test.find()</div><div class="line">&#123; &quot;_id&quot; : 2, &quot;text&quot; : &quot;test&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 1, &quot;ary&quot; : [ 1, 2, 3, 4, 5,[8,9,10] ] &#125; # 由此可见push一次只能插入一个字段,如果想要批量插入的话就缓存pushAll;</div><div class="line"> </div><div class="line">db.test.update(&#123;_id:2&#125;,&#123;$push:&#123;ary:6&#125;&#125;) # 数组不存在,创建数组并存入</div><div class="line"> </div><div class="line">db.test.find()</div><div class="line">&#123; &quot;_id&quot; : 2, &quot;ary&quot; : [ 6 ], &quot;text&quot; : &quot;test&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 1, &quot;ary&quot; : [ 1, 2, 3, 4, 5 ] &#125;</div><div class="line"> </div><div class="line">db.test.update(&#123;_id:2&#125;,&#123;$push:&#123;text:6&#125;&#125;)  # 更新字段存在但不是数组报错</div><div class="line">Cannot apply $push/$pushAll modifier to non-array</div><div class="line"> </div><div class="line"># pop</div><div class="line">db.user.update(&#123;_id:9&#125;,&#123;$pop:&#123;test:0&#125;&#125;) # 这里的test无论传入什么值,都是删掉test数组的最后一个</div><div class="line"> </div><div class="line"># $pull</div><div class="line">db.user.update(&#123;_id:9&#125;,&#123;$pull:&#123;test:2&#125;&#125;) #这里的test传什么值就删掉什么值</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#Option的作用</div><div class="line">&#123;upsert:true/false, multi:true/false&#125;</div><div class="line">#upsert是指没有匹配的行就直接插入该行</div><div class="line">#multi: 是指修改多行,默认情况下,即使查询表达式命中多行,默认也只是修改一行</div><div class="line"></div><div class="line">#upsert</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;QQ&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;xiaoming3&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line"></div><div class="line">&gt; db.student.update(&#123;_id:99&#125;,&#123;x:123,y:456&#125;,&#123;upsert:true&#125;)</div><div class="line">WriteResult(&#123; &quot;nMatched&quot; : 0, &quot;nUpserted&quot; : 1, &quot;nModified&quot; : 0, &quot;_id&quot; : 99 &#125;)</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;QQ&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;xiaoming3&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 99, &quot;x&quot; : 123, &quot;y&quot; : 456 &#125;</div><div class="line"></div><div class="line"></div><div class="line">#没有multi的情况下:</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;QQ&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;xiaoming3&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91327b1ba35a73d3b427a&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;xiaoming&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&gt; db.student.update(&#123;sn:&quot;004&quot;&#125;,&#123;$set:&#123;name:&quot;xxxxx&quot;&#125;&#125;)</div><div class="line">WriteResult(&#123; &quot;nMatched&quot; : 1, &quot;nUpserted&quot; : 0, &quot;nModified&quot; : 1 &#125;)</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;QQ&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;xxxxx&quot;, &quot;gender&quot; : &quot;m&quot; &#125;        #因为sn=004的有多个,但是update之后只是修改一条记录,这是默认的情况下</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91327b1ba35a73d3b427a&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;xiaoming&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line"></div><div class="line"></div><div class="line">#有multi的情况下:</div><div class="line">&gt; db.student.update(&#123;gender:&quot;m&quot;&#125;,&#123;$set:&#123;sn:&quot;888&quot;&#125;&#125;,&#123;multi:true&#125;)</div><div class="line">WriteResult(&#123; &quot;nMatched&quot; : 3, &quot;nUpserted&quot; : 0, &quot;nModified&quot; : 3 &#125;)</div><div class="line">&gt; db.student.find();        #update所有的gender=m的,并修改所有查询到的记录(将sn=888)</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;QQ&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xxxxx&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91327b1ba35a73d3b427a&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&gt;</div><div class="line"></div><div class="line"></div><div class="line"># $setOnInsert  当upsert为true时,并且发生了insert操作时,可以补充的字段:</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;QQ&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xxxxx&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91327b1ba35a73d3b427a&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line"> </div><div class="line">&gt; db.student.update(&#123;_id:88&#125;,&#123;$set:&#123;name:&quot;AAAAAA&quot;&#125;,$setOnInsert:&#123;job:&quot;java-hadoop&quot;&#125;&#125;,&#123;upsert:true&#125;);    #此时更新的记录不存在,那么就insert</div><div class="line">WriteResult(&#123; &quot;nMatched&quot; : 0, &quot;nUpserted&quot; : 1, &quot;nModified&quot; : 0, &quot;_id&quot; : 88 &#125;)</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;QQ&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xxxxx&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91327b1ba35a73d3b427a&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 88, &quot;name&quot; : &quot;AAAAAA&quot;, &quot;job&quot; : &quot;java-hadoop&quot; &#125;</div><div class="line"></div><div class="line">#此时更新的记录存在,那么setOnInsert就不会起作用</div><div class="line">&gt; db.student.update(&#123;sn:&quot;003&quot;&#125;,&#123;$set:&#123;name:&quot;AAAAAA&quot;&#125;,$setOnInsert:&#123;job:&quot;java-hadoop&quot;&#125;&#125;,&#123;upsert:true&#125;);</div><div class="line">WriteResult(&#123; &quot;nMatched&quot; : 1, &quot;nUpserted&quot; : 0, &quot;nModified&quot; : 1 &#125;)</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;AAAAAA&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xxxxx&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91327b1ba35a73d3b427a&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : 88, &quot;name&quot; : &quot;AAAAAA&quot;, &quot;job&quot; : &quot;java-hadoop&quot; &#125;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+<h1 id="4-查询"><a href="#4-查询" class="headerlink" title="4.查询"></a>4.查询</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">#语法</div><div class="line">db.collection.find(查询表达式, 查询的列)</div><div class="line"></div><div class="line">#查询所有</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a90683b1ba35a73d3b4272&quot;), &quot;sn&quot; : &quot;004&quot;, &quot;name&quot; : &quot;xiaoming4&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9068db1ba35a73d3b4273&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a90693b1ba35a73d3b4274&quot;), &quot;sn&quot; : &quot;002&quot;, &quot;name&quot; : &quot;xiaoming2&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line"></div><div class="line"></div><div class="line">#指定查询表达式</div><div class="line">db.collection.find(查询表达式, &#123;列1:1, 列2:1&#125;)</div><div class="line"></div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;001&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;xiaoming3&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&gt; db.student.find(&#123;name:&quot;xiaoming3&quot;&#125;);</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;xiaoming3&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&gt; </div><div class="line"></div><div class="line">#指定要显示的列(0表示不显示,1表示显示)</div><div class="line">&gt; db.student.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming1&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;sn&quot; : &quot;003&quot;, &quot;name&quot; : &quot;AAAAAA&quot;, &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xxxxx&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91327b1ba35a73d3b427a&quot;), &quot;sn&quot; : &quot;888&quot;, &quot;name&quot; : &quot;xiaoming&quot;, &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line"></div><div class="line">&gt; db.student.find(&#123;&#125;,&#123;gender:1&#125;);        #_id属性默认总是显示出来</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9088db1ba35a73d3b4276&quot;), &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a9089db1ba35a73d3b4277&quot;), &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91258b1ba35a73d3b4279&quot;), &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;58a91327b1ba35a73d3b427a&quot;), &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line"></div><div class="line">&gt; db.student.find(&#123;&#125;,&#123;gender:1,_id:0&#125;);</div><div class="line">&#123; &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;gender&quot; : &quot;f&quot; &#125;</div><div class="line">&#123; &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&#123; &quot;gender&quot; : &quot;m&quot; &#125;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mongodb/" rel="tag"># mongodb</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/Mongodb简介/" rel="next" title="Mongodb简介">
+                <i class="fa fa-chevron-left"></i> Mongodb简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/mapreduce/" rel="prev" title="mapreduce">
+                mapreduce <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-增加"><span class="nav-number">1.</span> <span class="nav-text">1.增加</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-删除"><span class="nav-number">2.</span> <span class="nav-text">2.删除</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-更新"><span class="nav-number">3.</span> <span class="nav-text">3.更新</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-查询"><span class="nav-number">4.</span> <span class="nav-text">4.查询</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

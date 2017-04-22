@@ -1,0 +1,782 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="zookeeper," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="ACL组成 Scheme:id:permission 比如:world:anyone:crdwa Scheme:验证过程中使用的检验策略 id:权限被赋予的对象,比如ip或者某个用户 permission为权限,上面的crdwa,表示5个权限组合 通过setAcl命令设置节点的权限 节点的acl不具有继承关系 getAcl可以查看节点的acl权限信息  1234[zk: localhost:218">
+<meta name="keywords" content="zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeper的ACL">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的ACL/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="ACL组成 Scheme:id:permission 比如:world:anyone:crdwa Scheme:验证过程中使用的检验策略 id:权限被赋予的对象,比如ip或者某个用户 permission为权限,上面的crdwa,表示5个权限组合 通过setAcl命令设置节点的权限 节点的acl不具有继承关系 getAcl可以查看节点的acl权限信息  1234[zk: localhost:218">
+<meta property="og:updated_time" content="2017-02-24T17:07:51.562Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zookeeper的ACL">
+<meta name="twitter:description" content="ACL组成 Scheme:id:permission 比如:world:anyone:crdwa Scheme:验证过程中使用的检验策略 id:权限被赋予的对象,比如ip或者某个用户 permission为权限,上面的crdwa,表示5个权限组合 通过setAcl命令设置节点的权限 节点的acl不具有继承关系 getAcl可以查看节点的acl权限信息  1234[zk: localhost:218">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的ACL/"/>
+
+
+
+
+
+  <title> zookeeper的ACL | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的ACL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                zookeeper的ACL
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="ACL组成"><a href="#ACL组成" class="headerlink" title="ACL组成"></a>ACL组成</h1><ul>
+<li>Scheme:id:permission 比如:world:anyone:crdwa</li>
+<li>Scheme:验证过程中使用的检验策略</li>
+<li>id:权限被赋予的对象,比如ip或者某个用户</li>
+<li>permission为权限,上面的crdwa,表示5个权限组合</li>
+<li>通过setAcl命令设置节点的权限</li>
+<li>节点的acl不具有继承关系</li>
+<li>getAcl可以查看节点的acl权限信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[zk: localhost:2181(CONNECTED) 0] getAcl /student</div><div class="line">&apos;world,&apos;anyone</div><div class="line">: cdrwa</div></pre></td></tr></table></figure>
+<h2 id="Scheme类型–world"><a href="#Scheme类型–world" class="headerlink" title="Scheme类型–world"></a>Scheme类型–world</h2><ul>
+<li>scheme:id:permission</li>
+<li>id为固定值,anyone,表示任何用户</li>
+<li>world:anyone:crdwa    表示任何用户都具有crdwa权限</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[zk: localhost:2181(CONNECTED) 1] setAcl /student world:anyone:ca</div><div class="line"></div><div class="line">[zk: localhost:2181(CONNECTED) 2] getAcl /student</div><div class="line">&apos;world,&apos;anyone</div><div class="line">: ca		#没有读权限</div><div class="line">[zk: localhost:2181(CONNECTED) 3] get /student</div><div class="line">Authentication is not valid : /student</div></pre></td></tr></table></figure>
+<h2 id="Scheme类型–auth"><a href="#Scheme类型–auth" class="headerlink" title="Scheme类型–auth"></a>Scheme类型–auth</h2><ul>
+<li>Scheme:id:permisstion,比如:auth:username:password:crdwa</li>
+<li>表示给认证通过的所有用户设置acl权限</li>
+<li>同时可以添加多个用户</li>
+<li>通过addauth命ј进行认证用户的添加:addauth digest <username>:<password></password></username></li>
+<li>auth策略的本质就是digest</li>
+<li>如果通过addauth创建多组用户和密码，当使用setAcl修改权限时，所有的用户和密码的权限都会跟着修改</li>
+<li>通过addauth新创建的用户和密码组需要重新调用setAcl才会入到权限组中去</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">#创建节点</div><div class="line">[zk: localhost:2181(CONNECTED) 4] create /node2 &quot;node2data&quot;</div><div class="line">Created /node2</div><div class="line"></div><div class="line">#获取默认的acl</div><div class="line">[zk: localhost:2181(CONNECTED) 5] getAcl /node2</div><div class="line">&apos;world,&apos;anyone</div><div class="line">: cdrwa</div><div class="line"></div><div class="line">#设置acl(不能设置,因为node2u:1111这样的用户是不存在的,所以验证不通过,即不能设置)</div><div class="line">[zk: localhost:2181(CONNECTED) 6] setAcl /node2 auth:node2u:1111:crdwa</div><div class="line">Acl is not valid : /node2</div><div class="line"></div><div class="line">#添加用户</div><div class="line">[zk: localhost:2181(CONNECTED) 7] addauth digest node2u:1111</div><div class="line"></div><div class="line">#再次设置acl</div><div class="line">[zk: localhost:2181(CONNECTED) 8] setAcl /node2 auth:node2u:1111:crdwa</div><div class="line">cZxid = 0x2d</div><div class="line">ctime = Thu Feb 23 21:52:48 CST 2017</div><div class="line">mZxid = 0x2d</div><div class="line">mtime = Thu Feb 23 21:52:48 CST 2017</div><div class="line">pZxid = 0x2d</div><div class="line">cversion = 0</div><div class="line">dataVersion = 0</div><div class="line">aclVersion = 1</div><div class="line">ephemeralOwner = 0x0</div><div class="line">dataLength = 11</div><div class="line">numChildren = 0</div><div class="line">[zk: localhost:2181(CONNECTED) 9]</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#在另外一个客户端上(因为本地没有验证用户)</div><div class="line">[zk: localhost:2181(CONNECTED) 0] get /node2</div><div class="line">Authentication is not valid : /node2</div><div class="line"></div><div class="line">#添加验证用户</div><div class="line">[zk: localhost:2181(CONNECTED) 3] addauth digest node2u:1111</div><div class="line">[zk: localhost:2181(CONNECTED) 4] get /node2</div><div class="line">&quot;node2data&quot;</div><div class="line">cZxid = 0x2d</div><div class="line">ctime = Thu Feb 23 21:52:48 CST 2017</div><div class="line">mZxid = 0x2d</div><div class="line">mtime = Thu Feb 23 21:52:48 CST 2017</div><div class="line">pZxid = 0x2d</div><div class="line">cversion = 0</div><div class="line">dataVersion = 0</div><div class="line">aclVersion = 1</div><div class="line">ephemeralOwner = 0x0</div><div class="line">dataLength = 11</div><div class="line">numChildren = 0</div><div class="line">[zk: localhost:2181(CONNECTED) 5]</div></pre></td></tr></table></figure>
+<h2 id="Scheme类型–digest"><a href="#Scheme类型–digest" class="headerlink" title="Scheme类型–digest"></a>Scheme类型–digest</h2><ul>
+<li>scheme:id:permission, 比如: digest:username:password:crdwa</li>
+<li>指定某个用户及他的密码可以访问</li>
+<li>此处的username:password必须进过SHA-1和BASE64编码<ul>
+<li>BASE64(SHA1(username:password))</li>
+</ul>
+</li>
+<li>通过addauth命令进行认证用户的添加<ul>
+<li>addauth digest <username>:<password></password></username></li>
+</ul>
+</li>
+</ul>
+<h2 id="Scheme类型—IP"><a href="#Scheme类型—IP" class="headerlink" title="Scheme类型—IP"></a>Scheme类型—IP</h2><ul>
+<li>Scheme:id:permission ，比如: ip:127.0.0.1:crdwa</li>
+<li>指定某个IP地址可以访问</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[zk: localhost:2181(CONNECTED) 8] create /node5 &quot;node5data&quot;</div><div class="line">Created /node5</div><div class="line"></div><div class="line">[zk: localhost:2181(CONNECTED) 9] setAcl /node5 ip:127.0.0.1:crdwa</div><div class="line">cZxid = 0x34</div><div class="line">ctime = Thu Feb 23 22:06:30 CST 2017</div><div class="line">mZxid = 0x34</div><div class="line">mtime = Thu Feb 23 22:06:30 CST 2017</div><div class="line">pZxid = 0x34</div><div class="line">cversion = 0</div><div class="line">dataVersion = 0</div><div class="line">aclVersion = 1</div><div class="line">ephemeralOwner = 0x0</div><div class="line">dataLength = 11</div><div class="line">numChildren = 0</div><div class="line">[zk: localhost:2181(CONNECTED) 10] get /node5	##这是为什么?????</div><div class="line">Authentication is not valid : /node5</div><div class="line"></div><div class="line">[zk: localhost:2181(CONNECTED) 11] setAcl ip:192.168.0.33:crdwa</div><div class="line">[zk: localhost:2181(CONNECTED) 12] get /node5</div><div class="line">Authentication is not valid : /node5</div><div class="line">[zk: localhost:2181(CONNECTED) 13]</div></pre></td></tr></table></figure>
+<h2 id="Scheme类型—super"><a href="#Scheme类型—super" class="headerlink" title="Scheme类型—super"></a>Scheme类型—super</h2><ul>
+<li>供运维人员维护节点使用</li>
+<li>有权限操作任何节点</li>
+<li>启动时,在命令参数中配置<ul>
+<li>-Dzookeeper.DigestAuthenticationProvider.superDigest=admin:015uTByzA4zSglcmseJsxTo7n3c=</li>
+<li>打开zkCli.cmd，在java命令后面增加以上配置</li>
+</ul>
+</li>
+<li>用户名和密码也需要通过sha1和base64编码</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zookeeper的Znode数据模型/" rel="next" title="zookeeper的Znode数据模型">
+                <i class="fa fa-chevron-left"></i> zookeeper的Znode数据模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zookeeper开源客户端/" rel="prev" title="zookeeper开源客户端">
+                zookeeper开源客户端 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ACL组成"><span class="nav-number">1.</span> <span class="nav-text">ACL组成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scheme类型–world"><span class="nav-number">1.1.</span> <span class="nav-text">Scheme类型–world</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scheme类型–auth"><span class="nav-number">1.2.</span> <span class="nav-text">Scheme类型–auth</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scheme类型–digest"><span class="nav-number">1.3.</span> <span class="nav-text">Scheme类型–digest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scheme类型—IP"><span class="nav-number">1.4.</span> <span class="nav-text">Scheme类型—IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scheme类型—super"><span class="nav-number">1.5.</span> <span class="nav-text">Scheme类型—super</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,762 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1. 简介 Queue：是一个消息队列，队列的长度可为无限或者有限 用于父子进程通讯，两个没有关系的进程不能使用Queue通信 使用实例： from mulitprocessing import Queue    进程之间同步：lock.acquire 当多个进程同时对队列写的时候需要进行同步，保证一个时刻只有一个进程对队列进行写操作  2.查看Queue帮助123456In [36]: from">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python进程之进程间通讯——消息队列Queue">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/python/python进程之进程间通讯——消息队列Queue/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1. 简介 Queue：是一个消息队列，队列的长度可为无限或者有限 用于父子进程通讯，两个没有关系的进程不能使用Queue通信 使用实例： from mulitprocessing import Queue    进程之间同步：lock.acquire 当多个进程同时对队列写的时候需要进行同步，保证一个时刻只有一个进程对队列进行写操作  2.查看Queue帮助123456In [36]: from">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/queue/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/queue/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/queue/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/queue/4.png">
+<meta property="og:updated_time" content="2017-02-24T17:10:36.902Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python进程之进程间通讯——消息队列Queue">
+<meta name="twitter:description" content="1. 简介 Queue：是一个消息队列，队列的长度可为无限或者有限 用于父子进程通讯，两个没有关系的进程不能使用Queue通信 使用实例： from mulitprocessing import Queue    进程之间同步：lock.acquire 当多个进程同时对队列写的时候需要进行同步，保证一个时刻只有一个进程对队列进行写操作  2.查看Queue帮助123456In [36]: from">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/queue/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/python/python进程之进程间通讯——消息队列Queue/"/>
+
+
+
+
+
+  <title> python进程之进程间通讯——消息队列Queue | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/python/python进程之进程间通讯——消息队列Queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python进程之进程间通讯——消息队列Queue
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><ul>
+<li>Queue：是一个消息队列，队列的长度可为无限或者有限</li>
+<li>用于父子进程通讯，两个没有关系的进程不能使用Queue通信</li>
+<li>使用实例： from mulitprocessing import Queue</li>
+</ul>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/python/queue/1.png" alt=""></p>
+<ul>
+<li>进程之间同步：lock.acquire</li>
+<li>当多个进程同时对队列写的时候需要进行同步，保证一个时刻只有一个进程对队列进行写操作</li>
+</ul>
+<h1 id="2-查看Queue帮助"><a href="#2-查看Queue帮助" class="headerlink" title="2.查看Queue帮助"></a>2.查看Queue帮助</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">In [36]: from multiprocessing import Queue</div><div class="line">In [37]: help(Queue)</div><div class="line">Help on function Queue in module multiprocessing:</div><div class="line"> </div><div class="line">Queue(maxsize=0)</div><div class="line">    Returns a queue object</div></pre></td></tr></table></figure>
+<h1 id="3-Queue常用方法"><a href="#3-Queue常用方法" class="headerlink" title="3.Queue常用方法"></a>3.Queue常用方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">In [38]: q = Queue()</div><div class="line"> </div><div class="line">In [39]: q.</div><div class="line">q.cancel_join_thread  </div><div class="line">q.empty               </div><div class="line">q.get                         #取出队列中的消息       </div><div class="line">q.join_thread         </div><div class="line">q.put_nowait</div><div class="line">q.close               </div><div class="line">q.full                </div><div class="line">q.get_nowait          </div><div class="line">q.put                        #向队列中放入消息     </div><div class="line">q.qsize</div></pre></td></tr></table></figure>
+<h1 id="4-Queue举例"><a href="#4-Queue举例" class="headerlink" title="4.Queue举例"></a>4.Queue举例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/python</div><div class="line"> </div><div class="line">import os</div><div class="line">from multiprocessing import Queue</div><div class="line"> </div><div class="line">Qmsg = Queue()                #创建一个队列</div><div class="line">pid = os.fork()                    #启动子进程</div><div class="line"> </div><div class="line">if pid==0:                                #说明是子进程</div><div class="line">        msg = Qmsg.get()                #从队列中获取数据</div><div class="line">        print(msg)</div><div class="line">else:                                #父进程</div><div class="line">        Qmsg.put(&quot;msg 1&quot;)                #向队列中放入数据</div><div class="line">        os.wait()                            #等待子进程退出</div><div class="line"></div><div class="line"></div><div class="line">-----------------------------------------------------------------------------------------------------------------</div><div class="line">[root@backup python]# vim queue2.py</div><div class="line"> </div><div class="line">import time</div><div class="line">#!/usr/bin/python</div><div class="line"> </div><div class="line">import os</div><div class="line">from multiprocessing import Queue,Process</div><div class="line">import time</div><div class="line"> </div><div class="line">Qmsg = Queue()                                       #创建队列</div><div class="line"> </div><div class="line">def child_func(name):</div><div class="line">        print(&quot;child pid=&#123;0&#125;&quot;.format(os.getpid()))        #打印子进程的pid</div><div class="line">        msg = Qmsg.get()                                    #获取队列数据</div><div class="line">        print(&quot;name=&#123;0&#125;,msg=&#123;1&#125;&quot;.format(name,msg))</div><div class="line"> </div><div class="line">print(&quot;Main pid = &#123;0&#125;&quot;.format(os.getpid()))        #打印父进程的pid</div><div class="line"> </div><div class="line">p = Process(target=child_func,args=(&quot;chilid_1&quot;,))        #创建一个子进程，并传递参数</div><div class="line">Qmsg.put(&quot;msg_1&quot;)                                #向队列中放入数据</div><div class="line">p.start()                                            #开启进程</div><div class="line">p.join()                            #等待子进程结束</div><div class="line"> </div><div class="line">#执行                                                                                                                                                                                                          </div><div class="line">[root@backup python]# python queue2.py</div><div class="line">Main pid = 3742</div><div class="line">child pid=3744</div><div class="line">name=chilid_1,msg=msg_1</div></pre></td></tr></table></figure>
+<p>将start方法换成run方法，那么child_func相当于在主进程中执行，此时并没有开一个子进程</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/python/queue/2.png" alt=""></p>
+<h1 id="5-Lock锁的使用"><a href="#5-Lock锁的使用" class="headerlink" title="5.Lock锁的使用"></a>5.Lock锁的使用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">In [39]: from multiprocessing import Lock                    #导入模块</div><div class="line">In [40]: help(Lock)</div><div class="line">Help on function Lock in module multiprocessing:</div><div class="line"> </div><div class="line">Lock()</div><div class="line">    Returns a non-recursive lock object</div><div class="line"> </div><div class="line"> </div><div class="line">In [41]: l = Lock()</div><div class="line">In [43]: l.                                        #其中的方法</div><div class="line">l.acquire  l.release                         #获取锁、释放锁</div></pre></td></tr></table></figure>
+<h1 id="6-解决多进程之间的互斥问题"><a href="#6-解决多进程之间的互斥问题" class="headerlink" title="6.解决多进程之间的互斥问题"></a>6.解决多进程之间的互斥问题</h1><p>加上1s的延时，则当前进程会被挂起，去执行其他的进程，所以打印的进程消息将不会有序 ，挂起之后，子进程得到锁的机会是随机的，但是在一个子进程中，因为有锁的存在，所以的能够保证一个进程中的所有的内容会一起执行，以下是解决方案：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">[root@backup python]# cat queue3.py      </div><div class="line">#!/usr/bin/python</div><div class="line"> </div><div class="line">import os                                            #导入相应的模块</div><div class="line">from multiprocessing import Queue,Process,Lock</div><div class="line">import time</div><div class="line"> </div><div class="line">Qmsg = Queue()</div><div class="line">lock = Lock()</div><div class="line"> </div><div class="line"> </div><div class="line">def child_func(name):</div><div class="line">        lock.acquire()                                                    #加锁</div><div class="line"> </div><div class="line">        Qmsg.put(&quot;child_&quot;+str(name)+&quot;_msg_1:&quot;+&quot;Pid=&quot;+str(os.getpid))</div><div class="line">        time.sleep(1)</div><div class="line">        Qmsg.put(&quot;child_&quot;+str(name)+&quot;_msg_2:&quot;+&quot;Pid=&quot;+str(os.getpid))</div><div class="line"> </div><div class="line">        lock.release()                                                #释放锁，这样就能保证每一个子进程中的两次put是相邻放入到队列中的</div><div class="line"> </div><div class="line"> </div><div class="line">listp = []</div><div class="line">for i in range(10):</div><div class="line">        p = Process(target=child_func, args=(i,))                        #创建子进程</div><div class="line">        p.start()                                    #开启子进程</div><div class="line">        listp.append(p)</div><div class="line"> </div><div class="line">while True:</div><div class="line">        msg = Qmsg.get()                                    #获取队列消息</div><div class="line">        print(msg)                                #打印</div><div class="line"> </div><div class="line">for i in range(10):</div><div class="line">        listp[i].join()                           #等待子进程结束</div><div class="line">-------------------------------------------------------------------------------------------------</div><div class="line">#执行结果</div><div class="line">[root@backup python]# python queue3.py</div><div class="line">child_0_msg_1:Pid=&lt;built-in function getpid&gt;                    #child_i_msg 总是在一起执行</div><div class="line">child_0_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_3_msg_1:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_3_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_4_msg_1:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_4_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_5_msg_1:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_5_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_2_msg_1:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_2_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_1_msg_1:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_1_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_6_msg_1:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_6_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_7_msg_1:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_7_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_9_msg_1:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_9_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_8_msg_1:Pid=&lt;built-in function getpid&gt;</div><div class="line">child_8_msg_2:Pid=&lt;built-in function getpid&gt;</div><div class="line">^CTraceback (most recent call last):</div><div class="line">  File &quot;queue3.py&quot;, line 28, in &lt;module&gt;</div><div class="line">    msg = Qmsg.get()</div><div class="line">  File &quot;/usr/lib/python2.6/multiprocessing/queues.py&quot;, line 91, in get</div><div class="line">    res = self._recv()</div><div class="line">KeyboardInterrupt</div></pre></td></tr></table></figure></p>
+<h1 id="7-使用Queue实现最简单的本地CS架构"><a href="#7-使用Queue实现最简单的本地CS架构" class="headerlink" title="7.使用Queue实现最简单的本地CS架构"></a>7.使用Queue实现最简单的本地CS架构</h1><p>读取客户端输入，并将数据保存到文件中，并在Server端回显</p>
+<ul>
+<li>基本思路：<ol>
+<li>创建小心队列</li>
+<li>创建子进程</li>
+<li>子进程读取输入并放到消息队列中</li>
+<li>父进程读取并处理消息</li>
+</ol>
+</li>
+</ul>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/python/queue/3.png" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/python/queue/4.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/python/Python面向对象编程指南(转)/" rel="next" title="Python面向对象编程指南(转)">
+                <i class="fa fa-chevron-left"></i> Python面向对象编程指南(转)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/python进程之进程间通讯——无名管道/" rel="prev" title="python进程之进程间通讯——无名管道">
+                python进程之进程间通讯——无名管道 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-简介"><span class="nav-number">1.</span> <span class="nav-text">1. 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-查看Queue帮助"><span class="nav-number">2.</span> <span class="nav-text">2.查看Queue帮助</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Queue常用方法"><span class="nav-number">3.</span> <span class="nav-text">3.Queue常用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Queue举例"><span class="nav-number">4.</span> <span class="nav-text">4.Queue举例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Lock锁的使用"><span class="nav-number">5.</span> <span class="nav-text">5.Lock锁的使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-解决多进程之间的互斥问题"><span class="nav-number">6.</span> <span class="nav-text">6.解决多进程之间的互斥问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-使用Queue实现最简单的本地CS架构"><span class="nav-number">7.</span> <span class="nav-text">7.使用Queue实现最简单的本地CS架构</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

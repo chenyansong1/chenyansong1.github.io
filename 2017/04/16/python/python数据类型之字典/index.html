@@ -1,0 +1,830 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="字典当成是无序的集合，是通过键来存取的，而不是通过偏移存取，python字典的主要属性如下：  通过键而不是偏移量来读取 任意对象的无序集合 可变长、异构、任意嵌套  常见的字典常量和操作    表达式 含义     D = {} 空字典    D = {“name”:”zhangsan”, “age”:33}    D = { “name”:”zhangsan”, “food”:{“ham”:1">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python数据类型之字典">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/python/python数据类型之字典/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="字典当成是无序的集合，是通过键来存取的，而不是通过偏移存取，python字典的主要属性如下：  通过键而不是偏移量来读取 任意对象的无序集合 可变长、异构、任意嵌套  常见的字典常量和操作    表达式 含义     D = {} 空字典    D = {“name”:”zhangsan”, “age”:33}    D = { “name”:”zhangsan”, “food”:{“ham”:1">
+<meta property="og:updated_time" content="2017-02-24T17:10:36.808Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python数据类型之字典">
+<meta name="twitter:description" content="字典当成是无序的集合，是通过键来存取的，而不是通过偏移存取，python字典的主要属性如下：  通过键而不是偏移量来读取 任意对象的无序集合 可变长、异构、任意嵌套  常见的字典常量和操作    表达式 含义     D = {} 空字典    D = {“name”:”zhangsan”, “age”:33}    D = { “name”:”zhangsan”, “food”:{“ham”:1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/python/python数据类型之字典/"/>
+
+
+
+
+
+  <title> python数据类型之字典 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/python/python数据类型之字典/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python数据类型之字典
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>字典当成是无序的集合，是通过键来存取的，而不是通过偏移存取，python字典的主要属性如下：</p>
+<ul>
+<li>通过键而不是偏移量来读取</li>
+<li>任意对象的无序集合</li>
+<li>可变长、异构、任意嵌套</li>
+</ul>
+<p>常见的字典常量和操作</p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D = {}</td>
+<td>空字典</td>
+<td></td>
+</tr>
+<tr>
+<td>D = {“name”:”zhangsan”, “age”:33}</td>
+<td></td>
+</tr>
+<tr>
+<td>D = { “name”:”zhangsan”, “food”:{“ham”:1,”egg”:3}}    嵌套</td>
+</tr>
+<tr>
+<td>D = dict(name=”Bob”, age=43)</td>
+<td></td>
+</tr>
+<tr>
+<td>D[“eggs”]</td>
+<td>通过键索引值</td>
+</tr>
+<tr>
+<td>D[“food”][“egg”]</td>
+</tr>
+<tr>
+<td>‘egg’ in D</td>
+<td>判断键是否存在</td>
+</tr>
+<tr>
+<td>D.keys()</td>
+<td>获取所有的键视图</td>
+</tr>
+<tr>
+<td>D.values()</td>
+<td>获取所有的值视图</td>
+</tr>
+<tr>
+<td>D.items()</td>
+<td>获取所有的键+值视图</td>
+</tr>
+<tr>
+<td>D.copy()</td>
+<td></td>
+</tr>
+<tr>
+<td>D.get(key, default)</td>
+<td>根据键获取值，没有返回默认</td>
+</tr>
+<tr>
+<td>D.update(D2)</td>
+<td>合并</td>
+</tr>
+<tr>
+<td>D.pop(key)</td>
+<td>删除等</td>
+</tr>
+<tr>
+<td>len(D)</td>
+<td>长度</td>
+</tr>
+<tr>
+<td>D[key] = 33</td>
+<td>赋值</td>
+</tr>
+<tr>
+<td>del D[key]</td>
+<td>根据键删除条目</td>
+</tr>
+<tr>
+<td>list(D.keys())</td>
+<td>字典视图转成列表</td>
+</tr>
+<tr>
+<td>D = {x : x*2 for x in range(10)}</td>
+<td>初始化字典</td>
+</tr>
+</tbody>
+</table>
+<h1 id="1-赋值"><a href="#1-赋值" class="headerlink" title="1.赋值"></a>1.赋值</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">&gt;&gt; D[&apos;name&apos;] = [&quot;firstName&quot;,&quot;lastName&quot;]</div><div class="line">&gt;&gt;D</div><div class="line">&#123;&quot;name“:[&quot;firstName&quot;,&quot;lastName&quot;], &quot;age&quot;:22&#125;</div></pre></td></tr></table></figure>
+<h1 id="2-取值-根据键，get，-for"><a href="#2-取值-根据键，get，-for" class="headerlink" title="2.取值(根据键，get， for)"></a>2.取值(根据键，get， for)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">&gt;&gt;D[&quot;name&quot;]</div><div class="line">&apos;zhangsan&apos;</div><div class="line"></div><div class="line">&gt;&gt;D.get(&quot;name&quot;)                            #如果不存在返回None</div><div class="line">&apos;zhangsan&apos;</div><div class="line"></div><div class="line">&gt;&gt;D.get(&quot;birthday&quot;, &quot;no have name&quot;)       #如果不存在就返回字符串”no have name&quot;</div><div class="line">”no have name&quot;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">&gt;&gt; for key in D                     #直接遍历的是字典的key</div><div class="line">......     print(key, &apos;\t&apos;, D[key])</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">&gt;&gt; for key in D.keys()                                   #先获取key的集合，然后遍历集合</div><div class="line">......     print(key, &apos;\t&apos;, D[key])</div></pre></td></tr></table></figure>
+<h1 id="3-获取不存在的值（避免missing-key错误）"><a href="#3-获取不存在的值（避免missing-key错误）" class="headerlink" title="3.获取不存在的值（避免missing-key错误）"></a>3.获取不存在的值（避免missing-key错误）</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">#方式1</div><div class="line">if key in D :</div><div class="line">    print (D[key])</div><div class="line">else:</div><div class="line">    print（0）</div><div class="line"></div><div class="line"></div><div class="line">#方式2</div><div class="line">try:</div><div class="line">    print (D[key])</div><div class="line">except KeyError:</div><div class="line">    print（0）</div><div class="line"></div><div class="line"></div><div class="line">#方式3</div><div class="line">D.get(key,defalut)                  #不存在就给一个默认的值</div></pre></td></tr></table></figure>
+<h1 id="4-len-长度"><a href="#4-len-长度" class="headerlink" title="4.len 长度"></a>4.len 长度</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">&gt;&gt;len(D)</div><div class="line">2</div></pre></td></tr></table></figure>
+<h1 id="5-删除pop-del"><a href="#5-删除pop-del" class="headerlink" title="5.删除pop / del"></a>5.删除pop / del</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">del D[&quot;name&quot;]</div><div class="line">&gt;&gt;D</div><div class="line">&#123;&quot;age&quot;:22&#125;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">&gt;&gt;D.pop(&quot;name&quot;)                                    #从字典中删除一个键并返回他的值</div><div class="line"></div><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">&gt;&gt;D.pop()                                    #删除并返回最后一个的值</div><div class="line"></div><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">&gt;&gt;D.pop(1)                                    #删除指定的一个，并返回值</div></pre></td></tr></table></figure>
+<h1 id="6-判断键存在in"><a href="#6-判断键存在in" class="headerlink" title="6.判断键存在in"></a>6.判断键存在in</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line">&gt;&gt; &quot;name&quot; in D                                 #检查某个键是否存在字典中</div><div class="line">True</div></pre></td></tr></table></figure>
+<h1 id="7-创建（初始化）字典的方法"><a href="#7-创建（初始化）字典的方法" class="headerlink" title="7.创建（初始化）字典的方法"></a>7.创建（初始化）字典的方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">#方式1</div><div class="line">D = &#123;&quot;name“:&quot;zhangsan&quot;, &quot;age&quot;:22&#125;</div><div class="line"></div><div class="line">#方式2</div><div class="line">D = &#123;&#125;</div><div class="line">D[&apos;name&apos;] = &quot;zhangsan&quot;</div><div class="line">D[&apos;age&apos;] = 33</div><div class="line"></div><div class="line">#方式3</div><div class="line">D = dict(name=&quot;zhangsan&quot;, age=33)</div><div class="line"></div><div class="line">#方式4</div><div class="line">D = dict([(&apos;name&apos;,&apos;zhangsan&apos;), (&apos;age&apos;,3)])</div><div class="line"></div><div class="line">#方式5</div><div class="line">D = dict.fromkeys([&apos;a&apos;,&apos;b&apos;],0)            #传入一个键列表，以及所有键的初始值（默认值为空）</div><div class="line">&#123;&apos;a&apos;:0, &apos;b&apos;:0&#125;        </div><div class="line"></div><div class="line">D = &#123;k:0 for k in [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;]&#125;</div><div class="line">&gt;&gt;D</div><div class="line">&#123;&apos;a&apos;:0, &apos;b&apos;:0, &apos;c&apos;:0&#125;</div><div class="line"></div><div class="line">D = &#123;k:None for k in [&apos;a&apos;, &apos;b&apos;, &apos;c&apos;]&#125;</div><div class="line">&gt;&gt;D</div><div class="line">&#123;&apos;a&apos;:None, &apos;b&apos;:None, &apos;c&apos;:None&#125;</div><div class="line"></div><div class="line">D =dict.fromkeys(&apos;abc&apos;)</div><div class="line">&gt;&gt;D</div><div class="line">&#123;&apos;a&apos;:None, &apos;b&apos;:None, &apos;c&apos;:None&#125;</div></pre></td></tr></table></figure>
+<h1 id="8-视图（keys-vlaues-items）"><a href="#8-视图（keys-vlaues-items）" class="headerlink" title="8.视图（keys / vlaues / items）"></a>8.视图（keys / vlaues / items）</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; D = dict(a=1, b=2, c=3)</div><div class="line">&gt;&gt; D</div><div class="line">&#123;&apos;a&apos;:1, &apos;b&apos;:2, &apos;c&apos;:3&#125;</div><div class="line"></div><div class="line">&gt;&gt;K = D.keys()</div><div class="line">&gt;&gt;K</div><div class="line">&gt;&gt;list(K)</div><div class="line">[&apos;a&apos;, &apos;b&apos;, &apos;c&apos;]</div><div class="line"></div><div class="line">&gt;&gt;list(D.values())</div><div class="line">[1,2,3]</div><div class="line"></div><div class="line">&gt;&gt;list(D.items())</div><div class="line">[(&apos;a&apos;,1), (&apos;b&apos;,2), (&apos;c&apos;, 3)]</div><div class="line"></div><div class="line"></div><div class="line">#python3中字典视图并非创建后不能改变——他们可以动态的反应在视图创建之后对字典做出的修改</div><div class="line">&gt;&gt; D = dict(a=1, b=2, c=3)</div><div class="line">&gt;&gt; K = D.keys()</div><div class="line">&gt;&gt;V = D.values()</div><div class="line">&gt;&gt;list(K)</div><div class="line">[&apos;a&apos;, &apos;b&apos;, &apos;c&apos;]</div><div class="line"></div><div class="line">&gt;&gt;list(V)</div><div class="line">[1,2,3]</div><div class="line"></div><div class="line">&gt;&gt;del D[&apos;a&apos;]</div><div class="line"></div><div class="line">&gt;&gt;list(K)</div><div class="line">[ &apos;b&apos;, &apos;c&apos;]</div><div class="line"></div><div class="line">&gt;&gt;list(V)</div><div class="line">[2,3]</div></pre></td></tr></table></figure>
+<h1 id="9-排序字典键"><a href="#9-排序字典键" class="headerlink" title="9.排序字典键"></a>9.排序字典键</h1><p>因为keys不会返回一个list，所以我们要排序，必须要通过手动转换为一个列表的方式，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; D = dict(a=1, b=2, c=3)</div><div class="line">&gt;&gt;ks = list(D.keys())</div><div class="line">ks.sort()                                                            #列表排序</div><div class="line">for k in ks:</div><div class="line">    print(k,D[k])</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt; D = dict(a=1, b=2, c=3)</div><div class="line">&gt;&gt;ks = D.keys()</div><div class="line">for k in sorted(ks)                                           #调用排序函数</div><div class="line">    print(k,D[k])</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/python/python数据类型之布尔型/" rel="next" title="python数据类型之布尔型">
+                <i class="fa fa-chevron-left"></i> python数据类型之布尔型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/python数据类型之列表/" rel="prev" title="python数据类型之列表">
+                python数据类型之列表 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-赋值"><span class="nav-number">1.</span> <span class="nav-text">1.赋值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-取值-根据键，get，-for"><span class="nav-number">2.</span> <span class="nav-text">2.取值(根据键，get， for)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-获取不存在的值（避免missing-key错误）"><span class="nav-number">3.</span> <span class="nav-text">3.获取不存在的值（避免missing-key错误）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-len-长度"><span class="nav-number">4.</span> <span class="nav-text">4.len 长度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-删除pop-del"><span class="nav-number">5.</span> <span class="nav-text">5.删除pop / del</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-判断键存在in"><span class="nav-number">6.</span> <span class="nav-text">6.判断键存在in</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-创建（初始化）字典的方法"><span class="nav-number">7.</span> <span class="nav-text">7.创建（初始化）字典的方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-视图（keys-vlaues-items）"><span class="nav-number">8.</span> <span class="nav-text">8.视图（keys / vlaues / items）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-排序字典键"><span class="nav-number">9.</span> <span class="nav-text">9.排序字典键</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

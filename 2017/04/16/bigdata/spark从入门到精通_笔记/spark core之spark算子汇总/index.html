@@ -1,0 +1,767 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="mapPartitions123456789101112131415161718192021222324252627val sparkConf = new SparkConf()      .setAppName(&amp;quot;Rdd&amp;quot;)      .setMaster(&amp;quot;local&amp;quot;)val sc = new SparkContext(sparkConf)val st">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spark core之spark算子汇总">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark算子汇总/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="mapPartitions123456789101112131415161718192021222324252627val sparkConf = new SparkConf()      .setAppName(&amp;quot;Rdd&amp;quot;)      .setMaster(&amp;quot;local&amp;quot;)val sc = new SparkContext(sparkConf)val st">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/groupByKey算子原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/reduceByKey算子原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/distinct算子原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/cogroup算子原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/intersection算子原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/join算子原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/sortByKey原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/union算子原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/cartesian算子原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/coalesce算子原理.png">
+<meta property="og:updated_time" content="2017-04-22T07:23:06.053Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spark core之spark算子汇总">
+<meta name="twitter:description" content="mapPartitions123456789101112131415161718192021222324252627val sparkConf = new SparkConf()      .setAppName(&amp;quot;Rdd&amp;quot;)      .setMaster(&amp;quot;local&amp;quot;)val sc = new SparkContext(sparkConf)val st">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/groupByKey算子原理.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark算子汇总/"/>
+
+
+
+
+
+  <title> spark core之spark算子汇总 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark算子汇总/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                spark core之spark算子汇总
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="mapPartitions"><a href="#mapPartitions" class="headerlink" title="mapPartitions"></a>mapPartitions</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">val sparkConf = new SparkConf()</div><div class="line">      .setAppName(&quot;Rdd&quot;)</div><div class="line">      .setMaster(&quot;local&quot;)</div><div class="line">val sc = new SparkContext(sparkConf)</div><div class="line"></div><div class="line">val studentNames = Array(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;)</div><div class="line">val studentNamesRdd = sc.parallelize(studentNames, 2)</div><div class="line"></div><div class="line"></div><div class="line">//mapPartitions类似于map</div><div class="line">// 不同之处在于map算子一次处理一个partition中的一条数据,</div><div class="line">// mapPartitions算子,一次处理一个partition中的所有的数据</div><div class="line"></div><div class="line">// 推荐使用场景</div><div class="line">// 如果你的Rdd的数据量不是特别大,那么建议采用mapPartitions算子代替map算子,这样可以加快处理速度</div><div class="line">// 但是如果你的rdd的数据量特别大,比如10条数据,不建议使用mapPartitions,因为可能会内存溢出</div><div class="line"></div><div class="line">studentNamesRdd.mapPartitions&#123;</div><div class="line">  ite=&gt;</div><div class="line">    var arr = mutable.ArrayBuffer&lt;String&gt;()</div><div class="line">    while(ite.hasNext)&#123;</div><div class="line">      val studentName = ite.next</div><div class="line">      val studentScore = studentScoresMap.get(studentName)</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    null</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="mapPartitionsWithIndex"><a href="#mapPartitionsWithIndex" class="headerlink" title="mapPartitionsWithIndex"></a>mapPartitionsWithIndex</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">map是对每个元素操作, mapPartitions是对其中的每个partition操作</div><div class="line">------------------------------------------------------------</div><div class="line">mapPartitionsWithIndex : 把每个partition中的分区号和对应的值拿出来, 看源码</div><div class="line">val func = (index: Int, iter: Iterator[(Int)]) =&gt; &#123; //index是分区的索引,Iterator是一个分区中的数据,可以迭代</div><div class="line">  iter.toList.map(x =&gt; &quot;[partID:&quot; +  index + &quot;, val: &quot; + x + &quot;]&quot;).iterator</div><div class="line">&#125;</div><div class="line">val rdd1 = sc.parallelize(List(1,2,3,4,5,6,7,8,9), 2)</div><div class="line">rdd1.mapPartitionsWithIndex(func).collect</div></pre></td></tr></table></figure>
+<h1 id="groupByKey算子原理"><a href="#groupByKey算子原理" class="headerlink" title="groupByKey算子原理"></a>groupByKey算子原理</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/groupByKey算子原理.png" alt=""></p>
+<h1 id="reduceByKey"><a href="#reduceByKey" class="headerlink" title="reduceByKey"></a>reduceByKey</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#Example</div><div class="line">sc.textFile(args(0)).flatMap(_.split(&quot; &quot;)).map((_, 1)).reduceByKey(_+_).</div><div class="line"></div><div class="line">#源码</div><div class="line">  def reduceByKey(partitioner: Partitioner, func: (V, V) =&gt; V): RDD[(K, V)] = self.withScope &#123;</div><div class="line">    combineByKeyWithClassTag[V]((v: V) =&gt; v, func, func, partitioner)</div><div class="line">  &#125;</div><div class="line">/*</div><div class="line">在reduceByKey的内部是调用的combineByKeyWithClassTag, 由上面的源码知道combineByKeyWithClassTag的第一个参数是对value原样输出,第二个,第三个参数是调用reduceByKey中指定的函数</div><div class="line">第二个参数的功能:是在partition内进行操作</div><div class="line">第三个参数的功能是对各个partition的所有的结果进行操作</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p>reduceByKey算子原理</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/reduceByKey算子原理.png" alt=""></p>
+<h1 id="distinct算子原理"><a href="#distinct算子原理" class="headerlink" title="distinct算子原理"></a>distinct算子原理</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/distinct算子原理.png" alt=""></p>
+<h1 id="cogroup算子原理"><a href="#cogroup算子原理" class="headerlink" title="cogroup算子原理"></a>cogroup算子原理</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/cogroup算子原理.png" alt=""></p>
+<h1 id="intersection"><a href="#intersection" class="headerlink" title="intersection"></a>intersection</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">val rdd6 = sc.parallelize(List(5,6,4,7))</div><div class="line">val rdd7 = sc.parallelize(List(1,2,3,4))</div><div class="line">#intersection求交集</div><div class="line">val rdd9 = rdd6.intersection(rdd7)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">//对rdd中的数据进行去重</div><div class="line">distinct([numTasks]))      </div><div class="line">//Return a new dataset that contains the distinct elements of the source dataset.</div></pre></td></tr></table></figure>
+<p>intersection算子原理</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/intersection算子原理.png" alt=""></p>
+<h1 id="join算子原理"><a href="#join算子原理" class="headerlink" title="join算子原理"></a>join算子原理</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/join算子原理.png" alt=""></p>
+<h1 id="sortByKey原理"><a href="#sortByKey原理" class="headerlink" title="sortByKey原理"></a>sortByKey原理</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/sortByKey原理.png" alt=""></p>
+<h1 id="aggregate"><a href="#aggregate" class="headerlink" title="aggregate"></a>aggregate</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">aggregate(参数1)(参数2,参数3)   //参数1是初始化的值,参数2是一个函数,对每一个partition的数据聚合,参数3 是对所有partition的结果进行聚合</div><div class="line"></div><div class="line">###是action操作, 第一个参数是初始值, 二:是2个函数[每个函数都是2个参数(第一个参数:先对个个分区进行合并, 第二个:对个个分区合并后的结果再进行合并), 输出一个参数]</div><div class="line">###0 + (0+1+2+3+4/*局部求和*/   +   0+5+6+7+8+9/*局部求和*/)</div><div class="line">rdd1.aggregate(0)(_+_, _+_/*全局求和*/)</div><div class="line">rdd1.aggregate(0)(math.max(_, _), _ + _) //传给第一个参数的是:itera ,所以使用math.max(_, _) 去迭代</div><div class="line"></div><div class="line"></div><div class="line">###5和1比, 得5再和234比得5 --&gt; 5和6789比,得9 --&gt; 5 + (5+9)</div><div class="line">rdd1.aggregate(5)(math.max(_, _), _ + _)</div><div class="line"> </div><div class="line">add1.reduce(math.max(_,_))//第一个下划线是上一次求max的值,第二个下划线是循环add1中的一个元素</div><div class="line"> </div><div class="line"> </div><div class="line">aggregate:先进行局部的(partition)操作(循环迭代所有的局部元素),然后进行全局的操作(循环迭代所有的分区)</div><div class="line"> </div><div class="line"> </div><div class="line">val rdd2 = sc.parallelize(List(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;,&quot;e&quot;,&quot;f&quot;),2)</div><div class="line">def func2(index: Int, iter: Iterator[(String)]) : Iterator[String] = &#123;</div><div class="line">  iter.toList.map(x =&gt; &quot;[partID:&quot; +  index + &quot;, val: &quot; + x + &quot;]&quot;).iterator</div><div class="line">&#125;</div><div class="line">rdd2.aggregate(&quot;&quot;)(_ + _, _ + _)  //abcdef</div><div class="line">rdd2.aggregate(&quot;=&quot;)(_ + _, _ + _)  //==abc=def  :局部求和为 =abc 和 =def 最后整体求和:==abc=def</div><div class="line"> </div><div class="line">val rdd3 = sc.parallelize(List(&quot;12&quot;,&quot;23&quot;,&quot;345&quot;,&quot;4567&quot;),2)</div><div class="line">rdd3.aggregate(&quot;&quot;)((x,y) =&gt; math.max(x.length, y.length).toString, (x,y) =&gt; x + y)//24 或者是42 因为是并行的任务,所以可能先返回2,也有可能先返回4</div><div class="line"> </div><div class="line">val rdd4 = sc.parallelize(List(&quot;12&quot;,&quot;23&quot;,&quot;345&quot;,&quot;&quot;),2)</div><div class="line">rdd4.aggregate(&quot;&quot;)((x,y) =&gt; math.min(x.length, y.length).toString, (x,y) =&gt; x + y)//返回10 或者01</div><div class="line">/*因为有初始值(空字符串)的存在,所以如下过程:</div><div class="line">分区0:</div><div class="line"> math.min(&quot;&quot;.length,&quot;12&quot;.length)  ==&gt;0.toString  &quot;0&quot;</div><div class="line"> math.min(&quot;0&quot;.length,&quot;23&quot;.length) ==&gt;1.toString  &quot;1&quot; 最终结果===&gt;1</div><div class="line"> </div><div class="line">分区1:</div><div class="line"> math.min(&quot;&quot;.length,&quot;345&quot;.length) ==&gt;0.toString  &quot;0&quot;</div><div class="line"> math.min(&quot;0&quot;.length,&quot;&quot;.length)  ==&gt;0.toString  &quot;0&quot; 最终结果===&gt;0</div><div class="line"> </div><div class="line">分区全局聚合:&quot;&quot;+&quot;1&quot;+&quot;0&quot;  或者   &quot;&quot;+&quot;0&quot;+&quot;1&quot;</div><div class="line">*/</div><div class="line"> </div><div class="line">val rdd5 = sc.parallelize(List(&quot;12&quot;,&quot;23&quot;,&quot;&quot;,&quot;345&quot;),2)</div><div class="line">rdd5.aggregate(&quot;&quot;)((x,y) =&gt; math.min(x.length, y.length).toString, (x,y) =&gt; x + y) //结果: &quot;11&quot;</div></pre></td></tr></table></figure>
+<h1 id="sample"><a href="#sample" class="headerlink" title="sample"></a>sample</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">val rand = studentNamesRdd.sample(false,0.1,9)</div><div class="line"></div><div class="line">/*</div><div class="line">  /**</div><div class="line">   * Return a sampled subset of this RDD.</div><div class="line">   *</div><div class="line">   * @param withReplacement can elements be sampled multiple times (replaced when sampled out)</div><div class="line">   * @param fraction expected size of the sample as a fraction of this RDD&apos;s size</div><div class="line">   *  without replacement: probability that each element is chosen; fraction must be [0, 1]</div><div class="line">   *  with replacement: expected number of times each element is chosen; fraction must be &gt;= 0</div><div class="line">   * @param seed seed for the random number generator</div><div class="line">   */</div><div class="line">  def sample(</div><div class="line">      withReplacement: Boolean,</div><div class="line">      fraction: Double,</div><div class="line">      seed: Long = Utils.random.nextLong): RDD[T] = withScope &#123;</div><div class="line">    require(fraction &gt;= 0.0, &quot;Negative fraction value: &quot; + fraction)</div><div class="line">    if (withReplacement) &#123;</div><div class="line">      new PartitionwiseSampledRDD[T, T](this, new PoissonSampler[T](fraction), true, seed)</div><div class="line">    &#125; else &#123;</div><div class="line">      new PartitionwiseSampledRDD[T, T](this, new BernoulliSampler[T](fraction), true, seed)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="union"><a href="#union" class="headerlink" title="union"></a>union</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#union求并集，注意类型要一致</div><div class="line">val rdd6 = sc.parallelize(List(5,6,4,7))</div><div class="line">val rdd7 = sc.parallelize(List(1,2,3,4))</div><div class="line">val rdd8 = rdd6.union(rdd7)</div><div class="line">rdd8.distinct.sortBy(x=&gt;x).collect</div></pre></td></tr></table></figure>
+<p>union算子原理</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/union算子原理.png" alt=""></p>
+<h1 id="aggregateByKey"><a href="#aggregateByKey" class="headerlink" title="aggregateByKey"></a>aggregateByKey</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> val pairRDD = sc.parallelize(List( (&quot;cat&quot;,2), (&quot;cat&quot;, 5), (&quot;mouse&quot;, 4),(&quot;cat&quot;, 12), (&quot;dog&quot;, 12), (&quot;mouse&quot;, 2)), 2)</div><div class="line"></div><div class="line"> def func2(index: Int, iter: Iterator[(String, Int)]) : Iterator[String] = &#123;</div><div class="line">   iter.toList.map(x =&gt; &quot;[partID:&quot; +  index + &quot;, val: &quot; + x + &quot;]&quot;).iterator</div><div class="line"> &#125;</div><div class="line"> pairRDD.mapPartitionsWithIndex(func2).foreach(println)     //查看分区的结果</div><div class="line"></div><div class="line"> pairRDD.aggregateByKey(0)(math.max(_, _), _ + _).foreach(println)  //在局部可以将key相同的放在一起迭代,math.max(_, _) 就是取一个分区中key相同的元素中的最大的值</div><div class="line"> pairRDD.aggregateByKey(100)(math.max(_, _), _ + _).foreach(println)//会在每个分区中有一个初始化的值:100</div><div class="line"></div><div class="line">/*</div><div class="line">第一个参数:每个key的初始值</div><div class="line">第二个参数:如何进行shuffle map-side的本地聚合</div><div class="line">第三个参数:如何进行shuffle reduce-side的全局聚合</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">//这里是分区信息</div><div class="line">[partID:0, val: (cat,2)]</div><div class="line">[partID:0, val: (cat,5)]</div><div class="line">[partID:0, val: (mouse,4)]</div><div class="line"></div><div class="line">[partID:1, val: (cat,12)]</div><div class="line">[partID:1, val: (dog,12)]</div><div class="line">[partID:1, val: (mouse,2)]</div><div class="line"></div><div class="line">//这里是aggregate的结果</div><div class="line">(dog,12)</div><div class="line">(cat,17)</div><div class="line"></div><div class="line">(mouse,6)</div><div class="line"></div><div class="line">(dog,100)</div><div class="line">(cat,200)</div><div class="line">(mouse,200)</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="cartesian笛卡尔积"><a href="#cartesian笛卡尔积" class="headerlink" title="cartesian笛卡尔积"></a>cartesian笛卡尔积</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#cartesian笛卡尔积</div><div class="line"></div><div class="line">val rdd1 = sc.parallelize(List(&quot;tom&quot;, &quot;jerry&quot;))</div><div class="line">val rdd2 = sc.parallelize(List(&quot;tom&quot;, &quot;kitty&quot;, &quot;shuke&quot;))</div><div class="line">rdd1.cartesian(rdd2).foreach(println)</div><div class="line"></div><div class="line">/*</div><div class="line">(tom,tom)</div><div class="line">(tom,kitty)</div><div class="line">(tom,shuke)</div><div class="line">(jerry,tom)</div><div class="line">(jerry,kitty)</div><div class="line">(jerry,shuke)</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p>cartesian算子原理</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/cartesian算子原理.png" alt=""></p>
+<h1 id="coalesce"><a href="#coalesce" class="headerlink" title="coalesce"></a>coalesce</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">coalesce算子,功能:将RDD的partition缩减</div><div class="line">将一定量的数据缩减到更少的partition中去</div><div class="line"></div><div class="line">使用场景,配合filter算子使用</div><div class="line">使用filter算子过滤掉很多数据以后,比如30%的数据,出现很多partition中的数据不均匀的情况</div><div class="line">此时建议使用coalesce算子,压缩rdd的partition的数量,从而让各个partition中的数据更加紧促</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line"> val pairRDD = sc.parallelize(List( (&quot;cat&quot;,2), (&quot;cat&quot;, 5), (&quot;mouse&quot;, 4),(&quot;cat&quot;, 12), (&quot;dog&quot;, 12), (&quot;mouse&quot;, 2)), 3)</div><div class="line"></div><div class="line"> def func2(index: Int, iter: Iterator[(String, Int)]) : Iterator[String] = &#123;</div><div class="line">   iter.toList.map(x =&gt; &quot;[partID:&quot; +  index + &quot;, val: &quot; + x + &quot;]&quot;).iterator</div><div class="line"> &#125;</div><div class="line"> pairRDD.mapPartitionsWithIndex(func2).foreach(println)     //查看分区的结果</div><div class="line"></div><div class="line"> pairRDD.coalesce(2).mapPartitionsWithIndex(func2).foreach(println)</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">------------第一次查看分区的结果-----------------------</div><div class="line">[partID:0, val: (cat,2)]</div><div class="line">[partID:0, val: (cat,5)]</div><div class="line"></div><div class="line">[partID:1, val: (mouse,4)]</div><div class="line">[partID:1, val: (cat,12)]</div><div class="line"></div><div class="line">[partID:2, val: (dog,12)]</div><div class="line">[partID:2, val: (mouse,2)]</div><div class="line"></div><div class="line">------------第二次查看分区的结果-----------------------</div><div class="line">[partID:0, val: (cat,2)]</div><div class="line">[partID:0, val: (cat,5)]</div><div class="line"></div><div class="line">[partID:1, val: (mouse,4)]</div><div class="line">[partID:1, val: (cat,12)]</div><div class="line">[partID:1, val: (dog,12)]</div><div class="line">[partID:1, val: (mouse,2)]</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p>coalesce算子原理</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/coalesce算子原理.png" alt=""></p>
+<h1 id="repartition"><a href="#repartition" class="headerlink" title="repartition"></a>repartition</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">repartition可以将RDD的partition增多或者减少</div><div class="line">而coalesce仅仅能将rdd的partition减少</div><div class="line"></div><div class="line">reparation的使用场景</div><div class="line">使用spark sql从hive中查询数据时,spark sql会根据hive对应的HDFS文件的block数量来决定加载出来的数据rdd有多少个partition,这里的partition数量,是我们根本无法设置的,有些时候产生的partition数量少了,此时就可以在spark sql加载hive数据到rdd中以后,立即使用reparation算在,将rdd的partition数量变多</div><div class="line">*/</div><div class="line"></div><div class="line"> val pairRDD = sc.parallelize(List( (&quot;cat&quot;,2), (&quot;cat&quot;, 5), (&quot;mouse&quot;, 4),(&quot;cat&quot;, 12), (&quot;dog&quot;, 12), (&quot;mouse&quot;, 2)), 1)</div><div class="line"></div><div class="line"> def func2(index: Int, iter: Iterator[(String, Int)]) : Iterator[String] = &#123;</div><div class="line">   iter.toList.map(x =&gt; &quot;[partID:&quot; +  index + &quot;, val: &quot; + x + &quot;]&quot;).iterator</div><div class="line"> &#125;</div><div class="line"> pairRDD.mapPartitionsWithIndex(func2).foreach(println)     //查看分区的结果</div><div class="line"></div><div class="line"> pairRDD.repartition(3).mapPartitionsWithIndex(func2).foreach(println)</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">------------第一次查看分区的结果-----------------------</div><div class="line">[partID:0, val: (cat,2)]</div><div class="line">[partID:0, val: (cat,5)]</div><div class="line">[partID:0, val: (mouse,4)]</div><div class="line">[partID:0, val: (cat,12)]</div><div class="line">[partID:0, val: (dog,12)]</div><div class="line">[partID:0, val: (mouse,2)]</div><div class="line"></div><div class="line">------------第二次查看分区的结果-----------------------</div><div class="line">[partID:0, val: (mouse,4)]</div><div class="line">[partID:0, val: (mouse,2)]</div><div class="line"></div><div class="line">[partID:1, val: (cat,2)]</div><div class="line">[partID:1, val: (cat,12)]</div><div class="line"></div><div class="line">[partID:2, val: (cat,5)]</div><div class="line">[partID:2, val: (dog,12)]</div><div class="line">*/</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark算子的闭包原理详解/" rel="next" title="spark core之spark算子的闭包原理详解">
+                <i class="fa fa-chevron-left"></i> spark core之spark算子的闭包原理详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之spark-submit说明/" rel="prev" title="spark core之spark-submit说明">
+                spark core之spark-submit说明 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#mapPartitions"><span class="nav-number">1.</span> <span class="nav-text">mapPartitions</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mapPartitionsWithIndex"><span class="nav-number">2.</span> <span class="nav-text">mapPartitionsWithIndex</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#groupByKey算子原理"><span class="nav-number">3.</span> <span class="nav-text">groupByKey算子原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reduceByKey"><span class="nav-number">4.</span> <span class="nav-text">reduceByKey</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#distinct算子原理"><span class="nav-number">5.</span> <span class="nav-text">distinct算子原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cogroup算子原理"><span class="nav-number">6.</span> <span class="nav-text">cogroup算子原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#intersection"><span class="nav-number">7.</span> <span class="nav-text">intersection</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#join算子原理"><span class="nav-number">8.</span> <span class="nav-text">join算子原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sortByKey原理"><span class="nav-number">9.</span> <span class="nav-text">sortByKey原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#aggregate"><span class="nav-number">10.</span> <span class="nav-text">aggregate</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sample"><span class="nav-number">11.</span> <span class="nav-text">sample</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#union"><span class="nav-number">12.</span> <span class="nav-text">union</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#aggregateByKey"><span class="nav-number">13.</span> <span class="nav-text">aggregateByKey</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cartesian笛卡尔积"><span class="nav-number">14.</span> <span class="nav-text">cartesian笛卡尔积</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#coalesce"><span class="nav-number">15.</span> <span class="nav-text">coalesce</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#repartition"><span class="nav-number">16.</span> <span class="nav-text">repartition</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

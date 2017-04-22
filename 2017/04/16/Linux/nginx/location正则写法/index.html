@@ -1,0 +1,741 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="nginx," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="参考（非常详细）；http://fantefei.blog.51cto.com/2229719/919431 1.匹配说明 已=开头表示精确匹配 ^~ 开头表示uri以某个常规字符串开头，不是正则匹配 ~ 开头表示区分大小写的正则匹配; ~* 开头表示不区分大小写的正则匹配 / 通用匹配, 如果没有其它匹配,任何请求都会匹配到  &amp;emsp;所有的匹配都是主机名之后的字符的匹配，如：www.eti">
+<meta name="keywords" content="nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="location正则写法">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/Linux/nginx/location正则写法/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="参考（非常详细）；http://fantefei.blog.51cto.com/2229719/919431 1.匹配说明 已=开头表示精确匹配 ^~ 开头表示uri以某个常规字符串开头，不是正则匹配 ~ 开头表示区分大小写的正则匹配; ~* 开头表示不区分大小写的正则匹配 / 通用匹配, 如果没有其它匹配,任何请求都会匹配到  &amp;emsp;所有的匹配都是主机名之后的字符的匹配，如：www.eti">
+<meta property="og:updated_time" content="2017-02-24T17:09:32.456Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="location正则写法">
+<meta name="twitter:description" content="参考（非常详细）；http://fantefei.blog.51cto.com/2229719/919431 1.匹配说明 已=开头表示精确匹配 ^~ 开头表示uri以某个常规字符串开头，不是正则匹配 ~ 开头表示区分大小写的正则匹配; ~* 开头表示不区分大小写的正则匹配 / 通用匹配, 如果没有其它匹配,任何请求都会匹配到  &amp;emsp;所有的匹配都是主机名之后的字符的匹配，如：www.eti">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/Linux/nginx/location正则写法/"/>
+
+
+
+
+
+  <title> location正则写法 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/Linux/nginx/location正则写法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                location正则写法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>参考（非常详细）；<a href="http://fantefei.blog.51cto.com/2229719/919431" target="_blank" rel="external">http://fantefei.blog.51cto.com/2229719/919431</a></p>
+<h1 id="1-匹配说明"><a href="#1-匹配说明" class="headerlink" title="1.匹配说明"></a>1.匹配说明</h1><ul>
+<li>已=开头表示精确匹配</li>
+<li>^~ 开头表示uri以某个常规字符串开头，不是正则匹配</li>
+<li>~ 开头表示区分大小写的正则匹配;</li>
+<li>~* 开头表示不区分大小写的正则匹配</li>
+<li>/ 通用匹配, 如果没有其它匹配,任何请求都会匹配到</li>
+</ul>
+<p>&emsp;所有的匹配都是主机名之后的字符的匹配，如：www.etiantian.org/static/iphone.jpg，中只有/static/iphone.jpg会在location中进行匹配，其中/匹配到主机。</p>
+<h1 id="2-实例"><a href="#2-实例" class="headerlink" title="2.实例"></a>2.实例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">location  = / &#123;</div><div class="line">  # 精确匹配 / ，主机名后面不能带任何字符串</div><div class="line">  [ configuration A ]</div><div class="line">&#125;</div><div class="line"></div><div class="line">location  / &#123;</div><div class="line">  # 因为所有的地址都以 / 开头，所以这条规则将匹配到所有请求</div><div class="line">  # 但是正则和最长字符串会优先匹配</div><div class="line">  [ configuration B ]</div><div class="line">&#125;</div><div class="line"></div><div class="line">location /documents/ &#123;</div><div class="line">  # 匹配任何以 /documents/ 开头的地址，匹配符合以后，还要继续往下搜索</div><div class="line">  # 只有后面的正则表达式没有匹配到时，这一条才会采用这一条</div><div class="line">  [ configuration C ]</div><div class="line">&#125;</div><div class="line"></div><div class="line">location ~ /documents/Abc &#123;</div><div class="line">  # 匹配任何以 /documents/Abc 开头的地址，匹配符合以后，还要继续往下搜索</div><div class="line">  # 只有后面的正则表达式没有匹配到时，这一条才会采用这一条</div><div class="line">  [ configuration CC ]</div><div class="line">&#125;</div><div class="line"></div><div class="line">location ^~ /images/ &#123;</div><div class="line">  # 匹配任何以 /images/ 开头的地址，匹配符合以后，停止往下搜索正则，采用这一条。</div><div class="line">  [ configuration D ]</div><div class="line">&#125;</div><div class="line"></div><div class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</div><div class="line">  # 匹配所有以 gif,jpg或jpeg 结尾的请求</div><div class="line">  # 然而，所有请求 /images/ 下的图片会被 config D 处理，因为 ^~ 到达不了这一条正则</div><div class="line">  [ configuration E ]</div><div class="line">&#125;</div><div class="line"></div><div class="line">location /images/ &#123;</div><div class="line">  # 字符匹配到 /images/，继续往下，会发现 ^~ 存在</div><div class="line">  [ configuration F ]</div><div class="line">&#125;</div><div class="line"></div><div class="line">location /images/abc &#123;</div><div class="line">  # 最长字符匹配到 /images/abc，继续往下，会发现 ^~ 存在</div><div class="line">  # F与G的放置顺序是没有关系的</div><div class="line">  [ configuration G ]</div><div class="line">&#125;</div><div class="line"></div><div class="line">location ~ /images/abc/ &#123;</div><div class="line">  # 只有去掉 config D 才有效：先最长匹配 config G 开头的地址，继续往下搜索，匹配到这一条正则，采用</div><div class="line">    [ configuration H ]</div><div class="line">&#125;</div><div class="line"></div><div class="line">location ~* /js/.*/\.js</div></pre></td></tr></table></figure>
+<h1 id="3-匹配优先级"><a href="#3-匹配优先级" class="headerlink" title="3.匹配优先级"></a>3.匹配优先级</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#顺序 no优先级：</div><div class="line">(location =) &gt; (location 完整路径) &gt; (location ^~ 路径) &gt; (location ~,~* 正则顺序) &gt; (location 部分起始路径) &gt; (/)</div></pre></td></tr></table></figure>
+<h1 id="4-实际使用建议"><a href="#4-实际使用建议" class="headerlink" title="4.实际使用建议"></a>4.实际使用建议</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">所以实际使用中，个人觉得至少有三个匹配规则定义，如下：</div><div class="line">#直接匹配网站根，通过域名访问网站首页比较频繁，使用这个会加速处理，官网如是说。</div><div class="line">#这里是直接转发给后端应用服务器了，也可以是一个静态首页</div><div class="line"># 第一个必选规则</div><div class="line">location = / &#123;</div><div class="line">    proxy_pass http://tomcat:8080/index</div><div class="line">&#125;</div><div class="line"></div><div class="line"># 第二个必选规则是处理静态文件请求，这是nginx作为http服务器的强项</div><div class="line"># 有两种配置模式，目录匹配或后缀匹配,任选其一或搭配使用</div><div class="line">location ^~ /static/ &#123;</div><div class="line">    root /webroot/static/;</div><div class="line">&#125;</div><div class="line">location ~* \.(gif|jpg|jpeg|png|css|js|ico)$ &#123;</div><div class="line">    root /webroot/res/;</div><div class="line">&#125;</div><div class="line"></div><div class="line">#第三个规则就是通用规则，用来转发动态请求到后端应用服务器</div><div class="line">#非静态文件请求就默认是动态请求，自己根据实际把握</div><div class="line">#毕竟目前的一些框架的流行，带.php,.jsp后缀的情况很少了</div><div class="line">location / &#123;</div><div class="line">    proxy_pass http://tomcat:8080/</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/Linux/nginx/nginx rewrite 重写/" rel="next" title="nginx rewrite 重写">
+                <i class="fa fa-chevron-left"></i> nginx rewrite 重写
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/Linux/NFS/NFS(网络文件系统)/" rel="prev" title="NFS(网络文件系统)">
+                NFS(网络文件系统) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-匹配说明"><span class="nav-number">1.</span> <span class="nav-text">1.匹配说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-实例"><span class="nav-number">2.</span> <span class="nav-text">2.实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-匹配优先级"><span class="nav-number">3.</span> <span class="nav-text">3.匹配优先级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-实际使用建议"><span class="nav-number">4.</span> <span class="nav-text">4.实际使用建议</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

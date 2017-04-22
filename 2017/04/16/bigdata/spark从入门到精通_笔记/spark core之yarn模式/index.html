@@ -1,0 +1,754 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="yarn-client模式原理 yarn-cluster模式原理 yarn-client模式提交spark作业yarn运行spark作业的前提如果想要让spark作业可以运行在yarn上面,那么首先就必须在spark-env.sh文件中,配置HADOOP_CONF_DIR或者YARN_CONF_DIR属性,值为hadoop的配置文件的目录,即:HADOOP_HOME/etc/hadoop,其中包含">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spark core之yarn模式">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之yarn模式/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="yarn-client模式原理 yarn-cluster模式原理 yarn-client模式提交spark作业yarn运行spark作业的前提如果想要让spark作业可以运行在yarn上面,那么首先就必须在spark-env.sh文件中,配置HADOOP_CONF_DIR或者YARN_CONF_DIR属性,值为hadoop的配置文件的目录,即:HADOOP_HOME/etc/hadoop,其中包含">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/yarn-client模式原理.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/yarn-cluster模式原理.png">
+<meta property="og:updated_time" content="2017-04-22T07:23:06.066Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spark core之yarn模式">
+<meta name="twitter:description" content="yarn-client模式原理 yarn-cluster模式原理 yarn-client模式提交spark作业yarn运行spark作业的前提如果想要让spark作业可以运行在yarn上面,那么首先就必须在spark-env.sh文件中,配置HADOOP_CONF_DIR或者YARN_CONF_DIR属性,值为hadoop的配置文件的目录,即:HADOOP_HOME/etc/hadoop,其中包含">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/yarn-client模式原理.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之yarn模式/"/>
+
+
+
+
+
+  <title> spark core之yarn模式 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之yarn模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                spark core之yarn模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="yarn-client模式原理"><a href="#yarn-client模式原理" class="headerlink" title="yarn-client模式原理"></a>yarn-client模式原理</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/yarn-client模式原理.png" alt=""></p>
+<h1 id="yarn-cluster模式原理"><a href="#yarn-cluster模式原理" class="headerlink" title="yarn-cluster模式原理"></a>yarn-cluster模式原理</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/yarn-cluster模式原理.png" alt=""></p>
+<h1 id="yarn-client模式提交spark作业"><a href="#yarn-client模式提交spark作业" class="headerlink" title="yarn-client模式提交spark作业"></a>yarn-client模式提交spark作业</h1><h2 id="yarn运行spark作业的前提"><a href="#yarn运行spark作业的前提" class="headerlink" title="yarn运行spark作业的前提"></a>yarn运行spark作业的前提</h2><p>如果想要让spark作业可以运行在yarn上面,那么首先就必须在spark-env.sh文件中,配置HADOOP_CONF_DIR或者YARN_CONF_DIR属性,值为hadoop的配置文件的目录,即:HADOOP_HOME/etc/hadoop,其中包含了hadoop和yarn所有的配置文件,比如:hdfs-site.xml,yarn-site.xml等,spark需要这些配置来读写HDFS,以及连接到yarn ResourceManager上,这个目录中包含的配置文件都会被分发到yarn集群中去的</p>
+<p>vim spark/conf/spark-env.sh<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop</div><div class="line"></div><div class="line">/*在/usr/local/hadoop/etc/hadoop目录下有:</div><div class="line">yarn-site.xml(其中可以找到ResourceManager所在的机器)</div><div class="line">还有一些其他的配置文件</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p>跟spark standalone模式不同,通常不需要使用–master指定master URL<br>因为spark会从hadoop的配置文件中去读ResourceManager的配置,这样就知道了ResourceManager所在的机器(master),所以不需要我们指定,但是我们需要指定deploy mode,如下示例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/export/servers/spark/bin/spark-submit \</div><div class="line">--class cn.spark.study.core.WordCount \</div><div class="line">--master yarn-cluster</div><div class="line">#--master yarn-client</div><div class="line">--num-executors 1 \</div><div class="line">--driver-memory 100m \</div><div class="line">--executor-memory 100m \</div><div class="line">--executor-cores 1 \</div><div class="line">--queue hadoop队列</div><div class="line">/usr/xx/spark-study-java-0.0.1-SNAPSHOT-jar-with-dependencies.jar \</div></pre></td></tr></table></figure></p>
+<p>–queue,在不同的部门,或者是不同的大数据项目,共用一个yarn集群,运行spark作业,推荐一定要用–queue,指定不同的hadoop队列,做项目或者部门之间的队列隔离</p>
+<p>与Standalone模式类似,yarn-client模式通常建议在测试的时候使用,方便你直接在提交作业的机器上查看日志,但是作业实际部署到生产环境中进行运行的时候,还是使用yarn-cluster模式</p>
+<p>yarn模式下需要观察的点:<br>1.日志<br>命令行日志<br>web ui日志</p>
+<p>2.web ui的地址不再是spark://192.168.0.108:8080这种URL了,因为那是Standalone模式下的监控web ui,在yarn模式下,要看yarn的web ui: <a href="http://192.168.0.108:8088/" target="_blank" rel="external">http://192.168.0.108:8088/</a> 这是yarn的URL地址</p>
+<p>3.进程<br>driver是什么进程</p>
+<p>AppLicationMaster是什么进程</p>
+<p>executor进程</p>
+<h1 id="yarn模式下的日志查看"><a href="#yarn模式下的日志查看" class="headerlink" title="yarn模式下的日志查看"></a>yarn模式下的日志查看</h1><p>在yarn模式下,spark作业运行相关的executor和ApplicationMaster都是运行在yarn的container中的,一个作业运行完了以后,yarn有两种方式来处理spark作业打印出的日志</p>
+<p>1.聚合日志方式(推荐,比较常用)<br>这种格式将散落在集群中各个机器上的日志,最后都给聚合起来,让我们可以统一查看,如果yarn的日志聚合的选项打开了,即:yarn.log-aggregation-enable(yarn-site.xml文件中配置), container的日志会拷贝到HDFS上去,并从机器中删除</p>
+<p>然后我们使用yarn logs -applicationId <app id=""> 命令来查看日志(app Id在yarn的web ui上看:resourceManager_host:8088)</app></p>
+<p>yarn logs命令,会打印出application对应的所有container的日志出来,当然,因为日志是在HDFS上的,我们自然可以通过HDFS的命令行来直接从HDFS中查看日志,日志在HDFS中的目录,可以通过查看yarn.nodemanager.remote-app-log-dir和yarn.nodemanager.remote-app-log-dir-suffix属性来获知</p>
+<p>2.web ui<br>日志也可以通过spark web ui来查看executor的输出日志<br>但是此时需要启动History Server,需要让spark history server和mapreduce history server运行着;并且在yarn-site.xml文件中,配置yarn.log.server.url属性<br>spark history server web ui中的log url,会将你重新定向到mapreduce history server上去查看日志</p>
+<p>3.分散查看(通常不推荐)<br>如果没有打开聚合日志选项,那么日志默认就是散落在各个机器上的本次磁盘目录中的,在YARN_APP_LOGS_DIR目录下,根据hadoop版本的不同,通常在/tmp/logs目录下,或者在$HADOOP_HOME/logs/userlogs目录下,如果你要查看某个container的日志,那么就得登录到那台机器上去,然后到指定的目录下如,找到那个日志文件,然后才能查看</p>
+<h1 id="yarn模式相关的参数"><a href="#yarn模式相关的参数" class="headerlink" title="yarn模式相关的参数"></a>yarn模式相关的参数</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">yarn模式运行spark作业所有属性详解</div><div class="line"></div><div class="line">属性名称											默认值							含义</div><div class="line">spark.yarn.am.memory								512m							client模式下，YARN Application Master使用的内存总量</div><div class="line">spark.yarn.am.cores									1								client模式下，Application Master使用的cpu数量</div><div class="line">spark.driver.cores									1								cluster模式下，driver使用的cpu core数量，driver与Application Master运行在一个进程中，所以也控制了Application Master的cpu数量</div><div class="line">spark.yarn.am.waitTime								100s							cluster模式下，Application Master要等待SparkContext初始化的时长; client模式下，application master等待driver来连接它的时长</div><div class="line">spark.yarn.submit.file.replication					hdfs副本数						作业写到hdfs上的文件的副本数量，比如工程jar，依赖jar，配置文件等，最小一定是1</div><div class="line">spark.yarn.preserve.staging.files					false							如果设置为true，那么在作业运行完之后，会避免工程jar等文件被删除掉</div><div class="line">spark.yarn.scheduler.heartbeat.interval-ms			3000							application master向resourcemanager发送心跳的间隔，单位ms</div><div class="line">spark.yarn.scheduler.initial-allocation.interval	200ms							application master在有pending住的container分配需求时，立即向resourcemanager发送心跳的间隔</div><div class="line">spark.yarn.max.executor.failures					executor数量*2，最小3			整个作业判定为失败之前，executor最大的失败次数</div><div class="line">spark.yarn.historyServer.address					无								spark history server的地址</div><div class="line">spark.yarn.dist.archives							无								每个executor都要获取并放入工作目录的archive</div><div class="line">spark.yarn.dist.files								无								每个executor都要放入的工作目录的文件</div><div class="line">spark.executor.instances							2								默认的executor数量</div><div class="line">spark.yarn.executor.memoryOverhead					executor内存10%					每个executor的堆外内存大小，用来存放诸如常量字符串等东西</div><div class="line">spark.yarn.driver.memoryOverhead					driver内存7%					同上</div><div class="line">spark.yarn.am.memoryOverhead						AM内存7%						同上</div><div class="line">spark.yarn.am.port									随机							application master端口</div><div class="line">spark.yarn.jar										无								spark jar文件的位置</div><div class="line">spark.yarn.access.namenodes							无								spark作业能访问的hdfs namenode地址</div><div class="line">spark.yarn.containerLauncherMaxThreads				25								application master能用来启动executor container的最大线程数量</div><div class="line">spark.yarn.am.extraJavaOptions						无								application master的jvm参数</div><div class="line">spark.yarn.am.extraLibraryPath						无								application master的额外库路径</div><div class="line">spark.yarn.maxAppAttempts															提交spark作业最大的尝试次数</div><div class="line">spark.yarn.submit.waitAppCompletion					true							cluster模式下，client是否等到作业运行完再退出</div></pre></td></tr></table></figure>
+<p>以上这些参数可以在spark-submit中配置,使用–conf配置</p>
+<h1 id="spark-submit详解"><a href="#spark-submit详解" class="headerlink" title="spark-submit详解"></a>spark-submit详解</h1><p>spark-submit可以通过一个统一的接口,将spark应用程序提交到所有spark支持的集群管理器上(Standalone(mater),Yarn(ResourceManager)等),所以我们并不需要为每种集群管理器都做特殊的配置</p>
+<p>–master<br>1.如果不设置,那么就是local模式<br>2.如果设置spark://开头的URL,那么就是Standalone模式,会提交到指定的URL的Mater进程上去<br>3.如果设置yarn-client/yarn-cluster,那么就是yarn模式,会读取hadoop配置文件,然后连接ResourceManager</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之主要的几个术语/" rel="next" title="spark core之主要的几个术语">
+                <i class="fa fa-chevron-left"></i> spark core之主要的几个术语
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/spark core之worker节点配置以及spark-env.sh参数详解/" rel="prev" title="spark core之worker节点配置以及spark-env.sh参数详解">
+                spark core之worker节点配置以及spark-env.sh参数详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#yarn-client模式原理"><span class="nav-number">1.</span> <span class="nav-text">yarn-client模式原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#yarn-cluster模式原理"><span class="nav-number">2.</span> <span class="nav-text">yarn-cluster模式原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#yarn-client模式提交spark作业"><span class="nav-number">3.</span> <span class="nav-text">yarn-client模式提交spark作业</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#yarn运行spark作业的前提"><span class="nav-number">3.1.</span> <span class="nav-text">yarn运行spark作业的前提</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#yarn模式下的日志查看"><span class="nav-number">4.</span> <span class="nav-text">yarn模式下的日志查看</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#yarn模式相关的参数"><span class="nav-number">5.</span> <span class="nav-text">yarn模式相关的参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#spark-submit详解"><span class="nav-number">6.</span> <span class="nav-text">spark-submit详解</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

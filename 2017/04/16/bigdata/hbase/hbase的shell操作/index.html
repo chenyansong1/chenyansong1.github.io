@@ -1,0 +1,749 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hbase," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="官网shellhttps://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/">
+<meta name="keywords" content="hbase">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hbase的shell操作">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/hbase/hbase的shell操作/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="官网shellhttps://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/">
+<meta property="og:updated_time" content="2017-02-28T17:01:30.522Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hbase的shell操作">
+<meta name="twitter:description" content="官网shellhttps://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/hbase/hbase的shell操作/"/>
+
+
+
+
+
+  <title> hbase的shell操作 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/hbase/hbase的shell操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                hbase的shell操作
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hbase/" itemprop="url" rel="index">
+                    <span itemprop="name">hbase</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="官网shell"><a href="#官网shell" class="headerlink" title="官网shell"></a>官网shell</h1><p><a href="https://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/" target="_blank" rel="external">https://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/</a></p>
+<a id="more"></a>
+<h1 id="1-进入客户端"><a href="#1-进入客户端" class="headerlink" title="1.进入客户端"></a>1.进入客户端</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#打开CLI</div><div class="line">#$HBASE_HOME/bin/hbase shell</div><div class="line"></div><div class="line">#退出</div><div class="line">#$HBASE_HOME/bin/hbase shell</div><div class="line">……</div><div class="line">&gt;quit</div></pre></td></tr></table></figure>
+<h1 id="2-帮助命令help"><a href="#2-帮助命令help" class="headerlink" title="2.帮助命令help"></a>2.帮助命令help</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">help &quot;COMMAND&quot;</div><div class="line"></div><div class="line">#如查看describe的帮助文档</div><div class="line">hbase(main):008:0&gt; help &apos;describe&apos;</div><div class="line">Describe the named table. For example:</div><div class="line">  hbase&gt; describe &apos;t1&apos;</div><div class="line">  hbase&gt; describe &apos;ns1:t1&apos;</div><div class="line"> </div><div class="line">Alternatively, you can use the abbreviated &apos;desc&apos; for the same thing.</div><div class="line">  hbase&gt; desc &apos;t1&apos;</div><div class="line">  hbase&gt; desc &apos;ns1:t1&apos;</div></pre></td></tr></table></figure>
+<h1 id="3-创建表create"><a href="#3-创建表create" class="headerlink" title="3.创建表create"></a>3.创建表create</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">#create &apos;表名&apos;, &apos;列族名1&apos;,&apos;列族名2&apos;,&apos;列族名N&apos;</div><div class="line">hbase(main):002:0&gt; create &apos;user&apos;,&apos;info1&apos;,&apos;info2&apos;</div><div class="line"></div><div class="line">#查看</div><div class="line">hbase(main):003:0&gt; list</div><div class="line">TABLE                                                                                                        </div><div class="line">user                                                                                                         </div><div class="line">1 row(s) in 0.0120 seconds</div><div class="line"> </div><div class="line">=&gt; [&quot;user&quot;]</div></pre></td></tr></table></figure>
+<h1 id="4-查看所有表list"><a href="#4-查看所有表list" class="headerlink" title="4.查看所有表list"></a>4.查看所有表list</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">hbase(main):003:0&gt; list</div><div class="line">TABLE                                                                                                        </div><div class="line">user                                                                                                         </div><div class="line">1 row(s) in 0.0120 seconds</div><div class="line"> </div><div class="line">=&gt; [&quot;user&quot;]</div></pre></td></tr></table></figure>
+<h1 id="5-描述表describe"><a href="#5-描述表describe" class="headerlink" title="5.描述表describe"></a>5.描述表describe</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">hbase(main):004:0&gt; describe &apos;user&apos;</div><div class="line">Table user is ENABLED                                                                                        </div><div class="line">COLUMN FAMILIES DESCRIPTION                                                                                  </div><div class="line">&#123;NAME =&gt; &apos;info1&apos;, DATA_BLOCK_ENCODING =&gt; &apos;NONE&apos;, BLOOMFILTER =&gt; &apos;ROW&apos;, REPLICATION_SCOPE =&gt; &apos;0&apos;, VERSIONS =&gt; &apos;</div><div class="line">1&apos;, COMPRESSION =&gt; &apos;NONE&apos;, MIN_VERSIONS =&gt; &apos;0&apos;, TTL =&gt; &apos;FOREVER&apos;, KEEP_DELETED_CELLS =&gt; &apos;FALSE&apos;, BLOCKSIZE =&gt;</div><div class="line">&apos;65536&apos;, IN_MEMORY =&gt; &apos;false&apos;, BLOCKCACHE =&gt; &apos;true&apos;&#125;                                                         </div><div class="line">&#123;NAME =&gt; &apos;info2&apos;, DATA_BLOCK_ENCODING =&gt; &apos;NONE&apos;, BLOOMFILTER =&gt; &apos;ROW&apos;, REPLICATION_SCOPE =&gt; &apos;0&apos;, VERSIONS =&gt; &apos;</div><div class="line">1&apos;, COMPRESSION =&gt; &apos;NONE&apos;, MIN_VERSIONS =&gt; &apos;0&apos;, TTL =&gt; &apos;FOREVER&apos;, KEEP_DELETED_CELLS =&gt; &apos;FALSE&apos;, BLOCKSIZE =&gt;</div><div class="line">&apos;65536&apos;, IN_MEMORY =&gt; &apos;false&apos;, BLOCKCACHE =&gt; &apos;true&apos;&#125;</div></pre></td></tr></table></figure>
+<h1 id="6-判断表存在exists"><a href="#6-判断表存在exists" class="headerlink" title="6.判断表存在exists"></a>6.判断表存在exists</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#exists &apos;表名&apos;</div><div class="line">hbase(main):011:0&gt; exists &apos;user&apos;</div><div class="line">Table user does exist</div></pre></td></tr></table></figure>
+<h1 id="7-判断是否禁用表is-enabled-enable"><a href="#7-判断是否禁用表is-enabled-enable" class="headerlink" title="7.判断是否禁用表is_enabled/enable"></a>7.判断是否禁用表is_enabled/enable</h1><p>&emsp;在删除表的时候要先禁用表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">#is_enabled  &apos;表名&apos;   </div><div class="line">hbase(main):012:0&gt; is_enabled &apos;user&apos;</div><div class="line">true                                                                                                         </div><div class="line">0 row(s) in 0.0410 seconds</div><div class="line"></div><div class="line">#is_disabled  &apos;表名&apos;</div><div class="line">hbase(main):013:0&gt; is_disabled &apos;user&apos;</div><div class="line">false                                                                                                        </div><div class="line">0 row(s) in 0.0160 seconds</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">If you want to delete a table or change its settings, as well as in some other situations, you need to disable the table first, using the disable command. </div><div class="line"></div><div class="line">*/</div><div class="line">hbase(main):008:0&gt; disable &apos;test&apos;</div><div class="line">0 row(s) in 1.1820 seconds</div><div class="line"> </div><div class="line">hbase(main):009:0&gt; enable &apos;test&apos;</div><div class="line">0 row(s) in 0.1770 seconds</div><div class="line"></div><div class="line">#如在drop之前，需要disable 表</div><div class="line">hbase(main):011:0&gt; drop &apos;test&apos;</div><div class="line">0 row(s) in 0.1370 seconds</div></pre></td></tr></table></figure></p>
+<h1 id="8-添加记录put"><a href="#8-添加记录put" class="headerlink" title="8.添加记录put"></a>8.添加记录put</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">#put  ‘表名’, ‘rowKey’, ‘列族 : 列‘  ,  &apos;值&apos;</div><div class="line"> </div><div class="line">hbase(main):003:0&gt; put &apos;user&apos;,&apos;1234&apos;,&apos;info1:name&apos;,&apos;zhangsan&apos;</div><div class="line">0 row(s) in 0.3500 seconds</div><div class="line"> </div><div class="line">#查看rowkey对应的值</div><div class="line">hbase(main):004:0&gt; get &apos;user&apos;,&apos;1234&apos;</div><div class="line">COLUMN                       CELL                                                                            </div><div class="line"> info1:name                  timestamp=1480639410845, value=zhangsan                                         </div><div class="line">1 row(s) in 0.0610 seconds</div></pre></td></tr></table></figure>
+<h1 id="9-获取数据get"><a href="#9-获取数据get" class="headerlink" title="9.获取数据get"></a>9.获取数据get</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">#查看记录rowkey下的所有数据</div><div class="line">#get  &apos;表名&apos; , &apos;rowKey&apos;</div><div class="line">hbase(main):007:0&gt; get &apos;user&apos;,&apos;1234&apos;</div><div class="line">COLUMN                       CELL                                                                            </div><div class="line"> info1:address               timestamp=1480639492886, value=beijing                                          </div><div class="line"> info1:age                   timestamp=1480639472692, value=22                                               </div><div class="line"> info1:name                  timestamp=1480639410845, value=zhangsan</div><div class="line"> </div><div class="line"></div><div class="line">#获取某个列族</div><div class="line">#get &apos;表名&apos;,&apos;rowkey&apos;,&apos;列族&apos;</div><div class="line">hbase(main):011:0&gt; get &apos;user&apos;,&apos;1234&apos;,&apos;info1&apos;</div><div class="line">COLUMN                       CELL                                                                            </div><div class="line"> info1:address               timestamp=1480639492886, value=beijing                                          </div><div class="line"> info1:age                   timestamp=1480639472692, value=22                                               </div><div class="line"> info1:name                  timestamp=1480639410845, value=zhangsan</div><div class="line"></div><div class="line"></div><div class="line">#获取某个列族的某个列</div><div class="line">#get &apos;表名&apos;,&apos;rowkey&apos;,&apos;列族：列’</div><div class="line">hbase(main):013:0&gt; get &apos;user&apos;,&apos;1234&apos;,&apos;info1:name&apos;</div><div class="line">COLUMN                       CELL                                                                            </div><div class="line"> info1:name                  timestamp=1480639410845, value=zhangsan </div><div class="line"></div><div class="line">或者</div><div class="line">hbase(main):012:0&gt; get &apos;user&apos;, &apos;1234&apos;, &#123;COLUMN=&gt;&apos;info1:name&apos;&#125;</div><div class="line"></div><div class="line"></div><div class="line">&apos;备注:COLUMN 和 COLUMNS 是不同的,scan 操作中的 COLUMNS 指定的是表的列族, get操作中的 COLUMN 指定的是特定的列,COLUMNS 的值实质上为“列族:列修饰符”。COLUMN 和 COLUMNS 必须为大写&apos;</div></pre></td></tr></table></figure>
+<h1 id="10-查看表中的记录总数count"><a href="#10-查看表中的记录总数count" class="headerlink" title="10.查看表中的记录总数count"></a>10.查看表中的记录总数count</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#查看所有记录</div><div class="line">hbase(main):015:0&gt; scan &apos;user&apos;</div><div class="line">ROW                          COLUMN+CELL                                                                     </div><div class="line"> 1234                        column=info1:address, timestamp=1480639492886, value=beijing                    </div><div class="line"> 1234                        column=info1:age, timestamp=1480639472692, value=22                             </div><div class="line"> 1234                        column=info1:name, timestamp=1480639410845, value=zhangsan                      </div><div class="line"> abcd                        column=info2:name, timestamp=1480639913995, value=anglebady                     </div><div class="line"></div><div class="line"></div><div class="line">#count  &apos;表名&apos;</div><div class="line">hbase(main):014:0&gt; count &apos;user&apos;</div><div class="line">2 row(s) in 0.1410 seconds        #因为所有记录中的行健只有2个，所以只有2条记录</div></pre></td></tr></table></figure>
+<h1 id="11-删除delete"><a href="#11-删除delete" class="headerlink" title="11.删除delete"></a>11.删除delete</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">#删除列记录</div><div class="line">#delete  ‘表名’ ,‘行键’ , ‘列族：列&apos;</div><div class="line">&apos;删除前&apos;</div><div class="line">hbase(main):015:0&gt; scan &apos;user&apos;</div><div class="line">ROW                          COLUMN+CELL                                                                     </div><div class="line"> 1234                        column=info1:address, timestamp=1480639492886, value=beijing                    </div><div class="line"> 1234                        column=info1:age, timestamp=1480639472692, value=22                             </div><div class="line"> 1234                        column=info1:name, timestamp=1480639410845, value=zhangsan                      </div><div class="line"> abcd                        column=info2:name, timestamp=1480639913995, value=anglebady                     </div><div class="line">2 row(s) in 0.0920 seconds</div><div class="line"> </div><div class="line">&apos;删除&apos;</div><div class="line">hbase(main):016:0&gt; delete</div><div class="line">delete                delete_all_snapshot   delete_snapshot       deleteall</div><div class="line">hbase(main):016:0&gt; delete &apos;user&apos;,&apos;1234&apos;,&apos;info1:address&apos;</div><div class="line"></div><div class="line"> </div><div class="line">&apos;删除后&apos;</div><div class="line">hbase(main):017:0&gt; scan &apos;user&apos;</div><div class="line">ROW                          COLUMN+CELL                                                                     </div><div class="line"> 1234                        column=info1:age, timestamp=1480639472692, value=22                             </div><div class="line"> 1234                        column=info1:name, timestamp=1480639410845, value=zhangsan                      </div><div class="line"> abcd                        column=info2:name, timestamp=1480639913995, value=anglebady                     </div><div class="line"></div><div class="line"></div><div class="line">#删除整行</div><div class="line">#deleteall &apos;表名&apos;,&apos;rowkey&apos;</div><div class="line"></div><div class="line">&apos;删除前&apos;</div><div class="line">hbase(main):020:0&gt; scan &apos;user&apos;</div><div class="line">ROW                          COLUMN+CELL                                                                     </div><div class="line"> 1234                        column=info1:age, timestamp=1480639472692, value=22                             </div><div class="line"> 1234                        column=info1:name, timestamp=1480639410845, value=zhangsan                      </div><div class="line"> abcd                        column=info2:name, timestamp=1480639913995, value=anglebady                     </div><div class="line">2 row(s) in 0.0310 seconds</div><div class="line"> </div><div class="line">&apos;删除&apos;</div><div class="line">hbase(main):021:0&gt; deleteall &apos;user&apos;,&apos;abcd&apos;</div><div class="line">0 row(s) in 0.0280 seconds</div><div class="line"> </div><div class="line">&apos;删除后&apos;</div><div class="line">hbase(main):022:0&gt; scan &apos;user&apos;</div><div class="line">ROW                          COLUMN+CELL                                                                     </div><div class="line"> 1234                        column=info1:age, timestamp=1480639472692, value=22                             </div><div class="line"> 1234                        column=info1:name, timestamp=1480639410845, value=zhangsan</div></pre></td></tr></table></figure>
+<h1 id="12-清空表truncate"><a href="#12-清空表truncate" class="headerlink" title="12.清空表truncate"></a>12.清空表truncate</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#truncate &apos;表名&apos;</div><div class="line"></div><div class="line">hbase(main):023:0&gt; help &apos;truncate&apos;</div><div class="line">  Disables, drops and recreates the specified table.</div></pre></td></tr></table></figure>
+<h1 id="13-查看所有记录scan"><a href="#13-查看所有记录scan" class="headerlink" title="13.查看所有记录scan"></a>13.查看所有记录scan</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">#查看所有记录</div><div class="line">#scan &quot;表名&quot;  </div><div class="line">hbase(main):008:0&gt; scan &apos;user&apos;</div><div class="line">ROW                          COLUMN+CELL                                                                     </div><div class="line"> 1234                        column=info1:address, timestamp=1480639492886, value=beijing                    </div><div class="line"> 1234                        column=info1:age, timestamp=1480639472692, value=22                             </div><div class="line"> 1234                        column=info1:name, timestamp=1480639410845, value=zhangsan                      </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#查看某个表某个列中所有数据</div><div class="line">#scan &quot;表名&quot; , &#123;COLUMNS=&gt;&apos;列族名:列名&apos;&#125;        COLUMNS 必须为大写</div><div class="line"> </div><div class="line">hbase(main):028:0&gt; scan &apos;user&apos;,&#123;COLUMNS=&gt;&apos;info1:name&apos;&#125;</div><div class="line">ROW                          COLUMN+CELL                                                                     </div><div class="line"> 1234                        column=info1:name, timestamp=1480639410845, value=zhangsan                      </div><div class="line"> abcd                        column=info1:name, timestamp=1480640586515, value=angebady </div><div class="line"> </div><div class="line"></div><div class="line">#其他</div><div class="line">  hbase&gt; scan &apos;hbase:meta&apos;                                #全表扫描</div><div class="line">  hbase&gt; scan &apos;hbase:meta&apos;, &#123;COLUMNS =&gt; &apos;info:regioninfo&apos;&#125;        #全表的regioninfo列</div><div class="line">  hbase&gt; scan &apos;ns1:t1&apos;, &#123;COLUMNS =&gt; [&apos;c1&apos;, &apos;c2&apos;], LIMIT =&gt; 10, STARTROW =&gt; &apos;xyz&apos;&#125;    </div><div class="line">  hbase&gt; scan &apos;t1&apos;, &#123;COLUMNS =&gt; [&apos;c1&apos;, &apos;c2&apos;], LIMIT =&gt; 10, STARTROW =&gt; &apos;xyz&apos;&#125;</div><div class="line">  hbase&gt; scan &apos;t1&apos;, &#123;COLUMNS =&gt; &apos;c1&apos;, TIMERANGE =&gt; [1303668804, 1303668904]&#125;</div><div class="line">  hbase&gt; scan &apos;t1&apos;, &#123;REVERSED =&gt; true&#125;</div><div class="line">  hbase&gt; scan &apos;t1&apos;, &#123;FILTER =&gt; &quot;(PrefixFilter (&apos;row2&apos;)   AND   (QualifierFilter (&gt;=, &apos;binary:xyz&apos;))) AND (TimestampsFilter ( 123, 456))&quot;&#125;</div><div class="line">  hbase&gt; scan &apos;t1&apos;, &#123;FILTER =&gt;org.apache.hadoop.hbase.filter.ColumnPaginationFilter.new(1, 0)&#125;</div><div class="line">  hbase&gt; scan &apos;t1&apos;, &#123;CONSISTENCY =&gt; &apos;TIMELINE&apos;&#125;</div></pre></td></tr></table></figure>
+<h1 id="14-更新记录"><a href="#14-更新记录" class="headerlink" title="14.更新记录"></a>14.更新记录</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">就是重写一遍put，进行覆盖，hbase没有修改，都是追加</div></pre></td></tr></table></figure>
+<h1 id="15-注意"><a href="#15-注意" class="headerlink" title="15.注意"></a>15.注意</h1><ul>
+<li>get是查询一条记录，所以要指定rowkey</li>
+<li>scan是全表扫描，查询多条记录<br>可以查询某些行的列</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hbase/" rel="tag"># hbase</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hbase/mapreduce操作hbase/" rel="next" title="mapreduce操作hbase">
+                <i class="fa fa-chevron-left"></i> mapreduce操作hbase
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hbase/HBase的API示例2/" rel="prev" title="HBase的API示例2">
+                HBase的API示例2 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#官网shell"><span class="nav-number">1.</span> <span class="nav-text">官网shell</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-进入客户端"><span class="nav-number">2.</span> <span class="nav-text">1.进入客户端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-帮助命令help"><span class="nav-number">3.</span> <span class="nav-text">2.帮助命令help</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-创建表create"><span class="nav-number">4.</span> <span class="nav-text">3.创建表create</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-查看所有表list"><span class="nav-number">5.</span> <span class="nav-text">4.查看所有表list</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-描述表describe"><span class="nav-number">6.</span> <span class="nav-text">5.描述表describe</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-判断表存在exists"><span class="nav-number">7.</span> <span class="nav-text">6.判断表存在exists</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-判断是否禁用表is-enabled-enable"><span class="nav-number">8.</span> <span class="nav-text">7.判断是否禁用表is_enabled/enable</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-添加记录put"><span class="nav-number">9.</span> <span class="nav-text">8.添加记录put</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-获取数据get"><span class="nav-number">10.</span> <span class="nav-text">9.获取数据get</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-查看表中的记录总数count"><span class="nav-number">11.</span> <span class="nav-text">10.查看表中的记录总数count</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-删除delete"><span class="nav-number">12.</span> <span class="nav-text">11.删除delete</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-清空表truncate"><span class="nav-number">13.</span> <span class="nav-text">12.清空表truncate</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-查看所有记录scan"><span class="nav-number">14.</span> <span class="nav-text">13.查看所有记录scan</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14-更新记录"><span class="nav-number">15.</span> <span class="nav-text">14.更新记录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#15-注意"><span class="nav-number">16.</span> <span class="nav-text">15.注意</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

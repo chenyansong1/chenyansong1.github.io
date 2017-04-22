@@ -1,0 +1,734 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.combineByKey函数的运行机制&amp;emsp;RDD提供了很多针对元素类型为(K,V)的API，这些API封装在PairRDDFunctions类中，通过Scala隐式转换使用。这些API实现上是借助于combineByKey实现的。combineByKey函数本身也是RDD开放给Spark开发人员使用的API之一 首先看一下combineByKey的方法说明： 1234567891011">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RDD-API之combineByKey">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/spark/RDD-API之combineByKey/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.combineByKey函数的运行机制&amp;emsp;RDD提供了很多针对元素类型为(K,V)的API，这些API封装在PairRDDFunctions类中，通过Scala隐式转换使用。这些API实现上是借助于combineByKey实现的。combineByKey函数本身也是RDD开放给Spark开发人员使用的API之一 首先看一下combineByKey的方法说明： 1234567891011">
+<meta property="og:updated_time" content="2017-03-04T11:21:27.101Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RDD-API之combineByKey">
+<meta name="twitter:description" content="1.combineByKey函数的运行机制&amp;emsp;RDD提供了很多针对元素类型为(K,V)的API，这些API封装在PairRDDFunctions类中，通过Scala隐式转换使用。这些API实现上是借助于combineByKey实现的。combineByKey函数本身也是RDD开放给Spark开发人员使用的API之一 首先看一下combineByKey的方法说明： 1234567891011">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/spark/RDD-API之combineByKey/"/>
+
+
+
+
+
+  <title> RDD-API之combineByKey | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark/RDD-API之combineByKey/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                RDD-API之combineByKey
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-combineByKey函数的运行机制"><a href="#1-combineByKey函数的运行机制" class="headerlink" title="1.combineByKey函数的运行机制"></a>1.combineByKey函数的运行机制</h1><p>&emsp;RDD提供了很多针对元素类型为(K,V)的API，这些API封装在PairRDDFunctions类中，通过Scala隐式转换使用。这些API实现上是借助于combineByKey实现的。combineByKey函数本身也是RDD开放给Spark开发人员使用的API之一<br> 首先看一下combineByKey的方法说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">   * Generic function to combine the elements for each key using a custom set of aggregation</div><div class="line">   * functions. Turns an RDD[(K, V)] into a result of type RDD[(K, C)], for a &quot;combined type&quot; C</div><div class="line">   * Note that V and C can be different -- for example, one might group an RDD of type</div><div class="line">   * (Int, Int) into an RDD of type (Int, Seq[Int]). Users provide three functions:</div><div class="line">   *</div><div class="line">   * - `createCombiner`, which turns a V into a C (e.g., creates a one-element list)</div><div class="line">   * - `mergeValue`, to merge a V into a C (e.g., adds it to the end of a list)</div><div class="line">   * - `mergeCombiners`, to combine two C&apos;s into a single one.</div><div class="line">   *</div><div class="line">   * In addition, users can control the partitioning of the output RDD, and whether to perform</div><div class="line">   * map-side aggregation (if a mapper can produce multiple items with the same key).</div><div class="line">   */</div><div class="line">  def combineByKey[C](createCombiner: V =&gt; C,</div><div class="line">      mergeValue: (C, V) =&gt; C,</div><div class="line">      mergeCombiners: (C, C) =&gt; C,</div><div class="line">      partitioner: Partitioner,</div><div class="line">      mapSideCombine: Boolean = true,</div><div class="line">      serializer: Serializer = null): RDD[(K, C)] = &#123;</div><div class="line">    require(mergeCombiners != null, &quot;mergeCombiners must be defined&quot;) // required as of Spark 0.9.0</div><div class="line">    if (keyClass.isArray) &#123;</div><div class="line">      if (mapSideCombine) &#123;</div><div class="line">        throw new SparkException(&quot;Cannot use map-side combining with array keys.&quot;)</div><div class="line">      &#125;</div><div class="line">      if (partitioner.isInstanceOf[HashPartitioner]) &#123;</div><div class="line">        throw new SparkException(&quot;Default partitioner cannot partition array keys.&quot;)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    val aggregator = new Aggregator[K, V, C](</div><div class="line">      self.context.clean(createCombiner),</div><div class="line">      self.context.clean(mergeValue),</div><div class="line">      self.context.clean(mergeCombiners))</div><div class="line">    if (self.partitioner == Some(partitioner)) &#123;</div><div class="line">      self.mapPartitions(iter =&gt; &#123;</div><div class="line">        val context = TaskContext.get()</div><div class="line">        new InterruptibleIterator(context, aggregator.combineValuesByKey(iter, context))</div><div class="line">      &#125;, preservesPartitioning = true)</div><div class="line">    &#125; else &#123;</div><div class="line">      new ShuffledRDD[K, V, C](self, partitioner)</div><div class="line">        .setSerializer(serializer)</div><div class="line">        .setAggregator(aggregator)</div><div class="line">        .setMapSideCombine(mapSideCombine)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">/* 主要看:</div><div class="line">      createCombiner: V =&gt; C,</div><div class="line">      mergeValue: (C, V) =&gt; C,</div><div class="line">      mergeCombiners: (C, C) =&gt; C,</div><div class="line"></div><div class="line">combineByKey的功能是对RDD中的数据集按照Key进行聚合(想象下Hadoop MapReduce的Combiner，用于Map端做Reduce)。聚合的逻辑是通过自定义函数提供给combineByKey。</div><div class="line">从上面的源代码中可以看到，combineByKey是把(K,V)类型的RDD转换为(K,C)类型的RDD，C和V可以不一样。</div><div class="line">combineByKey函数需要三个重要的函数作为参数</div><div class="line"></div><div class="line">createCombiner：在遍历RDD的数据集合过程中，对于遍历到的(k,v)，如果combineByKey第一次遇到值为k的Key（类型K），那么将对这个(k,v)调用combineCombiner函数，它的作用是将v转换为c(类型是C，聚合对象的类型，c作为局和对象的初始值)</div><div class="line"></div><div class="line">mergeValue：在遍历RDD的数据集合过程中，对于遍历到的(k,v)，如果combineByKey不是第一次(或者第二次，第三次...)遇到值为k的Key（类型K），那么将对这个(k,v)调用mergeValue函数，它的作用是将v累加到聚合对象（类型C）中，mergeValue的类型是(C,V)=&gt;C,参数中的C遍历到此处的聚合对象，然后对v进行聚合得到新的聚合对象值</div><div class="line"></div><div class="line">mergeCombiners：因为combineByKey是在分布式环境下执行，RDD的每个分区单独进行combineByKey操作，最后需要对各个分区的结果进行最后的聚合，它的函数类型是(C,C)=&gt;C，每个参数是分区聚合得到的聚合对象。</div><div class="line"> </div><div class="line"></div><div class="line">*/</div></pre></td></tr></table></figure>
+<p> combineByKey的流程是：</p>
+<p>假设<strong>一组具有相同 K 的 <k, v=""> records 正在一个个流向 combineByKey()</k,></strong>，createCombiner 将第一个 record 的value 初始化为 c （比如，c = value），然后从第二个 record 开始，来一个 record 就使用 mergeValue(c,record.value) 来更新 c，比如想要对这些 records 的所有 values 做 sum，那么使用 c = c + record.value。等到records 全部被 mergeValue()，得到结果 c。假设还有一组 records（key 与前面那组的 key 均相同）一个个到来，combineByKey() 使用前面的方法不断计算得到 c’。现在如果要求这两组 records 总的 combineByKey() 后的结果，那么可以使用 final c = mergeCombiners(c, c’) 来计算。</p>
+<h1 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"> </div><div class="line">combineByKey : 和reduceByKey是相同的效果</div><div class="line">###第一个参数x:原封不动取出来, 第二个参数:是函数, 局部运算, 第三个:是函数, 对局部运算后的结果再做运算</div><div class="line">###每个分区中每个key中value中的第一个值, (hello,1)(hello,1)(good,1)--&gt;(hello(1,1),good(1))--&gt;x就相当于hello的第一个1, good中的1</div><div class="line">val rdd1 = sc.textFile(&quot;hdfs://master:9000/wordcount/input/&quot;).flatMap(_.split(&quot; &quot;)).map((_, 1))</div><div class="line">val rdd2 = rdd1.combineByKey(x =&gt; x, (a: Int, b: Int) =&gt; a + b, (m: Int, n: Int) =&gt; m + n)</div><div class="line">rdd1.collect</div><div class="line">rdd2.collect</div><div class="line"> </div><div class="line">###当input下有3个文件时(有3个block块, 不是有3个文件就有3个block, ), 每个会多加3个10</div><div class="line">val rdd3 = rdd1.combineByKey(x =&gt; x + 10, (a: Int, b: Int) =&gt; a + b, (m: Int, n: Int) =&gt; m + n) //x =&gt; x + 10 只是将分区的第一个元素作为x,然后加10 ,将x+10作为局部计算的初始值</div><div class="line">rdd3.collect</div><div class="line"> </div><div class="line"> </div><div class="line">val rdd4 = sc.parallelize(List(&quot;dog&quot;,&quot;cat&quot;,&quot;gnu&quot;,&quot;salmon&quot;,&quot;rabbit&quot;,&quot;turkey&quot;,&quot;wolf&quot;,&quot;bear&quot;,&quot;bee&quot;), 3)</div><div class="line">val rdd5 = sc.parallelize(List(1,1,2,2,2,1,2,2,2), 3)</div><div class="line">val rdd6 = rdd5.zip(rdd4) //List((1,dog),(1,cat),(2,gnu),(2,salmon),(2,rabbit),(1,turkey),(2,wolf),(2,bear),(2,bee))</div><div class="line">val rdd7 = rdd6.combineByKey(List(_), (x: List[String], y: String) =&gt; x :+ y, (m: List[String], n: List[String]) =&gt; m ++ n)        //(1,list(&quot;dog&quot;,&quot;cat&quot;,&quot;turkey&quot;) ) ,  (2, list(&quot;gnu&quot;,&quot;salmon&quot;,&quot;rabbit&quot;,&quot;wolf&quot;,&quot;bear&quot;,&quot;bee&quot;)) )</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark/RDD-API之groupBy/" rel="next" title="RDD-API之groupBy">
+                <i class="fa fa-chevron-left"></i> RDD-API之groupBy
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/spark/RDD-API之aggregateByKey/" rel="prev" title="RDD-API之aggregateByKey.md">
+                RDD-API之aggregateByKey.md <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-combineByKey函数的运行机制"><span class="nav-number">1.</span> <span class="nav-text">1.combineByKey函数的运行机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#举例"><span class="nav-number">2.</span> <span class="nav-text">举例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,837 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mysql," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.查询执行基础知识1.1.mysql执行查询过程 客户端将查询发送到服务器 服务器检查查询缓存 如果找到了就从缓存返回结果 否则进行下一步 服务器解析，预处理和优化查询，生成执行计划 执行引擎调用存储引擎api执行查询 服务器将结果发送回客户端    mysql客户端/服务器协议  该协议是半双工通信，可以发送或接收数据，但是不能同时发送和接收决定了mysql的沟通简单又快捷； 缺点：无法进行流">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="查询性能优化">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/mysql/查询性能优化/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.查询执行基础知识1.1.mysql执行查询过程 客户端将查询发送到服务器 服务器检查查询缓存 如果找到了就从缓存返回结果 否则进行下一步 服务器解析，预处理和优化查询，生成执行计划 执行引擎调用存储引擎api执行查询 服务器将结果发送回客户端    mysql客户端/服务器协议  该协议是半双工通信，可以发送或接收数据，但是不能同时发送和接收决定了mysql的沟通简单又快捷； 缺点：无法进行流">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/youhua/1.jpg">
+<meta property="og:updated_time" content="2017-02-24T17:10:01.270Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="查询性能优化">
+<meta name="twitter:description" content="1.查询执行基础知识1.1.mysql执行查询过程 客户端将查询发送到服务器 服务器检查查询缓存 如果找到了就从缓存返回结果 否则进行下一步 服务器解析，预处理和优化查询，生成执行计划 执行引擎调用存储引擎api执行查询 服务器将结果发送回客户端    mysql客户端/服务器协议  该协议是半双工通信，可以发送或接收数据，但是不能同时发送和接收决定了mysql的沟通简单又快捷； 缺点：无法进行流">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/youhua/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/mysql/查询性能优化/"/>
+
+
+
+
+
+  <title> 查询性能优化 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/mysql/查询性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                查询性能优化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-查询执行基础知识"><a href="#1-查询执行基础知识" class="headerlink" title="1.查询执行基础知识"></a>1.查询执行基础知识</h1><h2 id="1-1-mysql执行查询过程"><a href="#1-1-mysql执行查询过程" class="headerlink" title="1.1.mysql执行查询过程"></a>1.1.mysql执行查询过程</h2><ol>
+<li>客户端将查询发送到服务器</li>
+<li>服务器检查查询缓存 如果找到了就从缓存返回结果 否则进行下一步</li>
+<li>服务器解析，预处理和优化查询，生成执行计划</li>
+<li>执行引擎调用存储引擎api执行查询</li>
+<li>服务器将结果发送回客户端</li>
+</ol>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/youhua/1.jpg" alt=""></p>
+<blockquote>
+<p>mysql客户端/服务器协议</p>
+</blockquote>
+<p>该协议是半双工通信，可以发送或接收数据，但是不能同时发送和接收决定了mysql的沟通简单又快捷；</p>
+<p>缺点：无法进行流程控制，一旦一方发送消息，另一方在发送回复之前必须提取完整的消息，就像抛球游戏，任意时间，只有某一方有球，而且有球在手上，否则就不能把球抛出去(发送消息)</p>
+<blockquote>
+<p>mysql客户端发送/服务器响应</p>
+</blockquote>
+<p>可以设定max_packet_size这个参数控制客户端发送的数据包(一旦发送数据包，唯一做的就是等待结果)</p>
+<p>服务器发送的响应由多个数据包组成， 客户端必须完整接收结果，即使只需要几行数据，也得等到全部接收 然后丢掉，或者强制断开连接。(这两个方法好挫，所以我们使用limit子句呀！！) </p>
+<p>也可以理解，客户端从服务器 “拉” 数据 ，实际是服务器产生数据 “推”到客户端， 客户端不能说不要 是必须全部装着！</p>
+<p>常用的Mysql类库 其实是从客户端提取数据 缓存到array(内存)中，然后进行 foreach 处理。</p>
+<p>但是对于庞大的结果集装载在内存中需要很长时间，如果不缓存，使用较少的内存并且可以尽快工作，但是应用程序和类库交互时候，服务器端的锁和资源都是被锁定的。</p>
+<blockquote>
+<p>查询状态</p>
+</blockquote>
+<p>每个mysql连接都是mysql服务器的一个线程 任意一个给定的时间都有一个状态来标识正在发生的事情。</p>
+<p>使用 show full processlist 命令查看 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mysql&gt; show full processlist;</div><div class="line">+----+------+-------------------+------+-------------+-------+-----------------------------------------------------------------------+-----------------------+</div><div class="line">| Id | User | Host              | db   | Command     | Time  | State                                                                 | Info                  |</div><div class="line">+----+------+-------------------+------+-------------+-------+-----------------------------------------------------------------------+-----------------------+</div><div class="line">| 13 | root | localhost         | test | Query       |     0 | NULL                                                                  | show full processlist |</div><div class="line">+----+------+-------------------+------+-------------+-------+-----------------------------------------------------------------------+-----------------------+</div><div class="line"></div><div class="line">#mysql中一共有12个状态：休眠、查询、锁定、分析和统计、拷贝到磁盘上的临时表、排序结果、发送数据，通过这些状态 知道 &quot;球在谁手上&quot;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>查询缓存</p>
+</blockquote>
+<p>解析一个查询，如果开启了缓存，mysql会检查查询缓存，发现缓存匹配，返回缓存之前，检查查询的权限</p>
+<h1 id="2-优化数据访问"><a href="#2-优化数据访问" class="headerlink" title="2.优化数据访问"></a>2.优化数据访问</h1><p>查询性能低下最基本的原因是访问了太多的数据，分析两方面：</p>
+<ul>
+<li>查明应用程序是否获取超过需要的数据 通常意味着访问了过多的行或列 </li>
+<li>查明mysql服务器是否分析了超过需要的行</li>
+</ul>
+<blockquote>
+<p>向服务器请求了不需要的数据</p>
+</blockquote>
+<p>一般请求不需要的数据，再丢掉他们，造成服务器额外的负担，增加网络开销，消耗了内存和cpu。</p>
+<p>典型的错误：</p>
+<ul>
+<li>提取超过需要的行 =&gt; 添加 limit 10 控制获取行数</li>
+<li>多表联接提取所有列 =&gt; select fruit.* from fruit left join fruit_juice where</li>
+<li>提取所有的列 =&gt; select id，name… from fruit … (有时提取超过需要的数据便于复用)</li>
+</ul>
+<blockquote>
+<p>mysql检查了太多数据</p>
+</blockquote>
+<p>简单的开销指标：执行时间、检查的行数、返回的行数</p>
+<p>以上三个指标写入了慢查询日志 可以使用 mysqlsla工具进行日志分析：</p>
+<ul>
+<li>执行时间：执行时间只是参考 不可一概而论 因为执行时间 和服务器当时负载有关</li>
+<li>检查和返回的行：理想情况下返回的行和检查的行一样，但是显示基本不可能 比如联接查询 </li>
+<li>检查的行和访问类型： 使用explain sq语句，观察typ列</li>
+</ul>
+<blockquote>
+<p>typ列：(访问速度依次递增)</p>
+</blockquote>
+<ul>
+<li>全表扫描(full table scan)</li>
+<li>索引扫描(index scan)</li>
+<li>范围扫描(range scan)</li>
+<li>唯一索引查找(unique index lookup)</li>
+<li>常量(constant)</li>
+</ul>
+<blockquote>
+<p>mysql会在3种情况下使用where子句，从最好到最坏依次是：</p>
+</blockquote>
+<ul>
+<li>对索引查找应用where子句来消除不匹配的行 这发生在存储层</li>
+<li>使用覆盖索引(extra 列 “using index”) 避免访问行 从索引取得数据过滤不匹配的行 这发生在服务层不需要从表中读取行</li>
+<li>从表中检索出数据 过滤不匹配的行(extra:using where)</li>
+</ul>
+<blockquote>
+<p>如果发现访问数据行数很大，尝试以下措施</p>
+</blockquote>
+<ul>
+<li>使用覆盖索引 ，存储了数据 存储引擎不会读取完整的行</li>
+<li>更改架构使用汇总表</li>
+<li>重写复杂的查询 让mysql优化器优化执行它</li>
+</ul>
+<h1 id="3-重构查询的方式"><a href="#3-重构查询的方式" class="headerlink" title="3.重构查询的方式"></a>3.重构查询的方式</h1><p>优化有问题的查询，其实也可以找到替代方案，提供更高的效率。</p>
+<blockquote>
+<p>复杂查询和多个查询</p>
+</blockquote>
+<p>mysql一般服务器可以每秒50000个查询，常规情况下，使用尽可能少的查询 有时候分解查询得到更高的效率。</p>
+<blockquote>
+<p>缩短查询</p>
+</blockquote>
+<p>分治法，查询本质上不变，每次执行一小部分，以减少受影响的行数。比如清理陈旧的数据，每次清理1000条：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">delete from message where create &lt; date_sub(now()，inteval 3 month)  limit 1000</div></pre></td></tr></table></figure></p>
+<p>防止长时间锁住很多行的数据。</p>
+<blockquote>
+<p>分解联接</p>
+</blockquote>
+<p>把一个多表联接分解成多个单个查询 然后在应用程序实现联接操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">select * from teacher </div><div class="line">join school on teacher.id = school.id</div><div class="line">join course on teacher.id = course.id</div><div class="line">where course.name = &quot;english&quot;</div><div class="line"></div><div class="line">#使用以下语句代替</div><div class="line">select * from course where name = &quot;english&quot;</div><div class="line">select * from teacher where course_id =1024</div><div class="line">select * from school where teacher_id in (111,222,333)</div></pre></td></tr></table></figure></p>
+<p>第一眼看上去比较浪费，因为增加了查询数量，但是有重大的性能优势：</p>
+<ul>
+<li>缓存效率高，应用程序直接缓存了表 类似第一个查询直接跳过</li>
+<li>对于myisam表来说 每个表一个查询有效利用表锁 查询锁住表的时间缩短</li>
+<li>应用程端进行联接更方便扩展数据库</li>
+<li>使用in() 避免联表查询id排序的耗费 </li>
+<li>减少多余行的访问 ， 意味着每行数据只访问一次 避免联接查询的非正则化的架构带来的反复访问同一行的弊端</li>
+</ul>
+<p>分解联接应用场景：</p>
+<p>① 可以缓存早期查询的大量的数据<br>② 使用了多个myisam表(mysiam表锁 并发时候 一条sql锁住多个表 所以要分解)<br>③ 数据分布在不同的服务器上<br>④ 对于大表使用in() 替换联接<br>④    一个联接引用了同一个表很多次</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/mysql/编译安装MySQL-5.5.32/" rel="next" title="编译安装MySQL-5.5.32">
+                <i class="fa fa-chevron-left"></i> 编译安装MySQL-5.5.32
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/mysql/字符集/" rel="prev" title="字符集">
+                字符集 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-查询执行基础知识"><span class="nav-number">1.</span> <span class="nav-text">1.查询执行基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-mysql执行查询过程"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.mysql执行查询过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-优化数据访问"><span class="nav-number">2.</span> <span class="nav-text">2.优化数据访问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-重构查询的方式"><span class="nav-number">3.</span> <span class="nav-text">3.重构查询的方式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

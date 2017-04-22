@@ -1,0 +1,751 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mongodb," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="官方文档:https://docs.mongodb.com/manual/core/backups/原本使用操作系统的快照进行备份还原，备份成功后，还原没有成功（参考：Backup and Restore with Filesystem Snapshots）,所以这个方法就先不记录到这里了。 当前测试以下几种备份还原方法（个人初学理解）：  使用拷贝和替换数据库文件进行备份还原 使用mongodu">
+<meta name="keywords" content="mongodb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="备份还原与导出导入(转)">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/mongodb/备份还原与导出导入/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="官方文档:https://docs.mongodb.com/manual/core/backups/原本使用操作系统的快照进行备份还原，备份成功后，还原没有成功（参考：Backup and Restore with Filesystem Snapshots）,所以这个方法就先不记录到这里了。 当前测试以下几种备份还原方法（个人初学理解）：  使用拷贝和替换数据库文件进行备份还原 使用mongodu">
+<meta property="og:updated_time" content="2017-02-24T17:10:16.934Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="备份还原与导出导入(转)">
+<meta name="twitter:description" content="官方文档:https://docs.mongodb.com/manual/core/backups/原本使用操作系统的快照进行备份还原，备份成功后，还原没有成功（参考：Backup and Restore with Filesystem Snapshots）,所以这个方法就先不记录到这里了。 当前测试以下几种备份还原方法（个人初学理解）：  使用拷贝和替换数据库文件进行备份还原 使用mongodu">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/mongodb/备份还原与导出导入/"/>
+
+
+
+
+
+  <title> 备份还原与导出导入(转) | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/备份还原与导出导入/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                备份还原与导出导入(转)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>官方文档:<a href="https://docs.mongodb.com/manual/core/backups/" target="_blank" rel="external">https://docs.mongodb.com/manual/core/backups/</a><br>原本使用操作系统的快照进行备份还原，备份成功后，还原没有成功（参考：<a href="https://docs.mongodb.com/manual/tutorial/backup-with-filesystem-snapshots/" target="_blank" rel="external">Backup and Restore with Filesystem Snapshots</a>）,所以这个方法就先不记录到这里了。</p>
+<p>当前测试以下几种备份还原方法（个人初学理解）：</p>
+<ol>
+<li>使用拷贝和替换数据库文件进行备份还原</li>
+<li>使用mongodump和mongorestore</li>
+<li>使用mongoimport 和 mongoexport</li>
+</ol>
+<h1 id="1-使用拷贝和替换数据库文件进行备份还原（有些危险又不好）"><a href="#1-使用拷贝和替换数据库文件进行备份还原（有些危险又不好）" class="headerlink" title="1.使用拷贝和替换数据库文件进行备份还原（有些危险又不好）"></a>1.使用拷贝和替换数据库文件进行备份还原（有些危险又不好）</h1><h2 id="1-1-备份"><a href="#1-1-备份" class="headerlink" title="1.1.备份"></a>1.1.备份</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#在MongoDB中执行db.fsyncLock()，刷新数据写入磁盘并锁住整个实例：</div><div class="line">&gt;db.fsyncLock()</div><div class="line"></div><div class="line">#打包压缩整个数据库目录（也可以打包部分数据库），作为备份：</div><div class="line">[root@localhost ~]# tar -cvzf /root/mongodb_20150505.tar.gz /var/lib/mongo  </div><div class="line"></div><div class="line">#在mongodb中执行db.fsyncUnlock()解锁，备份步骤完成</div><div class="line">&gt;db.fsyncUnlock()</div></pre></td></tr></table></figure>
+<h2 id="1-2-还原"><a href="#1-2-还原" class="headerlink" title="1.2.还原"></a>1.2.还原</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">#在mongodb中关闭服务（或者在操作系统层面关闭mongod服务）：</div><div class="line">&gt;use admin </div><div class="line">&gt;db.shutdownServer() </div><div class="line"></div><div class="line"># 将mongo数据文件删除！注意确认备份存在且正常！~否则回天无力！</div><div class="line">[root@localhost ~]# rm -rf /var/lib/mongo/*   </div><div class="line"></div><div class="line"></div><div class="line">#解压备份的文件到根目录下，相当于还原：</div><div class="line">[root@localhost ~]# tar -xvzf /root/mongodb_20150505.tar.gz -C /  </div><div class="line"></div><div class="line">#如果启动不了服务，先删除文件mongod.lock：</div><div class="line">[root@localhost ~]# rm -f /var/lib/mongo/mongod.lock  </div><div class="line"></div><div class="line">#启动服务，正常访问</div><div class="line">[root@localhost ~]# service mongod start</div></pre></td></tr></table></figure>
+<h1 id="2-使用mongodump和mongorestore"><a href="#2-使用mongodump和mongorestore" class="headerlink" title="2. 使用mongodump和mongorestore"></a>2. 使用mongodump和mongorestore</h1><h2 id="2-1-简单备份还原本地数据库的的方法，备份所有及还原所有"><a href="#2-1-简单备份还原本地数据库的的方法，备份所有及还原所有" class="headerlink" title="2.1.简单备份还原本地数据库的的方法，备份所有及还原所有"></a>2.1.简单备份还原本地数据库的的方法，备份所有及还原所有</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mongodump </div><div class="line">mongorestore /root/dump</div></pre></td></tr></table></figure>
+<p>备份完成后在当前目录将生成一个文件夹”dump“：</p>
+<h2 id="2-1-还原单个数据库时，指定要还原的数据库及其备份目录"><a href="#2-1-还原单个数据库时，指定要还原的数据库及其备份目录" class="headerlink" title="2.1.还原单个数据库时，指定要还原的数据库及其备份目录"></a>2.1.还原单个数据库时，指定要还原的数据库及其备份目录</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">mongorestore --db test /root/dump/test</div></pre></td></tr></table></figure>
+<p>还可以指定输出路径，使用计算机名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mongodump --host localhost.localdomain --port 27017 --out /root/mongodump-2015-05-05 </div><div class="line">mongorestore --port 27017 --db test /root/mongodump-2015-05-05/test</div></pre></td></tr></table></figure>
+<p>远程备份时指定用户名密码（这个没尝试，参考官方例子）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mongodump --host mongodb1.example.net --port 3017 --username user --password pass --out /opt/backup/mongodump-2013-10-24 </div><div class="line">mongorestore --host mongodb1.example.net --port 3017 --username user --password pass /opt/backup/mongodump-2013-10-24</div></pre></td></tr></table></figure></p>
+<h2 id="更多参考：执行-mongorestore-–help"><a href="#更多参考：执行-mongorestore-–help" class="headerlink" title="更多参考：执行 #mongorestore –help"></a>更多参考：执行 #mongorestore –help</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"># mongorestore --help</div><div class="line"> </div><div class="line"> </div><div class="line">general options:</div><div class="line">      --help                              print usage</div><div class="line">      --version                           print the tool version and exit</div><div class="line"> </div><div class="line">verbosity options:</div><div class="line">  -v, --verbose                           more detailed log output (include multiple times for more verbosity, e.g. -vvvvv)</div><div class="line">      --quiet                             hide all log output</div><div class="line"> </div><div class="line">connection options:</div><div class="line">  -h, --host=                             mongodb host to connect to (setname/host1,host2 for replica sets)</div><div class="line">      --port=                             server port (can also use --host hostname:port)</div><div class="line"> </div><div class="line">ssl options:</div><div class="line">      --ssl                               connect to a mongod or mongos that has ssl enabled</div><div class="line">      --sslCAFile=                        the .pem file containing the root certificate chain from</div><div class="line">                                          the certificate authority</div><div class="line">      --sslPEMKeyFile=                    the .pem file containing the certificate and key</div><div class="line">      --sslPEMKeyPassword=                the password to decrypt the sslPEMKeyFile, if necessary</div><div class="line">      --sslCRLFile=                       the .pem file containing the certificate revocation list</div><div class="line">      --sslAllowInvalidCertificates       bypass the validation for server certificates</div><div class="line">      --sslAllowInvalidHostnames          bypass the validation for server name</div><div class="line">      --sslFIPSMode                       use FIPS mode of the installed openssl library</div><div class="line"> </div><div class="line">authentication options:</div><div class="line">  -u, --username=                         username for authentication</div><div class="line">  -p, --password=                         password for authentication</div><div class="line">      --authenticationDatabase=           database that holds the user&apos;s credentials</div><div class="line">      --authenticationMechanism=          authentication mechanism to use</div><div class="line"> </div><div class="line">namespace options:</div><div class="line">  -d, --db=                               database to use</div><div class="line">  -c, --collection=                       collection to use</div><div class="line"> </div><div class="line">input options:</div><div class="line">      --objcheck                          validate all objects before inserting</div><div class="line">      --oplogReplay                       replay oplog for point-in-time restore</div><div class="line">      --oplogLimit=                       only include oplog entries before the provided Timestamp(seconds[:ordinal])</div><div class="line">      --restoreDbUsersAndRoles            restore user and role definitions for the given database</div><div class="line">      --dir=                              input directory, use &apos;-&apos; for stdin</div><div class="line"> </div><div class="line">restore options:</div><div class="line">      --drop                              drop each collection before import</div><div class="line">      --writeConcern=                     write concern options e.g. --writeConcern majority,</div><div class="line">                                          --writeConcern &apos;&#123;w: 3, wtimeout: 500, fsync: true, j:true&#125;&apos; (defaults to &apos;majority&apos;)</div><div class="line">      --noIndexRestore                    don&apos;t restore indexes</div><div class="line">      --noOptionsRestore                  don&apos;t restore collection options</div><div class="line">      --keepIndexVersion                  don&apos;t update index version</div><div class="line">      --maintainInsertionOrder            preserve order of documents during restoration</div><div class="line">  -j, --numParallelCollections=           number of collections to restore in parallel (4 by default)</div><div class="line">      --numInsertionWorkersPerCollection= number of insert operations to run concurrently per collection (1 by default)</div><div class="line">      --stopOnError                       stop restoring if an error is encountered on insert (off bydefault)</div></pre></td></tr></table></figure>
+<h1 id="3-使用mongoimport-和-mongoexport"><a href="#3-使用mongoimport-和-mongoexport" class="headerlink" title="3.使用mongoimport 和 mongoexport"></a>3.使用mongoimport 和 mongoexport</h1><h2 id="3-1-mongoexport导出"><a href="#3-1-mongoexport导出" class="headerlink" title="3.1.mongoexport导出"></a>3.1.mongoexport导出</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">--type: 为json 或 csv </div><div class="line">--fields: 选择导出的列 </div><div class="line"> </div><div class="line"> </div><div class="line">#导出列&#123;_id,id,size&#125;为csv的格式 </div><div class="line">mongoexport --db test --collection tab --type=csv --fields _id,id,size --out /root/test_tab.csv </div><div class="line"> </div><div class="line">#导出json格式 </div><div class="line">mongoexport --db test --collection tab --type=json --out /root/test_tab.json </div><div class="line"> </div><div class="line">#输出到shell(命令行)中，查询id=2 并按name升序输出 </div><div class="line">mongoexport --db test --collection tab --query &apos;&#123;&quot;id&quot;: 2&#125;&apos; --sort &apos;&#123;&quot;name&quot;: 1&#125;&apos; </div><div class="line"> </div><div class="line">#查询导出 </div><div class="line">mongoexport --db test --collection tab --type=csv --query &apos;&#123;&quot;id&quot;: 2&#125;&apos; --fields _id,id --out /root/test_tab.csv </div><div class="line"> </div><div class="line">#简写选项[--db]和[--collection]，使用跳过和限制函数输出 </div><div class="line">mongoexport -d test -c tab --sort &apos;&#123;&quot;name&quot;: -1&#125;&apos; --limit 2 --skip 2 --out /root/test_tab.json </div><div class="line"> </div><div class="line"> </div><div class="line">#若是远程，需要添加参数：host，port，username，password </div><div class="line">--host servername_or_ip --port 37017 --username user --password pass</div></pre></td></tr></table></figure>
+<h2 id="3-2-查看帮助：mongoexport-–help"><a href="#3-2-查看帮助：mongoexport-–help" class="headerlink" title="3.2.查看帮助：mongoexport –help"></a>3.2.查看帮助：mongoexport –help</h2><p>官网:<a href="https://docs.mongodb.com/manual/reference/program/mongoexport/" target="_blank" rel="external">https://docs.mongodb.com/manual/reference/program/mongoexport/</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">general options: </div><div class="line">      --help                         print usage </div><div class="line">      --version                      print the tool version and exit </div><div class="line"> </div><div class="line">verbosity options: </div><div class="line">  -v, --verbose                      more detailed log output (include multiple times for more verbosity, e.g. -vvvvv) </div><div class="line">      --quiet                        hide all log output </div><div class="line"> </div><div class="line">connection options: </div><div class="line">  -h, --host=                        mongodb host to connect to (setname/host1,host2 for replica sets) </div><div class="line">      --port=                        server port (can also use --host hostname:port) </div><div class="line"> </div><div class="line">ssl options: </div><div class="line">      --ssl                          connect to a mongod or mongos that has ssl enabled </div><div class="line">      --sslCAFile=                   the .pem file containing the root certificate chain from the certificate authority </div><div class="line">      --sslPEMKeyFile=               the .pem file containing the certificate and key </div><div class="line">      --sslPEMKeyPassword=           the password to decrypt the sslPEMKeyFile, if necessary </div><div class="line">      --sslCRLFile=                  the .pem file containing the certificate revocation list </div><div class="line">      --sslAllowInvalidCertificates  bypass the validation for server certificates </div><div class="line">      --sslAllowInvalidHostnames     bypass the validation for server name </div><div class="line">      --sslFIPSMode                  use FIPS mode of the installed openssl library </div><div class="line"> </div><div class="line">authentication options: </div><div class="line">  -u, --username=                    username for authentication </div><div class="line">  -p, --password=                    password for authentication </div><div class="line">      --authenticationDatabase=      database that holds the user&apos;s credentials </div><div class="line">      --authenticationMechanism=     authentication mechanism to use </div><div class="line"> </div><div class="line">namespace options: </div><div class="line">  -d, --db=                          database to use </div><div class="line">  -c, --collection=                  collection to use </div><div class="line"> </div><div class="line">output options: </div><div class="line">  -f, --fields=                      comma separated list of field names (required for exporting CSV) e.g. -f &quot;name,age&quot; </div><div class="line">      --fieldFile=                   file with field names - 1 per line </div><div class="line">      --type=                        the output format, either json or csv (defaults to &apos;json&apos;) </div><div class="line">  -o, --out=                         output file; if not specified, stdout is used </div><div class="line">      --jsonArray                    output to a JSON array rather than one object per line </div><div class="line">      --pretty                       output JSON formatted to be human-readable </div><div class="line"> </div><div class="line">querying options: </div><div class="line">  -q, --query=                       query filter, as a JSON string, e.g., &apos;&#123;x:&#123;$gt:1&#125;&#125;&apos; </div><div class="line">  -k, --slaveOk                      allow secondary reads if available (default true) </div><div class="line">      --forceTableScan               force a table scan (do not use $snapshot) </div><div class="line">      --skip=                        number of documents to skip </div><div class="line">      --limit=                       limit the number of documents to export </div><div class="line">      --sort=                        sort order, as a JSON string, e.g. &apos;&#123;x:1&#125;&apos;</div></pre></td></tr></table></figure>
+<h2 id="3-3-mongoimport-导入"><a href="#3-3-mongoimport-导入" class="headerlink" title="3.3.mongoimport 导入"></a>3.3.mongoimport 导入</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#列&quot;_id&quot;也会导入，注意重复键 </div><div class="line">mongoimport --db mydb --collection tab --file /root/test_tab.json </div><div class="line"> </div><div class="line">mongoimport --db mydb --collection tab --type csv --headerline --file /root/test_tab.csv </div><div class="line"> </div><div class="line"> </div><div class="line">#若是远程，需要添加参数：host，port，username，password </div><div class="line">--host servername_or_ip --port 37017 --username user --password pass</div></pre></td></tr></table></figure>
+<h2 id="3-4-查看帮助：-mongoimport-–help"><a href="#3-4-查看帮助：-mongoimport-–help" class="headerlink" title="3.4.查看帮助： mongoimport –help"></a>3.4.查看帮助： mongoimport –help</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">general options: </div><div class="line">      --help                         print usage </div><div class="line">      --version                      print the tool version and exit </div><div class="line"> </div><div class="line">verbosity options: </div><div class="line">  -v, --verbose                      more detailed log output (include multiple times for more verbosity, e.g. -vvvvv) </div><div class="line">      --quiet                        hide all log output </div><div class="line"> </div><div class="line">connection options: </div><div class="line">  -h, --host=                        mongodb host to connect to (setname/host1,host2 for replica sets) </div><div class="line">      --port=                        server port (can also use --host hostname:port) </div><div class="line"> </div><div class="line">ssl options: </div><div class="line">      --ssl                          connect to a mongod or mongos that has ssl enabled </div><div class="line">      --sslCAFile=                   the .pem file containing the root certificate chain from the certificate authority </div><div class="line">      --sslPEMKeyFile=               the .pem file containing the certificate and key </div><div class="line">      --sslPEMKeyPassword=           the password to decrypt the sslPEMKeyFile, if necessary </div><div class="line">      --sslCRLFile=                  the .pem file containing the certificate revocation list </div><div class="line">      --sslAllowInvalidCertificates  bypass the validation for server certificates </div><div class="line">      --sslAllowInvalidHostnames     bypass the validation for server name </div><div class="line">      --sslFIPSMode                  use FIPS mode of the installed openssl library </div><div class="line"> </div><div class="line">authentication options: </div><div class="line">  -u, --username=                    username for authentication </div><div class="line">  -p, --password=                    password for authentication </div><div class="line">      --authenticationDatabase=      database that holds the user&apos;s credentials </div><div class="line">      --authenticationMechanism=     authentication mechanism to use </div><div class="line"> </div><div class="line">namespace options: </div><div class="line">  -d, --db=                          database to use </div><div class="line">  -c, --collection=                  collection to use </div><div class="line"> </div><div class="line">input options: </div><div class="line">  -f, --fields=                      comma separated list of field names, e.g. -f name,age </div><div class="line">      --fieldFile=                   file with field names - 1 per line </div><div class="line">      --file=                        file to import from; if not specified, stdin is used </div><div class="line">      --headerline                   use first line in input source as the field list (CSV and TSV </div><div class="line">                                     only) </div><div class="line">      --jsonArray                    treat input source as a JSON array </div><div class="line">      --type=                        input format to import: json, csv, or tsv (defaults to &apos;json&apos;) </div><div class="line"> </div><div class="line">ingest options: </div><div class="line">      --drop                         drop collection before inserting documents </div><div class="line">      --ignoreBlanks                 ignore fields with empty values in CSV and TSV </div><div class="line">      --maintainInsertionOrder       insert documents in the order of their appearance in the input source </div><div class="line">  -j, --numInsertionWorkers=         number of insert operations to run concurrently (defaults to 1) </div><div class="line">      --stopOnError                  stop importing at first insert/upsert error </div><div class="line">      --upsert                       insert or update objects that already exist </div><div class="line">      --upsertFields=                comma-separated fields for the query part of the upsert </div><div class="line">      --writeConcern=                write concern options e.g. --writeConcern majority, </div><div class="line">                                     --writeConcern &apos;&#123;w: 3, wtimeout: 500, fsync: true, j: true&#125;&apos; </div><div class="line">                                     (defaults to &apos;majority&apos;)</div></pre></td></tr></table></figure>
+<p><a href="http://blog.csdn.net/kk185800961/article/details/45541893" target="_blank" rel="external">转自</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mongodb/" rel="tag"># mongodb</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/帮助说明/" rel="next" title="帮助说明">
+                <i class="fa fa-chevron-left"></i> 帮助说明
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/shard分片/" rel="prev" title="shard分片(转)">
+                shard分片(转) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-使用拷贝和替换数据库文件进行备份还原（有些危险又不好）"><span class="nav-number">1.</span> <span class="nav-text">1.使用拷贝和替换数据库文件进行备份还原（有些危险又不好）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-备份"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.备份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-还原"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.还原</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-使用mongodump和mongorestore"><span class="nav-number">2.</span> <span class="nav-text">2. 使用mongodump和mongorestore</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-简单备份还原本地数据库的的方法，备份所有及还原所有"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.简单备份还原本地数据库的的方法，备份所有及还原所有</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-还原单个数据库时，指定要还原的数据库及其备份目录"><span class="nav-number">2.2.</span> <span class="nav-text">2.1.还原单个数据库时，指定要还原的数据库及其备份目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多参考：执行-mongorestore-–help"><span class="nav-number">2.3.</span> <span class="nav-text">更多参考：执行 #mongorestore –help</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-使用mongoimport-和-mongoexport"><span class="nav-number">3.</span> <span class="nav-text">3.使用mongoimport 和 mongoexport</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-mongoexport导出"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.mongoexport导出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-查看帮助：mongoexport-–help"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.查看帮助：mongoexport –help</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-mongoimport-导入"><span class="nav-number">3.3.</span> <span class="nav-text">3.3.mongoimport 导入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-查看帮助：-mongoimport-–help"><span class="nav-number">3.4.</span> <span class="nav-text">3.4.查看帮助： mongoimport –help</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

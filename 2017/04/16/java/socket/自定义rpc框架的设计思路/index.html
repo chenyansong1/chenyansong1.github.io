@@ -1,0 +1,764 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,rpc," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="关联的知识 spring的注解和自定义注解 netty 反射 动态代理 zookeeper">
+<meta name="keywords" content="java,rpc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义rpc框架的设计思路">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/java/socket/自定义rpc框架的设计思路/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="关联的知识 spring的注解和自定义注解 netty 反射 动态代理 zookeeper">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/java/rpc/rpc.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/java/rpc/rpc_simple.png">
+<meta property="og:updated_time" content="2017-02-25T10:58:10.187Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义rpc框架的设计思路">
+<meta name="twitter:description" content="关联的知识 spring的注解和自定义注解 netty 反射 动态代理 zookeeper">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/java/rpc/rpc.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/java/socket/自定义rpc框架的设计思路/"/>
+
+
+
+
+
+  <title> 自定义rpc框架的设计思路 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/java/socket/自定义rpc框架的设计思路/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                自定义rpc框架的设计思路
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="关联的知识"><a href="#关联的知识" class="headerlink" title="关联的知识"></a>关联的知识</h1><ol>
+<li>spring的注解和自定义注解</li>
+<li>netty</li>
+<li>反射</li>
+<li>动态代理</li>
+<li>zookeeper</li>
+</ol>
+<a id="more"></a>
+<h1 id="1-实现原理图-详细"><a href="#1-实现原理图-详细" class="headerlink" title="1.实现原理图(详细)"></a>1.实现原理图(详细)</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/java/rpc/rpc.png" alt=""></p>
+<h1 id="2-实现简图"><a href="#2-实现简图" class="headerlink" title="2.实现简图"></a>2.实现简图</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/java/rpc/rpc_simple.png" alt=""></p>
+<h2 id="2-1-对客户端来说"><a href="#2-1-对客户端来说" class="headerlink" title="2.1.对客户端来说"></a>2.1.对客户端来说</h2><p>我只是需要调用一个业务的实现，所以我调用对应业务实现的接口中的方法</p>
+<h2 id="2-2-对服务端来说"><a href="#2-2-对服务端来说" class="headerlink" title="2.2.对服务端来说"></a>2.2.对服务端来说</h2><p>我只是实现业务接口中的方法，然后自定义注解，将业务实现类交给spring进行管理</p>
+<h1 id="3-工程rpc-sample-server"><a href="#3-工程rpc-sample-server" class="headerlink" title="3.工程rpc-sample-server"></a>3.工程rpc-sample-server</h1><h2 id="3-1-服务端的启动入口"><a href="#3-1-服务端的启动入口" class="headerlink" title="3.1.服务端的启动入口"></a>3.1.服务端的启动入口</h2><p>加载spring的配置文件，构造其中的bean</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public class RpcBootstrap &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        new ClassPathXmlApplicationContext(&quot;spring.xml&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3-2-spring的配置文件"><a href="#3-2-spring的配置文件" class="headerlink" title="3.2.spring的配置文件"></a>3.2.spring的配置文件</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></div><div class="line">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">       <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></div><div class="line">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans</span></div><div class="line">       http://www.springframework.org/schema/beans/spring-beans.xsd</div><div class="line">       http://www.springframework.org/schema/context</div><div class="line">       http://www.springframework.org/schema/context/spring-context.xsd"&gt;</div><div class="line">       </div><div class="line">    <span class="comment">&lt;!-- 扫描指定包下的类 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"cn.itcast.rpc.sample.server"</span>/&gt;</span></div><div class="line">    <span class="comment">&lt;!-- 指定加载一个properties文件 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:rpc.properties"</span>/&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"serviceRegistry"</span> <span class="attr">class</span>=<span class="string">"cn.itcast.rpc.registry.ServiceRegistry"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">name</span>=<span class="string">"registryAddress"</span> <span class="attr">value</span>=<span class="string">"$&#123;registry.address&#125;"</span>/&gt;</span><span class="comment">&lt;!-- 使用ognl表达式，key-value在properties中配置了 --&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"rpcServer"</span> <span class="attr">class</span>=<span class="string">"cn.itcast.rpc.server.RpcServer"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">name</span>=<span class="string">"serverAddress"</span> <span class="attr">value</span>=<span class="string">"$&#123;server.address&#125;"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">name</span>=<span class="string">"serviceRegistry"</span> <span class="attr">ref</span>=<span class="string">"serviceRegistry"</span>/&gt;</span><span class="comment">&lt;!-- 构造函数的参数指向了另一个Bean --&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="3-3-业务实现类"><a href="#3-3-业务实现类" class="headerlink" title="3.3.业务实现类"></a>3.3.业务实现类</h2><ol>
+<li>实现接口中的方法</li>
+<li>自定义注解RpcService</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@RpcService(HelloService.class)</div><div class="line">public class HelloServiceImpl implements HelloService &#123; </div><div class="line">    //..........</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="4-工程rpc-server"><a href="#4-工程rpc-server" class="headerlink" title="4.工程rpc-server"></a>4.工程rpc-server</h1><h2 id="4-1-spring启动的过程中会调用RpcServer中指定的方法"><a href="#4-1-spring启动的过程中会调用RpcServer中指定的方法" class="headerlink" title="4.1.spring启动的过程中会调用RpcServer中指定的方法"></a>4.1.spring启动的过程中会调用RpcServer中指定的方法</h2><p>由于本类实现了ApplicationContextAware 和 InitializingBean,<font color="red">spring构造本对象时会调用setApplicationContext()方法，从而可以在方法中通过自定义注解获得用户的业务接口和实现，还会调用afterPropertiesSet()方法，在方法中启动netty服务器</font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div></pre></td><td class="code"><pre><div class="line">public class RpcServer implements ApplicationContextAware, InitializingBean &#123;</div><div class="line"></div><div class="line">	private static final Logger LOGGER = LoggerFactory.getLogger(RpcServer.class);</div><div class="line"></div><div class="line">	private String serverAddress;</div><div class="line">	private ServiceRegistry serviceRegistry;</div><div class="line"></div><div class="line">	//用于存储业务接口和实现类的实例对象(由spring所构造)</div><div class="line">	private Map&lt;String, Object&gt; handlerMap = new HashMap&lt;String, Object&gt;();</div><div class="line"></div><div class="line">	//服务器绑定的地址和端口由spring在构造本类时从配置文件中传入</div><div class="line">	public RpcServer(String serverAddress, ServiceRegistry serviceRegistry) &#123;</div><div class="line">		this.serverAddress = serverAddress;</div><div class="line">		//用于向zookeeper注册名称服务的工具类</div><div class="line">		this.serviceRegistry = serviceRegistry;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 通过注解，获取标注了rpc服务注解的业务类的----接口及impl对象，将它放到handlerMap中</div><div class="line">	 */</div><div class="line">	public void setApplicationContext(ApplicationContext ctx) throws BeansException &#123;</div><div class="line">		Map&lt;String, Object&gt; serviceBeanMap = ctx.getBeansWithAnnotation(RpcService.class);</div><div class="line">		if (MapUtils.isNotEmpty(serviceBeanMap)) &#123;</div><div class="line">			for (Object serviceBean : serviceBeanMap.values()) &#123;</div><div class="line">				//从业务实现类上的自定义注解中获取到value，从来获取到业务接口的全名</div><div class="line">				String interfaceName = serviceBean.getClass().getAnnotation(RpcService.class).value().getName();</div><div class="line">				handlerMap.put(interfaceName, serviceBean);</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 在此启动netty服务，绑定handle流水线：</div><div class="line">	 * 1、接收请求数据进行反序列化得到request对象</div><div class="line">	 * 2、根据request中的参数，让RpcHandler从handlerMap中找到对应的业务imple，调用指定方法，获取返回结果</div><div class="line">	 * 3、将业务调用结果封装到response并序列化后发往客户端</div><div class="line">	 *</div><div class="line">	 */</div><div class="line">	public void afterPropertiesSet() throws Exception &#123;</div><div class="line">		EventLoopGroup bossGroup = new NioEventLoopGroup();</div><div class="line">		EventLoopGroup workerGroup = new NioEventLoopGroup();</div><div class="line">		try &#123;</div><div class="line">			ServerBootstrap bootstrap = new ServerBootstrap();</div><div class="line">			bootstrap</div><div class="line">					.group(bossGroup, workerGroup)</div><div class="line">					.channel(NioServerSocketChannel.class)</div><div class="line">					.childHandler(new ChannelInitializer&lt;SocketChannel&gt;() &#123;</div><div class="line">						@Override</div><div class="line">						public void initChannel(SocketChannel channel)</div><div class="line">								throws Exception &#123;</div><div class="line">							channel.pipeline()</div><div class="line">									.addLast(new RpcDecoder(RpcRequest.class))// 注册解码 IN-1</div><div class="line">									.addLast(new RpcEncoder(RpcResponse.class))// 注册编码 OUT</div><div class="line">									.addLast(new RpcHandler(handlerMap));//注册RpcHandler IN-2</div><div class="line">						&#125;</div><div class="line">					&#125;).option(ChannelOption.SO_BACKLOG, 128)</div><div class="line">					.childOption(ChannelOption.SO_KEEPALIVE, true);</div><div class="line"></div><div class="line">			</div><div class="line">			String[] array = serverAddress.split(&quot;:&quot;);</div><div class="line">			String host = array[0];</div><div class="line">			int port = Integer.parseInt(array[1]);</div><div class="line"></div><div class="line">			ChannelFuture future = bootstrap.bind(host, port).sync();</div><div class="line">			LOGGER.debug(&quot;server started on port &#123;&#125;&quot;, port);</div><div class="line"></div><div class="line">			if (serviceRegistry != null) &#123;</div><div class="line">				serviceRegistry.register(serverAddress);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			future.channel().closeFuture().sync();</div><div class="line">		&#125; finally &#123;</div><div class="line">			workerGroup.shutdownGracefully();</div><div class="line">			bossGroup.shutdownGracefully();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="5-工程rpc-sample-app"><a href="#5-工程rpc-sample-app" class="headerlink" title="5.工程rpc-sample-app"></a>5.工程rpc-sample-app</h1><h2 id="5-1-调用业务接口中方法"><a href="#5-1-调用业务接口中方法" class="headerlink" title="5.1.调用业务接口中方法"></a>5.1.调用业务接口中方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public class HelloServiceTest &#123;</div><div class="line">    //注解</div><div class="line">    @Autowired</div><div class="line">    private RpcProxy rpcProxy;</div><div class="line">    @Test</div><div class="line">    public void helloTest1() &#123;</div><div class="line">        // 调用代理的create方法，代理HelloService接口</div><div class="line">        HelloService helloService = rpcProxy.create(HelloService.class);</div><div class="line">        </div><div class="line">        // 调用代理的方法，执行invoke</div><div class="line">        String result = helloService.hello(&quot;World&quot;);</div><div class="line">        System.out.println(&quot;服务端返回结果：&quot;);</div><div class="line">        System.out.println(result);</div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="6-工程rpc-client"><a href="#6-工程rpc-client" class="headerlink" title="6.工程rpc-client"></a>6.工程rpc-client</h1><h2 id="6-1-获取代理"><a href="#6-1-获取代理" class="headerlink" title="6.1.获取代理"></a>6.1.获取代理</h2><p>向zk查找可用的服务主机地址<br>在代理中调用rpc client发送消息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">public class RpcProxy &#123;</div><div class="line">    private String serverAddress;</div><div class="line">    private ServiceDiscovery serviceDiscovery;</div><div class="line">    public RpcProxy(String serverAddress) &#123;</div><div class="line">        this.serverAddress = serverAddress;</div><div class="line">    &#125;</div><div class="line">    public RpcProxy(ServiceDiscovery serviceDiscovery) &#123;</div><div class="line">        this.serviceDiscovery = serviceDiscovery;</div><div class="line">    &#125;</div><div class="line">    /**</div><div class="line">     * 创建代理</div><div class="line">     * </div><div class="line">     * @param interfaceClass</div><div class="line">     * @return</div><div class="line">     */</div><div class="line">    @SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">    public &lt;T&gt; T create(Class&lt;?&gt; interfaceClass) &#123;</div><div class="line">        return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),</div><div class="line">                new Class&lt;?&gt;[] &#123; interfaceClass &#125;, new InvocationHandler() &#123;</div><div class="line">                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</div><div class="line">                        //创建RpcRequest，封装被代理类的属性</div><div class="line">                        RpcRequest request = new RpcRequest();</div><div class="line">                        request.setRequestId(UUID.randomUUID().toString());</div><div class="line">                        //拿到声明这个方法的业务接口名称</div><div class="line">                        request.setClassName(method.getDeclaringClass().getName());</div><div class="line">                        request.setMethodName(method.getName());</div><div class="line">                        request.setParameterTypes(method.getParameterTypes());</div><div class="line">                        request.setParameters(args);</div><div class="line">                        //查找服务</div><div class="line">                        if (serviceDiscovery != null) &#123;</div><div class="line">                            serverAddress = serviceDiscovery.discover();</div><div class="line">                        &#125;</div><div class="line">                        //随机获取服务的地址</div><div class="line">                        String[] array = serverAddress.split(&quot;:&quot;);</div><div class="line">                        String host = array[0];</div><div class="line">                        int port = Integer.parseInt(array[1]);</div><div class="line">                        //创建Netty实现的RpcClient，链接服务端</div><div class="line">                        RpcClient client = new RpcClient(host, port);</div><div class="line">                        //通过netty向服务端发送请求</div><div class="line">                        RpcResponse response = client.send(request);</div><div class="line">                        //返回信息</div><div class="line">                        if (response.isError()) &#123;</div><div class="line">                            throw response.getError();</div><div class="line">                        &#125; else &#123;</div><div class="line">                            return response.getResult();</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="7-工程rpc-registry"><a href="#7-工程rpc-registry" class="headerlink" title="7.工程rpc-registry"></a>7.工程rpc-registry</h1><ol>
+<li>提供rpc server向zk注册</li>
+<li>rpc client可以查找可用的主机地址</li>
+</ol>
+<h1 id="8-工程rpc-common"><a href="#8-工程rpc-common" class="headerlink" title="8.工程rpc-common"></a>8.工程rpc-common</h1><p>1.对通信过程中的流数据解码封装成类，或者编码成为流</p>
+<h1 id="9-代码实现"><a href="#9-代码实现" class="headerlink" title="9.代码实现"></a>9.代码实现</h1><p><a href="https://github.com/chenyansong1/custom_rpc/tree/master/%E8%87%AA%E5%AE%9A%E4%B9%89rpc%E9%A1%B9%E7%9B%AE%E5%B7%A5%E7%A8%8B" target="_blank" rel="external">github地址</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/rpc/" rel="tag"># rpc</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/java/socket/选择器Selector/" rel="next" title="选择器Selector">
+                <i class="fa fa-chevron-left"></i> 选择器Selector
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/java/socket/缓冲区_Buffer/" rel="prev" title="缓冲区-Buffer">
+                缓冲区-Buffer <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关联的知识"><span class="nav-number">1.</span> <span class="nav-text">关联的知识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-实现原理图-详细"><span class="nav-number">2.</span> <span class="nav-text">1.实现原理图(详细)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-实现简图"><span class="nav-number">3.</span> <span class="nav-text">2.实现简图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-对客户端来说"><span class="nav-number">3.1.</span> <span class="nav-text">2.1.对客户端来说</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-对服务端来说"><span class="nav-number">3.2.</span> <span class="nav-text">2.2.对服务端来说</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-工程rpc-sample-server"><span class="nav-number">4.</span> <span class="nav-text">3.工程rpc-sample-server</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-服务端的启动入口"><span class="nav-number">4.1.</span> <span class="nav-text">3.1.服务端的启动入口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-spring的配置文件"><span class="nav-number">4.2.</span> <span class="nav-text">3.2.spring的配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-业务实现类"><span class="nav-number">4.3.</span> <span class="nav-text">3.3.业务实现类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-工程rpc-server"><span class="nav-number">5.</span> <span class="nav-text">4.工程rpc-server</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-spring启动的过程中会调用RpcServer中指定的方法"><span class="nav-number">5.1.</span> <span class="nav-text">4.1.spring启动的过程中会调用RpcServer中指定的方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-工程rpc-sample-app"><span class="nav-number">6.</span> <span class="nav-text">5.工程rpc-sample-app</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-调用业务接口中方法"><span class="nav-number">6.1.</span> <span class="nav-text">5.1.调用业务接口中方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-工程rpc-client"><span class="nav-number">7.</span> <span class="nav-text">6.工程rpc-client</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-获取代理"><span class="nav-number">7.1.</span> <span class="nav-text">6.1.获取代理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-工程rpc-registry"><span class="nav-number">8.</span> <span class="nav-text">7.工程rpc-registry</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-工程rpc-common"><span class="nav-number">9.</span> <span class="nav-text">8.工程rpc-common</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-代码实现"><span class="nav-number">10.</span> <span class="nav-text">9.代码实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

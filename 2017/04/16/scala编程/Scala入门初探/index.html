@@ -1,0 +1,776 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.变量定义先写变量后写类型12345678scala&amp;gt; val msg: java.lang.String = &amp;quot;hello world!&amp;quot;msg: String = hello world!//或者scala&amp;gt; val msg: String = &amp;quot;hello world!&amp;quot;        #先写变量名称,再写变量类型msg: String">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第二章 scala入门初探">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/Scala入门初探/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.变量定义先写变量后写类型12345678scala&amp;gt; val msg: java.lang.String = &amp;quot;hello world!&amp;quot;msg: String = hello world!//或者scala&amp;gt; val msg: String = &amp;quot;hello world!&amp;quot;        #先写变量名称,再写变量类型msg: String">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/function.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/function_2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/option.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/set.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/map.png">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.008Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第二章 scala入门初探">
+<meta name="twitter:description" content="1.变量定义先写变量后写类型12345678scala&amp;gt; val msg: java.lang.String = &amp;quot;hello world!&amp;quot;msg: String = hello world!//或者scala&amp;gt; val msg: String = &amp;quot;hello world!&amp;quot;        #先写变量名称,再写变量类型msg: String">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/function.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/Scala入门初探/"/>
+
+
+
+
+
+  <title> 第二章 scala入门初探 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/Scala入门初探/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第二章 scala入门初探
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-变量定义"><a href="#1-变量定义" class="headerlink" title="1.变量定义"></a>1.变量定义</h1><p>先写变量后写类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">scala&gt; val msg: java.lang.String = &quot;hello world!&quot;</div><div class="line">msg: String = hello world!</div><div class="line"></div><div class="line">//或者</div><div class="line">scala&gt; val msg: String = &quot;hello world!&quot;        #先写变量名称,再写变量类型</div><div class="line">msg: String = hello world!    #定义了一个名称为msg的变量,类型为String, 值为 &quot;hello world!&quot;</div><div class="line"></div><div class="line">scala&gt;</div></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>自动类型推断<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#也可以省略类型的定义,scala会自动推断出变量的类型</div><div class="line">scala&gt; val msg = &quot;hello world!&quot;    #因为值的类型是String,所以可以推断出msg的类型是String,所以在定义变量的时候可以省略对msg类型的推断</div><div class="line">msg: String = hello world!        </div><div class="line"></div><div class="line">scala&gt;</div></pre></td></tr></table></figure></p>
+<p>val类型变量不能修改,var可以<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">#val类型的变量不能再次对其进行赋值操作</div><div class="line"></div><div class="line">scala&gt; msg = &quot;goodby cruel world!&quot;</div><div class="line">&lt;console&gt;:8: error: reassignment to val</div><div class="line">       msg = &quot;goodby cruel world!&quot;</div><div class="line">           ^</div><div class="line"></div><div class="line"></div><div class="line">#var可以重复赋值</div><div class="line"></div><div class="line">scala&gt; var msg_var: String = &quot;hello world!&quot;</div><div class="line">msg_var: String = hello world!</div><div class="line"></div><div class="line">#对变量重新赋值</div><div class="line">scala&gt; msg_var = &quot;hello 2222 world!&quot;</div><div class="line">msg_var: String = hello 2222 world!</div><div class="line"></div><div class="line">scala&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="2-函数定义"><a href="#2-函数定义" class="headerlink" title="2.函数定义"></a>2.函数定义</h1><p>函数的基本结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">def max(x: Int, y:Int): Int = &#123;</div><div class="line">  if(x &gt; y) x else y</div><div class="line">&#125;</div><div class="line">#scala的条件表达式可以像Java的三元操作符那样生成结果值</div><div class="line">if(x &gt; y) x else y      #scala中的if/else不仅控制语句的执行流程,同时有返回值,所以他不等同于Java中的if/else</div><div class="line">#等同于Java中的:</div><div class="line">(x &gt; y)? x: y</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/function.png" alt=""></p>
+<p>函数的返回值类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#函数的返回值类型可以不用写,因为可以使用函数体推断出来,但是如果函数是递归的,那么必须明确的说明返回值的类型</div><div class="line"></div><div class="line">#尽管如此,显示的说明函数结果类型也经常是一个好主意,这种类型标注可以使代码便于阅读,因为读者不用研究函数体之后再去猜测结果类型</div></pre></td></tr></table></figure></p>
+<p>函数体<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">如果函数仅包含一个语句,那么连花括号都可以选择不写,这样max函数就可以写成:</div><div class="line">def max2(x: Int, y:Int): Int =  if(x &gt; y) x else y</div></pre></td></tr></table></figure></p>
+<p>没有参数和返回值的函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line">scala&gt; def max2(x: Int, y:Int): Int =  if(x &gt; y) x else y</div><div class="line">max2: (x: Int, y: Int)Int</div><div class="line"> </div><div class="line">scala&gt; def greet() = println(&quot;Hello world!&quot;)</div><div class="line">greet: ()Unit        #greet是函数名,  ()说明函数不带参数,  Unit是greet的结果类型,指的是函数没有有效的返回值</div></pre></td></tr></table></figure></p>
+<h1 id="3-编写scala脚本"><a href="#3-编写scala脚本" class="headerlink" title="3.编写scala脚本"></a>3.编写scala脚本</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#在hello.scala文件中,有如下的代码:</div><div class="line">println(&quot;hello world , from a script! &quot;)</div><div class="line"></div><div class="line">#执行上述脚本文件</div><div class="line">$ scala hello.scala</div><div class="line"></div><div class="line">#系统输出</div><div class="line">hello world , from a script! </div><div class="line"></div><div class="line"></div><div class="line">#传参,scala脚本的命令行参数保存在名为args的scala数组中</div><div class="line">println(&quot;hello world , from &quot; + args(0) + &quot; a script! &quot;)      //注意scala中的数组是以()去取元素的,而不是像Java中是以[]去取元素</div><div class="line"></div><div class="line"></div><div class="line">#再次执行脚本</div><div class="line">$ scala hello.scala xxxx</div><div class="line">hello world , from xxxx a script!</div></pre></td></tr></table></figure>
+<h1 id="4-用while循环-用if做判断"><a href="#4-用while循环-用if做判断" class="headerlink" title="4.用while循环,用if做判断"></a>4.用while循环,用if做判断</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#在printargs.scala文件里,输入以下代码测试while</div><div class="line">var i = 0</div><div class="line">while (i &lt; args.length) &#123;</div><div class="line">  println(args(i))</div><div class="line">  i += 1</div><div class="line">&#125;</div><div class="line"></div><div class="line">#上述代码并不是scala推荐的代码风格,在这里只是有助于解释while循环</div><div class="line">#在scala中并没有++/--,必须写成+= / -=这样的操作</div></pre></td></tr></table></figure>
+<h1 id="5-用foreach和for做枚举"><a href="#5-用foreach和for做枚举" class="headerlink" title="5.用foreach和for做枚举"></a>5.用foreach和for做枚举</h1><p>foreach</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">#上面所写的while循环的编码风格被称之为指令式编程(即:逐条执行指令,并经常改变不同函数之间的共享状态,在Java/C++/C这些语言中常见),在scala中更偏向的是函数式编程,如下:</div><div class="line"></div><div class="line">#在pa.scala文件中,如下代码:</div><div class="line">args.foreach(arg=&gt;println(arg))</div><div class="line"></div><div class="line">#执行</div><div class="line">$ scala pa.scala xx1 xx2 xx3</div><div class="line"></div><div class="line">#打印</div><div class="line">xx1</div><div class="line">xx2</div><div class="line">xx3</div><div class="line"></div><div class="line">#在上述例子中,scala解释器可以推断arg的类型为String,因为String是调用foreach的那个数组的元素类型,当然也可以更明确的给args加上类型名:</div><div class="line">args.foreach( (arg: String) =&gt;p rintln(arg))</div><div class="line"></div><div class="line"></div><div class="line">#更加简洁的写法</div><div class="line"></div><div class="line">args.foreach(p rintln(arg))</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/function_2.png" alt=""></p>
+<p>for<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#scala也是提供了像指令式的for</div><div class="line"></div><div class="line">for (arg &lt;- args)&#123;</div><div class="line">  println(arg)</div><div class="line">&#125;</div><div class="line">#&lt;- 右侧是已经在前面见过的args数组,&lt;-左侧的arg是val的名称(不是var,这里一定是val),尽管arg可能感觉像var,因为每次枚举都会得到新的值,但这的确是val,因为他不能在for表达式的函数体中被重新赋值,所以,对于args数组的每个元素,枚举的时候都会创建并初始化新的arg值,然后调用执行for的函数体</div></pre></td></tr></table></figure></p>
+<h1 id="6-数组Array"><a href="#6-数组Array" class="headerlink" title="6.数组Array"></a>6.数组Array</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">val greetStrings = new Array[String](3)</div><div class="line">greetStrings(0) = &quot;hello&quot;    //访问数组元素是使用圆括号,而不是像Java一样使用的是[]</div><div class="line">greetStrings(1) = &quot;,&quot;</div><div class="line">greetStrings(2) = &quot;world!&quot;</div><div class="line"></div><div class="line">for (i &lt;- 0 to 2) &#123;</div><div class="line">  println(greetStrings(i))</div><div class="line">&#125;</div><div class="line"></div><div class="line">#当同时使用类型和值参数化实例的时候,应该首先写方括号和类型参数,然后再写圆括号和值参数</div><div class="line">#以上代码并不是scala推荐的创建和初始化数组的推荐方式</div><div class="line"></div><div class="line"></div><div class="line">#因为scala的类型推断,所以有如下的代码</div><div class="line">val greetStrings: Array[String] = new Array[String](3)// 完整定义的形式能够更有效的说明类型参数(方括号包含的类型名)是实例类型的组成部分,而值参数(圆括号包含的值)不是,即:greetString的类型是Array[String] ,不是Array[String](3)</div><div class="line"></div><div class="line"></div><div class="line">#变量val</div><div class="line">用val定义的变量不能被重新赋值,但变量指向的对象内部却可以改变,所在在本例中,greetString对象不能被重新赋值成别的数组,他将永远指向初始化时指定的那个Array[String]实例,但是Array[String]的内部元素始终能被修改,因此数组本省是可变的</div></pre></td></tr></table></figure>
+<p>scala中没有运算符重载的问题<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">scala没有操作符重载的问题,因为它根本没有传统意义上的操作符,取而代之的是,诸如:+/-/*等遮掩的字符,可以用来做方法名</div><div class="line">因此在scala中输入 1+2的时候,实际上是在Int对象1上调用名称为+的方法,并把2当做参数传给他,如下图:</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/option.png" alt=""></p>
+<p>使用圆括号访问数组元素的原因<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">val greetStrings = new Array[String](3)</div><div class="line">greetStrings(0) = &quot;hello&quot;    //访问数组元素是使用圆括号,而不是像Java一样使用的是[]</div><div class="line">greetStrings(1) = &quot;,&quot;</div><div class="line">greetStrings(2) = &quot;world!&quot;</div><div class="line">/*</div><div class="line"></div><div class="line">数组只是类的实例(将greetStrings看做是对象),用括号传递给变量一个或多个值参数时,scala会把它转换成对apply方法的调用,于是greetString(i)转换成greetString.apply(i),所以scala里访问数组的元素也只不过是跟其他方法一样的调用,这个原则不是只对数组: 任何对于对象的值参数应用将都被转换为对apply方法的调用,当然前提是这个类型实际定义过apply方法,所以这不是特例,而是通用法则</div><div class="line"></div><div class="line">与之相对应,当对带有括号并包含一到若干参数的变量赋值时,编译器将使用对象的update方法对括号里的参数(索引值)和等号右边的对象执行调用</div><div class="line"></div><div class="line">*/</div><div class="line">greetStrings(0) = &quot;hello&quot;</div><div class="line">#将被转化为:</div><div class="line">greetStrings.update(0, &quot;hello&quot;)    #也是讲greetStrings看做是对象,update只是调用对象的方法</div><div class="line"></div><div class="line"></div><div class="line">#综上代码可以写成:</div><div class="line">val greetStrings = new Array[String](3)</div><div class="line">greetStrings.update(0,&quot;hello&quot;)</div><div class="line">greetStrings.update(1,&quot;,&quot;)</div><div class="line">greetStrings.update(2,&quot;world!&quot;)</div><div class="line"></div><div class="line">for(i &lt;- 0.to(2))&#123;</div><div class="line">  println(greetStrings.apply(i))</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p> 简介的构建数组的方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">val numNames = Array(&quot;zero&quot;, &quot;one&quot;, &quot;two&quot;)    //编译器根据传递的值类型(字符串)推断数组的类型是Array[String]</div><div class="line"></div><div class="line">#实际上是调用</div><div class="line">val numNames2 = Array.apply(&quot;zero&quot;, &quot;one&quot;, &quot;two&quot;)    //在Array的伴生对象中有apply方法</div></pre></td></tr></table></figure></p>
+<h1 id="7-列表list"><a href="#7-列表list" class="headerlink" title="7.列表list"></a>7.列表list</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">scala数组是可变的同类对象序列,例如:Array[String]的所有对象都是String,而且尽管数组在实例化之后长度固定,但是他的元素值却是可变的,所以说数组是可变的</div><div class="line">list是不可变的同类对象序列,scala的scala.List不同于Java的java.util.List,一旦创建了就不可改变,实际上scala的列表是为了实现函数式风格的编程而设计的,</div><div class="line">*/</div><div class="line">val oneTwoThree = List(1, 2, 3)</div><div class="line"></div><div class="line">val oneTwo = List(1, 2)</div><div class="line">val threeFour = List(3,4)</div><div class="line">val oneTwoThreeFour = oneTwo ::: threeFour    //用新的值重建了列表然后返回</div></pre></td></tr></table></figure>
+<p> 向列表添加单个元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">val twoThree = List(1, 2)</div><div class="line">val oneTwoThree = 1 :: twoThree</div><div class="line">/*</div><div class="line">表达式&quot;1 :: twoThree&quot;中, ::是右操作数twoThree的方法,即:方法的调用者是twoThree,</div><div class="line">1是方法的传入参数,因此可以写成:twoThree.::(1)</div><div class="line">* */</div></pre></td></tr></table></figure></p>
+<p> Nil形成新的列表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//因为Nil是空列表的简写,所以可以使用::操作符把所有元素都串联起来,并以Nil作结尾来定义新列表,例如可以用以下方法产生与上文同样的输出:&quot;List(1,2,3)&quot;</div><div class="line">val oneTwoThree = 1::2::3::Nil</div></pre></td></tr></table></figure></p>
+<p> 列表不支持append操作的解决方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">List类没有提供append操作,因为随着列表变长,append的耗时将呈现线性增长,而使用::做前缀则仅仅耗时固定的时间,如果你想通过添加元素来构造列表,你的选择可以如下:</div><div class="line">1.先使用前缀(::)去构建一个list,在调用reverse</div><div class="line">2.使用ListBuffer,一种提供append操作的可变列表,完成之后用toList</div></pre></td></tr></table></figure></p>
+<p>List 的一些方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">//空List</div><div class="line">List() //或者 Nil</div><div class="line"></div><div class="line">//创建带有三个值的新的List[String]</div><div class="line">List(&quot;cool&quot;, &quot;tools&quot;, &quot;rule&quot;)</div><div class="line"></div><div class="line">//创建带有三个值的新的List[String]</div><div class="line">val thrill = &quot;Will&quot;::&quot;fil&quot;::&quot;until&quot;::Nil</div><div class="line"></div><div class="line">//叠加两个列表(返回带&quot;a&quot;,&quot;b&quot;, &quot;c&quot;, &quot;d&quot;的新List[String] )</div><div class="line">List(&quot;a&quot;, &quot;b&quot;) ::: List(&quot;c&quot;, &quot;d&quot;)</div><div class="line"></div><div class="line">//获取list元素(返回thrill列表上索引为2的元素,从list是0开始)</div><div class="line">thrill(2) //&quot;until&quot;</div><div class="line"></div><div class="line">//count函数,计算满足条件的list的元素的个数</div><div class="line">thrill.count(s=&gt;s.length == 4) //计算长度为4的String元素的个数</div><div class="line"></div><div class="line">//删除元素并返回新列表</div><div class="line">thrill.drop(2)  //返回去掉前两个元素的thrill列表(List(&quot;until&quot;) )</div><div class="line">thrill.dropRight(2) //返回去掉后两个元素的thrill列表( List(&quot;Will&quot;) )</div><div class="line"></div><div class="line">//exists判断是否存在某个值</div><div class="line">thrill.exists(s=&gt;s==&quot;until&quot; )  //判断是否有值为&quot;until&quot;的字符串元素在thrill里</div><div class="line"></div><div class="line">//过滤掉指定条件的元素,返回新的list</div><div class="line">thrill.filter(s=&gt;s.length==4) //新的列表: List(&quot;Will&quot;, &quot;fill&quot;)</div><div class="line"></div><div class="line">//</div><div class="line">thrill.forall(s =&gt; s.endsWith(&quot;1&quot;))//判断是否thrill列表里的所有元素都以&quot;1&quot;结尾</div><div class="line"></div><div class="line">//遍历每一个list元素</div><div class="line">thrill.foreach(s =&gt; print(s))</div><div class="line">thrill.foreach(print) //上面形式的简写</div><div class="line"></div><div class="line">//取第一个元素</div><div class="line">thrill.head   //返回thrill列表的第一个元素( &quot;Will&quot; )</div><div class="line"></div><div class="line">//返回列表的最后一个元素</div><div class="line">thrill.last //&quot;until&quot;</div><div class="line"></div><div class="line">thrill.init //返回thrill列表除最后一个以外其他元素组成的列表( List(&quot;Will&quot;, &quot;fill&quot;) )</div><div class="line"></div><div class="line">//返回除第一个元素之外依次组成的新列表</div><div class="line">thrill.tail // List(&quot;fill&quot;, &quot;until&quot;)</div><div class="line"></div><div class="line"></div><div class="line">//判断thrill列表是否为空</div><div class="line">thrill.isEmpty  // false</div><div class="line"></div><div class="line">//返回列表元素的数量</div><div class="line">thrill.length   //3</div><div class="line"></div><div class="line">//遍历每一个元素,形成新的列表</div><div class="line">thrill.map(s =&gt; s+&quot;y&quot; ) //返回由thrill列表里每一个String元素都加了&quot;y&quot;构成的列表 (LIst(&quot;Willy&quot;,&quot;filly&quot;, &quot;untily&quot;) )</div><div class="line"></div><div class="line">//返回由list元素组成的字符串</div><div class="line">thrill.mkString(&quot;, &quot;) //&quot;Will, fill, until&quot;</div><div class="line"></div><div class="line">//翻转list,形成新列表</div><div class="line">thrill.reverse  //返回翻转之后的新列表: List(&quot;until&quot;,&quot;fill&quot;,&quot;Will&quot;)</div></pre></td></tr></table></figure>
+<h1 id="8-元组Tuple"><a href="#8-元组Tuple" class="headerlink" title="8.元组Tuple"></a>8.元组Tuple</h1><p>&emsp;元组也是很有用的容器对象,与列表一样,元组也是不可变的,但与列表不同元组可以返回不同类型的元素,例如列表只能写成LIst[Int] 或者 LIst[String] 但元组可以同时拥有Int和String,</p>
+<p>&emsp;元组的应用场景:如:方法里返回多个对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">val pair = (99, &quot;Luftballons&quot;)</div><div class="line">//元组的访问</div><div class="line">println(pair._1)  //99</div><div class="line"></div><div class="line">//元组的实际类型取决于他含有的元素数量和这些元素的类型</div><div class="line">(99.&quot;ddd&quot;) 的类型是Tuple2[Int, String]</div><div class="line">(&apos;u&apos;,&apos;r&apos;,&quot;ddd&quot;,1)的类型是Tuple4[Char,Char,String,Int]</div></pre></td></tr></table></figure></p>
+<p> 访问元组的元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">你或许想知道为什么不能用列表的方法来访问元组,如pair(0) ,那是因为列表的apply方法始终返回同样的元素,但元组的类型不尽相同, _1的结果类型可能与_2的不一致,诸如此类,因此两个的访问方法也不一样,此外,这些 _N 的索引是基于1的,而不是基于0的,这是因为对于拥有静态类型元组的其他语言,如Hashkell和ML,从1开始是传统的设定</div><div class="line"></div><div class="line"></div><div class="line">val pair = (99, &quot;Luftballons&quot;)</div><div class="line">//元组的访问</div><div class="line">println(pair._1)  //99</div></pre></td></tr></table></figure></p>
+<h1 id="9-使用集-set-和映射-map"><a href="#9-使用集-set-和映射-map" class="headerlink" title="9.使用集(set) 和映射(map)"></a>9.使用集(set) 和映射(map)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">在scala中的set和map来说,同样有可变和不可变,不过并非提供两种类型,而是通过继承的差别把可变差异蕴含其中</div><div class="line"></div><div class="line">如下图HashSet类,各有一个扩展了可变的和另一个扩展不可变的Set特质,(Java里面称为&quot;实现&quot;接口,而在scala中称为&quot;扩展&quot; 或者&quot;混入&quot; 了特质)</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/set.png" alt=""></p>
+<p>简单的实例代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">var jetSet = Set(&quot;Booing&quot;, &quot;Airbus&quot;)</div><div class="line">jetSet += &quot;Lear&quot;</div><div class="line">println(jetSet.contains(&quot;Cessna&quot;))</div><div class="line">/*</div><div class="line">第一行:</div><div class="line">   定义了名为jetSet的新变量,并初始化为包含两个字符串&quot;Booing&quot; 和&quot;Airbus&quot;的不可变交集</div><div class="line">scala中创建set的方法与创建list和array的类似,通过调用set伴生对象的apply工厂方法,</div><div class="line">在上面的例子中,对scala.collection.immutable.Set的伴生对象调用了apply方法,返回了默认的不可变Set的实例,scala编译器推断其类型为不可变Set[String]</div><div class="line"></div><div class="line">第二行:</div><div class="line">    加入新变量,可以对jetset调用,并传入新元素,可变的和不可变的集都提供了+方法,但结果不同,可变集把元素加入到自身,而不可变集则创建并返回包含了添加元素的新集,上述程序中使用的是不可变集,因此+调用将产生一个全新的集,所以只有可变集提供的才是正真的+=方法,不可变集不是:</div><div class="line">jetSet += &quot;Lear&quot; 实际上是下面方法的简写形式</div><div class="line">jetSet = jetSet + &quot;Lear&quot;</div><div class="line">因此这里实际是用包含了 &quot;Booing&quot; , &quot;Airbus&quot; , &quot;Lear&quot; 的新集重新赋值给了jetSet变量(因为jetSet变量是可变的,所以可以重新赋值)</div><div class="line"> */</div></pre></td></tr></table></figure></p>
+<p> 定义可变Set,需要加入引用import<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">import scala.collection.mutable.Set</div><div class="line">val movieSet = Set(&quot;hitch&quot;, &quot;Poltergeist&quot;)</div><div class="line">movieSet += &quot;Shrok&quot;</div><div class="line">println(movieSet)</div></pre></td></tr></table></figure></p>
+<p> map<br>&emsp; map和set一样,也是采用了类继承机制,提供了可变和不可变的两种版本的额Map,如下图:</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/2/map.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import scala.collection.mutable.Map</div><div class="line">val treasureMap = Map[Int,String]()</div><div class="line"></div><div class="line">treasureMap += &#123;1 -&gt; &quot;Go to island.&quot;&#125; //1 -&gt; &quot;Go to island.&quot; 转换为(1).-&gt;(&quot;Go to island.&quot;) ,scala的任何对象都能调用-&gt;方法,并返回包含键值对的二元组</div><div class="line">treasureMap += &#123;2 -&gt; &quot;Find big X on ground&quot;&#125;</div><div class="line">treasureMap += &#123;1 -&gt; &quot;Dig.&quot;&#125;</div><div class="line"></div><div class="line">println(treasureMap(2))</div><div class="line"></div><div class="line"></div><div class="line">//如果没有import,那么默认使用的Map是不可变的</div><div class="line">val romanNumberal = Map(1-&gt;&quot;1&quot;, 2-&gt;&quot;II&quot;, 3-&gt;&quot;III&quot;,4-&gt;&quot;IV&quot;, 5-&gt;&quot;V&quot;)</div><div class="line">println(romanNumberal(4)) //打印 &quot;IV&quot;</div></pre></td></tr></table></figure>
+<h1 id="10-认识函数式风格"><a href="#10-认识函数式风格" class="headerlink" title="10.认识函数式风格"></a>10.认识函数式风格</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">首先要理解指令式编程和函数式编程在代码风格上的差异,大致上说,如果代码包含了var变量,那么他可能就是指令式的风格,如果代码根本没有var ----就是说仅仅包含val ---- 那他或许是函数式的风格,因此向函数式风格转变的方式之一,就是尝试不用任何var编程</div><div class="line">*/</div><div class="line"></div><div class="line">#指令式风格</div><div class="line"></div><div class="line">def printArgs(args: Array[String]):Unit = &#123;</div><div class="line">  var i = 0</div><div class="line">  while(i&lt;args.length)&#123;</div><div class="line">    println(args(i))</div><div class="line">    i += 1</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">#函数式风格</div><div class="line">//通过去掉var的办法把代码变得更函数式风格</div><div class="line">def printArgs2(args: Array[String]):Unit = &#123;</div><div class="line">  for(arg &lt;- args)&#123;</div><div class="line">    println(arg)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//或者像这样</div><div class="line">def printArgs3(args: Array[String]):Unit = &#123;</div><div class="line">  args.foreach(println)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">这个例子说明了减少使用var的一个好处,重构后的代码比原来(指令式)的代码更加的简洁,明白,也更少有机会犯错,</div><div class="line"></div><div class="line">上述的代码有修改的余地,重构之后的printArgs方法并不是纯函数式的,因为他有副作用----本例中的副作用就是打印到标准输出流,识别函数是否有副作用的地方就在于其结果类型是否为Unit,如果某个函数不返回任何有用的值,也就是说如果返回类型为Unit,那么这个函数唯一能产生的作用就只能是通过某种副作用,而函数风格的方式应该是定义对打印的arg进行格式化的方法,不过仅返回格式化之后的字符串,如下:</div><div class="line">*/</div><div class="line"></div><div class="line">def formArgs(args: Array[String]) = args.mkString(&quot;\n&quot;)</div><div class="line">/*</div><div class="line">以上才是正真的函数式编程的风格,完全没有副作用或var的mkString方法,能在任何可枚举的集合类型上调用</div><div class="line"></div><div class="line">没有副作用的好处:</div><div class="line">举例来说:要测试前面给出的任何一个有副作用的printArgs方法,你将需要重新定义println,捕获传递给他的输出,在检查结果,相反,formatArgs来说你可以直接检查他的返回结果,如下:</div><div class="line">*/</div><div class="line">def formArgs(args: Array[String]) = args.mkString(&quot;\n&quot;)</div><div class="line">val res = formArgs(Array(&quot;one&quot;, &quot;two&quot;, &quot;zero&quot;))</div><div class="line">assert(res == &quot;one\ntwo\nzero&quot;) //assert方法检查传入的Boolean表达式,如果结果为假,抛出AssertionError,否则assert就什么也不做,安静的返回</div></pre></td></tr></table></figure>
+<p>scala程序员的平衡感<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">崇尚val, 不可变对象和没有副作用的方法</div><div class="line">首先想到他们,只有在特定需要和并加以权衡之后才选择var, 可变对象和有副作用的方法</div></pre></td></tr></table></figure></p>
+<h1 id="11-从文件里读取文本行"><a href="#11-从文件里读取文本行" class="headerlink" title="11.从文件里读取文本行"></a>11.从文件里读取文本行</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import scala.io.Source</div><div class="line">if(args.length&gt;0)&#123;</div><div class="line">  //Source.fromFile(args(0))尝试打开指定的文件并返回Source对象,之后对他调用, getLines函数,返回Iterator[String] ,枚举每次提供一行文本,包括行结束符</div><div class="line">  for(line &lt;- Source.fromFile(args(0)).getLines())&#123;</div><div class="line">    println(line.length + &quot;&quot; +line)</div><div class="line">  &#125;</div><div class="line">&#125;else&#123;</div><div class="line">  Console.err.println(&quot;Please enter filename&quot;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">toList 是必须加的,因为getLines方法返回的是枚举器,一旦完成遍历,枚举器就失效了,而通过调用toList 把它转换为LIst,我们把文件中的所有行全部存储在内存中,因此可以随时使用,lines变量因此就指向着包含了指定文件的文本字符串列表</div><div class="line">*/</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/Scala简介/" rel="next" title="第一章 scala简介">
+                <i class="fa fa-chevron-left"></i> 第一章 scala简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/面向对象编程-属性和方法/" rel="prev" title="面向对象编程-属性和方法">
+                面向对象编程-属性和方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-变量定义"><span class="nav-number">1.</span> <span class="nav-text">1.变量定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-函数定义"><span class="nav-number">2.</span> <span class="nav-text">2.函数定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-编写scala脚本"><span class="nav-number">3.</span> <span class="nav-text">3.编写scala脚本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-用while循环-用if做判断"><span class="nav-number">4.</span> <span class="nav-text">4.用while循环,用if做判断</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-用foreach和for做枚举"><span class="nav-number">5.</span> <span class="nav-text">5.用foreach和for做枚举</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-数组Array"><span class="nav-number">6.</span> <span class="nav-text">6.数组Array</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-列表list"><span class="nav-number">7.</span> <span class="nav-text">7.列表list</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-元组Tuple"><span class="nav-number">8.</span> <span class="nav-text">8.元组Tuple</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-使用集-set-和映射-map"><span class="nav-number">9.</span> <span class="nav-text">9.使用集(set) 和映射(map)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-认识函数式风格"><span class="nav-number">10.</span> <span class="nav-text">10.认识函数式风格</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-从文件里读取文本行"><span class="nav-number">11.</span> <span class="nav-text">11.从文件里读取文本行</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

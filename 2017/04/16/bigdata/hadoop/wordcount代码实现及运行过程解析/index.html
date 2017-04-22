@@ -1,0 +1,739 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop,mapreduce," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.wordcount程序实现1.1.map1234567891011121314151617181920212223242526272829303132333435363738394041424344package cn.itcast.bigdata.mr.wcdemo;import java.io.IOException;import org.apache.hadoop.io.IntWrita">
+<meta name="keywords" content="hadoop,mapreduce">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wordcount代码实现">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/hadoop/wordcount代码实现及运行过程解析/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.wordcount程序实现1.1.map1234567891011121314151617181920212223242526272829303132333435363738394041424344package cn.itcast.bigdata.mr.wcdemo;import java.io.IOException;import org.apache.hadoop.io.IntWrita">
+<meta property="og:updated_time" content="2017-02-27T05:55:04.776Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="wordcount代码实现">
+<meta name="twitter:description" content="1.wordcount程序实现1.1.map1234567891011121314151617181920212223242526272829303132333435363738394041424344package cn.itcast.bigdata.mr.wcdemo;import java.io.IOException;import org.apache.hadoop.io.IntWrita">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/hadoop/wordcount代码实现及运行过程解析/"/>
+
+
+
+
+
+  <title> wordcount代码实现 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/hadoop/wordcount代码实现及运行过程解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                wordcount代码实现
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-wordcount程序实现"><a href="#1-wordcount程序实现" class="headerlink" title="1.wordcount程序实现"></a>1.wordcount程序实现</h1><h2 id="1-1-map"><a href="#1-1-map" class="headerlink" title="1.1.map"></a>1.1.map</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.mr.wcdemo;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.LongWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Mapper;</div><div class="line"></div><div class="line">/**</div><div class="line"> * KEYIN: 默认情况下，是mr框架所读到的一行文本的起始偏移量，Long,</div><div class="line"> * 但是在hadoop中有自己的更精简的序列化接口，所以不直接用Long，而用LongWritable</div><div class="line"> * </div><div class="line"> * VALUEIN:默认情况下，是mr框架所读到的一行文本的内容，String，同上，用Text	（序列化需要）</div><div class="line"> * </div><div class="line"> * KEYOUT：是用户自定义逻辑处理完成之后输出数据中的key，在此处是单词，String，同上，用Text（序列化需要）</div><div class="line"> * VALUEOUT：是用户自定义逻辑处理完成之后输出数据中的value，在此处是单词次数，Integer，同上，用IntWritable（序列化需要）</div><div class="line"> * </div><div class="line"> * @author</div><div class="line"> *</div><div class="line"> */</div><div class="line"></div><div class="line">public class WordcountMapper extends Mapper&lt;LongWritable, Text, Text, IntWritable&gt;&#123;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * map阶段的业务逻辑就写在自定义的map()方法中</div><div class="line">	 * maptask会对每一行输入数据调用一次我们自定义的map()方法</div><div class="line">	 */</div><div class="line">	@Override</div><div class="line">	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException &#123;</div><div class="line">		</div><div class="line">		//将maptask传给我们的文本内容先转换成String</div><div class="line">		String line = value.toString();</div><div class="line">		//根据空格将这一行切分成单词</div><div class="line">		String[] words = line.split(&quot; &quot;);</div><div class="line">		</div><div class="line">		//将单词输出为&lt;单词，1&gt;</div><div class="line">		for(String word:words)&#123;</div><div class="line">			//将单词作为key，将次数1作为value，以便于后续的数据分发，可以根据单词分发，以便于相同单词会到相同的reduce task</div><div class="line">			context.write(new Text(word), new IntWritable(1));</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="1-2-reduce"><a href="#1-2-reduce" class="headerlink" title="1.2.reduce"></a>1.2.reduce</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.mr.wcdemo;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Reducer;</div><div class="line"></div><div class="line">/**</div><div class="line"> * KEYIN, VALUEIN 对应  mapper输出的KEYOUT,VALUEOUT类型对应</div><div class="line"> * </div><div class="line"> * KEYOUT, VALUEOUT 是自定义reduce逻辑处理结果的输出数据类型</div><div class="line"> * KEYOUT是单词</div><div class="line"> * VLAUEOUT是总次数</div><div class="line"> * @author</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class WordcountReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt;&#123;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * &lt;angelababy,1&gt;&lt;angelababy,1&gt;&lt;angelababy,1&gt;&lt;angelababy,1&gt;&lt;angelababy,1&gt;</div><div class="line">	 * &lt;hello,1&gt;&lt;hello,1&gt;&lt;hello,1&gt;&lt;hello,1&gt;&lt;hello,1&gt;&lt;hello,1&gt;</div><div class="line">	 * &lt;banana,1&gt;&lt;banana,1&gt;&lt;banana,1&gt;&lt;banana,1&gt;&lt;banana,1&gt;&lt;banana,1&gt;</div><div class="line">	 * 入参key，是一组相同单词kv对的key</div><div class="line">	 */</div><div class="line">	@Override</div><div class="line">	protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException &#123;</div><div class="line"></div><div class="line">		int count=0;</div><div class="line">		/*Iterator&lt;IntWritable&gt; iterator = values.iterator();</div><div class="line">		while(iterator.hasNext())&#123;</div><div class="line">			count += iterator.next().get();</div><div class="line">		&#125;*/</div><div class="line">		</div><div class="line">		for(IntWritable value:values)&#123;</div><div class="line">		</div><div class="line">			count += value.get();</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		context.write(key, new IntWritable(count));</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="1-3-启动程序"><a href="#1-3-启动程序" class="headerlink" title="1.3.启动程序"></a>1.3.启动程序</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line">package cn.itcast.bigdata.mr.wcdemo;</div><div class="line"></div><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.IntWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Job;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 相当于一个yarn集群的客户端:分配硬件资源，启动程序</div><div class="line"> * 需要在此封装我们的mr程序的相关运行参数，指定jar包</div><div class="line"> * 最后提交给yarn</div><div class="line"> * @author</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class WordcountDriver &#123;</div><div class="line">	</div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line">		</div><div class="line">		if (args == null || args.length == 0) &#123;</div><div class="line">			args = new String[2];</div><div class="line">			args[0] = &quot;hdfs://master:9000/wordcount/input/wordcount.txt&quot;;</div><div class="line">			args[1] = &quot;hdfs://master:9000/wordcount/output8&quot;;</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		Configuration conf = new Configuration();</div><div class="line">		</div><div class="line">		//设置的没有用!  ??????</div><div class="line">//		conf.set(&quot;HADOOP_USER_NAME&quot;, &quot;hadoop&quot;);</div><div class="line">//		conf.set(&quot;dfs.permissions.enabled&quot;, &quot;false&quot;);</div><div class="line">		</div><div class="line">		</div><div class="line">		/*conf.set(&quot;mapreduce.framework.name&quot;, &quot;yarn&quot;);</div><div class="line">		conf.set(&quot;yarn.resoucemanager.hostname&quot;, &quot;mini1&quot;);*/</div><div class="line">		Job job = Job.getInstance(conf);</div><div class="line">		</div><div class="line">		/*job.setJar(&quot;/home/hadoop/wc.jar&quot;);*/</div><div class="line">		//指定本程序的jar包所在的本地路径（因为最后是要交给yarn来跑jar的，所以这里是指定jar的路径）</div><div class="line">		job.setJarByClass(WordcountDriver.class);</div><div class="line">		</div><div class="line">		//指定本业务job要使用的mapper/Reducer业务类</div><div class="line">		job.setMapperClass(WordcountMapper.class);</div><div class="line">		job.setReducerClass(WordcountReducer.class);</div><div class="line">		</div><div class="line">		//指定mapper输出数据的kv类型</div><div class="line">		job.setMapOutputKeyClass(Text.class);</div><div class="line">		job.setMapOutputValueClass(IntWritable.class);</div><div class="line">		</div><div class="line">		//指定最终输出的数据的kv类型</div><div class="line">		job.setOutputKeyClass(Text.class);</div><div class="line">		job.setOutputValueClass(IntWritable.class);</div><div class="line">		</div><div class="line">		//指定job的输入原始文件所在目录</div><div class="line">		FileInputFormat.setInputPaths(job, new Path(args[0]));</div><div class="line">		//指定job的输出结果所在目录</div><div class="line">		FileOutputFormat.setOutputPath(job, new Path(args[1]));</div><div class="line">		</div><div class="line">		//将job中配置的相关参数，以及job所用的java类所在的jar包，提交给yarn去运行</div><div class="line">		/*job.submit();*/</div><div class="line">		boolean res = job.waitForCompletion(true);</div><div class="line">		System.exit(res?0:1);</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="2-在linux上运行一个jar"><a href="#2-在linux上运行一个jar" class="headerlink" title="2.在linux上运行一个jar"></a>2.在linux上运行一个jar</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#启动</div><div class="line">java    -cp    wordcount.jar    cn.itcast.bigdata.mr.wcdemo.wordcountDriver    /wordcount/input    /wordcount/output</div><div class="line">/*</div><div class="line">-cp 和 -classpath 一样，是指定类运行所依赖其他类的路径，通常是类库，jar包之类，</div><div class="line">需要全路径到jar包，window上分号“;”分隔，linux上是分号“:”分隔。不支持通配符，需要列出所有jar包，用一点“.”代表当前路径。  </div><div class="line"></div><div class="line">wordcount.jar：是启动的jar文件</div><div class="line"></div><div class="line">cn.itcast.bigdata.mr.wcdemo.wordcountDriver ：是启动的main函数所在的类</div><div class="line"></div><div class="line">/wordcount/input    /wordcount/output：参数</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p>使用java -cp 去启动一个jar，需要指定所有的依赖的jar文件 ,而使用hadoop命令则会帮我们加上依赖的jar和配置文件到classpath</p>
+<pre><code>hadoop jar wordcount.jar cn.itcast.bigdata.mr.wcdemo.WordcountDriver  /wordcount/input   /wordcount/output
+</code></pre><p>在MyEclipse中打jar包，如果是打成的是runnable的jar，那么会将依赖打到jar包中去, 如果是打包成普通的jar，那么运行时需要指定运行程序所依赖的其他jar文件</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+            <a href="/tags/mapreduce/" rel="tag"># mapreduce</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/倒排索引的建立/" rel="next" title="倒排索引的建立">
+                <i class="fa fa-chevron-left"></i> 倒排索引的建立
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/shell脚本定时采集日志数据到hdfs/" rel="prev" title="shell脚本定时采集日志数据到hdfs">
+                shell脚本定时采集日志数据到hdfs <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-wordcount程序实现"><span class="nav-number">1.</span> <span class="nav-text">1.wordcount程序实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-map"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.map</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-reduce"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.reduce</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-启动程序"><span class="nav-number">1.3.</span> <span class="nav-text">1.3.启动程序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-在linux上运行一个jar"><span class="nav-number">2.</span> <span class="nav-text">2.在linux上运行一个jar</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

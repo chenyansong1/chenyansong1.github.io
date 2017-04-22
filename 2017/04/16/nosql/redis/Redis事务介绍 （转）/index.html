@@ -1,0 +1,768 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.Redis事务介绍相信学过Mysql等其他数据库的同学对事务这个词都不陌生，事务表示的是一组动作，这组动作要么全部执行，要么全部不执行。为什么会有这样的需求呢？看看下面的场景：  微博是一个弱关系型社交网络，用户之间有关注和被关注两种关系，比如两个用户A和B，如果A关注B，则B的粉丝中就应该有A。关注这个动作需要两个步骤完成：在A的关注者中添加B；在B的粉丝中添加A。 这两个动作要么都执行成功">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis事务介绍 （转）">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/redis/Redis事务介绍 （转）/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.Redis事务介绍相信学过Mysql等其他数据库的同学对事务这个词都不陌生，事务表示的是一组动作，这组动作要么全部执行，要么全部不执行。为什么会有这样的需求呢？看看下面的场景：  微博是一个弱关系型社交网络，用户之间有关注和被关注两种关系，比如两个用户A和B，如果A关注B，则B的粉丝中就应该有A。关注这个动作需要两个步骤完成：在A的关注者中添加B；在B的粉丝中添加A。 这两个动作要么都执行成功">
+<meta property="og:updated_time" content="2017-02-24T17:10:17.012Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis事务介绍 （转）">
+<meta name="twitter:description" content="1.Redis事务介绍相信学过Mysql等其他数据库的同学对事务这个词都不陌生，事务表示的是一组动作，这组动作要么全部执行，要么全部不执行。为什么会有这样的需求呢？看看下面的场景：  微博是一个弱关系型社交网络，用户之间有关注和被关注两种关系，比如两个用户A和B，如果A关注B，则B的粉丝中就应该有A。关注这个动作需要两个步骤完成：在A的关注者中添加B；在B的粉丝中添加A。 这两个动作要么都执行成功">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/redis/Redis事务介绍 （转）/"/>
+
+
+
+
+
+  <title> Redis事务介绍 （转） | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/redis/Redis事务介绍 （转）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Redis事务介绍 （转）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-Redis事务介绍"><a href="#1-Redis事务介绍" class="headerlink" title="1.Redis事务介绍"></a>1.Redis事务介绍</h1><p>相信学过Mysql等其他数据库的同学对事务这个词都不陌生，事务表示的是一组动作，这组动作要么全部执行，要么全部不执行。为什么会有这样的需求呢？看看下面的场景：</p>
+<ul>
+<li><p>微博是一个弱关系型社交网络，用户之间有关注和被关注两种关系，比如两个用户A和B，如果A关注B，则B的粉丝中就应该有A。关注这个动作需要两个步骤完成：在A的关注者中添加B；在B的粉丝中添加A。 这两个动作要么都执行成功，要么都不执行。否则就可能会出现A关注了B，但是B的粉丝中没有A的不可容忍的情况。</p>
+</li>
+<li><p>转账汇款，假设现在有两个账户A和B，现在需要将A中的一万块大洋转到B的账户中，这个动作也需要两个步骤完成：从A的账户中划走一万块；在B的账户中增加一万块。这两个动作要么全部执行成功，要么全部不执行，否则自会有人问候你的！！！</p>
+</li>
+</ul>
+<p>Redis作为一种高效的分布式数据库，同样支持事务。</p>
+<h1 id="2-Redis事务"><a href="#2-Redis事务" class="headerlink" title="2.Redis事务"></a>2.Redis事务</h1><p>&emsp;Redis中的事务(transaction)是一组命令的集合。事务同命令一样都是Redis最小的执行单位，一个事务中的命令要么都执行，要么都不执行。Redis事务的实现需要用到 MULTI 和 EXEC 两个命令，事务开始的时候先向Redis服务器发送 MULTI 命令，然后依次发送需要在本次事务中处理的命令，最后再发送 EXEC 命令表示事务命令结束。</p>
+<p>举个例子，使用redis-cli连接redis，然后在命令行工具中输入如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">127.0.0.1:6379&gt; MULTI</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; set url http://qifuguang.me</div><div class="line">QUEUED</div><div class="line">127.0.0.1:6379&gt; set title winwill2012</div><div class="line">QUEUED</div><div class="line">127.0.0.1:6379&gt; set desc java</div><div class="line">QUEUED</div><div class="line">127.0.0.1:6379&gt; EXEC</div><div class="line">1) OK</div><div class="line">2) OK</div><div class="line">3) OK</div><div class="line">127.0.0.1:6379&gt;</div><div class="line">127.0.0.1:6379&gt; get url</div><div class="line">&quot;http://qifuguang.me&quot;</div><div class="line">127.0.0.1:6379&gt; get title</div><div class="line">&quot;winwill2012&quot;</div><div class="line">127.0.0.1:6379&gt; get desc</div><div class="line">&quot;java&quot;</div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
+<p>从输出中可以看到，当输入MULTI命令后，服务器返回OK表示事务开始成功，然后依次输入需要在本次事务中执行的所有命令，每次输入一个命令服务器并不会马上执行，而是返回”QUEUED”，这表示命令已经被服务器接受并且暂时保存起来，最后输入EXEC命令后，本次事务中的所有命令才会被依次执行，可以看到最后服务器一次性返回了三个OK，这里返回的结果与发送的命令是按顺序一一对应的，这说明这次事务中的命令全都执行成功了。</p>
+<p>再举个例子，在命令行工具中输入如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; MULTI</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; set a a</div><div class="line">QUEUED</div><div class="line">127.0.0.1:6379&gt; sett b b</div><div class="line">(error) ERR unknown command &apos;sett&apos;</div><div class="line">127.0.0.1:6379&gt; set c c</div><div class="line">QUEUED</div><div class="line">127.0.0.1:6379&gt; EXEC</div><div class="line">(error) EXECABORT Transaction discarded because of previous errors.</div><div class="line">127.0.0.1:6379&gt; get a</div><div class="line">(nil)</div><div class="line">127.0.0.1:6379&gt; get b</div><div class="line">(nil)</div><div class="line">127.0.0.1:6379&gt; get c</div><div class="line">(nil)</div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
+<p>和前面的例子一样，先输入MULTI最后输入EXEC表示中间的命令属于一个事务，不同的是中间输入的命令有一个错误(set写成了sett)，这样因为有一个错误的命令导致事务中的其他命令都不执行了(通过后续的get命令可以验证)，可见事务中的所有命令式同呼吸共命运的。</p>
+<p>如果客户端在发送EXEC命令之前断线了，则服务器会清空事务队列，事务中的所有命令都不会被执行。而一旦客户端发送了EXEC命令之后，事务中的所有命令都会被执行，即使此后客户端断线也没关系，因为服务器已经保存了事务中的所有命令。</p>
+<p>除了保证事务中的所有命令要么全执行要么全不执行外，Redis的事务还能保证一个事务中的命令依次执行而不会被其他命令插入。试想一个客户端A需要执行几条命令，同时客户端B发送了几条命令，如果不使用事务，则客户端B的命令有可能会插入到客户端A的几条命令中，如果想避免这种情况发生，也可以使用事务。</p>
+<h1 id="3-Redis事务错误处理"><a href="#3-Redis事务错误处理" class="headerlink" title="3.Redis事务错误处理"></a>3.Redis事务错误处理</h1><p>如果一个事务中的某个命令执行出错，Redis会怎样处理呢？要回答这个问题，首先要搞清楚是什么原因导致命令执行出错：</p>
+<ol>
+<li>语法错误 就像上面的例子一样，语法错误表示命令不存在或者参数错误<br>这种情况需要区分Redis的版本，Redis 2.6.5之前的版本会忽略错误的命令，执行其他正确的命令，2.6.5之后的版本会忽略这个事务中的所有命令，都不执行，就比如上面的例子(使用的Redis版本是2.8的)</li>
+<li>运行错误 运行错误表示命令在执行过程中出现错误，比如用GET命令获取一个散列表类型的键值。<br>这种错误在命令执行之前Redis是无法发现的，所以在事务里这样的命令会被Redis接受并执行。如果食物里有一条命令执行错误，其他命令依旧会执行（包括出错之后的命令）。比如下例：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; MULTI</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; set key 1</div><div class="line">QUEUED</div><div class="line">127.0.0.1:6379&gt; SADD key 2</div><div class="line">QUEUED</div><div class="line">127.0.0.1:6379&gt; set key 3</div><div class="line">QUEUED</div><div class="line">127.0.0.1:6379&gt; EXEC</div><div class="line">1) OK</div><div class="line">2) (error) WRONGTYPE Operation against a key holding the wrong kind of value</div><div class="line">3) OK</div><div class="line">127.0.0.1:6379&gt; get key</div><div class="line">&quot;3&quot;</div></pre></td></tr></table></figure>
+<p>Redis中的事务并没有关系型数据库中的事务回滚(rollback)功能，因此使用者必须自己收拾剩下的烂摊子。不过由于Redis不支持事务回滚功能，这也使得Redis的事务简洁快速。</p>
+<p>回顾上面两种类型的错误，语法错误完全可以在开发的时候发现并作出处理，另外如果能很好地规划Redis数据的键的使用，也是不会出现命令和键不匹配的问题的。</p>
+<h1 id="4-WATCH命令"><a href="#4-WATCH命令" class="headerlink" title="4.WATCH命令"></a>4.WATCH命令</h1><p>从上面的例子我们可以看到，事务中的命令要全部执行完之后才能获取每个命令的结果，但是如果一个事务中的命令B依赖于他上一个命令A的结果的话该怎么办呢？就比如说实现类似Java中的i++的功能，先要获取当前值，才能在当前值的基础上做加一操作。这种场合仅仅使用上面介绍的MULTI和EXEC是不能实现的，因为MULTI和EXEC中的命令是一起执行的，并不能将其中一条命令的执行结果作为另一条命令的执行参数，所以这个时候就需要引进Redis事务家族中的另一成员：WATCH命令</p>
+<p>换个角度思考上面说到的实现i++的方法，可以这样实现：</p>
+<ol>
+<li>监控i的值，保证i的值不被修改</li>
+<li>获取i的原值</li>
+<li>如果过程中i的值没有被修改，则将当前的i值+1，否则不执行</li>
+</ol>
+<p>这样就能够避免竞态条件，保证i++能够正确执行。</p>
+<p>WATCH命令可以监控一个或多个键，一旦其中有一个键被修改（或删除），之后的事务就不会执行，监控一直持续到EXEC命令（事务中的命令是在EXEC之后才执行的，EXEC命令执行完之后被监控的键会自动被UNWATCH）</p>
+<p>举个例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; set mykey 1</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; WATCH mykey</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; set mykey 2</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; MULTI</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; set mykey 3</div><div class="line">QUEUED</div><div class="line">127.0.0.1:6379&gt; EXEC</div><div class="line">(nil)</div><div class="line">127.0.0.1:6379&gt; get mykey</div><div class="line">&quot;2&quot;</div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
+<p>上面的例子中，首先设置mykey的键值为1，然后使用WATCH命令监控mykey，随后更改mykey的值为2，然后进入事务，事务中设置mykey的值为3，然后执行EXEC运行事务中的命令，最后使用get命令查看mykey的值，发现mykey的值还是2，也就是说事务中的命令根本没有执行（因为WATCH监控mykey的过程中，mykey被修改了，所以随后的事务便会被取消）。</p>
+<p>有了WATCH命令，我们就可以自己实现i++功能了，伪代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">def incr($key):</div><div class="line">    WATCH $key</div><div class="line">    $value = GET $key</div><div class="line">    if not $value</div><div class="line">        $value = 0</div><div class="line">    $value = $value + 1</div><div class="line"> </div><div class="line">    MULTI</div><div class="line">    SET $key $value</div><div class="line">        result = EXEC</div><div class="line">    return result[0]</div></pre></td></tr></table></figure></p>
+<p>因为EXEC返回的是多行字符串，使用result[0]表示返回值的第一个字符串。</p>
+<p>注意：由于WATCH命令的作用只是当被监控的键被修改后取消之后的事务，并不能保证其他客户端不修改监控的值，所以当EXEC命令执行失败之后需要手动重新执行整个事务。</p>
+<p>执行EXEC命令之后会取消监控使用WATCH命令监控的键，如果不想执行事务中的命令，也可以使用UNWATCH命令来取消监控。</p>
+<p>转自:<br><a href="http://qifuguang.me/2015/09/30/Redis%E4%BA%8B%E5%8A%A1%E4%BB%8B%E7%BB%8D/" target="_blank" rel="external">Redis事务介绍</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/redis命令——通用key操作命令/" rel="next" title="redis命令——通用key操作命令">
+                <i class="fa fa-chevron-left"></i> redis命令——通用key操作命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/redis主从同步及切换主从配置示例(转)/" rel="prev" title="redis主从同步及切换主从配置示例(转)">
+                redis主从同步及切换主从配置示例(转) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Redis事务介绍"><span class="nav-number">1.</span> <span class="nav-text">1.Redis事务介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Redis事务"><span class="nav-number">2.</span> <span class="nav-text">2.Redis事务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Redis事务错误处理"><span class="nav-number">3.</span> <span class="nav-text">3.Redis事务错误处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-WATCH命令"><span class="nav-number">4.</span> <span class="nav-text">4.WATCH命令</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,811 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="linux," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.用户切换命令 su1.1.参数   参数 详解     -;-l;  –login 使一个shell成为登录的shell，如执行su - oldboy ,表示该用户想要改变身份为oldboy,并使用oldboy用户的环境变量，如：/home/oldboy/.bash_profile等   -c pass a single command to the shell with -c :切换到一个s">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用户切换命令su,sudo,visudo">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/Linux/sudo/用户切换命令su,sudo,visudo/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.用户切换命令 su1.1.参数   参数 详解     -;-l;  –login 使一个shell成为登录的shell，如执行su - oldboy ,表示该用户想要改变身份为oldboy,并使用oldboy用户的环境变量，如：/home/oldboy/.bash_profile等   -c pass a single command to the shell with -c :切换到一个s">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo5.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo6.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo7.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo8.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo9.png">
+<meta property="og:updated_time" content="2017-02-24T17:09:32.518Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用户切换命令su,sudo,visudo">
+<meta name="twitter:description" content="1.用户切换命令 su1.1.参数   参数 详解     -;-l;  –login 使一个shell成为登录的shell，如执行su - oldboy ,表示该用户想要改变身份为oldboy,并使用oldboy用户的环境变量，如：/home/oldboy/.bash_profile等   -c pass a single command to the shell with -c :切换到一个s">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/Linux/sudo/用户切换命令su,sudo,visudo/"/>
+
+
+
+
+
+  <title> 用户切换命令su,sudo,visudo | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/Linux/sudo/用户切换命令su,sudo,visudo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                用户切换命令su,sudo,visudo
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-用户切换命令-su"><a href="#1-用户切换命令-su" class="headerlink" title="1.用户切换命令 su"></a>1.用户切换命令 su</h1><h2 id="1-1-参数"><a href="#1-1-参数" class="headerlink" title="1.1.参数"></a>1.1.参数</h2><table>
+<thead>
+<tr>
+<th style="text-align:left">参数</th>
+<th>详解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">-;-l;  –login</td>
+<td>使一个shell成为登录的shell，如执行su - oldboy ,表示该用户想要改变身份为oldboy,并使用oldboy用户的环境变量，如：/home/oldboy/.bash_profile等</td>
+</tr>
+<tr>
+<td style="text-align:left">-c</td>
+<td>pass a single command to the shell with -c :切换到一个shell下，执行一个命令，然后退出所切换的用户目录</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@lamp01 chenyansong]su - chenyansong -c &quot;touch fileByRoot.txt&quot;</div><div class="line">[root@lamp01 chenyansong]ll</div><div class="line">总用量 20</div><div class="line"></div><div class="line">-rw-rw-r-- 1 chenyansong chenyansong    0 2月  13 21:22 fileByRoot.txt</div><div class="line"># 可以看到创建的文件是以chenyansong为所属用户,所属组,因为是以chenyansong为用户创建的</div></pre></td></tr></table></figure>
+<h2 id="1-2-优点"><a href="#1-2-优点" class="headerlink" title="1.2.优点"></a>1.2.优点</h2><p>如果知道了root的密码，可以从普通用户转到root</p>
+<h2 id="1-3-缺点"><a href="#1-3-缺点" class="headerlink" title="1.3.缺点"></a>1.3.缺点</h2><p>普通用户切换到root之后，拥有root的权限，带来了很大的安全管理问题，例如：如果普通用户将root的密码改了</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo1.png" alt=""></p>
+<h1 id="2-sudo"><a href="#2-sudo" class="headerlink" title="2.sudo"></a>2.sudo</h1><h2 id="2-1-语法"><a href="#2-1-语法" class="headerlink" title="2.1.语法"></a>2.1.语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo cmd</div></pre></td></tr></table></figure>
+<h2 id="2-2-sudo的执行原理"><a href="#2-2-sudo的执行原理" class="headerlink" title="2.2.sudo的执行原理"></a>2.2.sudo的执行原理</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo2.png" alt=""></p>
+<h2 id="2-3执行原理实操过程"><a href="#2-3执行原理实操过程" class="headerlink" title="2.3执行原理实操过程"></a>2.3执行原理实操过程</h2><h3 id="2-3-1-visudo添加rm权限"><a href="#2-3-1-visudo添加rm权限" class="headerlink" title="2.3.1.visudo添加rm权限"></a>2.3.1.visudo添加rm权限</h3><p>viduso进入文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## Allow root to run any commands anywhere</div><div class="line">root    ALL=(ALL)       ALL</div><div class="line">chenyansong    ALL=(ALL)       /bin/rm</div><div class="line"></div><div class="line">#ALL一定是大写的,All还不行</div></pre></td></tr></table></figure></p>
+<h3 id="2-3-2-使用sudo删除"><a href="#2-3-2-使用sudo删除" class="headerlink" title="2.3.2.使用sudo删除"></a>2.3.2.使用sudo删除</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# su - zhangsan</div><div class="line"></div><div class="line">#直接删除,权限不够</div><div class="line">[zhangsan@lamp01 ~]$ rm -f /etc/oldboy.md5</div><div class="line">rm: 无法删除&quot;/etc/oldboy.md5&quot;: 权限不够</div><div class="line"></div><div class="line">#使用sudo去删除</div><div class="line">[zhangsan@lamp01 ~]$ sudo rm -f /etc/oldboy.md5</div><div class="line">[sudo] password for zhangsan:</div><div class="line">[zhangsan@lamp01 ~]$</div><div class="line"></div><div class="line">#使用sudo去cp,但是在sudo中没有配cp执行权限</div><div class="line">[zhangsan@lamp01 ~]$ sudo cp /etc/hosts /home/zhangsan/</div><div class="line">Sorry, user zhangsan is not allowed to execute &apos;/bin/cp /etc/hosts /home/zhangsan/&apos; as root on lamp01.</div><div class="line">[zhangsan@lamp01 ~]$</div></pre></td></tr></table></figure>
+<h3 id="2-3-3检查时间戳文件"><a href="#2-3-3检查时间戳文件" class="headerlink" title="2.3.3检查时间戳文件"></a>2.3.3检查时间戳文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# ll /var/db/sudo/zhangsan/</div><div class="line">总用量 4</div><div class="line">-rw------- 1 root zhangsan 28 2月  14 08:07 0</div></pre></td></tr></table></figure>
+<h3 id="2-3-4-sudo-相关的参数"><a href="#2-3-4-sudo-相关的参数" class="headerlink" title="2.3.4.sudo 相关的参数"></a>2.3.4.sudo 相关的参数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">#sudo -l  列出用户在主机上可用和被禁止的命令</div><div class="line">[root@lamp01 ~]# sudo -l</div><div class="line">User root may run the following commands on this host:</div><div class="line">    (ALL) ALL</div><div class="line"> </div><div class="line">[zhangsan@lamp01 ~]$ sudo -l</div><div class="line">User zhangsan may run the following commands on this host:</div><div class="line">    (ALL) /bin/rm</div><div class="line"> </div><div class="line"> </div><div class="line"># sudo -k</div><div class="line">#通-K,删除时间戳,下一个sudo就要求提供密码,前有NOPASSWD:参数,时间戳默认5分钟也会 失效</div><div class="line">[zhangsan@lamp01 ~]$ sudo -K</div><div class="line">[zhangsan@lamp01 ~]$ sudo -l</div><div class="line">[sudo] password for zhangsan:        #提供密码</div><div class="line">User zhangsan may run the following commands on this host:</div><div class="line">    (ALL) /bin/rm</div><div class="line"> </div><div class="line">#删除时间戳,然后看时间戳文件是否存在</div><div class="line">[zhangsan@lamp01 ~]$ sudo -K</div><div class="line">[zhangsan@lamp01 ~]$ logout</div><div class="line">[root@lamp01 ~]# ll /var/db/sudo/zhangsan/</div><div class="line">总用量 0</div></pre></td></tr></table></figure>
+<h1 id="3-visudo"><a href="#3-visudo" class="headerlink" title="3.visudo"></a>3.visudo</h1><p>等同于：vim /etc/sudoers</p>
+<h2 id="3-1-通过echo的方式修改vim-etc-sudoers"><a href="#3-1-通过echo的方式修改vim-etc-sudoers" class="headerlink" title="3.1.通过echo的方式修改vim /etc/sudoers"></a>3.1.通过echo的方式修改vim /etc/sudoers</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# echo &quot;chenyansong ALL=(ALL)   ALL&quot;&gt;&gt;/etc/sudoers</div><div class="line">[root@lamp01 ~]# tail -1 /etc/sudoers</div><div class="line">chenyansong ALL=(ALL)   ALL</div></pre></td></tr></table></figure>
+<h2 id="3-2-visudo-c-语法检查"><a href="#3-2-visudo-c-语法检查" class="headerlink" title="3.2.visudo -c 语法检查"></a>3.2.visudo -c 语法检查</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# visudo -c</div><div class="line">/etc/sudoers: parsed OK</div></pre></td></tr></table></figure>
+<h2 id="3-3-修改vim-etc-sudoers文件的权限位777"><a href="#3-3-修改vim-etc-sudoers文件的权限位777" class="headerlink" title="3.3.修改vim /etc/sudoers文件的权限位777"></a>3.3.修改vim /etc/sudoers文件的权限位777</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# ll /etc/sudoers   </div><div class="line">-r--r----- 1 root root 4131 2月  14 08:24 /etc/sudoers</div><div class="line"></div><div class="line">[root@lamp01 ~]# chmod 777 /etc/sudoers</div><div class="line"></div><div class="line">[root@lamp01 ~]# su - zhangsan</div><div class="line"></div><div class="line">#sudo的授权用户再去执行就会有问题</div><div class="line">[zhangsan@lamp01 ~]$ sudo rm -f /etc/test.txt</div><div class="line">sudo: /etc/sudoers is mode 0777, should be 0440</div><div class="line">sudo: no valid sudoers sources found, quitting</div><div class="line"></div><div class="line">#还是要切换回440</div><div class="line">[root@lamp01 ~]# chmod 440 /etc/sudoers</div></pre></td></tr></table></figure>
+<h2 id="3-4-viduso文件添加使用权限"><a href="#3-4-viduso文件添加使用权限" class="headerlink" title="3.4.viduso文件添加使用权限"></a>3.4.viduso文件添加使用权限</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo3.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">#首先需要配置一些Alias，这样在下面配置权限时，会方便一些，不用写大段大段的配置。Alias主要分成4种</div><div class="line">Host_Alias</div><div class="line">Cmnd_Alias</div><div class="line">User_Alias</div><div class="line">Runas_Alias</div><div class="line"></div><div class="line">#配置Host_Alias：就是主机的列表</div><div class="line">Host_Alias      HOST_FLAG = hostname1, hostname2, hostname3</div><div class="line"></div><div class="line">#配置Cmnd_Alias：就是允许执行的命令的列表，命令前加上!表示不能执行此命令.命令一定要使用绝对路径，避免其他目录的同名命令被执行，造成安全隐患 ,因此使用的时候也是使用绝对路径!</div><div class="line">Cmnd_Alias      COMMAND_FLAG = command1, command2, command3 ，!command4</div><div class="line"></div><div class="line">#配置User_Alias：就是具有sudo权限的用户的列表</div><div class="line">User_Alias USER_FLAG = user1, user2, user3</div><div class="line"></div><div class="line">#配置Runas_Alias：就是用户以什么身份执行（例如root，或者oracle）的列表</div><div class="line">Runas_Alias RUNAS_FLAG = operator1, operator2, operator3</div><div class="line"></div><div class="line">#总体的配置权限的格式如下：</div><div class="line">USER_FLAG HOST_FLAG=(RUNAS_FLAG) COMMAND_FLAG</div><div class="line">#如果不需要密码验证的话，则按照这样的格式来配置</div><div class="line">USER_FLAG HOST_FLAG=(RUNAS_FLAG) NOPASSWD: COMMAND_FLAG</div></pre></td></tr></table></figure>
+<h2 id="3-5-主机别名"><a href="#3-5-主机别名" class="headerlink" title="3.5.主机别名"></a>3.5.主机别名</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo4.png" alt=""></p>
+<h2 id="3-6-用户别名-组"><a href="#3-6-用户别名-组" class="headerlink" title="3.6.用户别名(%组)"></a>3.6.用户别名(%组)</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo5.png" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo6.png" alt=""></p>
+<h2 id="3-7-命令别名"><a href="#3-7-命令别名" class="headerlink" title="3.7.命令别名"></a>3.7.命令别名</h2><p>以后可以针对不同的角色用户使用不同的命令别名</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo7.png" alt=""></p>
+<h2 id="3-8-角色别名"><a href="#3-8-角色别名" class="headerlink" title="3.8.角色别名"></a>3.8.角色别名</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo8.png" alt=""></p>
+<h2 id="3-9-总结"><a href="#3-9-总结" class="headerlink" title="3.9.总结"></a>3.9.总结</h2><p>&emsp;通过上面的别名的配置，我们在创建新用户的时候，让用户属于上面配置的用户别名组, 这样创建的用户就能够有上面对特定组配置的权限</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/sudo/sudo9.png" alt=""></p>
+<p>注意：</p>
+<ul>
+<li>授权规则中所有的ALL字符串必须为大写字母</li>
+<li>一行内容超长可以用“\”斜线换行</li>
+<li>“！”表示非，就是命令取反的意思，即禁止执行的命令</li>
+<li><p>放在后面的命令会覆盖前面的命令（如果他们有重叠的话）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">下面的/sbin/* 和!/sbin/fdisk就是：拥有/sbin/*下除了/sbin/fdisk的权限</div><div class="line">/usr/sbin/*,/sbin/*,!/usr/sbin/visudo,!/sbin/fdisk</div></pre></td></tr></table></figure>
+</li>
+<li><p>命令的路径要全路径</p>
+</li>
+<li>如果不需要密码,应该加上NOPASSWD:参数</li>
+<li>用户组前面必须加%号</li>
+</ul>
+<h1 id="4-sudo-su-root"><a href="#4-sudo-su-root" class="headerlink" title="4.sudo su -root"></a>4.sudo su -root</h1><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sudo su -</td>
+<td>该命令是通过sudo权限进行角色转换(默认是切换到root),执行命令对应账号的密码,非root密码</td>
+</tr>
+<tr>
+<td>sudo su - oldboy</td>
+<td>该命令是通过sudo以root权限,进行su - oldboy,因此输入的是执行命令当时账号的密码</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/Linux/一些重要的配置文件/DNS文件/" rel="next" title="Linux一些重要的配置文件之DNS文件">
+                <i class="fa fa-chevron-left"></i> Linux一些重要的配置文件之DNS文件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/Linux/shell/监控站点目录文件是否被篡改/" rel="prev" title="监控站点目录文件是否被篡改">
+                监控站点目录文件是否被篡改 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-用户切换命令-su"><span class="nav-number">1.</span> <span class="nav-text">1.用户切换命令 su</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-参数"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-优点"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-缺点"><span class="nav-number">1.3.</span> <span class="nav-text">1.3.缺点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-sudo"><span class="nav-number">2.</span> <span class="nav-text">2.sudo</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-语法"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-sudo的执行原理"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.sudo的执行原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3执行原理实操过程"><span class="nav-number">2.3.</span> <span class="nav-text">2.3执行原理实操过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-visudo添加rm权限"><span class="nav-number">2.3.1.</span> <span class="nav-text">2.3.1.visudo添加rm权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2-使用sudo删除"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.3.2.使用sudo删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-3检查时间戳文件"><span class="nav-number">2.3.3.</span> <span class="nav-text">2.3.3检查时间戳文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-4-sudo-相关的参数"><span class="nav-number">2.3.4.</span> <span class="nav-text">2.3.4.sudo 相关的参数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-visudo"><span class="nav-number">3.</span> <span class="nav-text">3.visudo</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-通过echo的方式修改vim-etc-sudoers"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.通过echo的方式修改vim /etc/sudoers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-visudo-c-语法检查"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.visudo -c 语法检查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-修改vim-etc-sudoers文件的权限位777"><span class="nav-number">3.3.</span> <span class="nav-text">3.3.修改vim /etc/sudoers文件的权限位777</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-viduso文件添加使用权限"><span class="nav-number">3.4.</span> <span class="nav-text">3.4.viduso文件添加使用权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-主机别名"><span class="nav-number">3.5.</span> <span class="nav-text">3.5.主机别名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6-用户别名-组"><span class="nav-number">3.6.</span> <span class="nav-text">3.6.用户别名(%组)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-7-命令别名"><span class="nav-number">3.7.</span> <span class="nav-text">3.7.命令别名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-8-角色别名"><span class="nav-number">3.8.</span> <span class="nav-text">3.8.角色别名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-9-总结"><span class="nav-number">3.9.</span> <span class="nav-text">3.9.总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-sudo-su-root"><span class="nav-number">4.</span> <span class="nav-text">4.sudo su -root</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

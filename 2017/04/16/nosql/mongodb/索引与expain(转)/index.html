@@ -1,0 +1,840 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mongodb," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="官网：https://docs.mongodb.com/manual/indexes/ 1.索引操作&amp;emsp;数据库百分之八十的工作基本上都是查询,而索引能帮我们更快的查询到想要的数据.但是其降低了数据的写入速度,所以要权衡常用的查询字段,不必在太多字段上建立索引.在mongoDB中默认是用btree来组织索引文件,并且可以按字段升序/降序来创建,便于排序. 1.1.数据准备123for (va">
+<meta name="keywords" content="mongodb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="索引与expain(转)">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/mongodb/索引与expain(转)/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="官网：https://docs.mongodb.com/manual/indexes/ 1.索引操作&amp;emsp;数据库百分之八十的工作基本上都是查询,而索引能帮我们更快的查询到想要的数据.但是其降低了数据的写入速度,所以要权衡常用的查询字段,不必在太多字段上建立索引.在mongoDB中默认是用btree来组织索引文件,并且可以按字段升序/降序来创建,便于排序. 1.1.数据准备123for (va">
+<meta property="og:updated_time" content="2017-02-24T17:10:16.965Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="索引与expain(转)">
+<meta name="twitter:description" content="官网：https://docs.mongodb.com/manual/indexes/ 1.索引操作&amp;emsp;数据库百分之八十的工作基本上都是查询,而索引能帮我们更快的查询到想要的数据.但是其降低了数据的写入速度,所以要权衡常用的查询字段,不必在太多字段上建立索引.在mongoDB中默认是用btree来组织索引文件,并且可以按字段升序/降序来创建,便于排序. 1.1.数据准备123for (va">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/mongodb/索引与expain(转)/"/>
+
+
+
+
+
+  <title> 索引与expain(转) | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/索引与expain(转)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                索引与expain(转)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>官网：<a href="https://docs.mongodb.com/manual/indexes/" target="_blank" rel="external">https://docs.mongodb.com/manual/indexes/</a></p>
+<h1 id="1-索引操作"><a href="#1-索引操作" class="headerlink" title="1.索引操作"></a>1.索引操作</h1><p>&emsp;数据库百分之八十的工作基本上都是查询,而索引能帮我们更快的查询到想要的数据.但是其降低了数据的写入速度,所以要权衡常用的查询字段,不必在太多字段上建立索引.在mongoDB中默认是用btree来组织索引文件,并且可以按字段升序/降序来创建,便于排序.</p>
+<h2 id="1-1-数据准备"><a href="#1-1-数据准备" class="headerlink" title="1.1.数据准备"></a>1.1.数据准备</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for (var i = 1; i &lt;100000; i++) &#123;</div><div class="line">  db.test.insert(&#123;name:&apos;user&apos;+i,num:i,sn:Math.floor(Math.random()*10000000)&#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="1-2-索引常用操作"><a href="#1-2-索引常用操作" class="headerlink" title="1.2.索引常用操作"></a>1.2.索引常用操作</h2><h3 id="1-2-1-查看当前索引"><a href="#1-2-1-查看当前索引" class="headerlink" title="1.2.1.查看当前索引"></a>1.2.1.查看当前索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&gt; db.test.getIndexes();</div><div class="line">[</div><div class="line">    &#123;</div><div class="line">        &quot;v&quot; : 1,</div><div class="line">        &quot;key&quot; : &#123;</div><div class="line">                &quot;_id&quot; : 1</div><div class="line">        &#125;,</div><div class="line">        &quot;name&quot; : &quot;_id_&quot;,</div><div class="line">        &quot;ns&quot; : &quot;test.test&quot;</div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>MongoDB有个默认的_id的键，他相当于“主键”的角色。集合创建后系统会自动创建一个索引在_id键上，它是默认索引，索引名叫“_id”，是无法被删除的。</p>
+<p>另外, system.indexes集合中包含了每个索引的详细信息，因此可以通过下面的命令查询已经存在的索引<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.system.indexes.find(&#123;&#125;);</div></pre></td></tr></table></figure></p>
+<h3 id="1-2-2-创建单列索引"><a href="#1-2-2-创建单列索引" class="headerlink" title="1.2.2.创建单列索引"></a>1.2.2.创建单列索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.collection.ensureIndex(&#123;field:1/-1&#125;) # 1是正序,-1是倒序</div></pre></td></tr></table></figure>
+<h3 id="1-2-3-创建多列索引-组合索引"><a href="#1-2-3-创建多列索引-组合索引" class="headerlink" title="1.2.3.创建多列索引(组合索引)"></a>1.2.3.创建多列索引(组合索引)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.collection.ensureIndex(&#123;field1:1/-1, field2:1/-1&#125;)</div></pre></td></tr></table></figure>
+<p>&emsp;在大多数情况下我们创建的索引都是多列索引,因为数据库查询器只会选择最优的索引来进行查询,在多列分别建立索引,查询器只会选择其中一列索引来进行查询,而直接建立一个多列索引的话,该索引由于是作用于多列的,效率更高于单列索引,具体多列索引建立技巧可以查看下文中的 &lt;&lt;新版Explain的分析实例&gt;&gt;，另外，mongoDB的多列索引也遵循着最左前缀的原则<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.test.ensureIndex(&#123;&quot;username&quot;:1, &quot;age&quot;:-1&#125;)</div></pre></td></tr></table></figure></p>
+<p>&emsp;该索引被创建后，基于username和age的查询将会用到该索引，或者是基于username的查询也会用到该索引，但是只是基于age的查询将不会用到该复合索引。因此可以说，如果想用到复合索引，必须在查询条件中包含复合索引中的前N个索引列。然而如果查询条件中的键值顺序和复合索引中的创建顺序不一致的话，MongoDB可以智能的帮助我们调整该顺序，以便使复合索引可以为查询所用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.test.find(&#123;&quot;age&quot;: 30, &quot;username&quot;: &quot;stephen&quot;&#125;)</div></pre></td></tr></table></figure>
+<p>对于上面示例中的查询条件，MongoDB在检索之前将会动态的调整查询条件文档的顺序，以使该查询可以用到刚刚创建的复合索引。</p>
+<h3 id="1-2-4-创建子文档索引"><a href="#1-2-4-创建子文档索引" class="headerlink" title="1.2.4.创建子文档索引"></a>1.2.4.创建子文档索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.collection.ensureIndex(&#123;&apos;filed.subfield&apos;:1/-1&#125;);</div></pre></td></tr></table></figure>
+<h3 id="1-2-5-创建唯一索引"><a href="#1-2-5-创建唯一索引" class="headerlink" title="1.2.5.创建唯一索引"></a>1.2.5.创建唯一索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.collection.ensureIndex(&#123;filed:1/-1&#125;, &#123;unique:true&#125;);</div></pre></td></tr></table></figure>
+<h3 id="1-2-6-创建稀疏索引"><a href="#1-2-6-创建稀疏索引" class="headerlink" title="1.2.6.创建稀疏索引"></a>1.2.6.创建稀疏索引</h3><p>稀疏索引的特点——如果针对field做索引,针对不含field列的文档,将不建立索引.<br>与之相对,普通索引,会把该文档的field列的值认为NULL,并建索引.<br>适宜于: 小部分文档含有某列时.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> db.tea.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5275f99b87437c610023597b&quot;), &quot;email&quot; : &quot;a@163.com&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5275f99e87437c610023597c&quot;), &quot;email&quot; : &quot;b@163.com&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5275f9e887437c610023597e&quot;), &quot;email&quot; : &quot;c@163.com&quot; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;5275fa3887437c6100235980&quot;) &#125;</div><div class="line"></div><div class="line"></div><div class="line">db.collection.ensureIndex(&#123;field:1/-1&#125;,&#123;sparse:true&#125;);</div></pre></td></tr></table></figure></p>
+<p>如上内容,最后一行没有email列,如果分别加普通索引,和稀疏索引,对于最后一行的email分别当成null 和 忽略最后一行来处理.根据{email:null}来查询,前者能利用到索引,而后者用不到索引,是一个全表扫描的过程;</p>
+<h3 id="1-2-7-创建哈希索引"><a href="#1-2-7-创建哈希索引" class="headerlink" title="1.2.7.创建哈希索引"></a>1.2.7.创建哈希索引</h3><p>哈希索引速度比普通索引快,但是,不能对范围查询进行优化.<br>适宜于随机性强的散列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.collection.ensureIndex(&#123;file:’hashed’&#125;);</div></pre></td></tr></table></figure>
+<h3 id="1-2-8-重建索引"><a href="#1-2-8-重建索引" class="headerlink" title="1.2.8.重建索引"></a>1.2.8.重建索引</h3><p>一个表经过很多次修改后,导致表的文件产生空洞,索引文件也如此.可以通过索引的重建,减少索引文件碎片,并提高索引的效率.类似mysql中的optimize table</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.collection.reIndex()</div></pre></td></tr></table></figure>
+<h3 id="1-2-9-删除索引"><a href="#1-2-9-删除索引" class="headerlink" title="1.2.9.删除索引"></a>1.2.9.删除索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">db.collection.dropIndex(&#123;filed:1/-1&#125;);  #删除单个索引</div><div class="line">db.collection.dropIndexes(); #删除所有索引</div></pre></td></tr></table></figure>
+<h2 id="1-3-正则表达式在索引中的应用"><a href="#1-3-正则表达式在索引中的应用" class="headerlink" title="1.3.正则表达式在索引中的应用"></a>1.3.正则表达式在索引中的应用</h2><p>正则表达式可以灵活地匹配查询条件，如果希望正则表达式能命中索引，就要注意了：<br>Mongodb能为前缀型的正则表达式命中索引(和mysql一样)，比如：需要查询Mail中user以z开头的：/^z/<br>如果有user索引,这种查询很高效,但其他的即使有索引,也不会命中索引，比说：需要查询Mail中的user中含有z的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/.*z.*/</div><div class="line">/^.*z.*/</div></pre></td></tr></table></figure>
+<p>这种查询是不会命中到索引的，当数据量很大，速度很慢总之，^后的条件必须明确，不能^.* ^[a-z]之类开头的</p>
+<h1 id="2-查询计划explain"><a href="#2-查询计划explain" class="headerlink" title="2.查询计划explain"></a>2.查询计划explain</h1><p>&emsp;我学习mongodb比较晚,安装的是3.05版本的,发现此版本的explain的使用方法跟教程上有很大不同,究竟是从什么版本开始发生改变的,我也就不去追溯了.</p>
+<h2 id="2-1-新版explain介绍"><a href="#2-1-新版explain介绍" class="headerlink" title="2.1.新版explain介绍"></a>2.1.新版explain介绍</h2><p>新版本的explain有三种模式,作为explain的参数传进去</p>
+<ul>
+<li>queryPlanner 默认</li>
+<li>executionStats</li>
+<li>allPlansExecution</li>
+</ul>
+<blockquote>
+<p>queryPlanner</p>
+</blockquote>
+<p>queryPlanner是现版本explain的默认模式，queryPlanner模式下并不会去真正进行query语句查询，而是针对query语句进行执行计划分析并选出winning plan。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    &quot;queryPlanner&quot;: &#123;</div><div class="line">        &quot;plannerVersion&quot;: 1,</div><div class="line">        &quot;namespace&quot;: &quot;game_db.game_user&quot;,</div><div class="line">        &quot;indexFilterSet&quot;: false,//针对该query是否有indexfilter（详见下文）</div><div class="line">        &quot;parsedQuery&quot;: &#123;</div><div class="line">            &quot;w&quot;: &#123;</div><div class="line">                &quot;$eq&quot;: 1</div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        &quot;winningPlan&quot;: &#123;  // 查询优化器针对该query所返回的最优执行计划的详细内容。</div><div class="line">            &quot;stage&quot;: &quot;FETCH&quot;, //最优执行计划的stage，这里返回是FETCH，可以理解为通过返回的index位置去检索具体的文档(详见下文)</div><div class="line">            &quot;inputStage&quot;: &#123; // 上一个stage的child stage，此处是IXSCAN，表示进行的是index scanning。</div><div class="line">                &quot;stage&quot;: &quot;IXSCAN&quot;, </div><div class="line">                &quot;keyPattern&quot;: &#123;</div><div class="line">                    &quot;w&quot;: 1, //所扫描的index内容</div><div class="line">                    &quot;n&quot;: 1 // 返回的条数?</div><div class="line">                &#125;,</div><div class="line">                &quot;indexName&quot;: &quot;w_1_n_1&quot;, //索引名称</div><div class="line">                &quot;isMultiKey&quot;: false, //是否是Multikey，此处返回是false，如果索引建立在array上，此处将是true</div><div class="line">                &quot;direction&quot;: &quot;forward&quot;, //此query的查询顺序，此处是forward，如果用了.sort(&#123;w:-1&#125;)将显示backward。</div><div class="line">                &quot;indexBounds&quot;: &#123; //winningplan所扫描的索引范围，此处查询条件是w:1,使用的index是w与n的联合索引，故w是[1.0,1.0]而n没有指定在查询条件中，故是[MinKey,MaxKey]。</div><div class="line">                    &quot;w&quot;: [&quot;[1.0, 1.0]&quot;],</div><div class="line">                    &quot;n&quot;: [&quot;[MinKey, MaxKey]&quot;]</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        &quot;rejectedPlans&quot;: [&#123; //他执行计划（非最优而被查询优化器reject的）的详细返回，其中具体信息与winningPlan的返回中意义相同</div><div class="line">            &quot;stage&quot;: &quot;FETCH&quot;,</div><div class="line">            &quot;inputStage&quot;: &#123;</div><div class="line">                &quot;stage&quot;: &quot;IXSCAN&quot;,</div><div class="line">                &quot;keyPattern&quot;: &#123;</div><div class="line">                    &quot;w&quot;: 1,</div><div class="line">                    &quot;v&quot;: 1</div><div class="line">                &#125;,</div><div class="line">                &quot;indexName&quot;: &quot;w_1_v_1&quot;,</div><div class="line">                &quot;isMultiKey&quot;: false,</div><div class="line">                &quot;direction&quot;: &quot;forward&quot;,</div><div class="line">                &quot;indexBounds&quot;: &#123;</div><div class="line">                    &quot;w&quot;: [&quot;[1.0, 1.0]&quot;],</div><div class="line">                    &quot;v&quot;: [&quot;[MinKey, MaxKey]&quot;]</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;]</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>indexFilterSet</p>
+</blockquote>
+<p>IndexFilter决定了查询优化器对于某一类型的查询将如何使用index，indexFilter仅影响查询优化器对于该类查询可以用尝试哪些index的执行计划分析，查询优化器还是根据分析情况选择最优计划。</p>
+<p>如果某一类型的查询设定了IndexFilter，那么执行时通过hint指定了其他的index，查询优化器将会忽略hint所设置index，仍然使用indexfilter中设定的查询计划。</p>
+<p>IndexFilter可以通过命令移除，也将在实例重启后清空。</p>
+<p>IndexFilter的创建<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">db.runCommand(</div><div class="line">   &#123;</div><div class="line">      planCacheSetFilter: &lt;collection&gt;,</div><div class="line">      query: &lt;query&gt;,</div><div class="line">      sort: &lt;sort&gt;,</div><div class="line">      projection: &lt;projection&gt;,</div><div class="line">      indexes: [ &lt;index1&gt;, &lt;index2&gt;, ...]</div><div class="line">   &#125;</div><div class="line">)</div><div class="line"></div><div class="line"></div><div class="line">db.runCommand(</div><div class="line">   &#123;</div><div class="line">      planCacheSetFilter: &quot;orders&quot;,</div><div class="line">      query: &#123; status: &quot;A&quot; &#125;,</div><div class="line">      indexes: [</div><div class="line">         &#123; cust_id: 1, status: 1 &#125;,</div><div class="line">         &#123; status: 1, order_date: -1 &#125;</div><div class="line">      ]</div><div class="line">   &#125;</div><div class="line">)</div></pre></td></tr></table></figure></p>
+<p>针对orders表建立了一个indexFilter，indexFilter指定了对于orders表只有status条件（仅对status进行查询，无sort等）的查询的indexes，所以以下的查询语句的查询优化器仅仅会从{cust_id:1,status:1}和{status:1,order_date:-1}中进行winning plan的选择</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">db.orders.find( &#123; status: &quot;D&quot; &#125; )</div><div class="line">db.orders.find( &#123; status: &quot;P&quot; &#125; )</div></pre></td></tr></table></figure>
+<p>indexFilter的列表<br>可以通过如下命令展示某一个collecton的所有indexFilter<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.runCommand( &#123; planCacheListFilters: &lt;collection&gt; &#125; )</div></pre></td></tr></table></figure></p>
+<p>indexFilter的删除</p>
+<p>可以通过如下命令对IndexFilter进行删除<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">db.runCommand(</div><div class="line">   &#123;</div><div class="line">      planCacheClearFilters: &lt;collection&gt;,</div><div class="line">      query: &lt;query pattern&gt;,</div><div class="line">      sort: &lt;sort specification&gt;,</div><div class="line">      projection: &lt;projection specification&gt;</div><div class="line">   &#125;</div><div class="line">)</div></pre></td></tr></table></figure></p>
+<p>Stage返回参数说明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">COLLSCAN #全表扫描</div><div class="line">IXSCAN #索引扫描</div><div class="line">FETCH #根据索引去检索指定document</div><div class="line">SHARD_MERGE #将各个分片返回数据进行merge</div><div class="line">SORT #表明在内存中进行了排序（与老版本的scanAndOrder:true一致）</div><div class="line">LIMIT #使用limit限制返回数</div><div class="line">SKIP #使用skip进行跳过</div><div class="line">IDHACK #针对_id进行查询</div><div class="line">SHARDING_FILTER #通过mongos对分片数据进行查询</div><div class="line">COUNT #利用db.coll.explain().count()之类进行count运算</div><div class="line">COUNTSCAN #count不使用Index进行count时的stage返回</div><div class="line">COUNT_SCAN #count使用了Index进行count时的stage返回</div><div class="line">SUBPLA #未使用到索引的$or查询的stage返回</div><div class="line">TEXT #使用全文索引进行查询时候的stage返回</div><div class="line">PROJECTION #限定返回字段时候stage的返回</div></pre></td></tr></table></figure>
+<blockquote>
+<p>executionStats</p>
+</blockquote>
+<p>该模式是mongoDB查询的执行状态,类似老版本的explain<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">&quot;executionStats&quot;: &#123;</div><div class="line">  &quot;executionSuccess&quot;: true, //是否执行成功</div><div class="line">  &quot;nReturned&quot;: 29861, //查询的返回条数</div><div class="line">  &quot;executionTimeMillis&quot;: 23079, //整体执行时间 毫秒</div><div class="line">  &quot;totalKeysExamined&quot;: 29861, // 索引扫描次数</div><div class="line">  &quot;totalDocsExamined&quot;: 29861, // document扫描次数</div><div class="line">  &quot;executionStages&quot;: &#123;</div><div class="line">    &quot;stage&quot;: &quot;FETCH&quot;, //这里是FETCH去扫描对于documents</div><div class="line">    &quot;nReturned&quot;: 29861, //由于是FETCH，所以这里该值与executionStats.nReturned一致</div><div class="line">    &quot;executionTimeMillisEstimate&quot;: 22685,</div><div class="line">    &quot;works&quot;: 29862, //查看源码中发现，每次操作会加1，且会把执行时间记录在executionTimeMillis中。</div><div class="line">    &quot;advanced&quot;: 29861,//而在查询结束EOF，works又会加1，advanced不加。正常的返回works会比nReturned多1，这时候isEOF为true（1）：另外advanced的返回值只有在命中的时候+1，在skip,eof的时候不会增加</div><div class="line">    &quot;needTime&quot;: 0,</div><div class="line">    &quot;needFetch&quot;: 0,</div><div class="line">    &quot;saveState&quot;: 946,</div><div class="line">    &quot;restoreState&quot;: 946,</div><div class="line">    &quot;isEOF&quot;: 1,</div><div class="line">    &quot;invalidates&quot;: 0,</div><div class="line">    &quot;docsExamined&quot;: 29861, // 与executionStats.totalDocsExamined一致</div><div class="line">    &quot;alreadyHasObj&quot;: 0,</div><div class="line">    &quot;inputStage&quot;: &#123;</div><div class="line">      &quot;stage&quot;: &quot;IXSCAN&quot;,</div><div class="line">      &quot;nReturned&quot;: 29861,</div><div class="line">      &quot;executionTimeMillisEstimate&quot;: 70,</div><div class="line">      &quot;works&quot;: 29862,</div><div class="line">      &quot;advanced&quot;: 29861,</div><div class="line">      &quot;needTime&quot;: 0,</div><div class="line">      &quot;needFetch&quot;: 0,</div><div class="line">      &quot;saveState&quot;: 946,</div><div class="line">      &quot;restoreState&quot;: 946,</div><div class="line">      &quot;isEOF&quot;: 1,</div><div class="line">      &quot;invalidates&quot;: 0,</div><div class="line">      &quot;keyPattern&quot;: &#123;</div><div class="line">        &quot;w&quot;: 1,</div><div class="line">        &quot;n&quot;: 1</div><div class="line">      &#125;,</div><div class="line">      &quot;indexName&quot;: &quot;w_1_n_1&quot;,</div><div class="line">      &quot;isMultiKey&quot;: false,</div><div class="line">      &quot;direction&quot;: &quot;forward&quot;,</div><div class="line">      &quot;indexBounds&quot;: &#123;</div><div class="line">        &quot;w&quot;: [&quot;[1.0, 1.0]&quot;],</div><div class="line">        &quot;n&quot;: [&quot;[MinKey, MaxKey]&quot;]</div><div class="line">      &#125;,</div><div class="line">      &quot;keysExamined&quot;: 29861,</div><div class="line">      &quot;dupsTested&quot;: 0,</div><div class="line">      &quot;dupsDropped&quot;: 0,</div><div class="line">      &quot;seenInvalidated&quot;: 0,</div><div class="line">      &quot;matchTested&quot;: 0</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>allPlansExecution</p>
+</blockquote>
+<p>该模式可以看做是以上两个模式加起来;</p>
+<h2 id="2-2-如何通过新版explain来分析索引"><a href="#2-2-如何通过新版explain来分析索引" class="headerlink" title="2.2.如何通过新版explain来分析索引"></a>2.2.如何通过新版explain来分析索引</h2><blockquote>
+<p>分析executionTimeMillis</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&quot;executionStats&quot; : &#123;</div><div class="line">  &quot;nReturned&quot; : 29861,</div><div class="line">  &quot;totalKeysExamined&quot; : 29861,</div><div class="line">  &quot;totalDocsExamined&quot; : 29861,</div><div class="line">  &quot;executionTimeMillis&quot; : 66948, # 该query的整体查询时间</div><div class="line">  ...</div><div class="line">  &quot;executionStages&quot; : &#123;</div><div class="line">    ...</div><div class="line">    &quot;executionTimeMillisEstimate&quot; : 66244, # 该查询根据index去检索document获取29861条具体数据的时间</div><div class="line">    ...</div><div class="line">    &quot;inputStage&quot; : &#123;</div><div class="line">            &quot;stage&quot; : &quot;IXSCAN&quot;,</div><div class="line">            ...</div><div class="line"> </div><div class="line">            &quot;executionTimeMillisEstimate&quot; : 290, #该查询扫描29861行index所用时间</div><div class="line"> </div><div class="line">            ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这三个值我们都希望越少越好，那么是什么影响这这三个返回值呢？</p>
+<blockquote>
+<p>分析index与document扫描数与查询返回条目数</p>
+</blockquote>
+<p>这里主要谈3个返回项，nReturned，totalKeysExamined与totalDocsExamined，分别代表该条查询返回的条目、索引扫描条目和文档扫描条目。<br>理想状态如下:<br>nReturned=totalKeysExamined &amp; totalDocsExamined=0 （cover index，仅仅使用到了index，无需文档扫描，这是最理想状态。）</p>
+<p>或者</p>
+<p>nReturned=totalKeysExamined=totalDocsExamined(需要具体情况具体分析)（正常index利用，无多余index扫描与文档扫描。）</p>
+<p>如果有sort的时候，为了使得sort不在内存中进行，我们可以在保证nReturned=totalDocsExamined的基础上，totalKeysExamined可以大于totalDocsExamined与nReturned，因为量级较大的时候内存排序非常消耗性能。</p>
+<blockquote>
+<p>分析Stage状态</p>
+</blockquote>
+<p>对于普通查询，我们最希望看到的组合有这些：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Fetch+IDHACK</div><div class="line"> </div><div class="line">Fetch+ixscan</div><div class="line"> </div><div class="line">Limit+（Fetch+ixscan）</div><div class="line"> </div><div class="line">PROJECTION+ixscan</div><div class="line"> </div><div class="line">SHARDING_FILTER+ixscan</div><div class="line"> </div><div class="line">等</div></pre></td></tr></table></figure></p>
+<p>不希望看到包含如下的stage：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">COLLSCAN（全表扫），SORT（使用sort但是无index），不合理的SKIP，SUBPLA（未用到index的$or）</div></pre></td></tr></table></figure>
+<p>对于count查询，希望看到的有：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">COUNT_SCAN</div></pre></td></tr></table></figure></p>
+<p>不希望看到的有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">COUNTSCAN</div></pre></td></tr></table></figure></p>
+<h2 id="2-3-新版Explain的分析实例"><a href="#2-3-新版Explain的分析实例" class="headerlink" title="2.3.新版Explain的分析实例"></a>2.3.新版Explain的分析实例</h2><p>表中数据如下(简单测试用例，仅10条数据，主要是对explain分析的逻辑进行解析)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b86d6bd7e3f4ccaaf20d70&quot;), &quot;a&quot; : 1, &quot;b&quot; : 1, &quot;c&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b86d6fd7e3f4ccaaf20d71&quot;), &quot;a&quot; : 1, &quot;b&quot; : 2, &quot;c&quot; : 2 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b86d72d7e3f4ccaaf20d72&quot;), &quot;a&quot; : 1, &quot;b&quot; : 3, &quot;c&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b86d74d7e3f4ccaaf20d73&quot;), &quot;a&quot; : 4, &quot;b&quot; : 2, &quot;c&quot; : 3 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b86d75d7e3f4ccaaf20d74&quot;), &quot;a&quot; : 4, &quot;b&quot; : 2, &quot;c&quot; : 5 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b86d77d7e3f4ccaaf20d75&quot;), &quot;a&quot; : 4, &quot;b&quot; : 2, &quot;c&quot; : 5 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b879b442bfd1a462bd8990&quot;), &quot;a&quot; : 2, &quot;b&quot; : 1, &quot;c&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b87fe842bfd1a462bd8991&quot;), &quot;a&quot; : 1, &quot;b&quot; : 9, &quot;c&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b87fe942bfd1a462bd8992&quot;), &quot;a&quot; : 1, &quot;b&quot; : 9, &quot;c&quot; : 1 &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55b87fe942bfd1a462bd8993&quot;), &quot;a&quot; : 1, &quot;b&quot; : 9, &quot;c&quot; : 1 &#125;</div></pre></td></tr></table></figure></p>
+<p>查询语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.test.find(&#123;a:1,b:&#123;$lt:3&#125;&#125;).sort(&#123;c:-1&#125;).explain();</div></pre></td></tr></table></figure>
+<p>未加索引前<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">&quot;executionStats&quot;: &#123;</div><div class="line">  &quot;executionSuccess&quot;: true,</div><div class="line">  &quot;nReturned&quot;: 2,</div><div class="line">  &quot;executionTimeMillis&quot;: 0,</div><div class="line">  &quot;totalKeysExamined&quot;: 0, // 为0表示没有使用索引</div><div class="line">  &quot;totalDocsExamined&quot;: 10, // 扫描了所有记录</div><div class="line">  &quot;executionStages&quot;: &#123;</div><div class="line">    &quot;stage&quot;: &quot;SORT&quot;,  //为SORT,未使用index的sort</div><div class="line">    &quot;nReturned&quot;: 2,</div><div class="line">    ...&quot;sortPattern&quot;: &#123;</div><div class="line">      &quot;c&quot;: -1</div><div class="line">    &#125;,</div><div class="line">    &quot;memUsage&quot;: 126, //占用的内存</div><div class="line">    &quot;memLimit&quot;: 33554432, //内存限制</div><div class="line">    &quot;inputStage&quot;: &#123;</div><div class="line">      &quot;stage&quot;: &quot;COLLSCAN&quot;, //全表扫描</div><div class="line">      &quot;filter&quot;: &#123;</div><div class="line">        &quot;$and&quot;: [&#123;</div><div class="line">          &quot;a&quot;: &#123;</div><div class="line">            &quot;$eq&quot;: 1</div><div class="line">          &#125;</div><div class="line">        &#125;,</div><div class="line">        &#123;</div><div class="line">          &quot;b&quot;: &#123;</div><div class="line">            &quot;$lt&quot;: 3</div><div class="line">          &#125;</div><div class="line">        &#125;]</div><div class="line">      &#125;,</div><div class="line">      &quot;nReturned&quot;: 2,</div><div class="line">      ...&quot;direction&quot;: &quot;forward&quot;,</div><div class="line">      &quot;docsExamined&quot;: 10</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>很明显，没有index的时候，进行了全表扫描，在内存中sort，数据量达百万级以后就会有明显的慢</p>
+<p>接着我们对c加一个正序索引</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.d.ensureIndex(&#123;c:1&#125;)</div></pre></td></tr></table></figure>
+<p>再来看一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&quot;executionStats&quot;: &#123;</div><div class="line">  &quot;executionSuccess&quot;: true,</div><div class="line">  &quot;nReturned&quot;: 2,</div><div class="line">  &quot;executionTimeMillis&quot;: 1,</div><div class="line">  &quot;totalKeysExamined&quot;: 10,</div><div class="line">  &quot;totalDocsExamined&quot;: 10,</div><div class="line">  &quot;executionStages&quot;: &#123;</div><div class="line">    &quot;stage&quot;: &quot;FETCH&quot;,    #变成了fetch</div><div class="line">    &quot;filter&quot;: &#123;</div><div class="line">      &quot;$and&quot;: [&#123;</div><div class="line">        &quot;a&quot;: &#123;</div><div class="line">          &quot;$eq&quot;: 1</div><div class="line">        &#125;</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        &quot;b&quot;: &#123;</div><div class="line">          &quot;$lt&quot;: 3</div><div class="line">        &#125;</div><div class="line">      &#125;]</div><div class="line">    &#125;,</div><div class="line">    &quot;nReturned&quot;: 2,</div><div class="line">    ...&quot;inputStage&quot;: &#123;</div><div class="line">      &quot;stage&quot;: &quot;IXSCAN&quot;,    #索引扫描</div><div class="line">      &quot;nReturned&quot;: 10,</div><div class="line">      ...&quot;keyPattern&quot;: &#123;</div><div class="line">        &quot;c&quot;: 1</div><div class="line">      &#125;,</div><div class="line">      &quot;indexName&quot;: &quot;c_1&quot;,</div><div class="line">      &quot;isMultiKey&quot;: false,</div><div class="line">      &quot;direction&quot;: &quot;backward&quot;,</div><div class="line">      &quot;indexBounds&quot;: &#123;</div><div class="line">        &quot;c&quot;: [&quot;[MaxKey, MinKey]&quot;]</div><div class="line">      &#125;</div></pre></td></tr></table></figure></p>
+<p>我们发现，Stage没有了SORT，因为我们sort字段有了index，但是由于查询还是没有index，故totalDocsExamined还是10，但是由于sort用了index，totalKeysExamined也是10，但是仅对sort排序做了优化，查询性能还是一样的低效。</p>
+<p>接下来， 我们对查询条件做index<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">db.test.ensureIndex(&#123;b:1,a:1,c:1&#125;)</div><div class="line"></div><div class="line">&quot;executionStats&quot;: &#123;</div><div class="line">  &quot;executionSuccess&quot;: true,</div><div class="line">  &quot;nReturned&quot;: 2,</div><div class="line">  &quot;executionTimeMillis&quot;: 0,</div><div class="line">  &quot;totalKeysExamined&quot;: 4,</div><div class="line">  &quot;totalDocsExamined&quot;: 2,</div><div class="line">  &quot;executionStages&quot;: &#123;</div><div class="line">    &quot;stage&quot;: &quot;SORT&quot;,</div><div class="line">    &quot;nReturned&quot;: 2,</div><div class="line">    ...&quot;sortPattern&quot;: &#123;</div><div class="line">      &quot;c&quot;: -1</div><div class="line">    &#125;,</div><div class="line">    &quot;memUsage&quot;: 126,</div><div class="line">    &quot;memLimit&quot;: 33554432,</div><div class="line">    &quot;inputStage&quot;: &#123;</div><div class="line">      &quot;stage&quot;: &quot;FETCH&quot;,</div><div class="line">      &quot;nReturned&quot;: 2,</div><div class="line">      ...&quot;inputStage&quot;: &#123;</div><div class="line">        &quot;stage&quot;: &quot;IXSCAN&quot;,</div><div class="line">        &quot;nReturned&quot;: 2,</div><div class="line">        ...&quot;keyPattern&quot;: &#123;</div><div class="line">          &quot;b&quot;: 1,</div><div class="line">          &quot;a&quot;: 1,</div><div class="line">          &quot;c&quot;: 1</div><div class="line">        &#125;,</div><div class="line">        &quot;indexName&quot;: &quot;b_1_a_1_c_1&quot;,</div><div class="line">        &quot;isMultiKey&quot;: false,</div><div class="line">        &quot;direction&quot;: &quot;forward&quot;,</div><div class="line">        &quot;indexBounds&quot;: &#123;</div><div class="line">          &quot;b&quot;: [&quot;[-inf.0, 3.0)&quot;],</div><div class="line">          &quot;a&quot;: [&quot;[1.0, 1.0]&quot;],</div><div class="line">          &quot;c&quot;: [&quot;[MinKey, MaxKey]&quot;]</div><div class="line">        &#125;,</div></pre></td></tr></table></figure></p>
+<p>nReturned为2，返回2条记录<br>totalKeysExamined为4，扫描了4个index<br>totalDocsExamined为2，扫描了2个docs</p>
+<p>此时nReturned=totalDocsExamined&lt;totalKeysExamined，不符合我们的期望。<br>且executionStages.Stage为Sort，在内存中进行排序了，也不符合我们的期望</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.test.ensureIndex(&#123;a:1,b:1,c:1&#125;)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&quot;executionStats&quot;: &#123;</div><div class="line">  &quot;executionSuccess&quot;: true,</div><div class="line">  &quot;nReturned&quot;: 2,</div><div class="line">  &quot;executionTimeMillis&quot;: 0,</div><div class="line">  &quot;totalKeysExamined&quot;: 2,</div><div class="line">  &quot;totalDocsExamined&quot;: 2,</div><div class="line">  &quot;executionStages&quot;: &#123;</div><div class="line">    &quot;stage&quot;: &quot;SORT&quot;,</div><div class="line">    &quot;nReturned&quot;: 2,</div><div class="line">    ...&quot;sortPattern&quot;: &#123;</div><div class="line">      &quot;c&quot;: -1</div><div class="line">    &#125;,</div><div class="line">    &quot;memUsage&quot;: 126,</div><div class="line">    &quot;memLimit&quot;: 33554432,</div><div class="line">    &quot;inputStage&quot;: &#123;</div><div class="line">      &quot;stage&quot;: &quot;FETCH&quot;,</div><div class="line">      &quot;nReturned&quot;: 2,</div><div class="line">      ...&quot;inputStage&quot;: &#123;</div><div class="line">        &quot;stage&quot;: &quot;IXSCAN&quot;,</div><div class="line">        &quot;nReturned&quot;: 2,</div><div class="line">        ...&quot;keyPattern&quot;: &#123;</div><div class="line">          &quot;a&quot;: 1,</div><div class="line">          &quot;b&quot;: 1,</div><div class="line">          &quot;c&quot;: 1</div><div class="line">        &#125;,</div><div class="line">        &quot;indexName&quot;: &quot;a_1_b_1_c_1&quot;,</div><div class="line">        &quot;isMultiKey&quot;: false,</div><div class="line">        &quot;direction&quot;: &quot;forward&quot;,</div><div class="line">        &quot;indexBounds&quot;: &#123;</div><div class="line">          &quot;a&quot;: [&quot;[1.0, 1.0]&quot;],</div><div class="line">          &quot;b&quot;: [&quot;[-inf.0, 3.0)&quot;],</div><div class="line">          &quot;c&quot;: [&quot;[MinKey, MaxKey]&quot;]</div><div class="line">        &#125;,</div></pre></td></tr></table></figure>
+<p>nReturned为2，返回2条记录<br>totalKeysExamined为2，扫描了2个index<br>totalDocsExamined为2，扫描了2个docs<br>此时nReturned=totalDocsExamined=totalKeysExamined，符合我们的期望。<br>但是！executionStages.Stage为Sort，在内存中进行排序了，这个在生产环境中尤其是在数据量较大的时候，是非常消耗性能的，这个千万不能忽视了，我们需要改进这个点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.test.ensureIndex(&#123;a:1,c:1,b:1&#125;)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">&quot;executionStats&quot;: &#123;</div><div class="line">  &quot;executionSuccess&quot;: true,</div><div class="line">  &quot;nReturned&quot;: 2,</div><div class="line">  &quot;executionTimeMillis&quot;: 0,</div><div class="line">  &quot;totalKeysExamined&quot;: 4,</div><div class="line">  &quot;totalDocsExamined&quot;: 2,</div><div class="line">  &quot;executionStages&quot;: &#123;</div><div class="line">    &quot;stage&quot;: &quot;FETCH&quot;,</div><div class="line">    &quot;nReturned&quot;: 2,</div><div class="line">    ...&quot;inputStage&quot;: &#123;</div><div class="line">      &quot;stage&quot;: &quot;IXSCAN&quot;,</div><div class="line">      &quot;nReturned&quot;: 2,</div><div class="line">      ...&quot;keyPattern&quot;: &#123;</div><div class="line">        &quot;a&quot;: 1,</div><div class="line">        &quot;c&quot;: 1,</div><div class="line">        &quot;b&quot;: 1</div><div class="line">      &#125;,</div><div class="line">      &quot;indexName&quot;: &quot;a_1_c_1_b_1&quot;,</div><div class="line">      &quot;isMultiKey&quot;: false,</div><div class="line">      &quot;direction&quot;: &quot;backward&quot;,</div><div class="line">      &quot;indexBounds&quot;: &#123;</div><div class="line">        &quot;a&quot;: [&quot;[1.0, 1.0]&quot;],</div><div class="line">        &quot;c&quot;: [&quot;[MaxKey, MinKey]&quot;],</div><div class="line">        &quot;b&quot;: [&quot;(3.0, -inf.0]&quot;]</div><div class="line">      &#125;,</div><div class="line">      &quot;keysExamined&quot;: 4,</div><div class="line">      &quot;dupsTested&quot;: 0,</div><div class="line">      &quot;dupsDropped&quot;: 0,</div><div class="line">      &quot;seenInvalidated&quot;: 0,</div><div class="line">      &quot;matchTested&quot;: 0</div></pre></td></tr></table></figure>
+<p>我们可以看到</p>
+<p>nReturned为2，返回2条记录<br>totalKeysExamined为4，扫描了4个index<br>totalDocsExamined为2，扫描了2个docs</p>
+<p>虽然不是nReturned=totalKeysExamined=totalDocsExamined，但是Stage无Sort，即利用了index进行排序，而非内存，这个性能的提升高于多扫几个index的代价。<br>综上可以有一个小结论，当查询覆盖精确匹配，范围查询与排序的时候，{精确匹配字段,排序字段,范围查询字段}这样的索引排序会更为高效</p>
+<h2 id="2-4-旧版本的explain"><a href="#2-4-旧版本的explain" class="headerlink" title="2.4.旧版本的explain"></a>2.4.旧版本的explain</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&gt; db.blogs.find(&#123;&quot;comment.author&quot;:&quot;joe&quot;&#125;).explain(); </div><div class="line">&#123; </div><div class="line">        &quot;cursor&quot; : &quot;BtreeCursor comment.author_1&quot;, </div><div class="line">        &quot;nscanned&quot; : 1, </div><div class="line">        &quot;nscannedObjects&quot; : 1, </div><div class="line">        &quot;n&quot; : 1, </div><div class="line">        &quot;millis&quot; : 70, </div><div class="line">        &quot;nYields&quot; : 0, </div><div class="line">        &quot;nChunkSkips&quot; : 0, </div><div class="line">        &quot;isMultiKey&quot; : true, </div><div class="line">        &quot;indexOnly&quot; : false, </div><div class="line">        &quot;indexBounds&quot; : &#123; </div><div class="line">                &quot;comment.author&quot; : [ </div><div class="line">                        [ </div><div class="line">                                &quot;joe&quot;, </div><div class="line">                                &quot;joe&quot; </div><div class="line">                        ] </div><div class="line">                ] </div><div class="line">        &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>参数说明:</p>
+<ul>
+<li>cursor：因为这个查询使用了索引，MongoDB中索引存储在B树结构中，所以这是也使用了BtreeCursor类型的游标。如果没有使用索引，游标的类型是BasicCursor。这个键还会给出你所使用的索引的名称，你通过这个名称可以查看当前数据库下的system.indexes集合（系统自动创建，由于存储索引信息，这个稍微会提到）来得到索引的详细信息。</li>
+<li>nscanned/nscannedObjects：表明当前这次查询一共扫描了集合中多少个文档，我们的目的是，让这个数值和返回文档的数量越接近越好。</li>
+<li>n：当前查询返回的文档数量。</li>
+<li>millis：当前查询所需时间，毫秒数。</li>
+<li>indexBounds：当前查询具体使用的索引</li>
+</ul>
+<h2 id="2-5-hint强制使用某个索引"><a href="#2-5-hint强制使用某个索引" class="headerlink" title="2.5.hint强制使用某个索引"></a>2.5.hint强制使用某个索引</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">&gt; db.user.ensureIndex(&#123;&quot;name&quot;:1,&quot;age&quot;:1&#125;);</div><div class="line">&gt; db.user.ensureIndex(&#123;&quot;age&quot;:1,&quot;name&quot;:1&#125;);</div><div class="line">&gt; db.user.find(&#123;&quot;age&quot;:40, &quot;name&quot;:&quot;tim&quot;&#125;).explain();</div><div class="line">&#123;</div><div class="line">    &quot;cursor&quot; : &quot;BtreeCursor name_1_age_1&quot;,</div><div class="line">    &quot;nscanned&quot; : 1,</div><div class="line">    &quot;nscannedObjects&quot; : 1,</div><div class="line">    &quot;n&quot; : 1,</div><div class="line">    &quot;millis&quot; : 0,</div><div class="line">    &quot;nYields&quot; : 0,</div><div class="line">    &quot;nChunkSkips&quot; : 0,</div><div class="line">    &quot;isMultiKey&quot; : false,</div><div class="line">    &quot;indexOnly&quot; : false,</div><div class="line">    &quot;indexBounds&quot; : &#123;</div><div class="line">            &quot;name&quot; : [</div><div class="line">                    [</div><div class="line">                            &quot;tim&quot;,</div><div class="line">                            &quot;tim&quot;</div><div class="line">                    ]</div><div class="line">            ],</div><div class="line">            &quot;age&quot; : [</div><div class="line">                    [</div><div class="line">                            40,</div><div class="line">                            40</div><div class="line">                    ]</div><div class="line">            ]</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>返回文档的键没有区别，其默认使用了索引”name_1_age_1”，这是查询优化器为我们使用的索引！我们此处可以通过hint进行更行，即强制这个查询使用我们定义的“age_1_name_1”索引，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">&gt; var cursor = db.user.find(&#123;&quot;age&quot;:40, &quot;name&quot;:&quot;tim&quot;&#125;).hint(&#123;&quot;age&quot;:1,&quot;name&quot;:1&#125;);</div><div class="line">&gt; cursor.explain();</div><div class="line">&#123;</div><div class="line">    &quot;cursor&quot; : &quot;BtreeCursor age_1_name_1&quot;,</div><div class="line">    &quot;nscanned&quot; : 1,</div><div class="line">    &quot;nscannedObjects&quot; : 1,</div><div class="line">    &quot;n&quot; : 1,</div><div class="line">    &quot;millis&quot; : 0,</div><div class="line">    &quot;nYields&quot; : 0,</div><div class="line">    &quot;nChunkSkips&quot; : 0,</div><div class="line">    &quot;isMultiKey&quot; : false,</div><div class="line">    &quot;indexOnly&quot; : false,</div><div class="line">    &quot;indexBounds&quot; : &#123;</div><div class="line">            &quot;age&quot; : [</div><div class="line">                    [</div><div class="line">                            40,</div><div class="line">                            40</div><div class="line">                    ]</div><div class="line">            ],</div><div class="line">            &quot;name&quot; : [</div><div class="line">                    [</div><div class="line">                            &quot;tim&quot;,</div><div class="line">                            &quot;tim&quot;</div><div class="line">                    ]</div><div class="line">            ]</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>hint函数会返回游标，我们可以在游标上调用explain查看索引的使用情况！99%的情况，我们没有必要通过hint去强制使用某个索引，MongoDB的查询优化器非常智能，绝对能帮助我们使用最佳的索引去进行查询！</p>
+<p><a href="https://segmentfault.com/a/1190000004263246" target="_blank" rel="external">转自</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mongodb/" rel="tag"># mongodb</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/聚集运算之group与aggregate(转)/" rel="next" title="聚集运算之group与aggregate(转)">
+                <i class="fa fa-chevron-left"></i> 聚集运算之group与aggregate(转)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/用户管理(转)/" rel="prev" title="用户管理(转)">
+                用户管理(转) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-索引操作"><span class="nav-number">1.</span> <span class="nav-text">1.索引操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-数据准备"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.数据准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-索引常用操作"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.索引常用操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-查看当前索引"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1.查看当前索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-创建单列索引"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2.2.创建单列索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-3-创建多列索引-组合索引"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.2.3.创建多列索引(组合索引)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-4-创建子文档索引"><span class="nav-number">1.2.4.</span> <span class="nav-text">1.2.4.创建子文档索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-5-创建唯一索引"><span class="nav-number">1.2.5.</span> <span class="nav-text">1.2.5.创建唯一索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-6-创建稀疏索引"><span class="nav-number">1.2.6.</span> <span class="nav-text">1.2.6.创建稀疏索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-7-创建哈希索引"><span class="nav-number">1.2.7.</span> <span class="nav-text">1.2.7.创建哈希索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-8-重建索引"><span class="nav-number">1.2.8.</span> <span class="nav-text">1.2.8.重建索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-9-删除索引"><span class="nav-number">1.2.9.</span> <span class="nav-text">1.2.9.删除索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-正则表达式在索引中的应用"><span class="nav-number">1.3.</span> <span class="nav-text">1.3.正则表达式在索引中的应用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-查询计划explain"><span class="nav-number">2.</span> <span class="nav-text">2.查询计划explain</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-新版explain介绍"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.新版explain介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-如何通过新版explain来分析索引"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.如何通过新版explain来分析索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-新版Explain的分析实例"><span class="nav-number">2.3.</span> <span class="nav-text">2.3.新版Explain的分析实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-旧版本的explain"><span class="nav-number">2.4.</span> <span class="nav-text">2.4.旧版本的explain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-hint强制使用某个索引"><span class="nav-number">2.5.</span> <span class="nav-text">2.5.hint强制使用某个索引</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

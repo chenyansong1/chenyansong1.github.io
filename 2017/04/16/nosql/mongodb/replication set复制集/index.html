@@ -1,0 +1,770 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mongodb," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.介绍replicattion set 多台服务器维护相同的数据副本,提高服务器的可用性,总结下来有以下好处:  数据备份与恢复 读写分离  1.1.Mongodb复制集的结构及基本概念 正如上图所示，MongoDB 复制集的架构中，主要分为两部分：主节点（Primary）和从节点（Secondary）。  主节点：在一个复制集中只有并且必须有一个主节点，主节点也是众多实例中唯一可以接收客户端写">
+<meta name="keywords" content="mongodb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="replication set复制集">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/mongodb/replication set复制集/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.介绍replicattion set 多台服务器维护相同的数据副本,提高服务器的可用性,总结下来有以下好处:  数据备份与恢复 读写分离  1.1.Mongodb复制集的结构及基本概念 正如上图所示，MongoDB 复制集的架构中，主要分为两部分：主节点（Primary）和从节点（Secondary）。  主节点：在一个复制集中只有并且必须有一个主节点，主节点也是众多实例中唯一可以接收客户端写">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/5.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/6.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/7.png">
+<meta property="og:updated_time" content="2017-02-24T17:10:16.918Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="replication set复制集">
+<meta name="twitter:description" content="1.介绍replicattion set 多台服务器维护相同的数据副本,提高服务器的可用性,总结下来有以下好处:  数据备份与恢复 读写分离  1.1.Mongodb复制集的结构及基本概念 正如上图所示，MongoDB 复制集的架构中，主要分为两部分：主节点（Primary）和从节点（Secondary）。  主节点：在一个复制集中只有并且必须有一个主节点，主节点也是众多实例中唯一可以接收客户端写">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/mongodb/replication set复制集/"/>
+
+
+
+
+
+  <title> replication set复制集 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/replication set复制集/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                replication set复制集
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h1><p>replicattion set 多台服务器维护相同的数据副本,提高服务器的可用性,总结下来有以下好处:</p>
+<ul>
+<li>数据备份与恢复</li>
+<li>读写分离</li>
+</ul>
+<h2 id="1-1-Mongodb复制集的结构及基本概念"><a href="#1-1-Mongodb复制集的结构及基本概念" class="headerlink" title="1.1.Mongodb复制集的结构及基本概念"></a>1.1.Mongodb复制集的结构及基本概念</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/1.png" alt=""></p>
+<p>正如上图所示，MongoDB 复制集的架构中，主要分为两部分：主节点（Primary）和从节点（Secondary）。</p>
+<ul>
+<li>主节点：在一个复制集中只有并且必须有一个主节点，主节点也是众多实例中唯一可以接收客户端写操作的节点，当然也可以进行读操作；</li>
+<li>从节点：从节点会复制主节点的操作，以获取完全一致的数据集。客户端不能够直接对从节点进行写操作，但是可以进行读操作，这个需要通过复制集选项进行设置。</li>
+<li>投票节点：投票节点 并不含有 复制集中的数据集副本，且也 无法 升职为主节点。投票节点的存在是为了使复制集中的节点数量为奇数，这样保证在进行投票的时候不会出现票数相同的情况。如果添加了一个节点后，总节点数为偶数，那么就需要相应的增加一个投票节点。</li>
+</ul>
+<p>注：MongoDB 3.0 把复制集中的成员数量从原来的12个提升到了50个，但是投票节点的数量仍然保持不变，还是7个。</p>
+<h2 id="1-2-最基本的复制集架构"><a href="#1-2-最基本的复制集架构" class="headerlink" title="1.2.最基本的复制集架构"></a>1.2.最基本的复制集架构</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/2.png" alt=""></p>
+<p>一个主节点，两个从节点，自动化故障切换的特性<br>最基本的复制集架构是有3个节点的形式。这样在主节点不可用以后，从节点会进行投票选出一个节点成为主节点，继续工作。如下图所示：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/3.png" alt=""></p>
+<p>三个节点的复制集架构，还有另外一种形式：一个主节点，一个从节点，一个投票节点。如下图所示：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/4.png" alt=""></p>
+<p> 一个主节点，一个从节点，一个投票节点<br>在这种架构中，当主节点不可用时，只有从节点可以升为主节点，而投票节点是不可以成为主节点的。投票节点仅仅在选举中进行投票。如下图所示：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/5.png" alt=""></p>
+<h2 id="1-3-从节点无法升职为主节点的情况"><a href="#1-3-从节点无法升职为主节点的情况" class="headerlink" title="1.3.从节点无法升职为主节点的情况"></a>1.3.从节点无法升职为主节点的情况</h2><p>其他概念<br>从节点还有集中特殊的设置情况，不同的设置有不同的需求：</p>
+<p>优先级为0：设置 priority:0 ，那么该结点将不能成为主节点，但是其数据仍是与主节点保持一致的,而且应用程序也可以进行读操作。这样可以在某些特殊的情况下，保证其他特定节点优先成为主节点。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/6.png" alt=""></p>
+<p>隐藏节点：隐藏节点与主节点的数据集一致，但是对于应用程序来说是不可见的。隐藏节点可以很好的与 复制集 中的其他节点隔离，并应对特殊的需求，比如进行报表或者数据备份。隐藏节点也应该是一个不能升职为主节点的优先级为0的节点。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/7.png" alt=""></p>
+<p>延时节点：延时节点也将从 复制集 中主节点复制数据，然而延时节点中的数据集将会比复制集中主节点的数据延后。举个例子，现在是09：52，如果延时节点延后了1小时，那么延时节点的数据集中将不会有08：52之后的操作。</p>
+<p>由于延时节点的数据集是延时的，因此它可以帮助我们在人为误操作或是其他意外情况下恢复数据。举个例子，当应用升级失败，或是误操作删除了表和数据库时，我们可以通过延时节点进行数据恢复。</p>
+<p>oplog：全拼 oprations log，它保存有数据库的所有的操作的记录。在复制集中，主节点产生 oplog，然后从节点复制主节点的 oplog 进行相应的操作，这样达到保持数据集一致的要求。因此从节点的数据与主节点的数据相比是有延迟的。</p>
+<h1 id="2-配置"><a href="#2-配置" class="headerlink" title="2.配置"></a>2.配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"># 创建数据存储目录</div><div class="line">mkdir -p /data/r0 /data/r1 /data/r2</div><div class="line"> </div><div class="line"># 创建日志文件</div><div class="line">touch /var/log/mongo17.log /var/log/mongo18.log /var/log/mongo19.log</div><div class="line"> </div><div class="line">#启动3个实例,且声明实例属于某复制集 rsa</div><div class="line">./bin/mongod --port 27017 --dbpath /data/r0 --smallfiles --replSet rsa --fork --logpath /var/log/mongo17.log</div><div class="line">./bin/mongod --port 27018 --dbpath /data/r1 --smallfiles --replSet rsa --fork --logpath /var/log/mongo18.log</div><div class="line">./bin/mongod --port 27019 --dbpath /data/r2 --smallfiles --replSet rsa --fork --logpath /var/log/mongo19.log</div><div class="line"> </div><div class="line"># 进入27017进行配置初始化</div><div class="line">./bin/mongo --port 27017</div><div class="line">rsconf = &#123;</div><div class="line">    _id:&apos;rsa&apos;,</div><div class="line">    members:</div><div class="line">    [</div><div class="line">        &#123;_id:0,</div><div class="line">        host:&apos;192.168.42.168:27017&apos;</div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;</div><div class="line">rs.initiate(rsconf); # 如果以后需要再重载一下config的话,用rs.reconfig(rsconf);</div><div class="line"> </div><div class="line"># 添加节点</div><div class="line">rs.add(&apos;192.168.42.168:27018&apos;);</div><div class="line">rs.add(&apos;192.168.42.168:27019&apos;);</div><div class="line"> </div><div class="line"># 查看状态</div><div class="line">rs.status();</div><div class="line"> </div><div class="line"># 删除节点</div><div class="line">rs.remove(&apos;192.168.1.201:27019&apos;);</div><div class="line"> </div><div class="line"># 主节点插入数据</div><div class="line">&gt;use test</div><div class="line">&gt;db.user.insert(&#123;uid:1,name:&apos;lily&apos;&#125;);</div><div class="line"> </div><div class="line">#连接secondary查询同步情况</div><div class="line">./bin/mongo --port 27019</div><div class="line">&gt;show dbs</div><div class="line"> </div><div class="line">rsa:SECONDARY&gt; show dbs;</div><div class="line">2015-08-27T11:39:00.638+0800 E QUERY    Error: listDatabases failed:&#123; &quot;note&quot; : &quot;from execCommand&quot;, &quot;ok&quot; : 0, &quot;errmsg&quot; : &quot;not master&quot; &#125;</div><div class="line"> </div><div class="line"># 还可以通过isMaster()命令来查看信息;</div><div class="line">rsa:PRIMARY&gt; db.isMaster();</div><div class="line">&#123;</div><div class="line">        &quot;setName&quot; : &quot;rsa&quot;,</div><div class="line">        &quot;setVersion&quot; : 5,</div><div class="line">        &quot;ismaster&quot; : true,</div><div class="line">        &quot;secondary&quot; : false,</div><div class="line">        &quot;hosts&quot; : [</div><div class="line">                &quot;192.168.42.168:27018&quot;,</div><div class="line">                &quot;192.168.42.168:27019&quot;,</div><div class="line">                &quot;192.168.42.168:27017&quot;</div><div class="line">        ],</div><div class="line">        &quot;primary&quot; : &quot;192.168.42.168:27018&quot;,</div><div class="line">        &quot;me&quot; : &quot;192.168.42.168:27018&quot;,</div><div class="line">        &quot;electionId&quot; : ObjectId(&quot;55dea0cffa0c638625a82486&quot;),</div><div class="line">        &quot;maxBsonObjectSize&quot; : 16777216,</div><div class="line">        &quot;maxMessageSizeBytes&quot; : 48000000,</div><div class="line">        &quot;maxWriteBatchSize&quot; : 1000,</div><div class="line">        &quot;localTime&quot; : ISODate(&quot;2015-08-27T05:49:13.740Z&quot;),</div><div class="line">        &quot;maxWireVersion&quot; : 3,</div><div class="line">        &quot;minWireVersion&quot; : 0,</div><div class="line">        &quot;ok&quot; : 1</div><div class="line">&#125;</div><div class="line"> </div><div class="line"># 出现上述错误,是因为slave默认不许读写</div><div class="line">&gt;rs.slaveOk();</div><div class="line">&gt;show dbs; # 执行上面一个语句就可以看到和primary一致的数据,并且可以把读和写分离开来;</div></pre></td></tr></table></figure>
+<p>以上便是一个最简单的复制集架构,其中如果27017的主节点崩溃,那27018的节点就由从节点变为主节点;注意,如果再添加原来的27017节点进来,那主节点还是27018;</p>
+<h2 id="2-1-自动化配置脚本"><a href="#2-1-自动化配置脚本" class="headerlink" title="2.1.自动化配置脚本"></a>2.1.自动化配置脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">IP=&apos;192.168.1.202&apos;</div><div class="line">NA=&apos;rsb&apos;</div><div class="line"> </div><div class="line">if [ &quot;$1&quot; = &quot;reset&quot; ]</div><div class="line">then</div><div class="line">  pkill -9 mongo</div><div class="line">  rm -rf /home/m*</div><div class="line">  exit</div><div class="line">fi</div><div class="line"> </div><div class="line"> </div><div class="line">if [ &quot;$1&quot; = &quot;install&quot; ]</div><div class="line">then</div><div class="line"> </div><div class="line">mkdir -p /home/m0 /home/m1 /home/m2 /home/mlog</div><div class="line"> </div><div class="line">/usr/local/mongodb/bin/mongod --dbpath /home/m0 --logpath /home/mlog/m17.log --logappend --port 27017 --fork</div><div class="line">--replSet $&#123;NA&#125;</div><div class="line">/usr/local/mongodb/bin/mongod --dbpath /home/m1 --logpath /home/mlog/m18.log --logappend --port 27018 --fork</div><div class="line">--replSet $&#123;NA&#125;</div><div class="line">/usr/local/mongodb/bin/mongod --dbpath /home/m2 --logpath /home/mlog/m19.log --logappend --port 27019 --fork</div><div class="line">--replSet $&#123;NA&#125;</div><div class="line"> </div><div class="line">exit</div><div class="line">fi</div><div class="line"> </div><div class="line">if [ &quot;$1&quot; = &quot;repl&quot; ]</div><div class="line">then</div><div class="line">/usr/local/mongodb/bin/mongo &lt;&lt;EOF</div><div class="line"> </div><div class="line">use admin</div><div class="line">rsconf = &#123;</div><div class="line">  _id:&apos;$&#123;NA&#125;&apos;,</div><div class="line">  members:[</div><div class="line">    &#123;_id:0,host:&apos;$&#123;IP&#125;:27017&apos;&#125;,</div><div class="line">    &#123;_id:1,host:&apos;$&#123;IP&#125;:27018&apos;&#125;,</div><div class="line">    &#123;_id:2,host:&apos;$&#123;IP&#125;:27019&apos;&#125;,</div><div class="line">  ]</div><div class="line">&#125;</div><div class="line">rs.initiate(rsconf)</div><div class="line">EOF</div><div class="line">fi</div></pre></td></tr></table></figure>
+<p>转自:<br><a href="https://segmentfault.com/a/1190000004263290" target="_blank" rel="external">replication set复制集</a></p>
+<p>参考:<br><a href="http://blog.csdn.net/kk185800961/article/details/45791903" target="_blank" rel="external">MongoDB 基础（八）复制Ⅱ—部署仲裁节点</a><br><a href="http://blog.csdn.net/kk185800961/article/details/45700485" target="_blank" rel="external"> MongoDB 基础（七）复制Ⅰ—部署复制集</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mongodb/" rel="tag"># mongodb</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/shard分片/" rel="next" title="shard分片(转)">
+                <i class="fa fa-chevron-left"></i> shard分片(转)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/mongodb/Mongodb简介/" rel="prev" title="Mongodb简介">
+                Mongodb简介 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-介绍"><span class="nav-number">1.</span> <span class="nav-text">1.介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Mongodb复制集的结构及基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.Mongodb复制集的结构及基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-最基本的复制集架构"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.最基本的复制集架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-从节点无法升职为主节点的情况"><span class="nav-number">1.3.</span> <span class="nav-text">1.3.从节点无法升职为主节点的情况</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-配置"><span class="nav-number">2.</span> <span class="nav-text">2.配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-自动化配置脚本"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.自动化配置脚本</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

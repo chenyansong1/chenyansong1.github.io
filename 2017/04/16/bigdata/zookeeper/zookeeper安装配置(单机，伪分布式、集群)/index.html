@@ -1,0 +1,741 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="zookeeper," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.单机模式搭建1.1.解压123cd /home/oldboy/tools/                tar -zxvf zookeeper-3.4.5.tar.gz mv zookeeper-3.4.5 zookeeper 1.2.修改配置文件12345678910cd zookeeper/conf/ cp   zoo_sample.cfg   zoo_sample.cfg.bak">
+<meta name="keywords" content="zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeper安装配置(单机，伪分布式、集群)">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper安装配置(单机，伪分布式、集群)/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.单机模式搭建1.1.解压123cd /home/oldboy/tools/                tar -zxvf zookeeper-3.4.5.tar.gz mv zookeeper-3.4.5 zookeeper 1.2.修改配置文件12345678910cd zookeeper/conf/ cp   zoo_sample.cfg   zoo_sample.cfg.bak">
+<meta property="og:updated_time" content="2017-02-24T17:07:51.547Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zookeeper安装配置(单机，伪分布式、集群)">
+<meta name="twitter:description" content="1.单机模式搭建1.1.解压123cd /home/oldboy/tools/                tar -zxvf zookeeper-3.4.5.tar.gz mv zookeeper-3.4.5 zookeeper 1.2.修改配置文件12345678910cd zookeeper/conf/ cp   zoo_sample.cfg   zoo_sample.cfg.bak">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper安装配置(单机，伪分布式、集群)/"/>
+
+
+
+
+
+  <title> zookeeper安装配置(单机，伪分布式、集群) | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper安装配置(单机，伪分布式、集群)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                zookeeper安装配置(单机，伪分布式、集群)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-单机模式搭建"><a href="#1-单机模式搭建" class="headerlink" title="1.单机模式搭建"></a>1.单机模式搭建</h1><h2 id="1-1-解压"><a href="#1-1-解压" class="headerlink" title="1.1.解压"></a>1.1.解压</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd /home/oldboy/tools/                </div><div class="line">tar -zxvf zookeeper-3.4.5.tar.gz </div><div class="line">mv zookeeper-3.4.5 zookeeper</div></pre></td></tr></table></figure>
+<h2 id="1-2-修改配置文件"><a href="#1-2-修改配置文件" class="headerlink" title="1.2.修改配置文件"></a>1.2.修改配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">cd zookeeper/conf/ </div><div class="line">cp   zoo_sample.cfg   zoo_sample.cfg.bak          #首先备份配置文件</div><div class="line">mv   zoo_sample.cfg   zoo.cfg               #将配置文件改名</div><div class="line"></div><div class="line"></div><div class="line">&apos;修改下列选项&apos;</div><div class="line">tickTime=2000</div><div class="line">dataDir=/usr/local/zk/data</div><div class="line">dataLogDir=/usr/local/zk/dataLog      </div><div class="line">clientPort=2181</div></pre></td></tr></table></figure>
+<h2 id="1-3-配置环境变量"><a href="#1-3-配置环境变量" class="headerlink" title="1.3.配置环境变量"></a>1.3.配置环境变量</h2><p>为了今后操作方便，我们需要对Zookeeper的环境变量进行配置，方法如下在/etc/profile文件中加入如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&apos;需要Java的环境，所以如果没有jdk，需要配置jdk&apos;</div><div class="line">ZOOKEEPER=/home/oldboy/tools/zookeeper</div><div class="line">PATH=$ZOOKEEPER/bin:$PATH</div><div class="line">export PATH</div></pre></td></tr></table></figure></p>
+<h2 id="1-4-启动-停止服务"><a href="#1-4-启动-停止服务" class="headerlink" title="1.4.启动/停止服务"></a>1.4.启动/停止服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#启动ZooKeeper的Server</div><div class="line">./bin/zkServer.sh start</div><div class="line"></div><div class="line">#关闭ZooKeeper的Server</div><div class="line">./bin/zkServer.sh stop</div></pre></td></tr></table></figure>
+<h1 id="2-伪集群模式搭建"><a href="#2-伪集群模式搭建" class="headerlink" title="2.伪集群模式搭建"></a>2.伪集群模式搭建</h1><h2 id="2-1-复制及修改配置文件"><a href="#2-1-复制及修改配置文件" class="headerlink" title="2.1.复制及修改配置文件"></a>2.1.复制及修改配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line">[root@data-1-1 ~]# cd /home/oldboy/tools/zookeeper</div><div class="line">[root@data-1-1 zookeeper0]# cp ./conf/zoo.cfg zoo1.cfg</div><div class="line">[root@data-1-1 zookeeper0]# cp ./conf/zoo.cfg zoo2.cfg</div><div class="line">[root@data-1-1 zookeeper0]# cp ./conf/zoo.cfg zoo3.cfg</div><div class="line"></div><div class="line">&apos;##################   zoo1.cfg   ###########################&apos;</div><div class="line"># The number of milliseconds of each tick</div><div class="line">tickTime=2000</div><div class="line"> </div><div class="line"># The number of ticks that the initial</div><div class="line"># synchronization phase can take</div><div class="line">initLimit=10</div><div class="line"> </div><div class="line"># The number of ticks that can pass between</div><div class="line"># sending a request and getting an acknowledgement</div><div class="line">syncLimit=5</div><div class="line"> </div><div class="line"># the directory where the snapshot is stored.</div><div class="line">dataDir=/usr/local/zk/data_1</div><div class="line"> </div><div class="line"># the port at which the clients will connect</div><div class="line">clientPort=2181</div><div class="line"> </div><div class="line">#the location of the log file</div><div class="line">dataLogDir=/usr/local/zk/logs_1</div><div class="line"> </div><div class="line">server.0=localhost:2287:3387</div><div class="line">server.1=localhost:2288:3388</div><div class="line">server.2=localhost:2289:3389</div><div class="line"></div><div class="line">&apos;##################   zoo2.cfg   ###########################&apos;</div><div class="line"># The number of milliseconds of each tick</div><div class="line">tickTime=2000</div><div class="line"> </div><div class="line"># The number of ticks that the initial</div><div class="line"># synchronization phase can take</div><div class="line">initLimit=10</div><div class="line"> </div><div class="line"># The number of ticks that can pass between</div><div class="line"># sending a request and getting an acknowledgement</div><div class="line">syncLimit=5</div><div class="line"> </div><div class="line"># the directory where the snapshot is stored.</div><div class="line">dataDir=/usr/local/zk/data_2</div><div class="line"> </div><div class="line"># the port at which the clients will connect</div><div class="line">clientPort=2182</div><div class="line"> </div><div class="line">#the location of the log file</div><div class="line">dataLogDir=/usr/local/zk/logs_2</div><div class="line"> </div><div class="line">server.0=localhost:2287:3387</div><div class="line">server.1=localhost:2288:3388</div><div class="line">server.2=localhost:2289:3389</div><div class="line"></div><div class="line">&apos;##################   zoo3.cfg   ###########################&apos;</div><div class="line"># The number of milliseconds of each tick</div><div class="line">tickTime=2000</div><div class="line"> </div><div class="line"># The number of ticks that the initial</div><div class="line"># synchronization phase can take</div><div class="line">initLimit=10</div><div class="line"> </div><div class="line"># The number of ticks that can pass between</div><div class="line"># sending a request and getting an acknowledgement</div><div class="line">syncLimit=5</div><div class="line"> </div><div class="line"># the directory where the snapshot is stored.</div><div class="line">dataDir=/usr/local/zk/data_3</div><div class="line"> </div><div class="line"># the port at which the clients will connect</div><div class="line">clientPort=2183</div><div class="line"> </div><div class="line">#the location of the log file</div><div class="line">dataLogDir=/usr/local/zk/logs_3</div><div class="line"> </div><div class="line">server.0=localhost:2287:3387</div><div class="line">server.1=localhost:2288:3388</div><div class="line">server.2=localhost:2289:3389</div><div class="line"></div><div class="line"></div><div class="line">&apos;#其实上述配置文件就是：clientPort、dataDir、dataLogDir、server.x 不同&apos;</div></pre></td></tr></table></figure>
+<h2 id="2-2-创建相应的文件"><a href="#2-2-创建相应的文件" class="headerlink" title="2.2.创建相应的文件"></a>2.2.创建相应的文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//创建dataLogDir</div><div class="line">mkdir /usr/local/zk/logs_1 -p</div><div class="line">mkdir /usr/local/zk/logs_2 -p</div><div class="line">mkdir /usr/local/zk/logs_3 -p</div><div class="line"></div><div class="line">//创建dataDir</div><div class="line">mkdir /usr/local/zk/data_1 -p</div><div class="line">mkdir /usr/local/zk/data_2 -p</div><div class="line">mkdir /usr/local/zk/data_3 -p</div><div class="line"></div><div class="line">//在dataDir下创建myid</div><div class="line">/*</div><div class="line">在/usr/local/zk/data_x目录下创建myid文件，在对应的myid文件中写入数字，</div><div class="line">server.X和myid： server.X 这个数字就是对应，data/myid中的数字。在3个server的myid文件中分别写入了0，1，2</div><div class="line">*/</div><div class="line">echo &quot;0&quot;&gt;/usr/local/zk/data_1/myid</div><div class="line">echo &quot;1&quot;&gt;/usr/local/zk/data_2/myid</div><div class="line">echo &quot;2&quot;&gt;/usr/local/zk/data_3/myid</div><div class="line"></div><div class="line">cat    /usr/local/zk/data_3/myid        #检查一下</div></pre></td></tr></table></figure>
+<h2 id="2-3-启动"><a href="#2-3-启动" class="headerlink" title="2.3.启动"></a>2.3.启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">[root@data-1-1 conf]# zkServer.sh start zoo1.cfg               </div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo1.cfg        #为什么没有指定路径，因为配置了zk的环境变量，这里就可以看到回去找对应的bin和conf目录</div><div class="line">Starting zookeeper ... STARTED</div><div class="line"></div><div class="line">[root@data-1-1 conf]# zkServer.sh start zoo2.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo2.cfg</div><div class="line">Starting zookeeper ... STARTED</div><div class="line"></div><div class="line">[root@data-1-1 conf]# zkServer.sh start zoo3.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo3.cfg</div><div class="line">Starting zookeeper ... STARTED</div><div class="line"></div><div class="line">//检查，是3个表示启动成功</div><div class="line">[root@data-1-1 conf]# jps</div><div class="line">2566 QuorumPeerMain</div><div class="line">2539 QuorumPeerMain</div><div class="line">2638 Jps</div><div class="line">2607 QuorumPeerMain</div><div class="line">[root@data-1-1 conf]#</div><div class="line"></div><div class="line"></div><div class="line">//检查2：通过命令的方式</div><div class="line">[root@data-1-1 tools]# zkServer.sh status zoo1.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo1.cfg</div><div class="line">Mode: follower</div><div class="line"></div><div class="line">[root@data-1-1 tools]# zkServer.sh status zoo2.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo2.cfg</div><div class="line">Mode: leader</div><div class="line"></div><div class="line">[root@data-1-1 tools]# zkServer.sh status zoo3.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo3.cfg</div><div class="line">Mode: follower</div></pre></td></tr></table></figure>
+<h1 id="3-集群模式搭建"><a href="#3-集群模式搭建" class="headerlink" title="3.集群模式搭建"></a>3.集群模式搭建</h1><h2 id="3-1-相同的配置文件"><a href="#3-1-相同的配置文件" class="headerlink" title="3.1.相同的配置文件"></a>3.1.相同的配置文件</h2><p>创建一个配置文件zoo.cfg<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"># The number of milliseconds of each tick</div><div class="line">tickTime=2000</div><div class="line"> </div><div class="line"># The number of ticks that the initial</div><div class="line"># synchronization phase can take</div><div class="line">initLimit=10</div><div class="line"> </div><div class="line"># The number of ticks that can pass between</div><div class="line"># sending a request and getting an acknowledgement</div><div class="line">syncLimit=5</div><div class="line"> </div><div class="line"># the directory where the snapshot is stored.</div><div class="line">dataDir=/usr/local/zk/data</div><div class="line"> </div><div class="line"># the port at which the clients will connect</div><div class="line">clientPort=2183</div><div class="line"> </div><div class="line">#the location of the log file</div><div class="line">dataLogDir=/usr/local/zk/log</div><div class="line"> </div><div class="line">server.0=hadoop:2288:3388</div><div class="line">server.1=hadoop0:2288:3388</div><div class="line">server.2=hadoop1:2288:3388</div><div class="line"></div><div class="line">#此时的server.x就相同，因为配置文件在不同的机器上，所以不必担心端口冲突的问题</div></pre></td></tr></table></figure></p>
+<h2 id="3-2-创建myid"><a href="#3-2-创建myid" class="headerlink" title="3.2.创建myid"></a>3.2.创建myid</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">在dataDir(/usr/local/zk/data)目录创建myid文件</div><div class="line"> </div><div class="line">Server0机器的内容为：0</div><div class="line">Server1机器的内容为：1</div><div class="line">Server2机器的内容为：2</div></pre></td></tr></table></figure>
+<h2 id="3-3-创建dataDir和dataLogDir"><a href="#3-3-创建dataDir和dataLogDir" class="headerlink" title="3.3.创建dataDir和dataLogDir"></a>3.3.创建dataDir和dataLogDir</h2><p>在3台机器上都执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//创建dataLogDir</div><div class="line">mkdir /usr/local/zk/logs -p</div><div class="line"></div><div class="line"> </div><div class="line">//创建dataDir</div><div class="line">mkdir /usr/local/zk/data -p</div></pre></td></tr></table></figure></p>
+<h2 id="3-4-启动"><a href="#3-4-启动" class="headerlink" title="3.4.启动"></a>3.4.启动</h2><p>在3台机器上都执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">zkServer.sh start</div><div class="line"></div><div class="line">//检查</div><div class="line">zkServer.sh status</div></pre></td></tr></table></figure></p>
+<h2 id="3-5-客户端连接"><a href="#3-5-客户端连接" class="headerlink" title="3.5.客户端连接"></a>3.5.客户端连接</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">zkCli.sh -server 192.168.0.50:2182                        #带-server连接的是远端</div><div class="line">zkCli.sh                #连接的是本地</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zookeeper客户端API使用(zk-API)/" rel="next" title="zookeeper客户端API使用(zk-API)">
+                <i class="fa fa-chevron-left"></i> zookeeper客户端API使用(zk-API)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zookeeper四字命令/" rel="prev" title="zookeeper四字命令">
+                zookeeper四字命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-单机模式搭建"><span class="nav-number">1.</span> <span class="nav-text">1.单机模式搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-解压"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-修改配置文件"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.修改配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-配置环境变量"><span class="nav-number">1.3.</span> <span class="nav-text">1.3.配置环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-启动-停止服务"><span class="nav-number">1.4.</span> <span class="nav-text">1.4.启动/停止服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-伪集群模式搭建"><span class="nav-number">2.</span> <span class="nav-text">2.伪集群模式搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-复制及修改配置文件"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.复制及修改配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-创建相应的文件"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.创建相应的文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-启动"><span class="nav-number">2.3.</span> <span class="nav-text">2.3.启动</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-集群模式搭建"><span class="nav-number">3.</span> <span class="nav-text">3.集群模式搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-相同的配置文件"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.相同的配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-创建myid"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.创建myid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-创建dataDir和dataLogDir"><span class="nav-number">3.3.</span> <span class="nav-text">3.3.创建dataDir和dataLogDir</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-启动"><span class="nav-number">3.4.</span> <span class="nav-text">3.4.启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-客户端连接"><span class="nav-number">3.5.</span> <span class="nav-text">3.5.客户端连接</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

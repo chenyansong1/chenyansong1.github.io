@@ -1,0 +1,811 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mysql," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.配置mysql从库级联复制环境是：3306主库 3307从库 3308从库由于已经做了主库3306到从库3307，所以现在我们要实现的需求是，当主库3306产生bin_log，发给从库，从库3307产生的bin_log文件发送给其他从库3308。相当于下图中第三个图   开启从库3307的log-bin日志文件  1sed -i &amp;apos;s@#log-bin = /data/3307/my">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置mysql从库级联复制和主主复制(转)">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/mysql/配置mysql从库级联复制和主主复制(转)/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.配置mysql从库级联复制环境是：3306主库 3307从库 3308从库由于已经做了主库3306到从库3307，所以现在我们要实现的需求是，当主库3306产生bin_log，发给从库，从库3307产生的bin_log文件发送给其他从库3308。相当于下图中第三个图   开启从库3307的log-bin日志文件  1sed -i &amp;apos;s@#log-bin = /data/3307/my">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/mmm/1.png">
+<meta property="og:updated_time" content="2017-02-24T17:10:01.270Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="配置mysql从库级联复制和主主复制(转)">
+<meta name="twitter:description" content="1.配置mysql从库级联复制环境是：3306主库 3307从库 3308从库由于已经做了主库3306到从库3307，所以现在我们要实现的需求是，当主库3306产生bin_log，发给从库，从库3307产生的bin_log文件发送给其他从库3308。相当于下图中第三个图   开启从库3307的log-bin日志文件  1sed -i &amp;apos;s@#log-bin = /data/3307/my">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/mmm/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/mysql/配置mysql从库级联复制和主主复制(转)/"/>
+
+
+
+
+
+  <title> 配置mysql从库级联复制和主主复制(转) | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/mysql/配置mysql从库级联复制和主主复制(转)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                配置mysql从库级联复制和主主复制(转)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-配置mysql从库级联复制"><a href="#1-配置mysql从库级联复制" class="headerlink" title="1.配置mysql从库级联复制"></a>1.配置mysql从库级联复制</h1><p>环境是：3306主库 3307从库 3308从库<br>由于已经做了主库3306到从库3307，所以现在我们要实现的需求是，当主库3306产生bin_log，发给从库，从库3307产生的bin_log文件发送给其他从库3308。相当于下图中第三个图</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/mysql/mmm/1.png" alt=""></p>
+<blockquote>
+<p>开启从库3307的log-bin日志文件</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sed -i &apos;s@#log-bin = /data/3307/mysql-bin@log-bin = /data/3307/mysql-bin@g&apos; /data/3307/my.cnf</div></pre></td></tr></table></figure>
+<blockquote>
+<p>在3307从库配置文件my.cnf，[mysqld]模块添加 如下内容</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">log-bin = /data/3307/mysql-bin</div><div class="line">log-slave-updates = 1</div><div class="line">expire_logs_days = 7</div></pre></td></tr></table></figure>
+<p>重启数据库3307<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@lixiang data]# /data/3307/mysql stop                        </div><div class="line">Stoping MySQL...</div><div class="line">[root@lixiang data]# /data/3307/mysql start</div><div class="line">Starting MySQL...</div></pre></td></tr></table></figure></p>
+<p>如果现下面的错误的时候<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@lixiang data]# /data/3307/mysql stop</div><div class="line">Stoping MySQL...</div><div class="line">/application/mysql/bin/mysqladmin: connect to server at &apos;localhost&apos; failed</div><div class="line">error: &apos;Access denied for user &apos;root&apos;@&apos;localhost&apos; (using password: YES)&apos;</div></pre></td></tr></table></figure></p>
+<p>那是因为我们在做单台主从复制的时候，是将主服务器整个包导入到从库3307的，所以修改从库3307的启动文件mysqld<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sed -i &apos;s/lx3307/lx3306/g&apos; /data/3307/mysql</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>查看log_slave_updates状态是否开启</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql&gt; show variables like &quot;log_slave_updates&quot;;</div><div class="line">+-------------------+-------+</div><div class="line">| Variable_name     | Value |</div><div class="line">+-------------------+-------+</div><div class="line">| log_slave_updates | ON    |</div><div class="line">+-------------------+-------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>通过mysqldump导出从库3307数据文件</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mysqldump -uroot -plx3306 -S /data/3307/mysql.sock -A --events -B -F -x --master-data=1|gzip &gt; /opt/lx.sql.gz  </div><div class="line">#--master-data=1,表示在lx.sql文件中将取消注释“CHANGE MASTER TO MASTER_LOG_FILE=&apos;mysql-bin.000003&apos;, MASTER_LOG_POS=107;”</div><div class="line">[root@lixiang opt]# cat lx.sql |grep &quot;mysql-bin.000003&quot;</div><div class="line">CHANGE MASTER TO MASTER_LOG_FILE=&apos;mysql-bin.000003&apos;, MASTER_LOG_POS=107;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>解压数据库，并导入从库3308</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd /opt/3308</div><div class="line">gzip -d lx.sql.gz</div><div class="line">mysql -uroot -plx3308 -S /data/3308/mysql.sock &lt;lx.sql</div></pre></td></tr></table></figure>
+<blockquote>
+<p>登录从数据库3308</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line">mysql -uroot -plx3308 -S /data/3308/mysql.sock</div><div class="line">mysql&gt; CHANGE MASTER TO  MASTER_HOST=&apos;192.168.10.102&apos;,  MASTER_PORT=3307, MASTER_USER=&apos;rep&apos;,  MASTER_PASSWORD=&apos;lx123&apos;;</div><div class="line">#此时就不用指定binlog的日志文件和pos,因为在mysqldump的时候,指定了--master-data=1</div><div class="line"></div><div class="line">mysql&gt; start slave;                                                #开启从库3307到从库3308同步开关</div><div class="line">mysql&gt; show slave status\G;                               #查看从库3308状态</div><div class="line">*************************** 1. row ***************************</div><div class="line">               Slave_IO_State: Waiting for master to send event</div><div class="line">                  Master_Host: 192.168.10.102</div><div class="line">                  Master_User: rep</div><div class="line">                  Master_Port: 3307</div><div class="line">                Connect_Retry: 60</div><div class="line">              Master_Log_File: mysql-bin.000003</div><div class="line">          Read_Master_Log_Pos: 107</div><div class="line">               Relay_Log_File: relay-bin.000005</div><div class="line">                Relay_Log_Pos: 253</div><div class="line">        Relay_Master_Log_File: mysql-bin.000003</div><div class="line">             Slave_IO_Running: Yes</div><div class="line">            Slave_SQL_Running: Yes</div><div class="line">              Replicate_Do_DB:</div><div class="line">          Replicate_Ignore_DB: mysql</div><div class="line">           Replicate_Do_Table:</div><div class="line">       Replicate_Ignore_Table:</div><div class="line">      Replicate_Wild_Do_Table:</div><div class="line">  Replicate_Wild_Ignore_Table:</div><div class="line">                   Last_Errno: 0</div><div class="line">                   Last_Error:</div><div class="line">                 Skip_Counter: 0</div><div class="line">          Exec_Master_Log_Pos: 107</div><div class="line">              Relay_Log_Space: 446</div><div class="line">              Until_Condition: None</div><div class="line">               Until_Log_File:</div><div class="line">                Until_Log_Pos: 0</div><div class="line">           Master_SSL_Allowed: No</div><div class="line">           Master_SSL_CA_File:</div><div class="line">           Master_SSL_CA_Path:</div><div class="line">              Master_SSL_Cert:</div><div class="line">            Master_SSL_Cipher:</div><div class="line">               Master_SSL_Key:</div><div class="line">        Seconds_Behind_Master: 0</div><div class="line">Master_SSL_Verify_Server_Cert: No</div><div class="line">                Last_IO_Errno: 0</div><div class="line">                Last_IO_Error:</div><div class="line">               Last_SQL_Errno: 0</div><div class="line">               Last_SQL_Error:</div><div class="line">  Replicate_Ignore_Server_Ids:</div><div class="line">             Master_Server_Id: 3</div><div class="line">1 row in set (0.00 sec)</div><div class="line">ERROR:</div><div class="line">No query specified</div><div class="line"></div><div class="line"></div><div class="line">mysql&gt; show databases;</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| lx                 |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">| test               |</div><div class="line">+--------------------+</div><div class="line">5 rows in set (0.00 sec)</div><div class="line"> </div><div class="line">#使用此种方法也能快速查看从库mysql的状态</div><div class="line">[root@lixiang data]# mysql -uroot -p&apos;lx3306&apos; -S /data/3307/mysql.sock -e &quot;show slave status\G;&quot;|egrep -i &quot;_running|_Behind&quot;        </div><div class="line">             Slave_IO_Running: Yes</div><div class="line">            Slave_SQL_Running: Yes</div><div class="line">        Seconds_Behind_Master: 0</div></pre></td></tr></table></figure>
+<p>这个时候我们看见从库3308已经多了一个数据库名为 “lx”的数据库，出现了这个则表示创建成功</p>
+<blockquote>
+<p>登录主库3306，删除测试数据库</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[root@lixiang opt]# mysql -uroot -plx3306 -S /data/3306/mysql.sock</div><div class="line">mysql&gt; drop database test;                                    #删除主库名称为 &quot;test&quot;数据库</div><div class="line">Query OK, 0 rows affected (0.13 sec)</div><div class="line">mysql&gt; show databases;                                        #查看数据库</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| lx                 |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">+--------------------+</div><div class="line">4 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>分别登录从库3306和从库3307查看</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[root@lixiang opt]# mysql -uroot -plx3307 -S /data/3307/mysql.sock</div><div class="line">mysql&gt; show databases;                                        #查看数据库</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| lx                 |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">+--------------------+</div><div class="line">4 rows in set (0.00 sec)</div><div class="line">[root@lixiang opt]# mysql -uroot -plx3308 -S /data/3308/mysql.sock</div><div class="line">mysql&gt; show databases;                                        #查看数据库</div><div class="line">+--------------------+</div><div class="line">| Database           |</div><div class="line">+--------------------+</div><div class="line">| information_schema |</div><div class="line">| lx                 |</div><div class="line">| mysql              |</div><div class="line">| performance_schema |</div><div class="line">+--------------------+</div><div class="line">4 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p>发现test数据库都被删除了，至此mysql级联复制配置完毕</p>
+<h1 id="2-mysql主主复制"><a href="#2-mysql主主复制" class="headerlink" title="2.mysql主主复制"></a>2.mysql主主复制</h1><ul>
+<li>应用场景：高并发场景，使用双主双写，慎用！</li>
+<li>注意： ID会冲突</li>
+<li>解决 ID 冲突问题<br>方法一： 表的id自增，让主A 写1，3，5；主B 写2，4，6；<br>方法二：表的id不自增，通过web端程序去seq取id，写入双主</li>
+</ul>
+<p>环境：主库3306 ，从库 3307<br>由于我们已经做了主库3306到从库3307，现在我们需要将从库3307变为主库，将3306作为从库</p>
+<blockquote>
+<p>编辑数据库配置文件</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">##3306</div><div class="line">[root@lixiang 3306]# cd /data/3306</div><div class="line">[root@lixiang 3306]# vim my.cnf           </div><div class="line">#……省略……</div><div class="line">[mysqld]                # 以下内容加在[mysqld]下面</div><div class="line">#________m-m m1 start________</div><div class="line">auto_increment_increment    = 2        #自增ID的间隔</div><div class="line">auto_increment_offset           = 1        #ID的初始位置</div><div class="line">log-slave-updates   = 1</div><div class="line">log-bin = /data/3306/mysql-bin</div><div class="line">expire_logs_days = 7</div><div class="line">#________m-m m1 end________</div><div class="line">……省略……</div><div class="line"></div><div class="line"></div><div class="line">#重启mysql</div><div class="line">[root@lixiang 3306]# ./mysql stop</div><div class="line">Stoping MySQL...</div><div class="line">[root@lixiang 3306]# ./mysql start</div><div class="line">Starting MySQL...</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">##3307</div><div class="line">[root@lixiang 3306]# cd /data/3307</div><div class="line">[root@lixiang 3307]# vim my.cnf    </div><div class="line">……省略……</div><div class="line">[mysqld]                # 以下内容加在[mysqld]下面</div><div class="line">#________m-m m1 start________</div><div class="line">auto_increment_increment    = 2        #自增ID的间隔</div><div class="line">auto_increment_offset           = 2        #ID的初始位置</div><div class="line">log-slave-updates   = 1</div><div class="line">log-bin = /data/3307/mysql-bin</div><div class="line">expire_logs_days = 7</div><div class="line">#________m-m m1 end________</div><div class="line">……省略……</div><div class="line"> </div><div class="line">#重启mysql</div><div class="line">[root@lixiang 3307]# ./mysql stop</div><div class="line">Stoping MySQL...</div><div class="line">[root@lixiang 3307]# ./mysql start</div><div class="line">Starting MySQL...</div></pre></td></tr></table></figure>
+<blockquote>
+<p>导出3307数据库数据</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqldump -uroot -plx3306 -S /data/3307/mysql.sock -A --events -B -F -x --master-data=1|gzip &gt; /opt/$(date +%F).sql.gz</div></pre></td></tr></table></figure>
+<blockquote>
+<p>解压并将数据导入到3306</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">gzip -d 2015-07-27.sql.gz</div><div class="line">mysql -uroot -plx3306 -S /data/3306/mysql.sock &lt; 2015-07-27.sql</div></pre></td></tr></table></figure>
+<blockquote>
+<p>登录主数据库3306</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">mysql -uroot -plx3306 -S /data/3306/mysql.sock</div><div class="line">mysql&gt; CHANGE MASTER TO  MASTER_HOST=&apos;192.168.10.102&apos;, MASTER_USER=&apos;rep&apos;, MASTER_PORT=3307, MASTER_PASSWORD=&apos;lx123&apos;;</div><div class="line">mysql&gt; start slave;</div><div class="line">查看从库3306状态</div><div class="line">mysql&gt; show slave status\G;</div><div class="line">*************************** 1. row ***************************</div><div class="line">               Slave_IO_State: Waiting for master to send event</div><div class="line">                  Master_Host: 192.168.10.102</div><div class="line">                  Master_User: rep</div><div class="line">                  Master_Port: 3307</div><div class="line">                Connect_Retry: 60</div><div class="line">              Master_Log_File: mysql-bin.000008</div><div class="line">          Read_Master_Log_Pos: 1561</div><div class="line">               Relay_Log_File: relay-bin.000011</div><div class="line">                Relay_Log_Pos: 253</div><div class="line">        Relay_Master_Log_File: mysql-bin.000008</div><div class="line">             Slave_IO_Running: Yes</div><div class="line">            Slave_SQL_Running: Yes</div><div class="line">              Replicate_Do_DB:</div><div class="line">          Replicate_Ignore_DB: mysql</div><div class="line">           Replicate_Do_Table:</div><div class="line">       Replicate_Ignore_Table:</div><div class="line">      Replicate_Wild_Do_Table:</div><div class="line">  Replicate_Wild_Ignore_Table:</div><div class="line">                   Last_Errno: 0</div><div class="line">                   Last_Error:</div><div class="line">                 Skip_Counter: 0</div><div class="line">          Exec_Master_Log_Pos: 1561</div><div class="line">              Relay_Log_Space: 446</div><div class="line">              Until_Condition: None</div><div class="line">               Until_Log_File:</div><div class="line">                Until_Log_Pos: 0</div><div class="line">           Master_SSL_Allowed: No</div><div class="line">           Master_SSL_CA_File:</div><div class="line">           Master_SSL_CA_Path:</div><div class="line">              Master_SSL_Cert:</div><div class="line">            Master_SSL_Cipher:</div><div class="line">               Master_SSL_Key:</div><div class="line">        Seconds_Behind_Master: 0</div><div class="line">Master_SSL_Verify_Server_Cert: No</div><div class="line">                Last_IO_Errno: 0</div><div class="line">                Last_IO_Error:</div><div class="line">               Last_SQL_Errno: 0</div><div class="line">               Last_SQL_Error:</div><div class="line">  Replicate_Ignore_Server_Ids:</div><div class="line">             Master_Server_Id: 3</div><div class="line">1 row in set (0.00 sec)</div><div class="line">ERROR:</div><div class="line">No query specified</div></pre></td></tr></table></figure>
+<blockquote>
+<p>在数据库3306创建数据库students</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">mysql -uroot -plx3306 -S /data/3306/mysql.sock</div><div class="line">mysql&gt; create database students;</div><div class="line">mysql&gt; use students;</div><div class="line">创建表t1，并插入内容</div><div class="line">mysql&gt; CREATE TABLE `t1` (   `id` bigint(12) NOT NULL auto_increment,   `name` varchar(12) NOT NULL,   PRIMARY KEY  (`id`) );</div><div class="line">mysql&gt; insert into t1(name) values(&quot;oldgirl&quot;);</div><div class="line">mysql&gt; insert into t1(name) values(&quot;oldboy&quot;);</div><div class="line">mysql&gt; select * from t1;                     </div><div class="line">+----+---------+</div><div class="line">| id | name    |</div><div class="line">+----+---------+</div><div class="line">|  1 | oldgirl |</div><div class="line">|  3 | oldboy  |</div><div class="line">+----+---------+</div><div class="line">#结果查看到内容是按照ID号，1 3 ……进行增长</div></pre></td></tr></table></figure>
+<blockquote>
+<p>登录到3307数据库</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">[root@lixiang opt]# mysql -uroot -plx3306 -S /data/3307/mysql.sock</div><div class="line">mysql&gt; use students;</div><div class="line">mysql&gt; select * from t1;</div><div class="line">+----+---------+</div><div class="line">| id | name    |</div><div class="line">+----+---------+</div><div class="line">|  1 | oldgirl |</div><div class="line">|  3 | oldboy  |</div><div class="line">+----+---------+</div><div class="line">mysql&gt; insert into t1(name) values(&quot;lx&quot;);</div><div class="line">mysql&gt; insert into t1(name) values(&quot;swj&quot;);</div><div class="line">mysql&gt; select * from t1;                  </div><div class="line">+----+---------+</div><div class="line">| id | name    |</div><div class="line">+----+---------+</div><div class="line">|  1 | oldgirl |</div><div class="line">|  3 | oldboy  |</div><div class="line">|  4 | lx      |</div><div class="line">|  6 | swj     |</div><div class="line">+----+---------+</div><div class="line">4 rows in set (0.00 sec)</div><div class="line"></div><div class="line">#查看到数据库3307的ID是按照偶数进行递增的</div></pre></td></tr></table></figure>
+<h1 id="主从复制的故障处理"><a href="#主从复制的故障处理" class="headerlink" title="主从复制的故障处理"></a>主从复制的故障处理</h1><p>&emsp;当从库复制遇到错误时，比如报错“要创建的数据库已存在”</p>
+<p>解决方案： 让从库跳过这一步操作，继续执行其它的操作</p>
+<ul>
+<li><p>方法一： 命令行实现，跳过这一步；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql&gt; stop slave;</div><div class="line">mysql&gt; set global sql_slave_skip_counter =1;</div><div class="line">mysql&gt; start slave;</div></pre></td></tr></table></figure>
+</li>
+<li><p>方法二： 配置文件中，指定忽略的错误；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@MySQL opt]# grep slave-skip /data/3308/my.cnf</div><div class="line">slave-skip-errors = 1032,1062</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><a href="http://lx.wxqrcode.com/index.php/post/68.html" target="_blank" rel="external">整理自</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/memcached/Linux下编译安装memcached/" rel="next" title="Linux下编译安装memcached">
+                <i class="fa fa-chevron-left"></i> Linux下编译安装memcached
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/mysql/编译安装MySQL-5.5.32/" rel="prev" title="编译安装MySQL-5.5.32">
+                编译安装MySQL-5.5.32 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-配置mysql从库级联复制"><span class="nav-number">1.</span> <span class="nav-text">1.配置mysql从库级联复制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-mysql主主复制"><span class="nav-number">2.</span> <span class="nav-text">2.mysql主主复制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主从复制的故障处理"><span class="nav-number">3.</span> <span class="nav-text">主从复制的故障处理</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

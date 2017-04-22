@@ -1,0 +1,754 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.类 对象和方法1234567#类是对象的蓝图,一旦你定义了类,就可以用关键字new来创建对象class CheckSumAccumulator &amp;#123;&amp;#125;#使用类创建对象new CheckSumAccumulator">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第四章 类和对象">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/第四章 类和对象/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.类 对象和方法1234567#类是对象的蓝图,一旦你定义了类,就可以用关键字new来创建对象class CheckSumAccumulator &amp;#123;&amp;#125;#使用类创建对象new CheckSumAccumulator">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/3/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/3/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/3/3.png">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.094Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第四章 类和对象">
+<meta name="twitter:description" content="1.类 对象和方法1234567#类是对象的蓝图,一旦你定义了类,就可以用关键字new来创建对象class CheckSumAccumulator &amp;#123;&amp;#125;#使用类创建对象new CheckSumAccumulator">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/3/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/第四章 类和对象/"/>
+
+
+
+
+
+  <title> 第四章 类和对象 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第四章 类和对象/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第四章 类和对象
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-类-对象和方法"><a href="#1-类-对象和方法" class="headerlink" title="1.类 对象和方法"></a>1.类 对象和方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#类是对象的蓝图,一旦你定义了类,就可以用关键字new来创建对象</div><div class="line">class CheckSumAccumulator &#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">#使用类创建对象</div><div class="line">new CheckSumAccumulator</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">类定义里,可以放置字段和方法,这些被笼统的称之为成员,</div><div class="line">字段:使用val或者是var定义,方法使用这些数据执行对象的运算工作</div><div class="line">方法:使用def定义,包含了可执行的代码,字段保留了对象的状态或数据</div><div class="line"></div><div class="line">当类被实例化的时候,运行时环境会预留一些内存来保留对象的状态映像------即变量的内容</div><div class="line"></div><div class="line">class CheckSumAccumulator &#123;</div><div class="line">  var sum = 0</div><div class="line">&#125;</div><div class="line"></div><div class="line">//实例化两次</div><div class="line">val acc = new CheckSumAccumulator</div><div class="line">val csa = new CheckSumAccumulator</div><div class="line">//内存里对象的状态映像看上去大概是这样的,如下图:</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/3/1.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">由于在类CheckSumAccumulator里定义的字段sum是var,而不是val,因此之后可以重新赋给不同的Int值,如下</div><div class="line">acc.sum = 3</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/3/2.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">需要注意的是:尽管acc对象是val,但是仍然可以修改对象中变量的值,但是我们不能修改对象的指向,</div><div class="line">#编译不过,因为acc是val</div><div class="line">acc = new CheckSumAccumulator</div></pre></td></tr></table></figure>
+<p> private<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">class CheckSumAccumulator &#123;</div><div class="line">  private var sum = 0</div><div class="line">&#125;</div><div class="line">val csa = new CheckSumAccumulator</div><div class="line">acc.sum = 5 //编译不过,因为sum是私有的</div><div class="line"></div><div class="line">/*</div><div class="line">在scala里把成员公开的方法是不显示的指定任何访问修饰符,换句话说,在Java里要写上public的地方,在scala里只要什么都不要写就可以了,public是scala里默认的访问级别</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 方法的参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">class CheckSumAccumulator &#123;</div><div class="line">  private var sum = 0</div><div class="line">  def add(b: Byte): Unit =&#123;</div><div class="line">    sum += b</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def checkSum():Unit = &#123;</div><div class="line">    return -(sum &amp; 0xFF) + 1</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">传递给方法的任何参数都可以在方法内部使用,scala里方法参数的一个重要特征是他们都是val,不是var,如果你想在方法里面给参数赋值,结果是编译失败:</div><div class="line">  def add(b: Byte): Unit =&#123;</div><div class="line">   b = 1 //编译不过,因为b是val</div><div class="line">    sum += b</div><div class="line">  &#125;</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">checkSum方法最后的return语句是多余的可以去掉,如果没有发现任何显示的返回值,scala方法将返回方法中最后一次计算的到的结果</div><div class="line">方法的推荐风格是尽量避免使用返回语句,尤其是多条返回语句,代之以把每个方法当做是创建返回值的表达式,这种逻辑鼓励你分层简化方法,把较大的方法分解为多个更小的方法</div><div class="line"></div><div class="line">在这里checksum只要计算值,不用return,所以这个方法有另一种简写方式,假如某个方法仅计算单个表达式,则可以去掉花括号,如果表达式很短,甚至可以把它放在def的同一行里,这样改动之后,CheckSumAccumulator如下:</div><div class="line">*/</div><div class="line">class CheckSumAccumulator &#123;</div><div class="line">  private var sum = 0</div><div class="line">  def add(b: Byte):Unit = sum += b</div><div class="line">  def checkSum():Int = -(sum &amp; 0xFF) + 1</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">如果去掉方法体前面的等号,那么方法的结果类型就必定是Unit,这种说法不论方法体里面包含什么都成立,因为scala编译器可以把任何类型转换为Unit,例如:如果方法的最后结果是?String,但结果类型被声明为Unit,那么String将变为Unit并丢弃原值</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<h1 id="2-分号推断"><a href="#2-分号推断" class="headerlink" title="2.分号推断"></a>2.分号推断</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">在scala里,语句末尾的分号通常是可选的,愿意可以加,若一行中仅有一个语句也可以不加,不过一行中包含多条语句时,分号则是必须的</div><div class="line">*/</div><div class="line">val s = &quot;Hello&quot;; println(s)</div><div class="line"></div><div class="line">/*</div><div class="line">输入跨越多行的语句时,多数情况下无需特别处理,scala将在正确的位置分割语句,如下的代码被当成跨四行的一条语句</div><div class="line">*/</div><div class="line">if (x&lt;2)</div><div class="line">  println(&quot;to small&quot;)</div><div class="line">else</div><div class="line">  println(&quot;ok&quot;)</div><div class="line"></div><div class="line">/*</div><div class="line">然而,偶尔scala也许并不如你所愿,把句子拆分成两部分</div><div class="line">*/</div><div class="line">x</div><div class="line">+ y   //会被当做两个语句x 和 +y, 如果希望把它作为一个语句x + y ,可以把它放在括号里</div><div class="line"></div><div class="line">(x</div><div class="line">+ y)</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">或者可以把+号放在行末,也正源于此,串接类似于+这样的中缀操作符的时候,scala通常的风格是把操作符放在行尾而不是行头</div><div class="line">*/</div><div class="line">x +</div><div class="line">y +</div><div class="line">z</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">分号推断的规则</div><div class="line">除非以下情况的一种成立,否则行尾被认为是一个分号</div><div class="line">1.疑问行由一个不能合法作为语句结尾的字结束,如句点或中缀操作符</div><div class="line">2.下一行开始于不能作为语句开始的词,如下一行开始于+</div><div class="line">3.行结束语括号() 或方框[] 内部,因为这些符号不可能容纳多个语句</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="3-singleton对象"><a href="#3-singleton对象" class="headerlink" title="3.singleton对象"></a>3.singleton对象</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">scala不能定义静态成员,取而代之的是单例对象,除了用object关键字替换了class关键字以外,单例对象的定义看上去与类定义一致*/</div><div class="line"></div><div class="line">class CheckSumAccumulator &#123;</div><div class="line">  private var sum = 0</div><div class="line">  def add(b: Byte)&#123;sum += b&#125;</div><div class="line">  def checkSum(): Int  = -(sum &amp; 0xFF) + 1</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">object CheckSumAccumulator&#123;</div><div class="line">  import scala.collection.mutable.Map</div><div class="line">  private val cache = Map[String, Int]()</div><div class="line">  def calculate(s: String): Int =</div><div class="line">    if(cache.contains(s))</div><div class="line">      cache(s)  //包含,返回</div><div class="line">    else&#123;</div><div class="line">      val acc = new CheckSumAccumulator</div><div class="line">      for(c &lt;- s)</div><div class="line">        acc.add(c.toByte)</div><div class="line">      val cs = acc.checkSum()</div><div class="line">      cache += (s-&gt;cs) //加入cache映射表,因为Map是mutable类型的,所以可以+=</div><div class="line">      cs</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">当单例对象与某个类共享一个名称时,他就被称为这个类的伴生对象,类和他的伴生对象必须定义在一个源文件里,类被称为是这个单例对象的伴生类,类和他的伴生对象可以互相访问其私有成员</div><div class="line">*/</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">对于Java程序员来说,可以把单例对象当做是Java中可能会用到的静态方法工具类,也可以用类似的语法做方法调用,单例对象名,点,方法名,例如,可以调用CheckSumAccumulator单例对象的calculate方法,如下:</div><div class="line">*/</div><div class="line"></div><div class="line">CheckSumAccumulator.calculate(&quot;Every value is an object&quot;)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">单例对象不只是静态方法的工具类,他同样是头等的对象,因此单例对象的名字可以被看做是贴在对象上的&quot;名签&quot;</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/3/3.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">类和单例对象间的差别是:单例对象不带参数,而类可以,因为单例对象不是用new关键字实例化的,所以没机会传递给它实例化参数,每个单例对象都被实现为虚构类的实例,并指向静态的变量,因此他们与Java静态类有着相同的初始化语义,特别要指出的是,单例对象在第一次被访问的时候才会被初始化</div><div class="line">不与伴生类共享名称的单例对象被称为独立对象,他可以用在很多地方,例如作为相关功能方法的工具类,或者定义scala应用的入口点</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="4-scala程序"><a href="#4-scala程序" class="headerlink" title="4.scala程序"></a>4.scala程序</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">想要编写能够独立运行的scala程序,就必须创建有main(仅带一个参数Array[String],且结果类型为Unit)方法的单例对象,任何拥有合适签名的main方法的单例对象都可以用来作为程序的入口点</div><div class="line">*/</div><div class="line"></div><div class="line">object Summer&#123;</div><div class="line">  def main(args: Array[String]): Unit = &#123;</div><div class="line">    for (arg &lt;- args)&#123;</div><div class="line">      import CheckSumAccumulator.calculate//定义CheckSumAccumulator对象中calculate方法的引用,它允许你在后面的文件里使用方法的简化名</div><div class="line">      println(arg + &quot;: &quot; + calculate(arg))</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">scala的每个源文件都隐含了对包Java.lang ,包scala,以及单例对象Predef的成员引用,包scala中的Predef对象包含了许多有用的方法,例如,scala源文件中写下的println语句,实际调用的是Predef的println(Predef.println转而调用Console.println,完成真正的工作),写下assert,实际是在调用Predef.assert</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">scala和Java之间有一点不同,Java需要你把公共类放在以这个类命名的源文件中,如类SpeedRacer要放在文件SpeedRacer.java里,scala对于源文件的命名没有硬性的规定,但是在通常情况下,如果不是脚本,推荐的风格是像Java里那样按照所包含的类名来命名文件,这样程序员就可以比较容易的根据文件名找到类</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p> 编译scala文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ scalac CheckSumAccumulator.scala Summer.scala</div><div class="line"></div><div class="line">//编译之后再运行</div><div class="line">$scala Summer of love</div></pre></td></tr></table></figure></p>
+<h1 id="5-application特质"><a href="#5-application特质" class="headerlink" title="5.application特质"></a>5.application特质</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import CheckSumAccumulator.calculate</div><div class="line">object FallWinterSpringSummer extends Application&#123;</div><div class="line">  for (seasion &lt;- List(&quot;fail&quot;, &quot;winter&quot;, &quot;apring&quot;))&#123;</div><div class="line">    println(seasion + &quot;: &quot; + calculate(seasion))</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">首先在单例对象后面写上&quot;extends Application&quot; ,然后代之以main方法,你可以把想要执行的代码直接放在单例对象的花括号之间,如此而已,之后就可以正常的编译和运行了</div><div class="line"></div><div class="line">能这么做是因为Application声明了带有合适签名的main方法,并被你写的单例对象继承,使他可以像scala程序那样,好括号之间的代码被收集进了单例对象的主构造器</div><div class="line"></div><div class="line">*/</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/数据仓库/数据仓库/" rel="next" title="数据仓库">
+                <i class="fa fa-chevron-left"></i> 数据仓库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十章 组合与继承/" rel="prev" title="第十章 组合与继承">
+                第十章 组合与继承 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-类-对象和方法"><span class="nav-number">1.</span> <span class="nav-text">1.类 对象和方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-分号推断"><span class="nav-number">2.</span> <span class="nav-text">2.分号推断</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-singleton对象"><span class="nav-number">3.</span> <span class="nav-text">3.singleton对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-scala程序"><span class="nav-number">4.</span> <span class="nav-text">4.scala程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-application特质"><span class="nav-number">5.</span> <span class="nav-text">5.application特质</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

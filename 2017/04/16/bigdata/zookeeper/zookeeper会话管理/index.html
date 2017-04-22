@@ -1,0 +1,823 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="zookeeper," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="什么是会话? 代表客户端与服务器端的一个zk连接 底层通信是通过tcp协议进行连接通信 zookeeper会在服务器端创建一个会话对象来维护这个连接属性 当网络出现断网的抖动现象时,并不代表会话一定断开 会话对象的实现是SessionImpl,包括以下四个属性 sessionID:唯一标识一个会话,具备全局唯一性 Timeout:会话超时时间,创建zookeeper客户端对象时传入,服务器会根据最">
+<meta name="keywords" content="zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeper会话管理">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper会话管理/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="什么是会话? 代表客户端与服务器端的一个zk连接 底层通信是通过tcp协议进行连接通信 zookeeper会在服务器端创建一个会话对象来维护这个连接属性 当网络出现断网的抖动现象时,并不代表会话一定断开 会话对象的实现是SessionImpl,包括以下四个属性 sessionID:唯一标识一个会话,具备全局唯一性 Timeout:会话超时时间,创建zookeeper客户端对象时传入,服务器会根据最">
+<meta property="og:updated_time" content="2017-02-24T17:07:51.547Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zookeeper会话管理">
+<meta name="twitter:description" content="什么是会话? 代表客户端与服务器端的一个zk连接 底层通信是通过tcp协议进行连接通信 zookeeper会在服务器端创建一个会话对象来维护这个连接属性 当网络出现断网的抖动现象时,并不代表会话一定断开 会话对象的实现是SessionImpl,包括以下四个属性 sessionID:唯一标识一个会话,具备全局唯一性 Timeout:会话超时时间,创建zookeeper客户端对象时传入,服务器会根据最">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper会话管理/"/>
+
+
+
+
+
+  <title> zookeeper会话管理 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper会话管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                zookeeper会话管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="什么是会话"><a href="#什么是会话" class="headerlink" title="什么是会话?"></a>什么是会话?</h1><ul>
+<li>代表客户端与服务器端的一个zk连接</li>
+<li>底层通信是通过tcp协议进行连接通信</li>
+<li>zookeeper会在服务器端创建一个会话对象来维护这个连接属性</li>
+<li>当网络出现断网的抖动现象时,并不代表会话一定断开</li>
+<li>会话对象的实现是SessionImpl,包括以下四个属性<ul>
+<li>sessionID:唯一标识一个会话,具备全局唯一性</li>
+<li>Timeout:会话超时时间,创建zookeeper客户端对象时传入,服务器会根据最小会话时间和最大会话时间来明确指定此值具体是什么</li>
+<li>TickTime:下次会话超时时间</li>
+<li>isClosing:标记一个会话是否已经被关闭,当服务器端检测到右会话失效时,就会把此会话标记为已关闭</li>
+</ul>
+</li>
+</ul>
+<h1 id="会话状态"><a href="#会话状态" class="headerlink" title="会话状态"></a>会话状态</h1><ul>
+<li>Connecting</li>
+<li>connected</li>
+<li>reconnecting</li>
+<li>reconnected</li>
+<li>close<ul>
+<li>服务器端判断会话超时后,在进行会话清除之前,会把会话的状态置为close</li>
+</ul>
+</li>
+</ul>
+<h1 id="sessionTracker"><a href="#sessionTracker" class="headerlink" title="sessionTracker"></a>sessionTracker</h1><p>服务器端通过此类来管理会话,包括会话的创建,管理和清除</p>
+<p>通过三个数据结构从三个维度来管理会话</p>
+<ul>
+<li>sessionById属性:用于根据sessionID来查找session</li>
+<li>sessionWithTimeout:通过sessionID来查找此session的失效时间是什么时候</li>
+<li>sessionSets属性:通过某个时间查询都有哪些会话在这个时间点会失效</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class SessionTrackerImpl extends Thread implements SessionTracker &#123;</div><div class="line"></div><div class="line">    HashMap&lt;Long, SessionImpl&gt; sessionsById = new HashMap&lt;Long, SessionImpl&gt;();</div><div class="line"></div><div class="line">    HashMap&lt;Long, SessionSet&gt; sessionSets = new HashMap&lt;Long, SessionSet&gt;();</div><div class="line"></div><div class="line">    ConcurrentHashMap&lt;Long, Integer&gt; sessionsWithTimeout;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="分桶策略"><a href="#分桶策略" class="headerlink" title="分桶策略"></a>分桶策略</h1><p>把所有的会话按照时间维度来进行分类管理,即同一个时间点失效的会话都在一起管理,即上面的属性ConcurrentHashMap<long, integer=""> sessionsWithTimeout</long,></p>
+<p>会话失效时间计算:</p>
+<ul>
+<li>约定:把所有的时间按照某个单位时间进行等分(默认是服务器的tickTime配置)</li>
+<li><p>公式:某次超时时间=((currentTime+sessiontimeout)/ ExpirationInterval +1) x ExpirationInterval</p>
+</li>
+<li><p>举例说明:</p>
+<ul>
+<li>由于服务器的tickTime的默认值是2000ms,则ExpirationInterval=2000ms</li>
+<li>第一次创建会话时,currenttime=1370907000000</li>
+<li>创建会话时,客户端传入的超时时间是15000ms</li>
+<li>则,此会话的超时时间为((1370907000000+2000)+1)x2000=1370907016000</li>
+</ul>
+</li>
+</ul>
+<p>当某个会话由于有操作而导致超时时间变化,则会把会话从上一个桶移动到下一个桶中</p>
+<h1 id="会话激活"><a href="#会话激活" class="headerlink" title="会话激活"></a>会话激活</h1><ul>
+<li>当此会话一直有操作,则会话就不会失效</li>
+<li>影响会话失效超时时间的因素<ul>
+<li>心跳检测,及PING命令<ul>
+<li>当客户端发现sessionTimeout/3时间范围内还没有任何操作命令产生,就发送一个ping心跳请求</li>
+</ul>
+</li>
+<li>正常业务操作,比如get或者set</li>
+</ul>
+</li>
+<li>每次业务操作或者心跳检测,都会重新计算超时时间,然后在桶之间转移会话</li>
+</ul>
+<h1 id="会话超时检测"><a href="#会话超时检测" class="headerlink" title="会话超时检测"></a>会话超时检测</h1><ul>
+<li>由于sessionTracker中的一个线程负责检查session是否失效</li>
+<li>线程检查周期也是ExpirationInterval的倍数</li>
+<li>当某次检查时,如果在此次的分桶(即前面的ExpirationInterval)之前还有会话,就说明这些会话都超时了,因为会话如果有业务操作或者靠心跳,会不断的从小的分桶迁移到大的分桶</li>
+</ul>
+<p>举例:<br>系统启动时的时间是100001,此时ExpirationInterval=2000ms,则桶的刻度为100001/2000=50,下一次的检查时间为(100001/2000+1)x2000=102000</p>
+<h1 id="会话清理流程"><a href="#会话清理流程" class="headerlink" title="会话清理流程"></a>会话清理流程</h1><ul>
+<li>修改会话状态为close<ul>
+<li>由于清理过程中需要一定时间,为了避免清理期间会话状态发生变化</li>
+</ul>
+</li>
+<li>向所有的集群节点发送会话关闭请求</li>
+<li>收集跟被清理的会话相关的临时节点</li>
+<li>向集群节点发出删除临时节点的事务请求</li>
+<li>集群中的所有节点执行删除临时节点事务</li>
+<li>从sessionTracker的列表中移除会话</li>
+<li>关闭会话的网络连接,具体类是NIOServerCnxnFactory</li>
+</ul>
+<h1 id="会话重连"><a href="#会话重连" class="headerlink" title="会话重连"></a>会话重连</h1><p>当客户端与服务器端的网络断开后,客户端会不断的重新连接,当连接上后会话的状态时以下两种状态:</p>
+<ul>
+<li>connected:服务器端会话依然存在</li>
+<li>expired:服务器端的会话已经被关闭清除了</li>
+</ul>
+<p>注意:网络断开并不代表会话超时</p>
+<h1 id="三个会话异常"><a href="#三个会话异常" class="headerlink" title="三个会话异常:"></a>三个会话异常:</h1><ul>
+<li>connection_loss</li>
+<li>session_expired</li>
+<li>session_moved</li>
+</ul>
+<p>connection_loss</p>
+<p>网络闪断导致或者是客户端服务器出现问题导致,出现此问题,客户端会重新找地址进行连接,当某个操作过程(比如setData)中出现connection_loss现象,则客户端会收到NoneDisconnected(设置了默认watcher情况下),同时会抛出异常:org.apache.zookeeper.KeeperException$ConnectionLossException,当重新连接上后,客户端会收到事件通知(None-SyncConnected)//在设置了默认watcher时</p>
+<p>session_expired</p>
+<p>通常发生在connection_loss期间,因为没有网络连接,就不能有操作和心跳进行,会话就会超时,由于重新连接时间较长,导致服务器端关闭了会话,并清除会话,此时会话相关联的watcher等数据都会丢失,watcher失效,出现这种情况,客户端需要重新创建zookeeper对象,并且恢复数据(比如注册watcher),会收到SessionExpiredException</p>
+<p>session_moved</p>
+<p>出现CONNECTION_LOSS时，客户端尝试重新连接下个节点(connectstring)<br>例如:客户端刚开始连接的是s1,由于网络中断,客户端尝试连接s2,连接成功之后,s2延续了会话,即会话从s1迁移到了s2<br>当出现以下业务场景时,服务器端回抛出SessionMovedException异常,由于客户端的连接已经发生了变化(从s1–&gt;s2),所以客户端收不到异常<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">有三台服务器:s1 s2 s3</div><div class="line">开始时,客户端连接s1,此时客户端发出一个修改数据的请求r1</div><div class="line">在修改数据的请求到达s1之前,客户端重新连接上了s2服务器,此时出现了会话转译</div><div class="line">连接s2后,客户端又发起一次数据修改请求r2</div><div class="line">r1被s1服务器处理,r2被s2处理(比r1被处理要早)</div><div class="line">这样对于客户端来说,请求被处理两次,并且r2被r1的处理结果覆盖了</div><div class="line">服务器端通过检查会话的所有者来判断此次会话请求是否合法,不合法就抛出moved异常</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zookeeper命令行简单的CRUD命令/" rel="next" title="zookeeper命令行简单的CRUD命令">
+                <i class="fa fa-chevron-left"></i> zookeeper命令行简单的CRUD命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/zookeeper/zk详细配置说明/" rel="prev" title="zk详细配置说明">
+                zk详细配置说明 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是会话"><span class="nav-number">1.</span> <span class="nav-text">什么是会话?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#会话状态"><span class="nav-number">2.</span> <span class="nav-text">会话状态</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sessionTracker"><span class="nav-number">3.</span> <span class="nav-text">sessionTracker</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分桶策略"><span class="nav-number">4.</span> <span class="nav-text">分桶策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#会话激活"><span class="nav-number">5.</span> <span class="nav-text">会话激活</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#会话超时检测"><span class="nav-number">6.</span> <span class="nav-text">会话超时检测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#会话清理流程"><span class="nav-number">7.</span> <span class="nav-text">会话清理流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#会话重连"><span class="nav-number">8.</span> <span class="nav-text">会话重连</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三个会话异常"><span class="nav-number">9.</span> <span class="nav-text">三个会话异常:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

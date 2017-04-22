@@ -1,0 +1,786 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop,mapreduce," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.GroupingComparator的工作原理首先取第一个元素，然后将其的key作为一个基础，然后通过迭代器去取第一个后面的元素，取对应元素的key和第一个元素的key比较，如果相同则将元素的value拿过来，接着去迭代后面的元素，直到取到的元素的key和第一个元素不同，那么此时就将">
+<meta name="keywords" content="hadoop,mapreduce">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义GroupingComparator">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/hadoop/自定义GroupingComparator/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.GroupingComparator的工作原理首先取第一个元素，然后将其的key作为一个基础，然后通过迭代器去取第一个后面的元素，取对应元素的key和第一个元素的key比较，如果相同则将元素的value拿过来，接着去迭代后面的元素，直到取到的元素的key和第一个元素不同，那么此时就将">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/groupingComparator/groupingComparator.png">
+<meta property="og:updated_time" content="2017-02-27T05:55:04.793Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义GroupingComparator">
+<meta name="twitter:description" content="1.GroupingComparator的工作原理首先取第一个元素，然后将其的key作为一个基础，然后通过迭代器去取第一个后面的元素，取对应元素的key和第一个元素的key比较，如果相同则将元素的value拿过来，接着去迭代后面的元素，直到取到的元素的key和第一个元素不同，那么此时就将">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/groupingComparator/groupingComparator.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/hadoop/自定义GroupingComparator/"/>
+
+
+
+
+
+  <title> 自定义GroupingComparator | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/hadoop/自定义GroupingComparator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                自定义GroupingComparator
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-GroupingComparator的工作原理"><a href="#1-GroupingComparator的工作原理" class="headerlink" title="1.GroupingComparator的工作原理"></a>1.GroupingComparator的工作原理</h1><p>首先取第一个元素，然后将其的key作为一个基础，然后通过迭代器去取第一个后面的元素，取对应元素的key和第一个元素的key比较，如果相同则将元素的value拿过来，接着去迭代后面的元素，直到取到的元素的<br>key和第一个元素不同，那么此时就将<key1, <value1,="" value2,="" value3..="">&gt; 传递到reduce函数中</key1,></p>
+<p>实现示意图如下：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/groupingComparator/groupingComparator.png" alt=""></p>
+<h1 id="2-需求"><a href="#2-需求" class="headerlink" title="2.需求"></a>2.需求</h1><p>有如下订单数据，现在需要求出每一个订单中成交金额最大的一笔交易</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">订单id</th>
+<th style="text-align:center">商品id</th>
+<th style="text-align:center">成交金额</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Order_0000001</td>
+<td style="text-align:center">Pdt_01</td>
+<td style="text-align:center">222.8</td>
+</tr>
+<tr>
+<td style="text-align:center">Order_0000001</td>
+<td style="text-align:center">Pdt_05</td>
+<td style="text-align:center">25.8</td>
+</tr>
+<tr>
+<td style="text-align:center">Order_0000002</td>
+<td style="text-align:center">Pdt_03</td>
+<td style="text-align:center">522.8</td>
+</tr>
+<tr>
+<td style="text-align:center">Order_0000002</td>
+<td style="text-align:center">Pdt_04</td>
+<td style="text-align:center">122.4</td>
+</tr>
+<tr>
+<td style="text-align:center">Order_0000002</td>
+<td style="text-align:center">Pdt_05</td>
+<td style="text-align:center">722.4</td>
+</tr>
+<tr>
+<td style="text-align:center">Order_0000003</td>
+<td style="text-align:center">Pdt_01</td>
+<td style="text-align:center">222.8</td>
+</tr>
+</tbody>
+</table>
+<h1 id="3-分析"><a href="#3-分析" class="headerlink" title="3.分析"></a>3.分析</h1><p>1、利用“订单id和成交金额”作为key，可以将map阶段读取到的所有订单数据按照id分区，按照金额排序，发送到reduce<br>2、在reduce端利用groupingcomparator将订单id相同的kv聚合成组，然后取第一个即是最大值</p>
+<a id="more"></a>
+<h1 id="4-实现"><a href="#4-实现" class="headerlink" title="4.实现"></a>4.实现</h1><p>自定义groupingcomparator</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">package cn.itcastcat.bigdata.secondarysort;</div><div class="line"></div><div class="line">import org.apache.hadoop.io.WritableComparable;</div><div class="line">import org.apache.hadoop.io.WritableComparator;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 利用reduce端的GroupingComparator来实现将一组bean看成相同的key</div><div class="line"> * 用于控制shuffle过程中reduce端对kv对的聚合逻辑</div><div class="line"> * @author duanhaitao@itcast.cn</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class ItemidGroupingComparator extends WritableComparator &#123;</div><div class="line"></div><div class="line">	//传入作为key的bean的class类型，以及制定需要让框架做反射获取实例对象,然后去比较</div><div class="line">	protected ItemidGroupingComparator() &#123;</div><div class="line">		super(OrderBean.class, true);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public int compare(WritableComparable a, WritableComparable b) &#123;</div><div class="line">		OrderBean abean = (OrderBean) a;</div><div class="line">		OrderBean bbean = (OrderBean) b;</div><div class="line">		</div><div class="line">		//比较两个bean时，指定只比较bean中的orderid</div><div class="line">		//将item_id相同的bean都视为相同，从而聚合为一组，从而去取一组中的第一个bean作为key</div><div class="line">		return abean.getItemid().compareTo(bbean.getItemid());</div><div class="line">		</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>定义订单信息bean<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line">package cn.itcastcat.bigdata.secondarysort;</div><div class="line"></div><div class="line">import java.io.DataInput;</div><div class="line">import java.io.DataOutput;</div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line">import org.apache.hadoop.io.DoubleWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.io.WritableComparable;</div><div class="line"></div><div class="line">/**</div><div class="line"> * @author duanhaitao@itcast.cn</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class OrderBean implements WritableComparable&lt;OrderBean&gt;&#123;</div><div class="line"></div><div class="line">	private Text itemid;</div><div class="line">	private DoubleWritable amount;</div><div class="line"></div><div class="line">	public OrderBean() &#123;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public OrderBean(Text itemid, DoubleWritable amount) &#123;</div><div class="line">		set(itemid, amount);</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public void set(Text itemid, DoubleWritable amount) &#123;</div><div class="line"></div><div class="line">		this.itemid = itemid;</div><div class="line">		this.amount = amount;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">	public Text getItemid() &#123;</div><div class="line">		return itemid;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public DoubleWritable getAmount() &#123;</div><div class="line">		return amount;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">	@Override</div><div class="line">	public int compareTo(OrderBean o) &#123;</div><div class="line">		//先比较ID，如果ID相同，那么比较金额</div><div class="line">		int cmp = this.itemid.compareTo(o.getItemid());</div><div class="line">		if (cmp == 0) &#123;</div><div class="line">			cmp = -this.amount.compareTo(o.getAmount());</div><div class="line">		&#125;</div><div class="line">		return cmp;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void write(DataOutput out) throws IOException &#123;</div><div class="line">		out.writeUTF(itemid.toString());</div><div class="line">		out.writeDouble(amount.get());</div><div class="line">		</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void readFields(DataInput in) throws IOException &#123;</div><div class="line">		String readUTF = in.readUTF();</div><div class="line">		double readDouble = in.readDouble();</div><div class="line">		</div><div class="line">		this.itemid = new Text(readUTF);</div><div class="line">		this.amount= new DoubleWritable(readDouble);</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	@Override</div><div class="line">	public String toString() &#123;</div><div class="line"></div><div class="line">		return itemid.toString() + &quot;\t&quot; + amount.get();</div><div class="line">		</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>自定义Partitioner<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">package cn.itcastcat.bigdata.secondarysort;</div><div class="line"></div><div class="line">import org.apache.hadoop.io.NullWritable;</div><div class="line">import org.apache.hadoop.mapreduce.Partitioner;</div><div class="line"></div><div class="line"></div><div class="line">public class ItemIdPartitioner extends Partitioner&lt;OrderBean, NullWritable&gt;&#123;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public int getPartition(OrderBean bean, NullWritable value, int numReduceTasks) &#123;</div><div class="line">		//相同id的订单bean，会发往相同的partition</div><div class="line">		//而且，产生的分区数，是会跟用户设置的reduce task数保持一致</div><div class="line">		return (bean.getItemid().hashCode() &amp; Integer.MAX_VALUE) % numReduceTasks;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>编写mapreduce处理流程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line">package cn.itcastcat.bigdata.secondarysort;</div><div class="line"></div><div class="line">import java.io.IOException;</div><div class="line"></div><div class="line">import org.apache.commons.lang.StringUtils;</div><div class="line">import org.apache.hadoop.conf.Configuration;</div><div class="line">import org.apache.hadoop.fs.Path;</div><div class="line">import org.apache.hadoop.io.DoubleWritable;</div><div class="line">import org.apache.hadoop.io.LongWritable;</div><div class="line">import org.apache.hadoop.io.NullWritable;</div><div class="line">import org.apache.hadoop.io.Text;</div><div class="line">import org.apache.hadoop.mapreduce.Job;</div><div class="line">import org.apache.hadoop.mapreduce.Mapper;</div><div class="line">import org.apache.hadoop.mapreduce.Reducer;</div><div class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line"></div><div class="line">import com.sun.xml.bind.v2.schemagen.xmlschema.List;</div><div class="line"></div><div class="line">/**</div><div class="line"> * </div><div class="line"> * @author duanhaitao@itcast.cn</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class SecondarySort &#123;</div><div class="line">	</div><div class="line">	static class SecondarySortMapper extends Mapper&lt;LongWritable, Text, OrderBean, NullWritable&gt;&#123;</div><div class="line">		</div><div class="line">		OrderBean bean = new OrderBean();</div><div class="line">		</div><div class="line">		@Override</div><div class="line">		protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException &#123;</div><div class="line"></div><div class="line">			String line = value.toString();</div><div class="line">			String[] fields = StringUtils.split(line, &quot;,&quot;);</div><div class="line">			//封装成bean对象</div><div class="line">			bean.set(new Text(fields[0]), new DoubleWritable(Double.parseDouble(fields[2])));</div><div class="line">			</div><div class="line">			context.write(bean, NullWritable.get());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	static class SecondarySortReducer extends Reducer&lt;OrderBean, NullWritable, OrderBean, NullWritable&gt;&#123;</div><div class="line">		</div><div class="line">		</div><div class="line">		//到达reduce时，相同id的所有bean已经被看成一组，且金额最大的那个一排在第一位</div><div class="line">		@Override</div><div class="line">		protected void reduce(OrderBean key, Iterable&lt;NullWritable&gt; values, Context context) throws IOException, InterruptedException &#123;</div><div class="line">			context.write(key, NullWritable.get());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	</div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line">		</div><div class="line">		Configuration conf = new Configuration();</div><div class="line">		Job job = Job.getInstance(conf);</div><div class="line">		</div><div class="line">		job.setJarByClass(SecondarySort.class);</div><div class="line">		</div><div class="line">		job.setMapperClass(SecondarySortMapper.class);</div><div class="line">		job.setReducerClass(SecondarySortReducer.class);</div><div class="line">		</div><div class="line">		</div><div class="line">		job.setOutputKeyClass(OrderBean.class);</div><div class="line">		job.setOutputValueClass(NullWritable.class);</div><div class="line">		</div><div class="line">		FileInputFormat.setInputPaths(job, new Path(&quot;c:/wordcount/gpinput&quot;));</div><div class="line">		FileOutputFormat.setOutputPath(job, new Path(&quot;c:/wordcount/gpoutput&quot;));</div><div class="line">		</div><div class="line">		//在此设置自定义的Groupingcomparator类 </div><div class="line">		job.setGroupingComparatorClass(ItemidGroupingComparator.class);</div><div class="line">		//在此设置自定义的partitioner类</div><div class="line">		job.setPartitionerClass(ItemIdPartitioner.class);</div><div class="line">		</div><div class="line">		job.setNumReduceTasks(2);</div><div class="line">		</div><div class="line">		job.waitForCompletion(true);</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+            <a href="/tags/mapreduce/" rel="tag"># mapreduce</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/自定义InputFormat之大量小文件的问题/" rel="next" title="自定义InputFormat之大量小文件的问题">
+                <i class="fa fa-chevron-left"></i> 自定义InputFormat之大量小文件的问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/求共同的粉丝问题/" rel="prev" title="求共同的粉丝问题">
+                求共同的粉丝问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-GroupingComparator的工作原理"><span class="nav-number">1.</span> <span class="nav-text">1.GroupingComparator的工作原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-需求"><span class="nav-number">2.</span> <span class="nav-text">2.需求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-分析"><span class="nav-number">3.</span> <span class="nav-text">3.分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-实现"><span class="nav-number">4.</span> <span class="nav-text">4.实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

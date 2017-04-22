@@ -1,0 +1,769 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.ORM简介 一种对象关系映射工具 面向对象编程开发方法发生而产生的 面向对象编程中数据保存在对象中并在对象中交互，运行于内存（不易持久化） 关系是指关系数据库，即数据保存在数据库中（可持久化） 对象可以轻松的从数据库中载入持久化的数据 对象还可以将需要持久化的对象数据保存至数据库  2. ORM特性 提高开发效率，不用直接编写查询数据库载入数据的代码 开发人员不用接触SQL语句，可以完成数据库">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python数据库之ORM工具SQLAlchemy">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/python/python数据库之ORM工具SQLAlchemy/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.ORM简介 一种对象关系映射工具 面向对象编程开发方法发生而产生的 面向对象编程中数据保存在对象中并在对象中交互，运行于内存（不易持久化） 关系是指关系数据库，即数据保存在数据库中（可持久化） 对象可以轻松的从数据库中载入持久化的数据 对象还可以将需要持久化的对象数据保存至数据库  2. ORM特性 提高开发效率，不用直接编写查询数据库载入数据的代码 开发人员不用接触SQL语句，可以完成数据库">
+<meta property="og:updated_time" content="2017-02-24T17:10:36.793Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python数据库之ORM工具SQLAlchemy">
+<meta name="twitter:description" content="1.ORM简介 一种对象关系映射工具 面向对象编程开发方法发生而产生的 面向对象编程中数据保存在对象中并在对象中交互，运行于内存（不易持久化） 关系是指关系数据库，即数据保存在数据库中（可持久化） 对象可以轻松的从数据库中载入持久化的数据 对象还可以将需要持久化的对象数据保存至数据库  2. ORM特性 提高开发效率，不用直接编写查询数据库载入数据的代码 开发人员不用接触SQL语句，可以完成数据库">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/python/python数据库之ORM工具SQLAlchemy/"/>
+
+
+
+
+
+  <title> python数据库之ORM工具SQLAlchemy | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/python/python数据库之ORM工具SQLAlchemy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python数据库之ORM工具SQLAlchemy
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-ORM简介"><a href="#1-ORM简介" class="headerlink" title="1.ORM简介"></a>1.ORM简介</h1><ul>
+<li>一种对象关系映射工具</li>
+<li>面向对象编程开发方法发生而产生的</li>
+<li>面向对象编程中数据保存在对象中并在对象中交互，运行于内存（不易持久化）</li>
+<li>关系是指关系数据库，即数据保存在数据库中（可持久化）</li>
+<li>对象可以轻松的从数据库中载入持久化的数据</li>
+<li>对象还可以将需要持久化的对象数据保存至数据库</li>
+</ul>
+<h1 id="2-ORM特性"><a href="#2-ORM特性" class="headerlink" title="2. ORM特性"></a>2. ORM特性</h1><ul>
+<li>提高开发效率，不用直接编写查询数据库载入数据的代码</li>
+<li>开发人员不用接触SQL语句，可以完成数据库有关操作</li>
+<li>主要缺点是：不易数据库查询优化，并可能带来性能上的损失</li>
+</ul>
+<h1 id="3-SQLAlchemy"><a href="#3-SQLAlchemy" class="headerlink" title="3.SQLAlchemy"></a>3.SQLAlchemy</h1><ul>
+<li>开源并使用MIT许可证</li>
+<li>可兼容切换多种数据库（如：SQLite、MySQL、PostgreSQL、MsSQL、Oracle等）</li>
+<li>安装：在管理员方式的命令提示符中：pip install SQLAlchemy</li>
+</ul>
+<h1 id="4-使用步骤"><a href="#4-使用步骤" class="headerlink" title="4.使用步骤"></a>4.使用步骤</h1><ol>
+<li><p>构造声明基类<br> Base = sqlalchemy.ext.declarative.declarative_base()</p>
+</li>
+<li><p>声明对象关系映射类（继承Base）</p>
+</li>
+<li>创建与数据库的连接<br> engine = sqlalchemy.create_engine(数据库连接字符串)</li>
+<li>创建表（如果表存在，可以省略）<br> Base.metadata.create_all(engine)</li>
+<li>使用会话访问数据库<ol>
+<li>创建会话<br> Session = sqlalchemy.orm.sessionmaker(bind=engine)<br>  (或者先创建Session，后配置：Session.configure(bind=engine))<br> session = Session()</li>
+<li>会话方法 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">#添加</div><div class="line">session.add()</div><div class="line">session.add_all()</div><div class="line"></div><div class="line">#查询</div><div class="line">session.query()</div><div class="line">         filter_by()/filter()                #过滤</div><div class="line">         order_by()                    #排序</div><div class="line">         first()                #取第一条</div><div class="line">         all()                    #取所有</div><div class="line">         可切片（[1:3]）            #取切片</div><div class="line">        </div><div class="line">#删除</div><div class="line">session.delete()</div><div class="line"></div><div class="line">#提交事务</div><div class="line">session.commit()</div><div class="line">会话提交时，映射类各种改变都会提交</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<h1 id="5-定义实例"><a href="#5-定义实例" class="headerlink" title="5.定义实例"></a>5.定义实例</h1><ol>
+<li>主键的定义<br> primary_key = True</li>
+<li>主要列类型<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Column(用它来构造列对象)</div><div class="line">Integer</div><div class="line">Float</div><div class="line">String</div><div class="line">Text</div><div class="line">Sequence</div><div class="line">Date</div><div class="line">DateTime</div><div class="line">Boolean</div><div class="line">Binary</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="6-基本操作（使用步骤的代码实现）"><a href="#6-基本操作（使用步骤的代码实现）" class="headerlink" title="6.基本操作（使用步骤的代码实现）"></a>6.基本操作（使用步骤的代码实现）</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/python</div><div class="line"> </div><div class="line">from sqlalchemy import create_engine,String,Integer,Column</div><div class="line">from sqlalchemy.ext.declarative import declarative_base</div><div class="line">from sqlalchemy.orm import sessionmaker</div><div class="line"> </div><div class="line">#&apos;数据库类型+数据库驱动名称://用户名:口令@机器地址:端口号/数据库名&apos;</div><div class="line">db_name = &apos;mysql+mysqldb://root:oldboy123@192.168.0.11/testdb&apos;     </div><div class="line"># 创建对象的基类:           </div><div class="line">Base = declarative_base()                                    </div><div class="line"> </div><div class="line">class User(Base):                                #继承基类：相当于定义映射关系（实体对象和数据库字段的映射关系）</div><div class="line">        # 表的名字:</div><div class="line">        __tablename__ = &apos;user&apos;           </div><div class="line">                     </div><div class="line">        # 表的结构:</div><div class="line">        id = Column(Integer,primary_key=True)</div><div class="line">        name = Column(String(50))</div><div class="line"></div><div class="line"></div><div class="line"># 初始化数据库连接:</div><div class="line">engine = create_engine(db_name)</div><div class="line"></div><div class="line">#有这条语句，如果表不存在，那么就创建表（如上面的user表）</div><div class="line">Base.metadata.create_all(engine)</div><div class="line"> </div><div class="line">#创建session</div><div class="line">Session = sessionmaker(bind=engine)</div><div class="line">session = Session()</div><div class="line"> </div><div class="line"> </div><div class="line">#add</div><div class="line">&apos;&apos;&apos;</div><div class="line">u = User()</div><div class="line">u.id=1</div><div class="line">u.name = &apos;Lily&apos;</div><div class="line">session.add(u)</div><div class="line"> </div><div class="line">u2 = User(id=2,name=&apos;Bob&apos;)</div><div class="line">session.add(u2)</div><div class="line"> </div><div class="line">session.commit()</div><div class="line">&apos;&apos;&apos;</div><div class="line"> </div><div class="line">#查询并过滤</div><div class="line">u3 = session.query(User).filter_by(id=2).first()</div><div class="line">#u3 = session.query(User).filter(User.id=2).first()</div><div class="line"> </div><div class="line">print(&quot;u3:id=&#123;0&#125;,name=&#123;1&#125;&quot;.format(str(u3.id),u3.name))</div><div class="line"></div><div class="line">#查询并排序</div><div class="line">#session.query(User).order_by(&apos;id&apos;).all()</div><div class="line"></div><div class="line">#查询并删除 </div><div class="line">#session.query(User).filter_by(id=3).delete()</div><div class="line"> </div><div class="line">#delete</div><div class="line">session.delete(u3)</div><div class="line">session.commit()</div><div class="line"># 关闭Session:</div><div class="line">session.close()</div></pre></td></tr></table></figure>
+<h1 id="7-一对多映射关系"><a href="#7-一对多映射关系" class="headerlink" title="7.一对多映射关系"></a>7.一对多映射关系</h1><p>user中的addresses是包含若干个Address对象的list</p>
+<h1 id="8-多对多映射关系"><a href="#8-多对多映射关系" class="headerlink" title="8.多对多映射关系"></a>8.多对多映射关系</h1><h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><p>关于：联系人和分组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div></pre></td><td class="code"><pre><div class="line">from sqlalchemy import create_engine,String,Integer,Column,ForeignKey,Table,Text,Sequence</div><div class="line">from sqlalchemy.ext.declarative import declarative_base</div><div class="line">from sqlalchemy.orm import sessionmaker,relationship</div><div class="line"> </div><div class="line">db_name = &apos;mysql+mysqlconnector://root:123456@localhost:3306/test&apos;</div><div class="line"> </div><div class="line">Base = declarative_base()</div><div class="line"> </div><div class="line">con_gro = Table(&apos;asso&apos;,Base.metadata,</div><div class="line">                Column(&apos;con_id&apos;,Integer,ForeignKey(&apos;contact.id&apos;)),</div><div class="line">                Column(&apos;gro_id&apos;,Integer,ForeignKey(&apos;mygroup.id&apos;)))</div><div class="line"> </div><div class="line">class Contact(Base):</div><div class="line">    __tablename__ = &apos;contact&apos;</div><div class="line">    id =  Column(Integer,Sequence(&apos;contact_id&apos;),primary_key=True)</div><div class="line">    name = Column(String(20))</div><div class="line">    home_tel = Column(String(20))</div><div class="line">    office_tel = Column(String(20))</div><div class="line">    mobile_phone = Column(String(20))</div><div class="line">    memo = Column(Text)</div><div class="line">    groups = relationship(&quot;Group&quot;,secondary=con_gro,backref=&quot;contacts&quot;)</div><div class="line"> </div><div class="line">class Group(Base):</div><div class="line">    __tablename__ = &apos;mygroup&apos;</div><div class="line">    id =  Column(Integer,Sequence(&apos;mygroup_id&apos;),primary_key=True)</div><div class="line">    name = Column(String(20))</div><div class="line">    memo = Column(Text)</div><div class="line"> </div><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line"> </div><div class="line">    cts = [</div><div class="line">        &#123;&apos;name&apos;:&apos;Lily&apos;,&apos;home_tel&apos;:&apos;0551-98789233&apos;,&apos;memo&apos;:&quot;安徽&quot;&#125;,</div><div class="line">        &#123;&apos;name&apos;:&apos;Bob&apos;,&apos;office_tel&apos;:&apos;021-94679233&apos;,&apos;memo&apos;:&quot;上海&quot;&#125;,</div><div class="line">        &#123;&apos;name&apos;:&apos;Mike&apos;,&apos;mobile_phone&apos;:&apos;18298781089&apos;&#125;,</div><div class="line">        &#123;&apos;name&apos;:&apos;John&apos;,&apos;home_tel&apos;:&apos;010-57989043&apos;,&apos;memo&apos;:&quot;北京&quot;&#125;,</div><div class="line">        &#123;&apos;name&apos;:&apos;Green&apos;,&apos;mobile_phone&apos;:&apos;13908707652&apos;,&#125;,</div><div class="line">        &#123;&apos;name&apos;:&apos;Tom&apos;,&apos;mobile_phone&apos;:&apos;13109008759&apos;&#125;,</div><div class="line">    ]</div><div class="line"> </div><div class="line">    gps = [</div><div class="line">        &#123;&quot;name&quot;:&apos;朋友&apos;&#125;,</div><div class="line">        &#123;&apos;name&apos;:&apos;家人&apos;&#125;,</div><div class="line">        &#123;&apos;name&apos;:&quot;学生&quot;&#125;,</div><div class="line">    ]</div><div class="line"> </div><div class="line"> </div><div class="line">    engine = create_engine(db_name)</div><div class="line">    Session = sessionmaker(bind=engine)</div><div class="line">    session = Session()</div><div class="line"> </div><div class="line">    print(&apos;初始化数据库……&apos;)</div><div class="line">    Base.metadata.drop_all(engine)</div><div class="line">    Base.metadata.create_all(engine)</div><div class="line"> </div><div class="line">    print(&apos;插入数据……&apos;)</div><div class="line">    for ct in cts:</div><div class="line">        session.add(Contact(**ct))</div><div class="line">    for gp in gps:</div><div class="line">        session.add(Group(**gp))</div><div class="line"> </div><div class="line">    session.commit()</div><div class="line"> </div><div class="line">    print(&apos;从数据库中查询到的数据……&apos;)</div><div class="line">    for c in session.query(Contact).all():</div><div class="line">        print(c.id,c.name,c.home_tel,</div><div class="line">            c.office_tel,c.mobile_phone,c.memo)</div><div class="line">    for g in session.query(Group).all():</div><div class="line">        print(g.id,g.name,g.memo)</div><div class="line"> </div><div class="line">    print(&apos;查询联系人，并添加到组2……&apos;)</div><div class="line">    ct = session.query(Contact).filter_by(name=&quot;Tom&quot;).first()</div><div class="line">    print(ct.id,ct.name)</div><div class="line">    gp = session.query(Group).filter_by(id=2).first()</div><div class="line">    gp.contacts.append(ct)</div><div class="line"> </div><div class="line">    ct = session.query(Contact).filter_by(id=1).first()</div><div class="line">    print(ct.id,ct.name)</div><div class="line">    gpo = session.query(Group).filter_by(id=1).first()</div><div class="line">    gpo.contacts.append(ct)</div><div class="line"> </div><div class="line">    ct = session.query(Contact).filter_by(id=3).first()</div><div class="line">    print(ct.id,ct.name)</div><div class="line">    gp.contacts.append(ct)</div><div class="line"> </div><div class="line">    ct = session.query(Contact).filter_by(id=5).first()</div><div class="line">    print(ct.id,ct.name)</div><div class="line">    gp.contacts.append(ct)</div><div class="line"> </div><div class="line">    session.commit()</div><div class="line"> </div><div class="line">    print(&quot;查询指定组的成员：&quot;)</div><div class="line">    gp = session.query(Group).filter_by(name=&quot;家人&quot;).first()</div><div class="line">    print(gp.id,gp.name)</div><div class="line">    for c in gp.contacts:</div><div class="line">        print(c.id,c.name)</div><div class="line"> </div><div class="line">    print(&quot;删除组成员：&quot;)</div><div class="line">    gp.contacts.remove(c)</div><div class="line">    session.commit()</div><div class="line">    for c in gp.contacts:</div><div class="line">        print(c.id,c.name)</div><div class="line"> </div><div class="line">    print(&quot;删除联系人：&quot;)</div><div class="line">    c = session.query(Contact).filter_by(id=5).first()</div><div class="line">    session.delete(c)</div><div class="line"> </div><div class="line">    print(&quot;删除组：&quot;)</div><div class="line">    g = session.query(Group).filter_by(id=2).first()</div><div class="line">    session.delete(g)</div><div class="line"> </div><div class="line">    session.commit()</div><div class="line"> </div><div class="line">    for c in session.query(Contact).all():</div><div class="line">        print(c.id,c.name,c.home_tel,</div><div class="line">            c.office_tel,c.mobile_phone,c.memo)</div><div class="line">    for g in session.query(Group).all():</div><div class="line">        print(g.id,g.name,g.memo)</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/python/python数据库之python DB API 2.0简绍/" rel="next" title="python数据库之python DB API 2.0简绍">
+                <i class="fa fa-chevron-left"></i> python数据库之python DB API 2.0简绍
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/python数据库之MySQLdb访问mysql数据库/" rel="prev" title="python数据库之MySQLdb访问mysql数据库">
+                python数据库之MySQLdb访问mysql数据库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-ORM简介"><span class="nav-number">1.</span> <span class="nav-text">1.ORM简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-ORM特性"><span class="nav-number">2.</span> <span class="nav-text">2. ORM特性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-SQLAlchemy"><span class="nav-number">3.</span> <span class="nav-text">3.SQLAlchemy</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-使用步骤"><span class="nav-number">4.</span> <span class="nav-text">4.使用步骤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-定义实例"><span class="nav-number">5.</span> <span class="nav-text">5.定义实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-基本操作（使用步骤的代码实现）"><span class="nav-number">6.</span> <span class="nav-text">6.基本操作（使用步骤的代码实现）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-一对多映射关系"><span class="nav-number">7.</span> <span class="nav-text">7.一对多映射关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-多对多映射关系"><span class="nav-number">8.</span> <span class="nav-text">8.多对多映射关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#练习"><span class="nav-number">9.</span> <span class="nav-text">练习</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

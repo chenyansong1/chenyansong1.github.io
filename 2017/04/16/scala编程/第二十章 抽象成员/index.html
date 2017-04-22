@@ -1,0 +1,744 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.抽象成员的快速浏览123456789101112131415161718192021222324/*我们称不完全定义的类或特质的成员为抽象成员,抽象成员将被声明类的子类实现*//*下面的特质对每种抽象成员各声明了一个例子,他们分别是:类型(T), 方法(transform), val(initial) , 以及var(current):*/trait Abstrant &amp;#123;  type">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第二十章 抽象成员">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/第二十章 抽象成员/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.抽象成员的快速浏览123456789101112131415161718192021222324/*我们称不完全定义的类或特质的成员为抽象成员,抽象成员将被声明类的子类实现*//*下面的特质对每种抽象成员各声明了一个例子,他们分别是:类型(T), 方法(transform), val(initial) , 以及var(current):*/trait Abstrant &amp;#123;  type">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.025Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第二十章 抽象成员">
+<meta name="twitter:description" content="1.抽象成员的快速浏览123456789101112131415161718192021222324/*我们称不完全定义的类或特质的成员为抽象成员,抽象成员将被声明类的子类实现*//*下面的特质对每种抽象成员各声明了一个例子,他们分别是:类型(T), 方法(transform), val(initial) , 以及var(current):*/trait Abstrant &amp;#123;  type">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/第二十章 抽象成员/"/>
+
+
+
+
+
+  <title> 第二十章 抽象成员 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第二十章 抽象成员/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第二十章 抽象成员
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-抽象成员的快速浏览"><a href="#1-抽象成员的快速浏览" class="headerlink" title="1.抽象成员的快速浏览"></a>1.抽象成员的快速浏览</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">我们称不完全定义的类或特质的成员为抽象成员,抽象成员将被声明类的子类实现</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">下面的特质对每种抽象成员各声明了一个例子,他们分别是:类型(T), 方法(transform), val(initial) , 以及var(current):</div><div class="line">*/</div><div class="line">trait Abstrant &#123;</div><div class="line">  type T</div><div class="line">  def transform(x: T): T</div><div class="line">  val initial: T</div><div class="line">  val current: T</div><div class="line">&#125;</div><div class="line"></div><div class="line">//Abstract的具体实现需要对每种抽象成员填入定义,下面的例子是提供这些定义的实现</div><div class="line">class Concrete extends Abstrant&#123;</div><div class="line">  type T = String</div><div class="line">  override def transform(x: String) = x + x</div><div class="line">  val initial= &quot;hi&quot;</div><div class="line">  override var current = initial</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">这个实现为类型T提供了具体的含义,他被定义为类型String的别名,transform被定义为参数字符串与其自身连接的操作,而initial和current值都被设置为&quot;hi&quot;</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="2-类型成员"><a href="#2-类型成员" class="headerlink" title="2.类型成员"></a>2.类型成员</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">抽象类型这个术语在scala中是指不带具体定义的,由&quot;type&quot;关键字声明为类或特质的成员的类型,类本身可以是抽象的,而特质本来就是抽象的,但不论哪种都不是scala中所指的抽象类型,scala的抽象乐行永远都是某个类或者特质的成员,就好像特质Abstract里的类型T那样</div><div class="line"></div><div class="line"></div><div class="line">你可以把非抽象的类型成员,如Concrete类里的类型T,想象成是类型定义新的名称,或别名的方式,例如Concrete类中,类型String被指定了别名T,因此,任何出现在Concrete定义中的T指的都是String,这也包含了transform的参数和结果类型initial,以及current,这些在Abstract超特质中声明的时候提到的T的成员,因此当Concrete类实现这些抽象成员的时候,所有的T都被解释为String</div><div class="line"></div><div class="line"></div><div class="line">使用类型成员的理由之一是为类型定义短小的,具有说明性的别名,因为类型的实际名称可能比别名更冗长,或语义不清,这种类型成员有助于净化类或特质的代码,类型成员的另一种主要用途是声明必须被定义为子类的抽象类型</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="3-抽象val"><a href="#3-抽象val" class="headerlink" title="3.抽象val"></a>3.抽象val</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">//抽象val以如下形式定义</div><div class="line">val initial: String </div><div class="line"></div><div class="line">//他指明了val的名称和类型,但不指定值,该值必须由子类的具体val定义提供,例如:Concrete类以如下方式实现了val:</div><div class="line">val initial    = &quot;hi&quot;</div><div class="line"></div><div class="line">//抽象的val声明类似于抽象的无参数方法声明,如:</div><div class="line">def    initial: String</div><div class="line">/*</div><div class="line">如果initial是抽象val,那么客户就获得了保证,每次引用都将得到同样的值,如果initial是抽象方法,就不会获得这样的保证,因为在这种情况下initial可以实现为每次调用时都返回不同值的具体方法</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">abstract class Fruit&#123;</div><div class="line">  val v: String //&apos;v&apos;代表value(值)</div><div class="line">  def m: String //&apos;m&apos;代表method方法</div><div class="line">&#125;</div><div class="line">abstract class Apple extends Fruit&#123;</div><div class="line">  val v: String</div><div class="line">  val m: String //可以用&quot;val&quot; 重写def</div><div class="line">&#125;</div><div class="line">abstract class BadApple extends Fruit&#123;</div><div class="line">  def v: String //error , 不能用&quot;def&quot;重写val</div><div class="line">  def m: String</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">换句话说,抽象的val限制了合法的实现方式,任何实现都必须是val类型的定义,不可以是var或def,另一方面,抽象方法声明可以被实现为具体的方法定义或具体的val定义,</div><div class="line">*/</div></pre></td></tr></table></figure>
+<h1 id="4-抽象var"><a href="#4-抽象var" class="headerlink" title="4.抽象var"></a>4.抽象var</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//与抽象val类似,抽象var只声明名称和类型,没有初始值,如下:</div><div class="line">trait AbstractTime&#123;</div><div class="line">  var hour: Int</div><div class="line">  var minute: Int</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">类似于hour和minute这样的抽象var表达的是什么意思呢?在18.2节看到声明为类成员的var实际配备了getter和setter方法,对于抽象var来说也是如此,比如如果你声明了名为hour的抽象var,实际上是隐式声明了抽象getter方法,hour及抽象setter方法(hour_=) </div><div class="line">*/</div><div class="line">trait AbstractTime&#123;</div><div class="line">  def hour: Int //&apos;hour&apos; 的getter方法</div><div class="line">  def hour_=(x:Int) //&quot;hour&quot; 的setter方法</div><div class="line">  def minute: Int //&quot;minute&quot;的getter方法</div><div class="line">  def minute_=(x:Int) //&apos;minute&apos;的setter方法</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="5-初始化抽象val"><a href="#5-初始化抽象val" class="headerlink" title="5.初始化抽象val"></a>5.初始化抽象val</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">抽象val有时会扮演类似于超类的参数这样的角色:他们能够让你在子类中提供超类缺少的细节信息,这对于特质来说尤其重要,因为特质缺少能够用来传递参数的构造器,因此通常参数化特质的方式就是通过需要在子类中实现的抽闲val完成</div><div class="line">*/</div><div class="line">trait RationalTrait &#123;</div><div class="line">  val numerArg: Int</div><div class="line">  val denomArg: Int</div><div class="line">&#125;</div><div class="line"></div><div class="line">//实现</div><div class="line">new RationalTrait &#123;</div><div class="line">  override val denomArg: Int = 1</div><div class="line">  override val numerArg: Int = 1</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">这里关键字new出现在特质名称(RationalTrait)之前,然后是花括号包围的类结构体,这个表达式可以产生混入了特质并被结构体定义的匿名类实例,这种特使的匿名类实例化结果与使用new Rational(1,2)的方式创建的实例具有类似的效果,不过这种类比并非完美,两者在表达式的初始化顺序方面存在着微妙的差别</div><div class="line">*/ </div><div class="line">//当你写下:</div><div class="line">new Rational(expr1, expr2)</div><div class="line"></div><div class="line">//两个表达式,expr1和expr2会在类Rational初始化之前计算,因此在执行类的初始化操作是expr1和expr2的值已经可用,然而对于特质来说,情况正好相反,当你写下:</div><div class="line">new RationalTrait&#123;</div><div class="line">    val numerArg = expr1</div><div class="line">    val denomArg = expr2</div><div class="line">&#125;</div><div class="line">//表达式expr1和expr2被作为匿名初始化的一部分计算,但匿名类的初始化在RationalTrait之后,因此numerArg和denomArg的值在RationalTrait初始化期间还没有主备好(更为精确的说,选用任何值都将得到Int类型的默认值,0),对于之前的RationalTrait定义来说,这不是问题,因为特质的初始化没有用到numerArg和denomArg的值,但是对于下面的代码来说就成为一个问题,因为其中定义了经过约分的分子和分母</div><div class="line">trait RationalTrait&#123;</div><div class="line">  val numerArg: Int</div><div class="line">  val denomArg: Int</div><div class="line">  require(denomArg != 0)</div><div class="line"></div><div class="line">  private val g = gcd(numerArg, denomArg)</div><div class="line"></div><div class="line">  val number = numerArg / g</div><div class="line">  val denom = denomArg / g</div><div class="line"></div><div class="line">  private def gcd(a:Int, b:Int): Int =</div><div class="line">    if (b == 0) a else gcd(b, a%b)</div><div class="line"></div><div class="line">  override def toString = number + &quot;/&quot; + denom</div><div class="line">&#125;</div><div class="line"></div><div class="line">//测试</div><div class="line"></div><div class="line">scala&gt; new RationalTrait&#123;</div><div class="line">     | val numerArg = 1*x</div><div class="line">     | val denomArg = 2*x</div><div class="line">     | &#125;</div><div class="line">java.lang.IllegalArgumentException: requirement failed</div><div class="line">        at scala.Predef$.require(Predef.scala:221)</div><div class="line">        at RationalTrait$class.$init$(&lt;console&gt;:10)</div><div class="line">        at $anon$1.&lt;init&gt;(&lt;console&gt;:10)</div><div class="line">        at .&lt;init&gt;(&lt;console&gt;:10)</div><div class="line">        at .&lt;clinit&gt;(&lt;console&gt;)</div><div class="line">        at .&lt;init&gt;(&lt;console&gt;:7)</div><div class="line"></div><div class="line">/*</div><div class="line">出错的原因是:当类RationalTrait初始化的时候,denomArg仍然为他的默认值0,使得require调用失败</div><div class="line">上述例子演示了类参数和抽象字段的初始化顺序并不一致,类参数在被传递给构造器之前计算(除非参数是传名的),相反子类对于val定义的实现,是在超类完成了初始化之后执行的</div><div class="line">*/</div></pre></td></tr></table></figure>
+<blockquote>
+<p>fields预初始化字段<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">第一种解决方案,预初始化字段,可以让你在调用超类之前初始化子类的字段,操作的方式是把字段加上花括号,放在超类构造器调用之前,</div><div class="line">*/</div><div class="line">new &#123;</div><div class="line">  val numerArg = 1*x</div><div class="line">  val denomArg = 2*x</div><div class="line">&#125; with RationalTrait</div><div class="line"></div><div class="line"></div><div class="line">//预初始化字段不仅限于匿名类,他们还可以被用于对象或有名称的子类</div><div class="line"></div><div class="line">//预初始化段落在每个例子中都被定义的对象或类的extends关键字之后</div><div class="line">object twoThirds extends &#123;</div><div class="line">  val numerArg = 2</div><div class="line">  val denomArg = 3</div><div class="line">&#125; with RationalTrait</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">由于预初始化的字段在超类构造器调用之前被初始化,因此他们的初始化器不能引用正被构造的对象,相应的结果是,如果有引用this的这种初始化器,那么实际指向的是包含了正被构造的类或对象的对象,而不是被构造对象本身</div><div class="line">*/</div><div class="line">scala&gt; new &#123;</div><div class="line">     | val numerArg = 1</div><div class="line">     | val denomArg = this.numerArg*2</div><div class="line">     | &#125; with RationalTrait</div><div class="line">&lt;console&gt;:11: error: value numerArg is not a member of object $iw</div><div class="line">              val denomArg = this.numerArg*2</div><div class="line">                                  ^</div><div class="line">/*</div><div class="line">上述例子编译通过的原因在于this.numerArg引用是在包含new的对象中numerArg字段(这个例子中是指名为$iw的合成对象,解释器会把用户输出的语句放在这个对象中)</div><div class="line">*/</div><div class="line"></div><div class="line">//示例了如何在超特质的初始化过程中使用类参数的通用模式</div><div class="line">class RationalClass(n: Int, d:Int) extends &#123;</div><div class="line">  val numerArg = n</div><div class="line">  val denomArg = d</div><div class="line">&#125;with RationalTrait&#123;</div><div class="line">  def + (that: RationalClass) = new RationalClass(</div><div class="line">    number * that.denom + that.number*denom, denom * that.denom</div><div class="line">  )</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>懒加载val<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">如果你把lazy修饰符前缀val定义上,那么右侧的初始化表达式直到val第一次被使用的时候才计算</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; object Demo&#123;</div><div class="line">     | val x = &#123;println(&quot;initializing x&quot;); &quot;done&quot;&#125;</div><div class="line">     | &#125;</div><div class="line">defined module Demo</div><div class="line"></div><div class="line">scala&gt; Demo</div><div class="line">initializing x</div><div class="line">res6: Demo.type = Demo$@3d0035d2</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; Demo.x</div><div class="line">res7: String = done</div><div class="line">/*</div><div class="line">发现,用到Demo的时候,他的x字段就完成了初始化,x的初始化成为了Demo初始化的一部分</div><div class="line">*/</div><div class="line"></div><div class="line">//将x字段定义为lazy</div><div class="line"></div><div class="line">scala&gt; object Demo&#123;</div><div class="line">     | lazy val x = &#123;println(&quot;initialing x&quot;); &quot;done&quot;&#125;</div><div class="line">     | &#125;</div><div class="line">defined module Demo</div><div class="line"></div><div class="line">scala&gt; Demo</div><div class="line">res8: Demo.type = Demo$@3c78e551</div><div class="line"></div><div class="line">scala&gt; Demo.x</div><div class="line">initialing x</div><div class="line">res9: String = done</div><div class="line"></div><div class="line">scala&gt; Demo.x</div><div class="line">res10: String = done</div><div class="line"></div><div class="line">/*</div><div class="line">初始化Demo不会执行初始化x的调用,x的初始化将延迟到第一次使用x的时候</div><div class="line">第一次计算懒加载val的时候结果就被保存了下来,以备同样的val后续使用</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">trait RationalTrait&#123;</div><div class="line">  val numerArg: Int</div><div class="line">  val denomArg: Int</div><div class="line"></div><div class="line">  private lazy val g = &#123;</div><div class="line">    require(denomArg != 0)</div><div class="line">    gcd(numerArg, denomArg)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  lazy val numer = numerArg / g</div><div class="line">  lazy val denom = denomArg / g</div><div class="line"></div><div class="line">  override def toString = numer + &quot;/&quot; + denom</div><div class="line"></div><div class="line">  private def gcd(a:Int, b:Int): Int =</div><div class="line">    if (b == 0) a else gcd(b, a%b)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//测试</div><div class="line">scala&gt; val x = 2</div><div class="line">x: Int = 2</div><div class="line"></div><div class="line">scala&gt; new RationalTrait&#123;</div><div class="line">     | val numerArg = 1*x</div><div class="line">     | val denomArg = 2*x</div><div class="line">     | &#125;</div><div class="line">res13: RationalTrait = 1/2</div><div class="line"></div><div class="line">//执行过程</div><div class="line">/*</div><div class="line">1.首先,RationalTrait的新实例被创建出来,特质的初始化代码被运行,该初始化代码为空,没有任何字段被初始化</div><div class="line">2.之后,有new表达式定义的匿名子类的主构造器被执行,他把numerArg初始化为2,把denomArg初始化为4</div><div class="line">3.之后,解释器调用了构造器对象的toString方法,结果值被打印出来</div><div class="line">4.之后,numer字段被特质RationalTrait的toString方法首次访问,因此它的初始化器执行计算</div><div class="line">5.numer的初始化器访问了私有字段g,因此g接下来被初始化计算,这次计算访问了numerArg和denomArg,他们定义在第二步</div><div class="line">6.之后,toString方法访问了denom值,引发denom的计算,这次访问计算了denomArg和g的值,g字段的初始化器不再重新计算,因为他已经在第五步执行过</div><div class="line">7.最终,结果字符串&quot;1/2&quot;被构造出来并被打印</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">请注意,在RationalTrait类中,g的定义在代码文本中处于numer和denom定义之后,尽管如此,因为所有的三个值都是懒加载的,所以g将在numer和denom完成初始化之前被初始化,这说明了懒加载val的一个很重要的属性,定义的文本顺序不用多加考虑,因为初始化是按需的,从而,懒加载val可以免去你作为程序员不得不认真考虑的问题,及如何安排val定义顺序,以确保所有东西在需要的时候已经完成定义</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h1 id="6-抽象类型"><a href="#6-抽象类型" class="headerlink" title="6.抽象类型"></a>6.抽象类型</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">与所有其他抽象声明一样,抽象类型声明也是将在子类中具体定义的事务的占位符,这里,他是将在之后的类层次中定义的类型,因此上文的T是对在声明点尚不可知的类型的引用,不同的子类可以提供不同的T实现</div><div class="line">*/</div><div class="line"></div><div class="line">//假设给了你一个为动物饮食习惯建模的任务,你或许会以Food类和带有eat方法的Animal类开始工作</div><div class="line">class Food</div><div class="line">abstract class Animal &#123;</div><div class="line">  def eat(food: Food)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//然后你或许尝试把这两个类特化为Cow类吃Grass类(牛吃草)</div><div class="line">class Grass extends Food</div><div class="line">class Cow extends Animal&#123;</div><div class="line">  override def eat(food: Grass) = &#123;&#125;//不能编译</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">这里的情况是Cow类的eat方法不能重写Animal类的eat方法,因为参数类型不同---Cow类里是Grass, 而Animal类里是Food</div><div class="line">*/</div><div class="line"></div><div class="line">//为什么要做这样的限制?</div><div class="line">class Food</div><div class="line">abstract class Animal &#123;</div><div class="line">  def eat(food: Food)</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Grass extends Food</div><div class="line">class Cow extends Animal&#123;</div><div class="line">  override def eat(food: Grass) = &#123;&#125;//不能编译,不过如果能够编译通过的话,...</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Fish extends Food</div><div class="line">val bessy: Animal = new Cow</div><div class="line">bessy eat (new Fish)  //.....你将能用鱼喂牛</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">你应该做的是采用更为精确的建模方式,Animal的确吃Food,但Animal具体吃什么类型的Food取决于Animal,这可以使用抽象类型干净的表示出来</div><div class="line">*/</div><div class="line">class Food</div><div class="line">abstract class Animal&#123;</div><div class="line">  type SuitableFood &lt;: Food</div><div class="line">  def eat(food: SuitableFood)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">有了新的定义,Animal就可以只吃适合的食物了,不过到底什么食物合适,这并不在Animal类的层面决定,这也就是SuitableFood被建模为抽象类型的原因,具体具有上界约束:Food,表达为&quot; &lt;:Food &quot; 子句,说明任何(Animal子类中的)SuitableFood的具体实例化结果都必须是Food的子类</div><div class="line">*/</div><div class="line">class Grass extends Food</div><div class="line">class Cow extends Animal&#123;</div><div class="line">  type SuitableFood = Grass</div><div class="line">  def eat(food: Grass)&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="7-路径依赖类型"><a href="#7-路径依赖类型" class="headerlink" title="7.路径依赖类型"></a>7.路径依赖类型</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">通常情况下,不同的路径将产生不同的依赖</div><div class="line">*/</div><div class="line">class DogFood extends Food</div><div class="line">class Dog extends Animal&#123;</div><div class="line">  override type SuitableFood = DogFood</div><div class="line">  override def eat(food: DogFood) = &#123;&#125;</div><div class="line">&#125;</div><div class="line">//如果你尝试把牛的饲料用来喂狗,你的代码将无法通过编译</div><div class="line"></div><div class="line">scala&gt; val bessy = new Cow</div><div class="line">bessy: Cow = Cow@59edb4f5</div><div class="line"></div><div class="line">scala&gt; val lassie = new Dog</div><div class="line">lassie: Dog = Dog@7ea2412c</div><div class="line"></div><div class="line">scala&gt; lassie eat (new bessy.SuitableFood)</div><div class="line">&lt;console&gt;:16: error: type mismatch;</div><div class="line"> found   : Grass</div><div class="line"> required: DogFood</div><div class="line">              lassie eat (new bessy.SuitableFood)</div><div class="line">                          ^</div><div class="line">/*</div><div class="line">问题在于传递给eat方法的SuitableFood对象的类型(bessy.SuitableFood), 不能匹配eat的参数类型,lassie.SuitableFood,然而如果同样是Dog的话,情况会不一样,因为Dog的SuitableFood类型被定义为DogFood类的别名,所以对于两条Dog来说,他们的SuitableFood类型实际上是一样的,</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; val bootsie = new Dog</div><div class="line">bootsie: Dog = Dog@11381415</div><div class="line"></div><div class="line">scala&gt; lassie eat (new bootsie.SuitableFood)</div><div class="line"></div><div class="line">scala&gt;</div><div class="line"></div><div class="line">/*</div><div class="line">路径依赖类型会让我们想起java中的内部类语法,但两者有决定性的差别:路径依赖类型表达了外在的对象,而内部类表达了外在的类</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">class Outer&#123;</div><div class="line">  class Inner</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">scala中,内部类的表达形式为Outer#Inner, 而不是java的Outer.Inner ,&quot;.&quot; 语法保留给对象使用,例如,假设你实例化了类型Outer的两个对象</div><div class="line">*/</div><div class="line">val o1 = new Outer</div><div class="line">val o2 = new Outer</div><div class="line">/*</div><div class="line">这里o1.Inner和o2.Inner是两个路径依赖类型,o1.Inner类型是指特定(o1引用的)外部对象的Inner类</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">//实例化内部类</div><div class="line">new o1.Inner   //因为o1.Inner是属于o1对象的内部类,所以new o1.Inner是new出来的对象</div><div class="line">//返回的内部对象将包含其外部对象的引用,即o1的对象引用,相反Outer#Inner没有指明任何特定Outer实例,因此你不能创建他的实例</div><div class="line">new Outer#Inner    //error</div></pre></td></tr></table></figure>
+<h1 id="8-枚举"><a href="#8-枚举" class="headerlink" title="8.枚举"></a>8.枚举</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">scala中如果想要创建新的枚举,只需要定义扩展scala.&apos;Enumeration这个类的对象即可</div><div class="line">*/</div><div class="line"></div><div class="line">object Color extends Enumeration&#123;</div><div class="line">  val Red = Value</div><div class="line">  val Green = Value</div><div class="line">  val Blue = Value</div><div class="line">&#125;</div><div class="line">//等价于</div><div class="line">object Color extends Enumeration&#123;</div><div class="line">  val Red, Green, Blue = Value</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">这个对象定义提供了三个值:Color.Red, Color.Green, Color.Blue,你可以引用Color的全部内容:</div><div class="line">*/</div><div class="line">import Color._</div><div class="line">//然后简单写成Red, Green, 和Blue ,但这些值的类型是什么?Enumeration定义了内部类,名为Value,以及同名的无参方法Value返回该类的新对象,也就是说诸如Color.Red类的值类型是Color.Value,而Color.Value也正是定义在对象Color中的所有枚举值的类型,他是路径依赖类型,其中Color是路径,Value是依赖类型,这里很重要的一点是他是全新的类型,与其他所有的类型都不一样</div><div class="line"></div><div class="line">object Direction extends Enumeration&#123;</div><div class="line">  val North, East, South, West = Value</div><div class="line">&#125;</div><div class="line">//Direction.Value与Color.Value不同,因为两种类型的路径部分不同</div><div class="line"></div><div class="line"></div><div class="line">//scala的Enumeration类还提供了其他语言的枚举设计中所拥有的许多其他特质,你可以通过使用Value方法不同的重载变体把名称与枚举值联系起来</div><div class="line">object Direction extends Enumeration&#123;</div><div class="line">  val North = Value(&quot;North&quot;)</div><div class="line">  val East = Value(&quot;East&quot;)</div><div class="line">  val South = Value(&quot;South&quot;)</div><div class="line">  val West = Value(&quot;West&quot;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//遍历枚举的所有值</div><div class="line">for(d &lt;-Direction) print(d+&quot; &quot;)    //North East South West</div><div class="line"></div><div class="line">//枚举值从0开始计数,你可以用枚举值的id方法获得他的计数值</div><div class="line">scala&gt; Direction.East.id</div><div class="line">res20: Int = 1</div><div class="line"></div><div class="line">//也可以反过来,通过非零的整数获得id为该数的枚举值</div><div class="line">scala&gt; Direction(1)</div><div class="line">res19: Direction.Value = East</div></pre></td></tr></table></figure>
+<h1 id="9-案例研究-货币"><a href="#9-案例研究-货币" class="headerlink" title="9.案例研究:货币"></a>9.案例研究:货币</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div></pre></td><td class="code"><pre><div class="line">//本章的剩余部分提供了一个解释scala中如何使用抽象类型的案例研究,任务是设计Currency类,典型的Currency实例可以代表美元,欧元,日元,或其他货币种类的一笔金额,而且还有可能需要一些关于货币方面的计算,比方说,相同货币的两笔金额应该能够相加,或金额应该能够乘上代表利率的因子</div><div class="line"></div><div class="line">abstract class Currency&#123;</div><div class="line">  val amount: Long    //金额大小</div><div class="line">  def designation: String    //标识货币的字符串</div><div class="line"></div><div class="line">  override def toString: String = amount + &quot; &quot; + designation</div><div class="line">  def +(that: Currency): Currency =     ...</div><div class="line">  def *(x:Double): Currency =   ...</div><div class="line">&#125;</div><div class="line"></div><div class="line">//产生的结果如下:</div><div class="line">79 USD</div><div class="line">11000 Yen</div><div class="line">99 Euro</div><div class="line"></div><div class="line">//抽象的实现</div><div class="line">new Currency &#123;</div><div class="line">  override val amount: Long = 79L</div><div class="line">  override def designation = &quot;USD&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//如果我们仅仅是对单一货币建模,那么这种设计不存在问题,可是一旦我们需要处理若干货币种类,这样做就不行了,假设你对美元和欧元建模为货币类的两个子类</div><div class="line">abstract class Dollar extends Currency&#123;</div><div class="line">  override def designation = &quot;USD&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">abstract class Euro extends Currency&#123;</div><div class="line">  override def designation = &quot;Euro&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">上面的做法看上去很有道理,但是在执行加法的时候将两种货币放在一起感觉古怪,你要的应该是+方法更具体化的版本,实现在Dollar类中的时候,他应该带Dollar参数并产生Dollar结果,实现在Euro类中的时候,应该带Euro参数并产生Euro结果,因此加法的类型应该依赖于所在类而改变,尽管如此,你还是希望方法只写一次即可,而不是每次定义新的货币都要重写</div><div class="line">*/</div><div class="line">//第二版</div><div class="line">abstract class AbstractCurrency&#123;</div><div class="line">  type Currncy &lt;:AbstractCurrency</div><div class="line">  val amount: Long</div><div class="line">  def designation: String</div><div class="line">  override def toString: String = amount + &quot; &quot; + designation</div><div class="line">  def +(that: Currency): Currency =   ...</div><div class="line">  def *(x: Double): Currency =   ...</div><div class="line">&#125;</div><div class="line"></div><div class="line">//第二版与前面的一版的却别在于:类现在成为AbstractCurrency,并且包含了抽象类型Currency,代表未知的真实货币种类,每种AbstractCurrency的具体子类将需要把Currency类型修改为这个类本身,从而能够把两者结合在一起</div><div class="line">//使用</div><div class="line">abstract class Dollar extends AbstractCurrency&#123;</div><div class="line">  override type Currncy = Dollar</div><div class="line">  override def designation = &quot;USD&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">这个设计仍不完美,问题之一是隐藏在AbstractCurrency类省略号中的方法定义+和* 如何具体化? 像下面这样吗?</div><div class="line">*/</div><div class="line">def +(that: Currency): Currency = new Currency &#123;</div><div class="line">  val amount = this.amount + that.amount</div><div class="line">&#125;</div><div class="line">//编译不通过,因为scala对待抽象类型的一种限制是你既不能创建抽象类型的实例,也不能把抽象类型当做其他类的超类型,因此编译器将拒绝上面例子的代码实例化Currency的尝试</div><div class="line">//解决的方法是通过工厂方法</div><div class="line">abstract  class CurrencyZone&#123;</div><div class="line">  type Currency &lt;: AbstractCurrency</div><div class="line">  def make(x: Long): Currency</div><div class="line">  abstract class AbstractCurrency&#123;</div><div class="line">    val amount: Long</div><div class="line">    def designation: String</div><div class="line">    override def toString: String = amount + &quot; &quot; + designation</div><div class="line">    def +(that: Currency): Currency = new Currency &#123;</div><div class="line">      make((this.amount + that.amount))</div><div class="line">    &#125;</div><div class="line">    def *(x: Double): Currency =</div><div class="line">      make((this.amount*x).toLong)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//实现</div><div class="line">object US extends Currency&#123;</div><div class="line">  abstract class Dollar extends AbstractCurrency&#123;</div><div class="line">    def designation = &quot;USD&quot;</div><div class="line">  &#125;</div><div class="line">  type Currency = Dollar</div><div class="line">  def make(x:Long) = new Dollar &#123;val amount = x&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">上面的情况是:每种货币都仅用一个测量单位:美元,欧元,或日元,然而大多数货币都有子单位,例如:在美国有美元和美分,下面将引入CurrencyUnit字段,以包含货币一个标准单位的金额</div><div class="line">*/</div><div class="line">//实现2</div><div class="line">object US extends Currency&#123;</div><div class="line">  abstract class Dollar extends AbstractCurrency&#123;</div><div class="line">    def designation = &quot;USD&quot;</div><div class="line">  &#125;</div><div class="line">  type Currency = Dollar</div><div class="line">  def make(cents:Long) = new Dollar &#123;val amount = cents&#125;</div><div class="line">  val Cent = make(1)  //美分</div><div class="line">  val Dollar = make(100)  //美元</div><div class="line">  val CurrencyUnit = Dollar</div><div class="line">&#125;</div><div class="line"></div><div class="line">//改进toString方法,例如:10美元与23美分的总和应该打印成小数:10.23USD</div><div class="line">override def toString: String = ((amount.toDouble/CurrencyUnit.amount.toDouble) formatted (</div><div class="line">  &quot;%.&quot;+decimals(CurrencyUnit.amount) + &quot;f&quot;))</div><div class="line"></div><div class="line">private def decimals(n: Long): Int =</div><div class="line">  if (n == 1) 0 else 1+decimals(n/10)</div><div class="line"></div><div class="line"></div><div class="line">//改进:添加货币特征转换,首先,你可以编写Converter对象,以包含适用的货币汇率</div><div class="line">object Converter&#123;</div><div class="line">  var exchangeRate = Map&#123;</div><div class="line">    &quot;USD&quot; -&gt; Map(&quot;USD&quot;-&gt;1.0, &quot;EUR&quot;-&gt;0.7596, &quot;JPY&quot;-&gt;1.211, &quot;CHF&quot;-&gt;1.223)</div><div class="line">    &quot;EUR&quot;-&gt; Map(&quot;USD&quot;-&gt;1.316, &quot;EUR&quot;-&gt;1.0, &quot;JPY&quot;-&gt;1.594, &quot;CHF&quot;-&gt;1.623)</div><div class="line">    &quot;JPY&quot;-&gt; Map(&quot;USD&quot;-&gt;0.8257, &quot;EUR&quot;-&gt;0.6272, &quot;JPY&quot;-&gt;1.0, &quot;CHF&quot;-&gt;1.018)</div><div class="line">    &quot;CHF&quot;-&gt; Map(&quot;USD&quot;-&gt;0.8108, &quot;EUR&quot;-&gt;0.6160, &quot;JPY&quot;-&gt;0.982, &quot;CHF&quot;-&gt;1.0)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">def from(other: CurrencyZone#AbstractCurrency): Currency =</div><div class="line">  make(Math.round(</div><div class="line">    other.amount.toDouble * Converter.exchangeRate(other.designation)(this.designation)</div><div class="line">  ))</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">//总代码</div><div class="line"></div><div class="line">abstract  class CurrencyZone&#123;</div><div class="line">  type Currency &lt;: AbstractCurrency</div><div class="line">  def make(x: Long): Currency</div><div class="line">  abstract class AbstractCurrency&#123;</div><div class="line">    val amount: Long</div><div class="line">    def designation: String</div><div class="line">    override def toString: String = amount + &quot; &quot; + designation</div><div class="line">    def +(that: Currency): Currency = new Currency &#123;</div><div class="line">      make((this.amount + that.amount))</div><div class="line">    &#125;</div><div class="line">    def *(x: Double): Currency =</div><div class="line">      make((this.amount*x).toLong)</div><div class="line">  &#125;</div><div class="line">  def from(other: CurrencyZone#AbstractCurrency): Currency =</div><div class="line">    make(Math.round(</div><div class="line">      other.amount.toDouble * Converter.exchangeRate(other.designation)(this.designation)</div><div class="line">    ))</div><div class="line">  private def decimals(n: Long): Int =</div><div class="line">    if (n == 1) 0 else 1+decimals(n/10)</div><div class="line"></div><div class="line">  override def toString: String = ((amount.toDouble/CurrencyUnit.amount.toDouble) formatted (</div><div class="line">    &quot;%.&quot;+decimals(CurrencyUnit.amount) + &quot;f&quot;</div><div class="line">    ))</div><div class="line">  val CurrencyUnit: Currency</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第五章 基本类型和操作/" rel="next" title="第五章 基本类型和操作">
+                <i class="fa fa-chevron-left"></i> 第五章 基本类型和操作
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第九章 控制抽象/" rel="prev" title="第九章 控制抽象">
+                第九章 控制抽象 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-抽象成员的快速浏览"><span class="nav-number">1.</span> <span class="nav-text">1.抽象成员的快速浏览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-类型成员"><span class="nav-number">2.</span> <span class="nav-text">2.类型成员</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-抽象val"><span class="nav-number">3.</span> <span class="nav-text">3.抽象val</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-抽象var"><span class="nav-number">4.</span> <span class="nav-text">4.抽象var</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-初始化抽象val"><span class="nav-number">5.</span> <span class="nav-text">5.初始化抽象val</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-抽象类型"><span class="nav-number">6.</span> <span class="nav-text">6.抽象类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-路径依赖类型"><span class="nav-number">7.</span> <span class="nav-text">7.路径依赖类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-枚举"><span class="nav-number">8.</span> <span class="nav-text">8.枚举</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-案例研究-货币"><span class="nav-number">9.</span> <span class="nav-text">9.案例研究:货币</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

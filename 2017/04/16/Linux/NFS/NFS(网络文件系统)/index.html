@@ -1,0 +1,825 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="NFS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.什么是NFS?&amp;emsp;NFS(Network File System) 网络文件系统，他的主要功能是通过网络（一般是局域网）让不同的主机系统之间可以共享文件或目录。NFS适用于中小型网站的数据共享，而大型的网站可能会用到更复杂的分布式文件系统，例如：Moosefs(mfs),glusterfs,FastDFS 2.应用场景&amp;emsp;NFS网络文件系统一般被用来存储共享视屏、图片、附件等静">
+<meta name="keywords" content="NFS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NFS(网络文件系统)">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/Linux/NFS/NFS(网络文件系统)/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.什么是NFS?&amp;emsp;NFS(Network File System) 网络文件系统，他的主要功能是通过网络（一般是局域网）让不同的主机系统之间可以共享文件或目录。NFS适用于中小型网站的数据共享，而大型的网站可能会用到更复杂的分布式文件系统，例如：Moosefs(mfs),glusterfs,FastDFS 2.应用场景&amp;emsp;NFS网络文件系统一般被用来存储共享视屏、图片、附件等静">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/5.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/6.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/7.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/8.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/9.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/10.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/11.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/12.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/13.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/14.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/15.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/16.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/17.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/18.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/19.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/20.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/21.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/22.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/23.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/24.png">
+<meta property="og:updated_time" content="2017-02-24T17:09:32.456Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NFS(网络文件系统)">
+<meta name="twitter:description" content="1.什么是NFS?&amp;emsp;NFS(Network File System) 网络文件系统，他的主要功能是通过网络（一般是局域网）让不同的主机系统之间可以共享文件或目录。NFS适用于中小型网站的数据共享，而大型的网站可能会用到更复杂的分布式文件系统，例如：Moosefs(mfs),glusterfs,FastDFS 2.应用场景&amp;emsp;NFS网络文件系统一般被用来存储共享视屏、图片、附件等静">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/Linux/NFS/NFS(网络文件系统)/"/>
+
+
+
+
+
+  <title> NFS(网络文件系统) | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/Linux/NFS/NFS(网络文件系统)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                NFS(网络文件系统)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NFS/" itemprop="url" rel="index">
+                    <span itemprop="name">NFS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-什么是NFS"><a href="#1-什么是NFS" class="headerlink" title="1.什么是NFS?"></a>1.什么是NFS?</h1><p>&emsp;NFS(Network File System) 网络文件系统，他的主要功能是通过网络（一般是局域网）让不同的主机系统之间可以共享文件或目录。NFS适用于中小型网站的数据共享，而大型的网站可能会用到更复杂的分布式文件系统，例如：Moosefs(mfs),glusterfs,FastDFS</p>
+<h1 id="2-应用场景"><a href="#2-应用场景" class="headerlink" title="2.应用场景"></a>2.应用场景</h1><p>&emsp;NFS网络文件系统一般被用来存储共享视屏、图片、附件等静态资源文件，一般是把网站用户上传的文件都放到NFS共享里，例如：BBS产品的图片、附件、头像，注意网站BBS程序不要放到NFS共享里，然后前端所有的节点访问这些静态资源时都会读取NFS存储上的资源。</p>
+<h1 id="3-为什么需要共享存储角色？"><a href="#3-为什么需要共享存储角色？" class="headerlink" title="3.为什么需要共享存储角色？"></a>3.为什么需要共享存储角色？</h1><p>&emsp;下面通过图解展示集群架构需要共享存储服务的理由：例如：A用户传图片到Web1服务器，然后让B用户访问这张图片，结果B用户访问的请求分发到了Web2上，因为Web2上没有这张图片，结果无法看到A用户上传的图片，如果此时有一个共享存储，A用户上传图片无论分发到Web1还是Web2，最终都存储到共享存储上，此时，B用户访问图片时，无论分发到Web1还是Web2上，最终也都会去共享存储上访问，这样可以访问到资源了。<br>下面是原理图：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/1.png" alt=""></p>
+<h1 id="4-NFS系统原理"><a href="#4-NFS系统原理" class="headerlink" title="4.NFS系统原理"></a>4.NFS系统原理</h1><h2 id="4-1原理图"><a href="#4-1原理图" class="headerlink" title="4.1原理图"></a>4.1原理图</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/2.png" alt=""></p>
+<h2 id="4-2查看挂载信息"><a href="#4-2查看挂载信息" class="headerlink" title="4.2查看挂载信息"></a>4.2查看挂载信息</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/3.png" alt=""> </p>
+<h2 id="4-3客户端和服务端通信原理图"><a href="#4-3客户端和服务端通信原理图" class="headerlink" title="4.3客户端和服务端通信原理图"></a>4.3客户端和服务端通信原理图</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/4.png" alt=""></p>
+<p>注意：NFS的rpc服务在CentOS5.x下名称为portmap，而在CentOS6.x下名称为rpcbind</p>
+<h2 id="4-4比喻：NFS工作流程图"><a href="#4-4比喻：NFS工作流程图" class="headerlink" title="4.4比喻：NFS工作流程图"></a>4.4比喻：NFS工作流程图</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/5.png" alt=""></p>
+<h1 id="5-安装"><a href="#5-安装" class="headerlink" title="5.安装"></a>5.安装</h1><h2 id="5-1检查是否已经安装rpcbind-和nfs-utils"><a href="#5-1检查是否已经安装rpcbind-和nfs-utils" class="headerlink" title="5.1检查是否已经安装rpcbind 和nfs-utils"></a>5.1检查是否已经安装rpcbind 和nfs-utils</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@nfs-server ~]# rpm -qa nfs-utils rpcbind</div><div class="line">#默认是没有安装nfs软件包（CentOS5默认是会安装）</div></pre></td></tr></table></figure>
+<h2 id="5-2-安装软件包"><a href="#5-2-安装软件包" class="headerlink" title="5.2 安装软件包"></a>5.2 安装软件包</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">yum install nfs-utils rpcbind -y</div><div class="line"></div><div class="line">[chenyansong@lamp01 ~]$ rpm -aq nfs-utils rpcbind</div><div class="line">rpcbind-0.2.0-12.el6.i686</div><div class="line">nfs-utils-1.2.3-70.el6_8.1.i686</div><div class="line">#出现上述两个包表示安装成功</div></pre></td></tr></table></figure>
+<h1 id="6-服务端启动"><a href="#6-服务端启动" class="headerlink" title="6.服务端启动"></a>6.服务端启动</h1><h2 id="6-1启动rpcbind"><a href="#6-1启动rpcbind" class="headerlink" title="6.1启动rpcbind"></a>6.1启动rpcbind</h2><h3 id="6-1-1查看rpcbind状态"><a href="#6-1-1查看rpcbind状态" class="headerlink" title="6.1.1查看rpcbind状态"></a>6.1.1查看rpcbind状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@nfs-server ~]# /etc/init.d/rpcbind status</div><div class="line">rpcbind is stopped</div></pre></td></tr></table></figure>
+<h3 id="6-1-2启动"><a href="#6-1-2启动" class="headerlink" title="6.1.2启动"></a>6.1.2启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@nfs-server ~]# /etc/init.d/rpcbind start</div><div class="line">Starting rpcbind:                                          [  OK  ]</div><div class="line">[root@nfs-server ~]# /etc/init.d/rpcbind status</div><div class="line">rpcbind (pid  2159) is running...</div></pre></td></tr></table></figure>
+<h3 id="6-1-3查看对应的端口（默认端口是111）"><a href="#6-1-3查看对应的端口（默认端口是111）" class="headerlink" title="6.1.3查看对应的端口（默认端口是111）"></a>6.1.3查看对应的端口（默认端口是111）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 chenyansong]# netstat -lntup|grep rpcbind</div><div class="line">tcp        0      0 0.0.0.0:111                 0.0.0.0:*                   LISTEN      1181/rpcbind       </div><div class="line">tcp        0      0 :::111                      :::*                        LISTEN      1181/rpcbind       </div><div class="line">udp        0      0 0.0.0.0:111                 0.0.0.0:*                               1181/rpcbind       </div><div class="line">udp        0      0 0.0.0.0:932                 0.0.0.0:*                               1181/rpcbind       </div><div class="line">udp        0      0 :::111                      :::*                                    1181/rpcbind       </div><div class="line">udp        0      0 :::932                      :::*                                    1181/rpcbind       </div><div class="line">[root@lamp01 chenyansong]#</div><div class="line"></div><div class="line"></div><div class="line">#还可以通过lsof 查看</div><div class="line">[root@nfs-server ~]# lsof -i :111</div></pre></td></tr></table></figure>
+<h3 id="6-1-4开机自启动"><a href="#6-1-4开机自启动" class="headerlink" title="6.1.4开机自启动"></a>6.1.4开机自启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#编辑：/etc/rc.local ,添加启动的命令 /etc/init.d/rpcbind start</div><div class="line"></div><div class="line">[root@lamp01 chenyansong]# cat /etc/rc.local</div><div class="line">#!/bin/sh</div><div class="line">#</div><div class="line"># This script will be executed *after* all the other init scripts.</div><div class="line"># You can put your own initialization stuff in here if you don&apos;t</div><div class="line"># want to do the full Sys V style init stuff.</div><div class="line"> </div><div class="line">touch /var/lock/subsys/local</div><div class="line"> </div><div class="line">#### NFS ######</div><div class="line">/etc/init.d/rpcbind start</div></pre></td></tr></table></figure>
+<h3 id="6-1-5查看房源关系映射rpcinfo"><a href="#6-1-5查看房源关系映射rpcinfo" class="headerlink" title="6.1.5查看房源关系映射rpcinfo"></a>6.1.5查看房源关系映射rpcinfo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">rpcinfo -p localhost</div><div class="line">#查看rpc映射信息，-p表示协议</div><div class="line"></div><div class="line">[root@lamp01 chenyansong]# rpcinfo -p localhost</div><div class="line">   program vers proto   port  service</div><div class="line">    100000    4   tcp    111  portmapper</div><div class="line">    100000    3   tcp    111  portmapper</div><div class="line">    100000    2   tcp    111  portmapper</div><div class="line">    100000    4   udp    111  portmapper</div><div class="line">    100000    3   udp    111  portmapper</div><div class="line">    100000    2   udp    111  portmapper</div><div class="line">    100024    1   udp  55295  status</div><div class="line">    100024    1   tcp  35345  status</div><div class="line">[root@lamp01 chenyansong]#</div></pre></td></tr></table></figure>
+<h2 id="6-2启动nfs"><a href="#6-2启动nfs" class="headerlink" title="6.2启动nfs"></a>6.2启动nfs</h2><h3 id="6-2-1查看nfs状态"><a href="#6-2-1查看nfs状态" class="headerlink" title="6.2.1查看nfs状态"></a>6.2.1查看nfs状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@nfs-server ~]# /etc/init.d/nfs status</div><div class="line">rpc.svcgssd 已停</div><div class="line">rpc.mountd is stopped</div><div class="line">nfsd is stopped</div><div class="line">rpc.rquotad is stopped</div></pre></td></tr></table></figure>
+<h3 id="6-2-2-启动"><a href="#6-2-2-启动" class="headerlink" title="6.2.2 启动"></a>6.2.2 启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[root@nfs-server ~]# /etc/init.d/nfs start</div><div class="line">Starting NFS services:                                     [  OK  ]</div><div class="line">Starting NFS quotas:                                       [  OK  ]</div><div class="line">Starting NFS mountd:                                       [  OK  ]</div><div class="line">Starting NFS daemon:                                       [  OK  ]</div><div class="line">正在启动 RPC idmapd：                                      [确定]</div><div class="line"></div><div class="line">#再次查看状态</div><div class="line">[root@lamp01 chenyansong]# /etc/init.d/nfs status</div><div class="line">rpc.svcgssd 已停</div><div class="line">rpc.mountd (pid 7221) 正在运行...</div><div class="line">nfsd (pid 7236 7235 7234 7233 7232 7231 7230 7229) 正在运行...</div><div class="line">rpc.rquotad (pid 7217) 正在运行...</div></pre></td></tr></table></figure>
+<h3 id="6-2-3查看映射关系"><a href="#6-2-3查看映射关系" class="headerlink" title="6.2.3查看映射关系"></a>6.2.3查看映射关系</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">#rpcinfo -p localhost 产生了很多端口映射</div><div class="line">[root@lamp01 chenyansong]# rpcinfo -p localhost </div><div class="line">   program vers proto   port  service</div><div class="line">    100000    4   tcp    111  portmapper</div><div class="line">    100000    3   tcp    111  portmapper</div><div class="line">    100000    2   tcp    111  portmapper</div><div class="line">    100000    4   udp    111  portmapper</div><div class="line">    100000    3   udp    111  portmapper</div><div class="line">    100000    2   udp    111  portmapper</div><div class="line">    100024    1   udp  55295  status</div><div class="line">    100024    1   tcp  35345  status</div><div class="line">    100011    1   udp    875  rquotad</div><div class="line">    100011    2   udp    875  rquotad</div><div class="line">    100011    1   tcp    875  rquotad</div><div class="line">    100011    2   tcp    875  rquotad</div><div class="line">    100005    1   udp  37316  mountd</div><div class="line">    100005    1   tcp  34211  mountd</div><div class="line">    100005    2   udp  44362  mountd</div><div class="line">    100005    2   tcp  49558  mountd</div><div class="line">    100005    3   udp  40356  mountd</div><div class="line">    100005    3   tcp  41507  mountd</div><div class="line">    100003    2   tcp   2049  nfs</div><div class="line">    100003    3   tcp   2049  nfs</div><div class="line">    100003    4   tcp   2049  nfs</div><div class="line">    100227    2   tcp   2049  nfs_acl</div><div class="line">    100227    3   tcp   2049  nfs_acl</div><div class="line">    100003    2   udp   2049  nfs</div><div class="line">    100003    3   udp   2049  nfs</div><div class="line">    100003    4   udp   2049  nfs</div><div class="line">    100227    2   udp   2049  nfs_acl</div><div class="line">    100227    3   udp   2049  nfs_acl</div><div class="line">    100021    1   udp  53347  nlockmgr</div><div class="line">    100021    3   udp  53347  nlockmgr</div><div class="line">    100021    4   udp  53347  nlockmgr</div><div class="line">    100021    1   tcp  56689  nlockmgr</div><div class="line">    100021    3   tcp  56689  nlockmgr</div><div class="line">    100021    4   tcp  56689  nlockmgr</div><div class="line">[root@lamp01 chenyansong]#</div></pre></td></tr></table></figure>
+<h3 id="6-2-4配置开机自启动"><a href="#6-2-4配置开机自启动" class="headerlink" title="6.2.4配置开机自启动"></a>6.2.4配置开机自启动</h3><p>&emsp;因为rpcbind 要在nfs前面启动，所以将他们配置成为开机自启动，两种方式</p>
+<ul>
+<li>在chkconfig 中配置, 要让rpcbind在nfs前面启动</li>
+<li>在rc.local中配置（推荐）<br>我们一般在rc.local中配置，我们一眼就能够看到我们配置了哪些文件，相比较chkconfig更加的清晰。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 chenyansong]# cat /etc/rc.local</div><div class="line">#!/bin/sh</div><div class="line">#</div><div class="line"># This script will be executed *after* all the other init scripts.</div><div class="line"># You can put your own initialization stuff in here if you don&apos;t</div><div class="line"># want to do the full Sys V style init stuff.</div><div class="line"> </div><div class="line">touch /var/lock/subsys/local</div><div class="line"> </div><div class="line">#### NFS ######</div><div class="line">/etc/init.d/rpcbind start</div><div class="line">/etc/init.d/nfs start</div></pre></td></tr></table></figure>
+<h1 id="7-nfs服务常见进程说明"><a href="#7-nfs服务常见进程说明" class="headerlink" title="7.nfs服务常见进程说明"></a>7.nfs服务常见进程说明</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 chenyansong]# ps -ef|egrep &quot;rpc|nfs&quot;</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/6.png" alt=""></p>
+<h1 id="8-服务端配置详解及实战配置"><a href="#8-服务端配置详解及实战配置" class="headerlink" title="8.服务端配置详解及实战配置"></a>8.服务端配置详解及实战配置</h1><h2 id="8-1详解-etc-exports"><a href="#8-1详解-etc-exports" class="headerlink" title="8.1详解/etc/exports"></a>8.1详解/etc/exports</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#nfs的配置文件，默认是空的</div><div class="line">[root@lamp01 chenyansong]# ll /etc/exports</div><div class="line">-rw-r--r--. 1 root root 0 1月  12 2010 /etc/exports</div><div class="line">[root@lamp01 chenyansong]# cat /etc/exports</div><div class="line">[root@lamp01 chenyansong]#</div></pre></td></tr></table></figure>
+<h3 id="8-1-1-etc-exports书写格式"><a href="#8-1-1-etc-exports书写格式" class="headerlink" title="8.1.1/etc/exports书写格式"></a>8.1.1/etc/exports书写格式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#格式：</div><div class="line">NFS 共享目录 NFS客户端地址1（参1，参2....）客户端地址2（参1，参2....）</div><div class="line">NFS 共享目录 NFS客户端地址1（参1，参2....）</div><div class="line">eg:   /data  192.168.0.0/24(rw,sync,all_squash)</div></pre></td></tr></table></figure>
+<h3 id="8-1-2格式说明"><a href="#8-1-2格式说明" class="headerlink" title="8.1.2格式说明"></a>8.1.2格式说明</h3><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/7.png" alt=""></p>
+<h3 id="8-1-3参数权限图解"><a href="#8-1-3参数权限图解" class="headerlink" title="8.1.3参数权限图解"></a>8.1.3参数权限图解</h3><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/8.png" alt=""></p>
+<h3 id="8-1-4man-export"><a href="#8-1-4man-export" class="headerlink" title="8.1.4man export"></a>8.1.4man export</h3><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/9.png" alt=""></p>
+<h3 id="8-1-5语法检查reload"><a href="#8-1-5语法检查reload" class="headerlink" title="8.1.5语法检查reload"></a>8.1.5语法检查reload</h3><p>&emsp;配置了/etc/exports之后，我们要进行语法检查，来判断配置是否正确：/etc/init.d/nfs reload</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/10.png" alt=""></p>
+<p>reload平滑过渡，用来检查语法</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/11.png" alt=""></p>
+<p>配NFS生产重要技巧:</p>
+<ol>
+<li>确保所有客户端服务器对NFS共享目录具备相同的用户访问权限<br>1.1. all_squash把所有客户端都压缩成固定的匿名用户(UID相同)<br>1.2. 就是anonuid,annongid指定的UID和GID的用户</li>
+<li>所有的客户端和服务端都需要有一个相同的UID和GID的用户,及nfsnobody(UID必须相同)</li>
+</ol>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/12.png" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/13.png" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/14.png" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/15.png" alt=""></p>
+<h2 id="8-2服务器端配置步骤"><a href="#8-2服务器端配置步骤" class="headerlink" title="8.2服务器端配置步骤"></a>8.2服务器端配置步骤</h2><h3 id="8-2-1安装软件"><a href="#8-2-1安装软件" class="headerlink" title="8.2.1安装软件"></a>8.2.1安装软件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install nfs-utils rpcbind -y</div></pre></td></tr></table></figure>
+<h3 id="8-2-2启动服务（注意先后顺序）"><a href="#8-2-2启动服务（注意先后顺序）" class="headerlink" title="8.2.2启动服务（注意先后顺序）"></a>8.2.2启动服务（注意先后顺序）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/rpcbind status</div><div class="line">/etc/inti.d/rpcbind start</div><div class="line">rpcinfo -p localhost   //查看是否有映射信息</div><div class="line">/etc/inti.d/nfs status</div><div class="line">/etc/inti.d/nfs start</div><div class="line">rpcinfo -p localhost</div></pre></td></tr></table></figure>
+<h3 id="8-2-3设置开机自启动"><a href="#8-2-3设置开机自启动" class="headerlink" title="8.2.3设置开机自启动"></a>8.2.3设置开机自启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">#两种方法：</div><div class="line">#1.在chkconfig中配置</div><div class="line">chkconfig nfs on</div><div class="line">chkconfig rpcbind on</div><div class="line"></div><div class="line">#2.在rc.local中配置（推荐）</div><div class="line">[root@lamp01 chenyansong]# cat /etc/rc.local</div><div class="line">#!/bin/sh</div><div class="line">#</div><div class="line"># This script will be executed *after* all the other init scripts.</div><div class="line"># You can put your own initialization stuff in here if you don&apos;t</div><div class="line"># want to do the full Sys V style init stuff.</div><div class="line"> </div><div class="line">#### NFS ######</div><div class="line">/etc/init.d/rpcbind start</div><div class="line">/etc/init.d/nfs start        #配置</div></pre></td></tr></table></figure>
+<h3 id="8-2-4配置nfs服务-etc-exports"><a href="#8-2-4配置nfs服务-etc-exports" class="headerlink" title="8.2.4配置nfs服务(/etc/exports)"></a>8.2.4配置nfs服务(/etc/exports)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">echo “/data 192.168.0.0/24(rw,sync,all_squash)”&gt;&gt;/etc/exports</div><div class="line">mkdir -p /data</div><div class="line">chown -R nfsnobody.nfsnobody /data</div><div class="line">#(查看nfs默认使用的用户以及共享的参数:cat /var/lib/nfs/etab )</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/16.png" alt=""></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/17.png" alt=""></p>
+<h3 id="8-2-5重新加载服务-优雅重启"><a href="#8-2-5重新加载服务-优雅重启" class="headerlink" title="8.2.5重新加载服务(优雅重启)"></a>8.2.5重新加载服务(优雅重启)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/nfs reload ====== exports -r</div></pre></td></tr></table></figure>
+<h3 id="8-2-6检查或测试挂载"><a href="#8-2-6检查或测试挂载" class="headerlink" title="8.2.6检查或测试挂载"></a>8.2.6检查或测试挂载</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">showmount -e localhost</div><div class="line">mount -t nfs 192.168.0.104:/data /mnt</div></pre></td></tr></table></figure>
+<h1 id="9-客户端配置详解及实战配置"><a href="#9-客户端配置详解及实战配置" class="headerlink" title="9.客户端配置详解及实战配置"></a>9.客户端配置详解及实战配置</h1><h2 id="9-1安装软件"><a href="#9-1安装软件" class="headerlink" title="9.1安装软件"></a>9.1安装软件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install nfs-utils rpcbind -y</div></pre></td></tr></table></figure>
+<h2 id="9-2启动服务rpcbind"><a href="#9-2启动服务rpcbind" class="headerlink" title="9.2启动服务rpcbind"></a>9.2启动服务rpcbind</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/rpcbind status</div><div class="line">/etc/inti.d/rpcbind start</div></pre></td></tr></table></figure>
+<h2 id="9-3测试服务端共享情况"><a href="#9-3测试服务端共享情况" class="headerlink" title="9.3测试服务端共享情况"></a>9.3测试服务端共享情况</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">showmount -e server_ip</div></pre></td></tr></table></figure>
+<h2 id="9-4挂载"><a href="#9-4挂载" class="headerlink" title="9.4挂载"></a>9.4挂载</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir -p /mnt</div><div class="line">mount -t nfs server_ip:/data /mnt</div></pre></td></tr></table></figure>
+<h2 id="9-5测试读写"><a href="#9-5测试读写" class="headerlink" title="9.5测试读写"></a>9.5测试读写</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">touch /mnt/test.txt</div><div class="line">#然后在服务器端观察是否创建成功</div></pre></td></tr></table></figure>
+<h2 id="9-6开机自启动-rc-local"><a href="#9-6开机自启动-rc-local" class="headerlink" title="9.6开机自启动(rc.local)"></a>9.6开机自启动(rc.local)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">vim /etc/rc.local</div><div class="line"> </div><div class="line">/etc/init.d/rpcbind start</div><div class="line">mount -t nfs 192.168.1.102:/data /mnt</div><div class="line">#这样开机将自动挂载</div></pre></td></tr></table></figure>
+<h1 id="10-FAQ"><a href="#10-FAQ" class="headerlink" title="10.FAQ"></a>10.FAQ</h1><h2 id="10-1-RPC-Program-not-registered"><a href="#10-1-RPC-Program-not-registered" class="headerlink" title="10.1 RPC:Program not registered"></a>10.1 RPC:Program not registered</h2><p>可能的原因是：nfs没有启动或者是nfs较rpcbind早启动，导致nfs没有向rpcbind注册</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/18.png" alt=""></p>
+<h2 id="10-2PRC-Port-mapper-failure"><a href="#10-2PRC-Port-mapper-failure" class="headerlink" title="10.2PRC:Port mapper failure"></a>10.2PRC:Port mapper failure</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/19.png" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/20.png" alt=""></p>
+<p>解决方法:<br>1.ping 192.168.0.104;<br>2 telnet rpc服务的端口（111）： 192.168.0.104 111 </p>
+<h2 id="10-3写数据写不了（Permission-denied）"><a href="#10-3写数据写不了（Permission-denied）" class="headerlink" title="10.3写数据写不了（Permission denied）"></a>10.3写数据写不了（Permission denied）</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/21.png" alt=""></p>
+<p>可能的原因：服务器端共享的/data目录没有设置权限，参见：8.2.4节</p>
+<h1 id="11-几个重要的文件"><a href="#11-几个重要的文件" class="headerlink" title="11.几个重要的文件"></a>11.几个重要的文件</h1><h2 id="11-1-etc-exports"><a href="#11-1-etc-exports" class="headerlink" title="11.1 /etc/exports"></a>11.1 /etc/exports</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#/etc/exports :NFS服务器配置文件，配置NFS具体共享服务的地点，默认内容为空，以行为单位</div><div class="line">[root@nfs-server data]# cat /etc/exports</div><div class="line">/data 192.168.0.0/24(rw,sync,all_squash)</div></pre></td></tr></table></figure>
+<h2 id="11-2-usr-sbin-exportfs"><a href="#11-2-usr-sbin-exportfs" class="headerlink" title="11.2. /usr/sbin/exportfs"></a>11.2. /usr/sbin/exportfs</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NFS服务的管理命令，例如：可以加载NFS配置生效（等价优雅重启：/etc/init.d/nfs reload），还可以直接配置NFS目录</div><div class="line">exportfs -rv =======/etc/init.d/nfs reload</div></pre></td></tr></table></figure>
+<h2 id="11-3-usr-sbin-showmount"><a href="#11-3-usr-sbin-showmount" class="headerlink" title="11.3 /usr/sbin/showmount"></a>11.3 /usr/sbin/showmount</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">showmount - show mount information for an NFS server</div><div class="line">#分别在客户端和服务器端，查看NFS配置及挂载情况</div><div class="line">NFS服务器端：showmount -e localhost</div><div class="line">NFS客户端：showmount -e server_ip</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/22.png" alt=""></p>
+<h2 id="11-4-var-lib-nsf-etab"><a href="#11-4-var-lib-nsf-etab" class="headerlink" title="11.4 /var/lib/nsf/etab"></a>11.4 /var/lib/nsf/etab</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#NFS服务端可以通过/cat /var/lib/nfs/etab查看NFS服务端配置的参数细节（有很多没有配置但是默认就有的NFS参数）</div><div class="line">[root@nfs-server data]# cat /var/lib/nfs/etab</div><div class="line">/data   192.168.0.0/24(rw,sync,wdelay,hide,nocrossmnt,secure,root_squash,all_squash,no_subtree_check,</div><div class="line">secure_locks,acl,anonuid=65534,anongid=65534,sec=sys,rw,root_squash,all_squash)</div></pre></td></tr></table></figure>
+<h2 id="11-5-proc-mounts"><a href="#11-5-proc-mounts" class="headerlink" title="11.5 /proc/mounts"></a>11.5 /proc/mounts</h2><p>在NFS客户端可以通过cat /proc/mounts查看mount的挂载参数细节，如下：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/23.png" alt=""></p>
+<h1 id="12-mount-挂载"><a href="#12-mount-挂载" class="headerlink" title="12.mount 挂载"></a>12.mount 挂载</h1><h2 id="12-1NFS客户端挂载的格式"><a href="#12-1NFS客户端挂载的格式" class="headerlink" title="12.1NFS客户端挂载的格式"></a>12.1NFS客户端挂载的格式</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mount -t nfs 192.168.0.104:/data /mnt </div><div class="line">#此命令在客户端执行,/mnt(必须存在)</div></pre></td></tr></table></figure>
+<h2 id="12-2执行挂载的过程"><a href="#12-2执行挂载的过程" class="headerlink" title="12.2执行挂载的过程"></a>12.2执行挂载的过程</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/NFS/24.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NFS/" rel="tag"># NFS</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/Linux/nginx/location正则写法/" rel="next" title="location正则写法">
+                <i class="fa fa-chevron-left"></i> location正则写法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/Linux/linux基础命令/设置连接服务器的超时时间TMOUT/" rel="prev" title="Linux基础命令之设置连接服务器的超时时间TMOUT">
+                Linux基础命令之设置连接服务器的超时时间TMOUT <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-什么是NFS"><span class="nav-number">1.</span> <span class="nav-text">1.什么是NFS?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-应用场景"><span class="nav-number">2.</span> <span class="nav-text">2.应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-为什么需要共享存储角色？"><span class="nav-number">3.</span> <span class="nav-text">3.为什么需要共享存储角色？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-NFS系统原理"><span class="nav-number">4.</span> <span class="nav-text">4.NFS系统原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1原理图"><span class="nav-number">4.1.</span> <span class="nav-text">4.1原理图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2查看挂载信息"><span class="nav-number">4.2.</span> <span class="nav-text">4.2查看挂载信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3客户端和服务端通信原理图"><span class="nav-number">4.3.</span> <span class="nav-text">4.3客户端和服务端通信原理图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4比喻：NFS工作流程图"><span class="nav-number">4.4.</span> <span class="nav-text">4.4比喻：NFS工作流程图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-安装"><span class="nav-number">5.</span> <span class="nav-text">5.安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1检查是否已经安装rpcbind-和nfs-utils"><span class="nav-number">5.1.</span> <span class="nav-text">5.1检查是否已经安装rpcbind 和nfs-utils</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-安装软件包"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 安装软件包</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-服务端启动"><span class="nav-number">6.</span> <span class="nav-text">6.服务端启动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1启动rpcbind"><span class="nav-number">6.1.</span> <span class="nav-text">6.1启动rpcbind</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-1查看rpcbind状态"><span class="nav-number">6.1.1.</span> <span class="nav-text">6.1.1查看rpcbind状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-2启动"><span class="nav-number">6.1.2.</span> <span class="nav-text">6.1.2启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-3查看对应的端口（默认端口是111）"><span class="nav-number">6.1.3.</span> <span class="nav-text">6.1.3查看对应的端口（默认端口是111）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-4开机自启动"><span class="nav-number">6.1.4.</span> <span class="nav-text">6.1.4开机自启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-5查看房源关系映射rpcinfo"><span class="nav-number">6.1.5.</span> <span class="nav-text">6.1.5查看房源关系映射rpcinfo</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2启动nfs"><span class="nav-number">6.2.</span> <span class="nav-text">6.2启动nfs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-1查看nfs状态"><span class="nav-number">6.2.1.</span> <span class="nav-text">6.2.1查看nfs状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-2-启动"><span class="nav-number">6.2.2.</span> <span class="nav-text">6.2.2 启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-3查看映射关系"><span class="nav-number">6.2.3.</span> <span class="nav-text">6.2.3查看映射关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-4配置开机自启动"><span class="nav-number">6.2.4.</span> <span class="nav-text">6.2.4配置开机自启动</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-nfs服务常见进程说明"><span class="nav-number">7.</span> <span class="nav-text">7.nfs服务常见进程说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-服务端配置详解及实战配置"><span class="nav-number">8.</span> <span class="nav-text">8.服务端配置详解及实战配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1详解-etc-exports"><span class="nav-number">8.1.</span> <span class="nav-text">8.1详解/etc/exports</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-1-etc-exports书写格式"><span class="nav-number">8.1.1.</span> <span class="nav-text">8.1.1/etc/exports书写格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-2格式说明"><span class="nav-number">8.1.2.</span> <span class="nav-text">8.1.2格式说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-3参数权限图解"><span class="nav-number">8.1.3.</span> <span class="nav-text">8.1.3参数权限图解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-4man-export"><span class="nav-number">8.1.4.</span> <span class="nav-text">8.1.4man export</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-5语法检查reload"><span class="nav-number">8.1.5.</span> <span class="nav-text">8.1.5语法检查reload</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2服务器端配置步骤"><span class="nav-number">8.2.</span> <span class="nav-text">8.2服务器端配置步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-1安装软件"><span class="nav-number">8.2.1.</span> <span class="nav-text">8.2.1安装软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-2启动服务（注意先后顺序）"><span class="nav-number">8.2.2.</span> <span class="nav-text">8.2.2启动服务（注意先后顺序）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-3设置开机自启动"><span class="nav-number">8.2.3.</span> <span class="nav-text">8.2.3设置开机自启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-4配置nfs服务-etc-exports"><span class="nav-number">8.2.4.</span> <span class="nav-text">8.2.4配置nfs服务(/etc/exports)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-5重新加载服务-优雅重启"><span class="nav-number">8.2.5.</span> <span class="nav-text">8.2.5重新加载服务(优雅重启)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-6检查或测试挂载"><span class="nav-number">8.2.6.</span> <span class="nav-text">8.2.6检查或测试挂载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-客户端配置详解及实战配置"><span class="nav-number">9.</span> <span class="nav-text">9.客户端配置详解及实战配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#9-1安装软件"><span class="nav-number">9.1.</span> <span class="nav-text">9.1安装软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-2启动服务rpcbind"><span class="nav-number">9.2.</span> <span class="nav-text">9.2启动服务rpcbind</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-3测试服务端共享情况"><span class="nav-number">9.3.</span> <span class="nav-text">9.3测试服务端共享情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-4挂载"><span class="nav-number">9.4.</span> <span class="nav-text">9.4挂载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-5测试读写"><span class="nav-number">9.5.</span> <span class="nav-text">9.5测试读写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-6开机自启动-rc-local"><span class="nav-number">9.6.</span> <span class="nav-text">9.6开机自启动(rc.local)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-FAQ"><span class="nav-number">10.</span> <span class="nav-text">10.FAQ</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-1-RPC-Program-not-registered"><span class="nav-number">10.1.</span> <span class="nav-text">10.1 RPC:Program not registered</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-2PRC-Port-mapper-failure"><span class="nav-number">10.2.</span> <span class="nav-text">10.2PRC:Port mapper failure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-3写数据写不了（Permission-denied）"><span class="nav-number">10.3.</span> <span class="nav-text">10.3写数据写不了（Permission denied）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-几个重要的文件"><span class="nav-number">11.</span> <span class="nav-text">11.几个重要的文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#11-1-etc-exports"><span class="nav-number">11.1.</span> <span class="nav-text">11.1 /etc/exports</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-2-usr-sbin-exportfs"><span class="nav-number">11.2.</span> <span class="nav-text">11.2. /usr/sbin/exportfs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-3-usr-sbin-showmount"><span class="nav-number">11.3.</span> <span class="nav-text">11.3 /usr/sbin/showmount</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-4-var-lib-nsf-etab"><span class="nav-number">11.4.</span> <span class="nav-text">11.4 /var/lib/nsf/etab</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-5-proc-mounts"><span class="nav-number">11.5.</span> <span class="nav-text">11.5 /proc/mounts</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-mount-挂载"><span class="nav-number">12.</span> <span class="nav-text">12.mount 挂载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#12-1NFS客户端挂载的格式"><span class="nav-number">12.1.</span> <span class="nav-text">12.1NFS客户端挂载的格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-2执行挂载的过程"><span class="nav-number">12.2.</span> <span class="nav-text">12.2执行挂载的过程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

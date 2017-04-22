@@ -1,0 +1,778 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala函数式编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.函数式编程的好处:一个简单的例子&amp;emsp;函数式编程(FP)基于一个简单又蕴含深远的前提:只用纯函数来构造程序—-换句话说,函数没有副作用,什么是副作用?一个带有副作用的函数不仅是简单的返回一个值,还干了一些其他事情,比如:  修改了一个变量 直接修改数据结构 设置一个对象的成员 抛出一个异常或者一个错误停止 打印到终端或读取用户的输入 读取或写入一个文件 在屏幕上绘画  &amp;emsp;函数式">
+<meta name="keywords" content="scala,scala函数式编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一章 什么是函数式编程">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第一章 什么是函数式编程/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.函数式编程的好处:一个简单的例子&amp;emsp;函数式编程(FP)基于一个简单又蕴含深远的前提:只用纯函数来构造程序—-换句话说,函数没有副作用,什么是副作用?一个带有副作用的函数不仅是简单的返回一个值,还干了一些其他事情,比如:  修改了一个变量 直接修改数据结构 设置一个对象的成员 抛出一个异常或者一个错误停止 打印到终端或读取用户的输入 读取或写入一个文件 在屏幕上绘画  &amp;emsp;函数式">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/1/1.png">
+<meta property="og:updated_time" content="2017-02-24T17:08:20.387Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第一章 什么是函数式编程">
+<meta name="twitter:description" content="1.函数式编程的好处:一个简单的例子&amp;emsp;函数式编程(FP)基于一个简单又蕴含深远的前提:只用纯函数来构造程序—-换句话说,函数没有副作用,什么是副作用?一个带有副作用的函数不仅是简单的返回一个值,还干了一些其他事情,比如:  修改了一个变量 直接修改数据结构 设置一个对象的成员 抛出一个异常或者一个错误停止 打印到终端或读取用户的输入 读取或写入一个文件 在屏幕上绘画  &amp;emsp;函数式">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/1/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第一章 什么是函数式编程/"/>
+
+
+
+
+
+  <title> 第一章 什么是函数式编程 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第一章 什么是函数式编程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第一章 什么是函数式编程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-函数式编程的好处-一个简单的例子"><a href="#1-函数式编程的好处-一个简单的例子" class="headerlink" title="1.函数式编程的好处:一个简单的例子"></a>1.函数式编程的好处:一个简单的例子</h1><p>&emsp;函数式编程(FP)基于一个简单又蕴含深远的前提:只用纯函数来构造程序—-换句话说,函数没有副作用,什么是副作用?一个带有副作用的函数不仅是简单的返回一个值,还干了一些其他事情,比如:</p>
+<ol>
+<li>修改了一个变量</li>
+<li>直接修改数据结构</li>
+<li>设置一个对象的成员</li>
+<li>抛出一个异常或者一个错误停止</li>
+<li>打印到终端或读取用户的输入</li>
+<li>读取或写入一个文件</li>
+<li>在屏幕上绘画</li>
+</ol>
+<p>&emsp;函数式编程更加模块化,由于纯函数的模块化特性,他们很容易被测试,复用,并行化,泛化以及推导,此外,纯函数减少了产生bug的可能性<br>&emsp;在这一章,我们将演示一个简单的带有副作用的程序,并通过去除这些副作用来示范函数式的一些好处</p>
+<h2 id="1-1-一段带有副作用的程序"><a href="#1-1-一段带有副作用的程序" class="headerlink" title="1.1.一段带有副作用的程序"></a>1.1.一段带有副作用的程序</h2><p>&emsp;假设我们要为一家咖啡店的购物编写一段程序,先用一段带有副作用的scala程序来实现<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cafe</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">buyCoffee</span></span>(cc: <span class="type">CreditCard</span>): <span class="type">Coffee</span> = &#123;</div><div class="line">    <span class="keyword">val</span> cup = <span class="keyword">new</span> <span class="type">Coffee</span>()</div><div class="line">    cc.charge(cup.price)  <span class="comment">//副作用,信用卡计费,我需要的是一杯咖啡,返回coffee即可,其他额外的是不需要做</span></div><div class="line">    cup <span class="comment">//返回coffee</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;cc.charge(cup.price)这行是一个副作用的例子,信用卡的计费涉及与外部世界的一些交互——-假设需要通过web service联系信用卡公司,授权交易,对卡片计费,并且持久化一些记录以便以后引用,我们的函数不过是返回一杯咖啡,这些其他行为也额外发生了,因此也被称为”副作用”<br>&emsp;副作用导致这段代码很难测试,我们不希望测试逻辑真的是去联系信用卡公司并对卡片计费,缺乏可测试性预示着设计的修改:按理说CreditCard不应该知道如何联系信用卡公司实际执行一次计费,他就是一张信用卡,他应该拥有的是信用卡的属性,所以同样也不应该知道怎么把一次计费持久化到内部系统,我们可以让CreditCard忽略掉这些事情,通过传递一个Payments对象(支付对象)给buyCoffee函数,使代码更加模块化和可测化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">class Cafe&#123;</div><div class="line">  def buyCoffee(cc: CreditCard, p: Payment): Coffee = &#123;</div><div class="line">    val cup = new Coffee()</div><div class="line">    p.charge(cc, cup.price)  //副作用,信用卡计费,我需要的是一杯咖啡,返回coffee即可,其他额外的是不需要做</div><div class="line">    cup //返回coffee</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>&emsp;虽然当我们调用p.charge(cc, cup.price)的时候仍然有副作用发生,但至少恢复了一些可测试性,Payments可以是一个接口,我们可以写一个合适于测试的mock实现这个接口<br>&emsp;撇开对测试的担心,这里还有另一个问题,buyCoffee方法很难被复用,假设一个叫Alice的顾客,要订购12杯咖啡,最理想的情况是只要复用这个方法,通过循环来调用12次buyCoffee,但是基于当前的程序,会陷入12次对支付系统的调用,对Alice的信用卡执行12次计费,那样所产生的更多的手续费对Alice和咖啡店都不好</p>
+<p>&emsp;多次购买的话我们该怎么做呢?如下图,我们编写一个全新的函数buyCoffees,他使用特别的逻辑去批量处理计费,这里可能不是什么大问题,因为buyCoffee的逻辑很简单,但是在别的情况下我们需要重复的逻辑就会很多,而且要为失去代码的可复用性和可组合性而难过</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/1/1.png" alt="buyCoffee的一次调用" title="buyCoffee的一次调用"></p>
+<h2 id="1-2-函数式的解法-去除副作用"><a href="#1-2-函数式的解法-去除副作用" class="headerlink" title="1.2.函数式的解法:去除副作用"></a>1.2.函数式的解法:去除副作用</h2><p>&emsp;函数式的解法是消除副作用,通过让buyCoffees方法在返回咖啡(Coffee)的时候,把费用(Charge)一并返回,计费的处理包括:发送到信用卡公司,持久化这条记录等,这些过程将在其他地方来做<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">class Cafe&#123;</div><div class="line">  def buyCoffee(cc: CreditCard): (Coffee, Charge) = &#123;</div><div class="line">    val cup = new Coffee()</div><div class="line">    (cup, Charge(cc, cup.price))</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;我们先来看看”Charge”怎么定义?我们所构造的这个数据类型有信用卡(CreditCard)和金额(amount)组成,并提供了一个combine函数,以便对同一张信用卡合并计费<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">case class Charge(cc: CreditCard, amount: Double)&#123;</div><div class="line">  //对相同的信用卡进行合并计费</div><div class="line">  def combine(other: Charge) =&#123;</div><div class="line">    if (cc == other.cc)</div><div class="line">      Charge(cc, amount+other.amount)    //case类可以不通过new关键字创建,我们只需要在类名后面传递一组参数到主构造器</div><div class="line">    else </div><div class="line">      throw new Exception(&quot;Can&apos;t combine charge to different cards&quot;)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;现在我们来看看buyCoffee方法如何实现购买n杯咖啡,与之前不同,现在可以利用buyCoffees方法实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//用同一张信用卡点了多杯咖啡</div><div class="line">def buyCoffees(cc: CrediCard, n: Int): (List[Coffee], Charge) = &#123;</div><div class="line">  val purchases: List[(Coffee, Charge)] = List.fill(n)(buyCoffee(cc))    //List.fill(n)(x)创建一个对x赋值n份的列表</div><div class="line">  val (coffees, charges) = purchases.unzip    //unzip将数值对儿列表,分成一对儿(pair)列表,所以分解成为了两个list</div><div class="line">  (coffees, charges.reduce((c1,c2)=&gt;c1.combine(c2))    //charges.reduce对整个charge列表规约成一个charge</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;总体上看,这个解决方案有显著的改善,现在我们可以直接复用buyCoffee来定义buyCoffees函数,这两个函数都很简单并容易测试,不需要实现一些Payments接口来进行复杂的mock,事实上,Cafe现在完全忽略了计费是如何处理的,当然我们可以用一个Payments类来做付款处理,但Cafe并不需要了解他<br>&emsp;让Charge成为一等值,还有一些我们没有预期到的好处:我们能更容易的组装业务,举个例子:Alice带着她的笔记本电脑来咖啡店并在这里工作几个小时,中间时不时地会买几杯咖啡,如果咖啡店能把Alice买的咖啡合并成一笔费用以节约信用卡的手续费就太好了,因为Charge是一等值,我们可以用下面的函数把同一张信用卡的费用合并为一个List[Charge]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def coalesce(charges: List[Charge]): List[Charge] =&#123;</div><div class="line">  charges.groupBy(_.cc).values.map(_.reduce(_ combine _)).toList</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;这个函数接收一个计费列表参数,按照信用卡对这个参数进行group,然后对每张卡组合成一个单独的计费</p>
+<h1 id="2-纯-函数究竟是什么"><a href="#2-纯-函数究竟是什么" class="headerlink" title="2.(纯)函数究竟是什么?"></a>2.(纯)函数究竟是什么?</h1><p>&emsp;对于一个输入类型为A和输出类型为B的函数f(用scala写为:A=&gt;B,读作”A到B”或”A箭头B”),他是一种将所有的A类型值的值a关联到某个确切的值b的运算过程,及b由a来决定,任何内部或外部过程的状态改变都不会影响到f(a)的计算机结果,例如,函数intToString的类型为Int=&gt;String,他负责将整数转换为一个相应的字符串,除此之外应该什么也不用做<br>&emsp;换言之,一个函数在程序的执行过程中除了根据输入参数给出运行结果之外没有其他的影响,就可以说是没有副作用的,将这一类函数称之为”纯函数”<br>&emsp;你可能已经了解过一些纯函数了,比如考虑整数的加法(+)函数,他接收两个整数值并返回一个整数值,对于给定的两个整数值,他的返回值永远是相同的整数值,另一个例子是java,scala和其他字符串作为不可变对象的语言中对字符串求长度的函数,对于给定的字符串,返回的长度总是相同的</p>
+<blockquote>
+<p>引用透明</p>
+</blockquote>
+<p>&emsp;我们可以使用引用透明的概念对纯函数进行形式化,这不仅仅是函数的属性,而且是一般表达式的属性,为了便于讨论,设定一个程序的任何部分的表达式,都可以计算为一个结果,在scala解释器下输入的任何内容都会得到结果,例如:2 + 3是一个表达式,他使用纯函数+对数值2和3进行计算(注意:数值2和3同样也是一个表达式),他没有副作用,这个表达式每次运算的结果都是同一个值5,实际上,如果看到程序里有2+3这样的表达式可以直接替换为5,并不会改变程序的含义<br>&emsp;这意味着任何程序中符合引用透明的表达式都可以由他的结果所取代,而不改变该程序的含义,当调用一个函数时所传入的参数是引用透明的,并且函数调用也是引用透明的,那么这个函数是一个纯函数</p>
+<blockquote>
+<p>引用透明与纯粹性</p>
+</blockquote>
+<p>&emsp;对于程序p,如果他包含的表达式e满足引用透明,所有的e都可以替换为他的运算结果而不会改变程序p的含义,假设存在一个函数f,若表达式f(x)对所有的引用透明的表达式x也是引用透明的,那么这个f是一个纯函数</p>
+<h1 id="3-引用透明-纯粹性以及代换模型"><a href="#3-引用透明-纯粹性以及代换模型" class="headerlink" title="3.引用透明/纯粹性以及代换模型"></a>3.引用透明/纯粹性以及代换模型</h1><p>&emsp;让我们看看如何对原先的buyCoffee例子定义引用透明的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def buyCoffee(cc: CreditCard): Coffee = &#123;</div><div class="line">  val cup = new Coffee()</div><div class="line">  cc.charge(cup.price)</div><div class="line">  cup</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;无论cc.charge(cup.price)返回什么类型,他都会被buyCoffee丢弃<br>&emsp;因此,buyCoffee(aliceCreditCard)的运算结果将仅仅是一杯咖啡,这相当于new Coffee() , 那么根据我们定义的引用透明,如果buyCoffee要满足纯函数,对于任何p而言,p(buyCoffee(aliceCreditCard))行为需要与p(new Coffee())相同,这显然不成立,表达式new Coffee()不做任何事情,但是buyCoffee(aliceCreditCard)将会连接信用卡公司并授权计费,两个程序显然有差异<br>&emsp;引用透明要求函数不论进行任何操作都可以用它的返回值来代替,这种限制使得推到一个程序的求值变得简单而自然,我们称之为代换模型,如果表达式是引用透明的,那么可以想象计算过程就像在解代数方程,展开表达式的每一部分,使用指示对象替代变量,然后规约到最简单的形式,在这个过程中,每一项都被等价值所替代,计算的过程就是被一个又一个等价值所替代的过程,换句话说:引用透明使得程序具备了等式推理的能力</p>
+<blockquote>
+<p>一个引用透明的例子</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">scala&gt; val x = &quot;Hello, World&quot;</div><div class="line">x: String = Hello, World</div><div class="line"></div><div class="line">scala&gt; val r1 = x.reverse</div><div class="line">r1: String = dlroW ,olleH</div><div class="line"></div><div class="line">scala&gt; val r2 = x.reverse</div><div class="line">r2: String = dlroW ,olleH</div></pre></td></tr></table></figure>
+<p>&emsp;假设我们把所有使用x的地方用它所引用的表达式来替换<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scala&gt; val r1 = &quot;Hello, World&quot;.reverse</div><div class="line">r1: String = dlroW ,olleH</div><div class="line"></div><div class="line">scala&gt; val r2 = &quot;Hello, World&quot;.reverse</div><div class="line">r2: String = dlroW ,olleH</div></pre></td></tr></table></figure></p>
+<p>&emsp;这样做并不影响结果,r1和r2的值和以前一样,所以说x是引用透明的,另外,r1和r2也是引用透明的,如果他们出现在某个程序中也可以替代为他们所引用的值而不会对程序造成影响</p>
+<blockquote>
+<p>一个不是引用透明的例子</p>
+</blockquote>
+<p>&emsp;比如,java.lang.StringBuilder类里的append方法,这个方法改变了StringBuilder对象自身,在调用append方法之后,StringBuilder对象之前的状态被破坏<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">scala&gt; val x = new StringBuilder(&quot;Hello&quot;)</div><div class="line">x: StringBuilder = Hello</div><div class="line"></div><div class="line">scala&gt; val y = x.append(&quot;, World&quot;)</div><div class="line">y: StringBuilder = Hello, World</div><div class="line"></div><div class="line">scala&gt; val r1 =  y.toString</div><div class="line">r1: String = Hello, World</div><div class="line"></div><div class="line">scala&gt; val r2 = y.toString</div><div class="line">r2: String = Hello, World</div></pre></td></tr></table></figure></p>
+<p>&emsp;我们将y利用等值替换为append(“, World”),然后r1和r2就不再相同<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">scala&gt; val r1 = x.append(&quot;, World&quot;).toString</div><div class="line">r1: String = Hello, World, World</div><div class="line"></div><div class="line">scala&gt; val r2 = x.append(&quot;, World&quot;).toString</div><div class="line">r2: String = Hello, World, World, World</div></pre></td></tr></table></figure></p>
+<p>&emsp;上面的例子说明:StringBuilder.append不是一个纯函数,虽然r1和r2看上去是同一个表达式,但他们引用的StringBuilder是两个不同的值,在r2调用x.append的时候,r1已经改变了x引用的对象(这就是副作用的产生之处)</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala函数式编程/" rel="tag"># scala函数式编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/functionalProgrammingInScala/第三章 函数式数据结构/" rel="next" title="第三章 函数式数据结构">
+                <i class="fa fa-chevron-left"></i> 第三章 函数式数据结构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/echarts/直角坐标系之axis(xAsix和yAxis)/" rel="prev" title="直角坐标系之axis(xAsix/yAxis)">
+                直角坐标系之axis(xAsix/yAxis) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-函数式编程的好处-一个简单的例子"><span class="nav-number">1.</span> <span class="nav-text">1.函数式编程的好处:一个简单的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-一段带有副作用的程序"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.一段带有副作用的程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-函数式的解法-去除副作用"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.函数式的解法:去除副作用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-纯-函数究竟是什么"><span class="nav-number">2.</span> <span class="nav-text">2.(纯)函数究竟是什么?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-引用透明-纯粹性以及代换模型"><span class="nav-number">3.</span> <span class="nav-text">3.引用透明/纯粹性以及代换模型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

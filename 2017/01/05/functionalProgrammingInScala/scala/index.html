@@ -1,0 +1,742 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.变量定义 先写变量后写类型12345678scala&amp;gt; val msg: java.lang.String = &amp;quot;hello world!&amp;quot;msg: String = hello world!//或者scala&amp;gt; val msg: String = &amp;quot;hello world!&amp;quot;        #先写变量名称,再写变量类型msg: String">
+<meta name="keywords" content="scala">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scala初探">
+<meta property="og:url" content="http://yoursite.com/2017/01/05/functionalProgrammingInScala/scala/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.变量定义 先写变量后写类型12345678scala&amp;gt; val msg: java.lang.String = &amp;quot;hello world!&amp;quot;msg: String = hello world!//或者scala&amp;gt; val msg: String = &amp;quot;hello world!&amp;quot;        #先写变量名称,再写变量类型msg: String">
+<meta property="og:updated_time" content="2017-02-24T17:08:20.371Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="scala初探">
+<meta name="twitter:description" content="1.变量定义 先写变量后写类型12345678scala&amp;gt; val msg: java.lang.String = &amp;quot;hello world!&amp;quot;msg: String = hello world!//或者scala&amp;gt; val msg: String = &amp;quot;hello world!&amp;quot;        #先写变量名称,再写变量类型msg: String">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/05/functionalProgrammingInScala/scala/"/>
+
+
+
+
+
+  <title> scala初探 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/05/functionalProgrammingInScala/scala/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                scala初探
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-05T08:55:29+08:00">
+                2017-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-变量定义"><a href="#1-变量定义" class="headerlink" title="1.变量定义"></a>1.变量定义</h1><blockquote>
+<p>先写变量后写类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">scala&gt; val msg: java.lang.String = &quot;hello world!&quot;</div><div class="line">msg: String = hello world!</div><div class="line"></div><div class="line">//或者</div><div class="line">scala&gt; val msg: String = &quot;hello world!&quot;        #先写变量名称,再写变量类型</div><div class="line">msg: String = hello world!    #定义了一个名称为msg的变量,类型为String, 值为 &quot;hello world!&quot;</div><div class="line"></div><div class="line">scala&gt;</div></pre></td></tr></table></figure></p>
+<p>自动类型推断<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#也可以省略类型的定义,scala会自动推断出变量的类型</div><div class="line">scala&gt; val msg = &quot;hello world!&quot;    #因为值的类型是String,所以可以推断出msg的类型是String,所以在定义变量的时候可以省略对msg类型的推断</div><div class="line">msg: String = hello world!        </div><div class="line"></div><div class="line">scala&gt;</div></pre></td></tr></table></figure></p>
+<p>val类型变量不能修改,var可以<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">#val类型的变量不能再次对其进行赋值操作</div><div class="line"></div><div class="line">scala&gt; msg = &quot;goodby cruel world!&quot;</div><div class="line">&lt;console&gt;:8: error: reassignment to val</div><div class="line">       msg = &quot;goodby cruel world!&quot;</div><div class="line">           ^</div><div class="line"></div><div class="line"></div><div class="line">#var可以重复赋值</div><div class="line"></div><div class="line">scala&gt; var msg_var: String = &quot;hello world!&quot;</div><div class="line">msg_var: String = hello world!</div><div class="line"></div><div class="line">#对变量重新赋值</div><div class="line">scala&gt; msg_var = &quot;hello 2222 world!&quot;</div><div class="line">msg_var: String = hello 2222 world!</div><div class="line"></div><div class="line">scala&gt;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h1 id="2-函数定义"><a href="#2-函数定义" class="headerlink" title="2.函数定义"></a>2.函数定义</h1><blockquote>
+<p>函数的基本结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">def max(x: Int, y:Int): Int = &#123;</div><div class="line">  if(x &gt; y) x else y</div><div class="line">&#125;</div><div class="line">#scala的条件表达式可以像Java的三元操作符那样生成结果值</div><div class="line">if(x &gt; y) x else y      #scala中的if/else不仅控制语句的执行流程,同时有返回值,所以他不等同于Java中的if/else</div><div class="line">#等同于Java中的:</div><div class="line">(x &gt; y)? x: y</div></pre></td></tr></table></figure></p>
+<p>函数的返回值类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#函数的返回值类型可以不用写,因为可以使用函数体推断出来,但是如果函数是递归的,那么必须明确的说明返回值的类型</div><div class="line"></div><div class="line">#尽管如此,显示的说明函数结果类型也经常是一个好主意,这种类型标注可以使代码便于阅读,因为读者不用研究函数体之后再去猜测结果类型</div></pre></td></tr></table></figure></p>
+<p>函数体<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">如果函数仅包含一个语句,那么连花括号都可以选择不谢,这样max函数就可以写成:</div><div class="line">def max2(x: Int, y:Int): Int =  if(x &gt; y) x else y</div></pre></td></tr></table></figure></p>
+<p>没有参数和返回值的函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line">scala&gt; def max2(x: Int, y:Int): Int =  if(x &gt; y) x else y</div><div class="line">max2: (x: Int, y: Int)Int</div><div class="line"> </div><div class="line">scala&gt; def greet() = println(&quot;Hello world!&quot;)</div><div class="line">greet: ()Unit        #greet是函数名,  ()说明函数不带参数,  Unit是greet的结果类型,指的是函数没有有效的返回值</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h1 id="3-编写scala脚本"><a href="#3-编写scala脚本" class="headerlink" title="3.编写scala脚本"></a>3.编写scala脚本</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#在hello.scala文件中,有如下的代码:</div><div class="line">println(&quot;hello world , from a script! &quot;)</div><div class="line"></div><div class="line">#执行上述脚本文件</div><div class="line">$ scala hello.scala</div><div class="line"></div><div class="line">#系统输出</div><div class="line">hello world , from a script! </div><div class="line"></div><div class="line"></div><div class="line">#传参,scala脚本的命令行参数保存在名为args的scala数组中</div><div class="line">println(&quot;hello world , from &quot; + args(0) + &quot; a script! &quot;)      //注意scala中的数组是以()去取元素的,而不是像Java中是以[]去取元素</div><div class="line"></div><div class="line"></div><div class="line">#再次执行脚本</div><div class="line">$ scala hello.scala xxxx</div><div class="line">hello world , from xxxx a script!</div></pre></td></tr></table></figure>
+<h1 id="4-用while循环-用if做判断"><a href="#4-用while循环-用if做判断" class="headerlink" title="4.用while循环,用if做判断"></a>4.用while循环,用if做判断</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#在printargs.scala文件里,输入以下代码测试while</div><div class="line">var i = 0</div><div class="line">while (i &lt; args.length) &#123;</div><div class="line">  println(args(i))</div><div class="line">  i += 1</div><div class="line">&#125;</div><div class="line"></div><div class="line">#上述代码并不是scala推荐的代码风格,在这里只是有助于解释while循环</div><div class="line">#在scala中并没有++/--,必须写成+= / -=这样的操作</div></pre></td></tr></table></figure>
+<h1 id="5-用foreach和for做枚举"><a href="#5-用foreach和for做枚举" class="headerlink" title="5.用foreach和for做枚举"></a>5.用foreach和for做枚举</h1><blockquote>
+<p>foreach<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">#上面所写的while循环的编码风格被称之为指令式编程(即:逐条执行指令,并经常改变不同函数之间的共享状态,在Java/C++/C这些语言中常见),在scala中更偏向的是函数式编程,如下:</div><div class="line"></div><div class="line">#在pa.scala文件中,如下代码:</div><div class="line">args.foreach(arg=&gt;println(arg))</div><div class="line"></div><div class="line">#执行</div><div class="line">$ scala pa.scala xx1 xx2 xx3</div><div class="line"></div><div class="line">#打印</div><div class="line">xx1</div><div class="line">xx2</div><div class="line">xx3</div><div class="line"></div><div class="line">#在上述例子中,scala解释器可以推断arg的类型为String,因为String是调用foreach的那个数组的元素类型,当然也可以更明确的给args加上类型名:</div><div class="line">args.foreach( (arg: String) =&gt;p rintln(arg))</div><div class="line"></div><div class="line"></div><div class="line">#更加简洁的写法</div><div class="line"></div><div class="line">args.foreach(p rintln(arg))</div></pre></td></tr></table></figure></p>
+<p>for<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#scala也是提供了像指令式的for</div><div class="line"></div><div class="line">for (arg &lt;- args)&#123;</div><div class="line">  println(arg)</div><div class="line">&#125;</div><div class="line">#&lt;- 右侧是已经在前面见过的args数组,&lt;-左侧的arg是val的名称(不是var,这里一定是val),尽管arg可能感觉像var,因为每次枚举都会得到新的值,但这的确是val,因为他不能在for表达式的函数体中被重新赋值,所以,对于args数组的每个元素,枚举的时候都会创建并初始化新的arg值,然后调用执行for的函数体</div></pre></td></tr></table></figure></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/24/functionalProgrammingInScala/第五章 函数式对象/" rel="next" title="第五章 函数式对象">
+                <i class="fa fa-chevron-left"></i> 第五章 函数式对象
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-变量定义"><span class="nav-number">1.</span> <span class="nav-text">1.变量定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-函数定义"><span class="nav-number">2.</span> <span class="nav-text">2.函数定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-编写scala脚本"><span class="nav-number">3.</span> <span class="nav-text">3.编写scala脚本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-用while循环-用if做判断"><span class="nav-number">4.</span> <span class="nav-text">4.用while循环,用if做判断</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-用foreach和for做枚举"><span class="nav-number">5.</span> <span class="nav-text">5.用foreach和for做枚举</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,855 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1. 共享内存简介 共享内存：进程间的一种通讯方式，他允许多个进程访问相同的内存，一个进程改变其中的数据后，其他的进程都可以看到数据的变化 Linux的内存模型：  每个进程的虚拟内存被分为页（page） 每个进程维护自己的内存地址到虚拟内存页之间的映射 实际的数据存在于进程的内存地址上 每个进程都有自己的地址空间，多个进程的映射还是可以指定相同的页   数据可以使用Value或Array类型存储">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python进程之进程间通讯——共享内存">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/python/python进程之进程间通讯——共享内存/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1. 共享内存简介 共享内存：进程间的一种通讯方式，他允许多个进程访问相同的内存，一个进程改变其中的数据后，其他的进程都可以看到数据的变化 Linux的内存模型：  每个进程的虚拟内存被分为页（page） 每个进程维护自己的内存地址到虚拟内存页之间的映射 实际的数据存在于进程的内存地址上 每个进程都有自己的地址空间，多个进程的映射还是可以指定相同的页   数据可以使用Value或Array类型存储">
+<meta property="og:updated_time" content="2017-02-24T17:10:36.886Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python进程之进程间通讯——共享内存">
+<meta name="twitter:description" content="1. 共享内存简介 共享内存：进程间的一种通讯方式，他允许多个进程访问相同的内存，一个进程改变其中的数据后，其他的进程都可以看到数据的变化 Linux的内存模型：  每个进程的虚拟内存被分为页（page） 每个进程维护自己的内存地址到虚拟内存页之间的映射 实际的数据存在于进程的内存地址上 每个进程都有自己的地址空间，多个进程的映射还是可以指定相同的页   数据可以使用Value或Array类型存储">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/python/python进程之进程间通讯——共享内存/"/>
+
+
+
+
+
+  <title> python进程之进程间通讯——共享内存 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/python/python进程之进程间通讯——共享内存/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python进程之进程间通讯——共享内存
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-共享内存简介"><a href="#1-共享内存简介" class="headerlink" title="1. 共享内存简介"></a>1. 共享内存简介</h1><ul>
+<li>共享内存：进程间的一种通讯方式，他允许多个进程访问相同的内存，一个进程改变其中的数据后，其他的进程都可以看到数据的变化</li>
+<li><p>Linux的内存模型：</p>
+<ol>
+<li>每个进程的虚拟内存被分为页（page）</li>
+<li>每个进程维护自己的内存地址到虚拟内存页之间的映射</li>
+<li>实际的数据存在于进程的内存地址上</li>
+<li>每个进程都有自己的地址空间，多个进程的映射还是可以指定相同的页</li>
+</ol>
+</li>
+<li><p>数据可以使用Value或Array类型存储在共享内存映射中，需要导入：from multiprocessing import Process, Value, Array</p>
+</li>
+<li>Manger()返回的管理者，支持类型包括：list  、dict、Namespance、Lock、RLock、Semaphore、BoundedSemaphore、Condition、Event、Queue、Avalue and Array</li>
+</ul>
+<h1 id="2-Value-and-Array-帮助"><a href="#2-Value-and-Array-帮助" class="headerlink" title="2.Value and Array 帮助"></a>2.Value and Array 帮助</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">In [5]: from multiprocessing import Process,Value,Array                    #导入模块</div><div class="line"> </div><div class="line">In [6]: help(Value)                                                #Value</div><div class="line">Help on function Value in module multiprocessing:</div><div class="line"> </div><div class="line">Value(typecode_or_type, *args, **kwds)                            #typecode_or_type是指定数据类型，见下文</div><div class="line">    Returns a synchronized shared object</div><div class="line"> </div><div class="line"> </div><div class="line">In [7]: help(Array)                                             #Array</div><div class="line">Help on function Array in module multiprocessing:</div><div class="line"> </div><div class="line">Array(typecode_or_type, size_or_initializer, **kwds)</div><div class="line">    Returns a synchronized shared array</div></pre></td></tr></table></figure>
+<h1 id="3-typecode-or-type数据类型"><a href="#3-typecode-or-type数据类型" class="headerlink" title="3.typecode_or_type数据类型"></a>3.typecode_or_type数据类型</h1><table>
+<thead>
+<tr>
+<th>Type code</th>
+<th>C Type</th>
+<th>Python Type</th>
+<th>Minimum size in bytes</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>‘b’</td>
+<td>signed char</td>
+<td>int</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>‘B’</td>
+<td>unsigned char</td>
+<td>int</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>‘u’</td>
+<td>Py_UNICODE    Unicode character</td>
+<td>2</td>
+<td>(1)</td>
+</tr>
+<tr>
+<td>‘h’</td>
+<td>signed short</td>
+<td>int</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>‘H’</td>
+<td>unsigned short</td>
+<td>int</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>‘i’</td>
+<td>signed</td>
+<td>int    int</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>‘I’</td>
+<td>unsigned</td>
+<td>int    int</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>‘l’</td>
+<td>signed long</td>
+<td>int</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>‘L’</td>
+<td>unsigned long</td>
+<td>int</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>‘q’</td>
+<td>signed long long</td>
+<td>int</td>
+<td>8</td>
+<td>(2)</td>
+<td></td>
+</tr>
+<tr>
+<td>‘Q’</td>
+<td>unsigned long long</td>
+<td>int</td>
+<td>8</td>
+<td>(2)</td>
+<td></td>
+</tr>
+<tr>
+<td>‘f’</td>
+<td>float</td>
+<td>float</td>
+<td>4</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>‘d’</td>
+<td>double</td>
+<td>float</td>
+<td>8</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">array(&apos;l&apos;)</div><div class="line">array(&apos;u&apos;, &apos;hello \u2641&apos;)</div><div class="line">array(&apos;l&apos;, [1, 2, 3, 4, 5])</div><div class="line">array(&apos;d&apos;, [1.0, 2.0, 3.14])</div></pre></td></tr></table></figure>
+<h1 id="4-Array、Value常用方法"><a href="#4-Array、Value常用方法" class="headerlink" title="4.Array、Value常用方法"></a>4.Array、Value常用方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">#Array</div><div class="line">In [8]: ay = Array(&apos;i&apos;, range(10))                #指定数据类型，创建Array</div><div class="line">In [9]: ay</div><div class="line">Out[9]: &lt;SynchronizedArray wrapper for &lt;multiprocessing.sharedctypes.c_long_Array_10 object at 0x96f48e4&gt;&gt;</div><div class="line">In [10]: ay.                                           #常用的方法</div><div class="line">ay.acquire                                           #加锁</div><div class="line">ay.get_lock                                          #获取锁</div><div class="line">ay.get_obj                                           #获取对象</div><div class="line">ay.release                                          #释放锁</div><div class="line"> </div><div class="line">In [10]: c = ay.get_obj()                       #获取对象      </div><div class="line">In [11]: c</div><div class="line">Out[11]: &lt;multiprocessing.sharedctypes.c_long_Array_10 at 0x96f48e4&gt;</div><div class="line">In [12]: c[:]                                            #打印对象分片</div><div class="line">Out[12]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</div><div class="line"> </div><div class="line"></div><div class="line">-------------------------------------------------------------------------------------</div><div class="line">#Value</div><div class="line">In [13]: value = Value(&apos;i&apos;,11)</div><div class="line">In [14]: value.</div><div class="line">value.acquire                  #加锁   </div><div class="line">value.get_lock                #获取锁</div><div class="line">value.get_obj                  #获取对象</div><div class="line">value.release                  #释放锁</div><div class="line">value.value                     #获取其中的值</div><div class="line"> </div><div class="line">In [14]: value.value              #打印值      </div><div class="line">Out[14]: 11</div></pre></td></tr></table></figure>
+<h1 id="5-Value、Array举例"><a href="#5-Value、Array举例" class="headerlink" title="5.Value、Array举例"></a>5.Value、Array举例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">[root@backup python]# cat gongxiang.py</div><div class="line">#!/usr/bin/python</div><div class="line"> </div><div class="line">from multiprocessing import Process,Value,Array            #导入相应的模块</div><div class="line">import time</div><div class="line">import os</div><div class="line"> </div><div class="line">def child_func(g_value, g_array, ar):</div><div class="line">        g_value.value = ar</div><div class="line">        g_array[ar] = ar*ar</div><div class="line">        print(&quot;g_value.value=&quot;,g_value.value)</div><div class="line"> </div><div class="line">listp = []</div><div class="line"> </div><div class="line">g_value = Value(&apos;i&apos;,0)                                    #初始化共享类型</div><div class="line">g_array = Array(&apos;i&apos;,range(10))</div><div class="line"> </div><div class="line">print(&quot;init g_value=&#123;0&#125;,g_array=&#123;1&#125;&quot;.format(g_value.value,g_array[:]))</div><div class="line"> </div><div class="line">for i in range(10):</div><div class="line">        p = Process(target=child_func, args=(g_value,g_array,i))       #启动子进程，子进程会调用对应的函数，所有的子进程会共享g_value,g_array，因为他们会继承父进程的内存</div><div class="line">        p.start()</div><div class="line">        listp.append(p)</div><div class="line"> </div><div class="line">for i in range(10):</div><div class="line">        listp[i].join()                                                                #等待子进程关闭</div><div class="line"> </div><div class="line">print(&quot;end vlaue=&quot;,g_value.value)</div><div class="line">print(&quot;end array=&quot;,g_array[:])</div><div class="line"></div><div class="line">----------------------------------------------------------------------------</div><div class="line">#打印结果</div><div class="line">[root@backup python]# python gongxiang.py</div><div class="line">init g_value=0,g_array=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</div><div class="line">(&apos;g_value.value=&apos;, 1)</div><div class="line">(&apos;g_value.value=&apos;, 0)</div><div class="line">(&apos;g_value.value=&apos;, 2)</div><div class="line">(&apos;g_value.value=&apos;, 3)</div><div class="line">(&apos;g_value.value=&apos;, 4)</div><div class="line">(&apos;g_value.value=&apos;, 5)</div><div class="line">(&apos;g_value.value=&apos;, 6)</div><div class="line">(&apos;g_value.value=&apos;, 7)</div><div class="line">(&apos;g_value.value=&apos;, 9)</div><div class="line">(&apos;g_value.value=&apos;, 8)</div><div class="line">(&apos;end vlaue=&apos;, 8)</div><div class="line">(&apos;end array=&apos;, [0, 1, 4, 9, 16, 25, 36, 49, 64, 81])</div></pre></td></tr></table></figure>
+<h1 id="6-Manger查看帮助及常用方法"><a href="#6-Manger查看帮助及常用方法" class="headerlink" title="6.Manger查看帮助及常用方法"></a>6.Manger查看帮助及常用方法</h1><p>因为Value和Array中的数据类型是固定的，所以我们引入了Manger的方式来共享内存<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">In [20]: from multiprocessing import Manager</div><div class="line">#帮助</div><div class="line">In [22]: help(Manager)</div><div class="line">Help on function Manager in module multiprocessing:</div><div class="line"> </div><div class="line">Manager()</div><div class="line">    Returns a manager associated with a running server process</div><div class="line"> </div><div class="line">    The managers methods such as `Lock()`, `Condition()` and `Queue()`</div><div class="line">    can be used to create shared objects.</div><div class="line"></div><div class="line"></div><div class="line">#常用方法</div><div class="line">In [23]: ma = Manager() </div><div class="line">#可以获取下面的数据类型</div><div class="line">In [25]: ma.</div><div class="line">ma.Array                        #数组 </div><div class="line">ma.JoinableQueue     </div><div class="line">ma.Queue                     #队列</div><div class="line">ma.address          </div><div class="line"> ma.join              </div><div class="line">ma.start</div><div class="line">ma.BoundedSemaphore  </div><div class="line">ma.Lock              </div><div class="line">ma.RLock            </div><div class="line">ma.connect           </div><div class="line">ma.list                         #列表</div><div class="line">ma.Condition         </div><div class="line">ma.Namespace         </div><div class="line">ma.Semaphore         </div><div class="line">ma.dict                       #字典</div><div class="line">ma.register         </div><div class="line">ma.Event            </div><div class="line">ma.Pool              </div><div class="line">ma.Value             </div><div class="line">ma.get_server        </div><div class="line">ma.shutdown         </div><div class="line">  </div><div class="line">In [26]: dict = ma.dict()            #返回一个字典类型</div><div class="line"> </div><div class="line">In [27]: dict</div><div class="line">Out[27]: &lt;DictProxy object, typeid &apos;dict&apos; at 0x9795aac&gt;</div><div class="line"></div><div class="line"> </div><div class="line">In [28]: dict[&apos;name&apos;]=&apos;zhangsan&apos;            #为字典赋值</div><div class="line"></div><div class="line">In [32]: dict.values()</div><div class="line">Out[32]: [&apos;zhangsan&apos;]</div><div class="line"> </div><div class="line">In [34]: dict[&apos;name&apos;]                           #取出其中的值</div><div class="line">Out[34]: &apos;zhangsan&apos;</div></pre></td></tr></table></figure></p>
+<h1 id="7-Manger举例"><a href="#7-Manger举例" class="headerlink" title="7.Manger举例"></a>7.Manger举例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">[root@backup python]# cat manager.py</div><div class="line">#!/usr/bin/python</div><div class="line"> </div><div class="line">from multiprocessing import Process,Value,Array,Manager</div><div class="line">import time</div><div class="line">import os</div><div class="line"> </div><div class="line"> </div><div class="line">def child_func(g_value,g_array,g_dict,ar):</div><div class="line">        g_value.value = ar</div><div class="line">        g_array[ar] = ar*ar</div><div class="line">        g_dict[ar] = ar+ar</div><div class="line"> </div><div class="line">listp = []</div><div class="line">g_value = Value(&apos;i&apos;,0)</div><div class="line">g_array = Array(&apos;i&apos;,range(10))</div><div class="line">manager = Manager()</div><div class="line">g_dict = manager.dict()                                                #返回一个dict类型的字典</div><div class="line"> </div><div class="line">print(&quot;init g_value=&#123;0&#125;,g_array=&#123;1&#125;,g_dict=&#123;2&#125;&quot;.format(g_value.value,g_array[:],g_dict))</div><div class="line"> </div><div class="line">for i in range(10):</div><div class="line">        p = Process(target=child_func, args=(g_value,g_array,g_dict,i))</div><div class="line">        p.start()</div><div class="line">        listp.append(p)</div><div class="line"> </div><div class="line">for i in range(10):</div><div class="line">        listp[i].join()</div><div class="line"> </div><div class="line">print(&quot;init g_value=&#123;0&#125;,g_array=&#123;1&#125;,g_dict=&#123;2&#125;&quot;.format(g_value.value,g_array[:],g_dict))</div><div class="line"></div><div class="line"></div><div class="line">-------------------------------------------------------------</div><div class="line">#执行结果</div><div class="line">[root@backup python]# python manager.py</div><div class="line">init g_value=0,g_array=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],g_dict=&#123;&#125;</div><div class="line">init g_value=8,g_array=[0, 1, 4, 9, 16, 25, 36, 49, 64, 81],g_dict=&#123;0: 0, 1: 2, 2: 4, 3: 6, 4: 8, 5: 10, 6: 12, 7: 14, 8: 16, 9: 18&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/python/python进程之进程间通讯——命名管道/" rel="next" title="python进程之进程间通讯——命名管道">
+                <i class="fa fa-chevron-left"></i> python进程之进程间通讯——命名管道
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/python进程之进程基本概念/" rel="prev" title="python进程之进程基本概念">
+                python进程之进程基本概念 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-共享内存简介"><span class="nav-number">1.</span> <span class="nav-text">1. 共享内存简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Value-and-Array-帮助"><span class="nav-number">2.</span> <span class="nav-text">2.Value and Array 帮助</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-typecode-or-type数据类型"><span class="nav-number">3.</span> <span class="nav-text">3.typecode_or_type数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Array、Value常用方法"><span class="nav-number">4.</span> <span class="nav-text">4.Array、Value常用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Value、Array举例"><span class="nav-number">5.</span> <span class="nav-text">5.Value、Array举例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-Manger查看帮助及常用方法"><span class="nav-number">6.</span> <span class="nav-text">6.Manger查看帮助及常用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-Manger举例"><span class="nav-number">7.</span> <span class="nav-text">7.Manger举例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.while循环1.1一般格式首行以测试表达式、有一列或者多列的缩进语句的主体，一个可选的else部分（控制权离开循环而又没有碰到break语句时会执行）1234while &amp;lt;test&amp;gt;:    &amp;lt;statements1&amp;gt;else:    &amp;lt;statements2&amp;gt; 1.2.Example12345678910111213141516171819202122#">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python语法之while和for循环和range和zip">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/python/python语法之while和for循环和range和zip/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.while循环1.1一般格式首行以测试表达式、有一列或者多列的缩进语句的主体，一个可选的else部分（控制权离开循环而又没有碰到break语句时会执行）1234while &amp;lt;test&amp;gt;:    &amp;lt;statements1&amp;gt;else:    &amp;lt;statements2&amp;gt; 1.2.Example12345678910111213141516171819202122#">
+<meta property="og:updated_time" content="2017-02-24T17:10:36.871Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python语法之while和for循环和range和zip">
+<meta name="twitter:description" content="1.while循环1.1一般格式首行以测试表达式、有一列或者多列的缩进语句的主体，一个可选的else部分（控制权离开循环而又没有碰到break语句时会执行）1234while &amp;lt;test&amp;gt;:    &amp;lt;statements1&amp;gt;else:    &amp;lt;statements2&amp;gt; 1.2.Example12345678910111213141516171819202122#">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/python/python语法之while和for循环和range和zip/"/>
+
+
+
+
+
+  <title> python语法之while和for循环和range和zip | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/python/python语法之while和for循环和range和zip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python语法之while和for循环和range和zip
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-while循环"><a href="#1-while循环" class="headerlink" title="1.while循环"></a>1.while循环</h1><h2 id="1-1一般格式"><a href="#1-1一般格式" class="headerlink" title="1.1一般格式"></a>1.1一般格式</h2><p>首行以测试表达式、有一列或者多列的缩进语句的主体，一个可选的else部分（<font color="red">控制权离开循环而又没有碰到break语句时会执行</font>）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">while &lt;test&gt;:</div><div class="line">    &lt;statements1&gt;</div><div class="line">else:</div><div class="line">    &lt;statements2&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="1-2-Example"><a href="#1-2-Example" class="headerlink" title="1.2.Example"></a>1.2.Example</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">#Example1</div><div class="line">while True:</div><div class="line">    print(&apos;ha ha&apos;)                    #一直循环打印</div><div class="line"></div><div class="line"></div><div class="line">#Example2</div><div class="line">x = &apos;spam&apos;</div><div class="line">while x:</div><div class="line">    print(x, end=&apos; &apos;)</div><div class="line">    x = x[1:]                        #重新指向自己的切片</div><div class="line"></div><div class="line">。。。</div><div class="line">spam pam am m </div><div class="line"></div><div class="line"></div><div class="line">#Example3</div><div class="line">a = 0, b = 6</div><div class="line">while a&lt;b:</div><div class="line">    print(a, end=&apos; &apos;)</div><div class="line">    a +=1</div><div class="line">。。。</div><div class="line">0 1 2 3 4 5</div></pre></td></tr></table></figure>
+<h2 id="1-3-break、continue、pass"><a href="#1-3-break、continue、pass" class="headerlink" title="1.3.break、continue、pass"></a>1.3.break、continue、pass</h2><ul>
+<li>break 跳出最近所在的循环（跳出整个循环语句）</li>
+<li>continue 跳到最近循环所在的开头处（来到循环的首行）</li>
+<li>pass 什么事也不做，只是空占位语句</li>
+<li>循环else块<br>只有当循环正常离开时，才会执行（也就是没有碰到break语句）</li>
+</ul>
+<h1 id="2-for循环"><a href="#2-for循环" class="headerlink" title="2.for循环"></a>2.for循环</h1><p>for循环语句可以用于字符串、列表、元组、其他内置可迭代对象以及之后我们能够通过类所创建的新对象</p>
+<h2 id="2-1-一般格式"><a href="#2-1-一般格式" class="headerlink" title="2.1.一般格式"></a>2.1.一般格式</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">for &lt;target&gt; in &lt;object&gt;</div><div class="line">    &lt;statements1&gt;</div><div class="line">else:</div><div class="line">    &lt;statements2&gt;</div><div class="line"></div><div class="line"></div><div class="line">#for 配合break、continue使用的例子</div><div class="line">for &lt;target&gt; in &lt;object&gt;</div><div class="line">    &lt;statements1&gt;</div><div class="line">    if &lt;test&gt; : break</div><div class="line">    if &lt;test&gt; :continue</div><div class="line">else:</div><div class="line">    &lt;statements2&gt;</div></pre></td></tr></table></figure>
+<h2 id="2-2-Example"><a href="#2-2-Example" class="headerlink" title="2.2.Example"></a>2.2.Example</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#Example1</div><div class="line">for x in [&apos;spam&apos;, &apos;eggs&apos;, &apos;ham&apos;]:               #循环遍历list</div><div class="line">    print(x , end=&apos; &apos;)</div><div class="line">...</div><div class="line">spam eggs ham</div><div class="line"></div><div class="line"></div><div class="line">#Example2</div><div class="line">S = &apos;spam&apos;</div><div class="line">for char in S:                        #循环遍历str</div><div class="line">    print(char, end=&apos; &apos;)            </div><div class="line">..</div><div class="line">s p a m </div><div class="line"></div><div class="line">#Example3</div><div class="line">T = (&apos;and&apos;, &apos;or&apos; , &apos;okay&apos;)</div><div class="line">for x in T:                        #循环遍历tuple</div><div class="line">    print(x , end=&apos; &apos;)</div><div class="line">...</div><div class="line">and or okay</div><div class="line"></div><div class="line"></div><div class="line">#Example4</div><div class="line">T = [(1,2), (3,4), (5,6)]</div><div class="line">for (a,b) in T:                #遍历嵌套元组</div><div class="line">    print(a,b)</div><div class="line">...</div><div class="line">1 2</div><div class="line">3 4</div><div class="line">5 6</div><div class="line"></div><div class="line"></div><div class="line">#Example5</div><div class="line">D = &#123;&apos;a&apos;:1, &apos;b&apos;:2, &apos;c&apos;:3&#125;</div><div class="line">for key in D:                              #遍历dict的key</div><div class="line">    print(key,&apos;=&gt;&apos;,D[key])</div><div class="line">....</div><div class="line">a=&gt;1</div><div class="line">b=&gt;2</div><div class="line">c=&gt;3</div><div class="line"></div><div class="line"></div><div class="line">for (key,value) in D.items():</div><div class="line">    print(key,&apos;=&gt;&apos;,value)</div><div class="line">....</div><div class="line">a=&gt;1</div><div class="line">b=&gt;2</div><div class="line">c=&gt;3</div><div class="line"></div><div class="line"></div><div class="line">#Example6</div><div class="line">for ((a, b), c) in [((1,2), 3),  ((4,5), 6)]:</div><div class="line">    print(a,b,c)</div><div class="line">1 2 3</div><div class="line">4 5 6</div><div class="line"></div><div class="line"></div><div class="line">for((a, b), c) in [((1, 2), 3), (&apos;xy&apos;, 6)]:</div><div class="line">    print(a, b, c)</div><div class="line">....</div><div class="line">1 2 3</div><div class="line">x y 6</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#Example7</div><div class="line">for (a, *b, c) in [(1,2,3,4), (5, 6, 7, 8)]:</div><div class="line">    print(a,b,c)</div><div class="line">......</div><div class="line">1 [2,3] 4</div><div class="line">5 [6,7] 8</div><div class="line"></div><div class="line"></div><div class="line">#Example8   </div><div class="line">for x in L1:                        #嵌套for循环            </div><div class="line">    for y in L2:</div><div class="line">        print(xxxx)</div><div class="line"></div><div class="line"></div><div class="line">#Example9</div><div class="line">for line in open(&apos;test.txt&apos;):            #循环遍历文件，文件迭代器会自动在每次循环迭代的时候读入一行</div><div class="line">    print(line)</div></pre></td></tr></table></figure>
+<h1 id="3-range"><a href="#3-range" class="headerlink" title="3.range"></a>3.range</h1><p>range函数返回一系列连续增加的整数，可用作for的索引</p>
+<h2 id="3-1-语法"><a href="#3-1-语法" class="headerlink" title="3.1.语法"></a>3.1.语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">list(range(&lt;font color=red&gt;x&lt;/font&gt;, &lt;font color=green&gt;y&lt;/font&gt; , &lt;font color=blue&gt;step&lt;/font&gt;)</div><div class="line"></div><div class="line">list(range(0,7,2)</div><div class="line">[0, 2, 4, 6]</div></pre></td></tr></table></figure>
+<ul>
+<li>x 表示整数序列的起始值（默认0开始）</li>
+<li>y 表示整数序列的结束值（不包含y本身）</li>
+<li>step 步进值（相邻元素之间的差值，默认是1）</li>
+</ul>
+<h2 id="3-2-例子"><a href="#3-2-例子" class="headerlink" title="3.2.例子"></a>3.2.例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">list(range(-4,4))</div><div class="line">[-4,-3,-2,-1,0,1,2,3]                                #可以是负数序列</div><div class="line"></div><div class="line"></div><div class="line">list(range(4,-4,-1))</div><div class="line">[4,3,2,1,0,-1,-2,-3]                                #可以是非递增的</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">x = &apos;spam&apos;</div><div class="line">for i in range(len(x)):                    #和for循环配合使用</div><div class="line">    print(x[i], end=&apos; &apos;)</div><div class="line">...</div><div class="line">s p a m</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">L = [1,2,3]</div><div class="line">[x+1 for x in L]                     #生成一个新的list，其中的每一个元素都加1</div></pre></td></tr></table></figure>
+<h1 id="4-zip"><a href="#4-zip" class="headerlink" title="4.zip"></a>4.zip</h1><p>zip会取得一个或多个序列为参数，然后返回一个元组的列表，将这些序列中的并排的元素配成对。如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">L1 = [1,2,3]</div><div class="line">L2 = [a,b,c]</div><div class="line"></div><div class="line">list(zip(L1, L2))</div><div class="line">[(1,a), (2,b), (3,c)]</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">T1 = (1,2,3)</div><div class="line">T2 = (4,5,6)</div><div class="line">T3 = (7,8,9)</div><div class="line"></div><div class="line">list(zip(T1, T2, T3))</div><div class="line">[(1,4,7), (2,5,8), (3,6,9)]</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">S1 = &apos;abc&apos;</div><div class="line">S2 = &apos;xyz123&apos;</div><div class="line"></div><div class="line">list(zip(S1, S2))                                       #当长度不同时，zip会以最短序列的长度为准来截取所得到的元组</div><div class="line">[(&apos;a&apos;,&apos;x&apos;), (&apos;b&apos;,&apos;y&apos;), (&apos;c&apos;, &apos;z&apos;)]</div><div class="line"></div><div class="line">#使用zip构造字典</div><div class="line">keys = [&apos;eggs&apos;, &apos;toast&apos;, &apos;ham&apos;]</div><div class="line">values = [1,3,5]</div><div class="line">D2 = &#123;&#125;</div><div class="line">for (k,v) in list(zip(keys,values)):</div><div class="line">    D2[k] = v</div><div class="line"></div><div class="line">D2</div><div class="line">&#123;&apos;eggs&apos;:1, &apos;toast&apos;:3, &apos;ham&apos;:5&#125;</div><div class="line"></div><div class="line"></div><div class="line">#另一种方式构造字典</div><div class="line">D3 = dict(list(zip(keys,values)))</div></pre></td></tr></table></figure></p>
+<h1 id="5-偏移和元素：enumerate"><a href="#5-偏移和元素：enumerate" class="headerlink" title="5.偏移和元素：enumerate"></a>5.偏移和元素：enumerate</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">#手动获取偏移</div><div class="line">&gt;&gt;s = &apos;spam&apos;</div><div class="line">&gt;&gt;offset = 0</div><div class="line">&gt;&gt;for item in s:</div><div class="line">    print(item, &apos;appers at offset&apos;, offset)</div><div class="line">    offset +=1</div><div class="line">...</div><div class="line">s appers at offset 0</div><div class="line">p appers at offset 1</div><div class="line">a appers at offset 2</div><div class="line">m appers at offset 3</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#通过enumerate获取偏移</div><div class="line">&gt;&gt;s = &apos;spam&apos;</div><div class="line">&gt;&gt;for (offset, item) in enumerate(s):                     #offset记录的就是偏移量</div><div class="line">    print(item, &apos;appers at offset&apos;, offset)</div><div class="line">...</div><div class="line">s appers at offset 0</div><div class="line">p appers at offset 1</div><div class="line">a appers at offset 2</div><div class="line">m appers at offset 3</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/python/python语法之变量命名规则/" rel="next" title="python语法之变量命名规则">
+                <i class="fa fa-chevron-left"></i> python语法之变量命名规则
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/python语法之if/" rel="prev" title="python语法之if">
+                python语法之if <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-while循环"><span class="nav-number">1.</span> <span class="nav-text">1.while循环</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1一般格式"><span class="nav-number">1.1.</span> <span class="nav-text">1.1一般格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-Example"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-break、continue、pass"><span class="nav-number">1.3.</span> <span class="nav-text">1.3.break、continue、pass</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-for循环"><span class="nav-number">2.</span> <span class="nav-text">2.for循环</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-一般格式"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.一般格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-Example"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.Example</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-range"><span class="nav-number">3.</span> <span class="nav-text">3.range</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-语法"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-例子"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.例子</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-zip"><span class="nav-number">4.</span> <span class="nav-text">4.zip</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-偏移和元素：enumerate"><span class="nav-number">5.</span> <span class="nav-text">5.偏移和元素：enumerate</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

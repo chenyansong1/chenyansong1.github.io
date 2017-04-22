@@ -1,0 +1,1513 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hive," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="转自:[一起学Hive]之二–Hive函数大全-完整版 介绍hive的函数分类,以及举例">
+<meta name="keywords" content="hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive函数大全(转)">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/hive/hive函数/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="转自:[一起学Hive]之二–Hive函数大全-完整版 介绍hive的函数分类,以及举例">
+<meta property="og:updated_time" content="2017-02-27T13:31:59.223Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hive函数大全(转)">
+<meta name="twitter:description" content="转自:[一起学Hive]之二–Hive函数大全-完整版 介绍hive的函数分类,以及举例">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/hive/hive函数/"/>
+
+
+
+
+
+  <title> Hive函数大全(转) | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/hive/hive函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Hive函数大全(转)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hive/" itemprop="url" rel="index">
+                    <span itemprop="name">hive</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>转自:<a href="http://lxw1234.com/archives/2015/06/251.htm" target="_blank" rel="external">[一起学Hive]之二–Hive函数大全-完整版</a></p>
+<p>介绍hive的函数分类,以及举例</p>
+<a id="more"></a>
+<h1 id="一、关系运算："><a href="#一、关系运算：" class="headerlink" title="一、关系运算："></a>一、关系运算：</h1><ol>
+<li>等值比较: =</li>
+<li>等值比较:&lt;=&gt;</li>
+<li>不等值比较: &lt;&gt;和!=</li>
+<li>小于比较: &lt;</li>
+<li>小于等于比较: &lt;=</li>
+<li>大于比较: &gt;</li>
+<li>大于等于比较: &gt;=</li>
+<li>区间比较</li>
+<li>空值判断: IS NULL</li>
+<li>非空判断: IS NOT NULL</li>
+<li>LIKE比较: LIKE</li>
+<li>JAVA的LIKE操作: RLIKE</li>
+<li>REGEXP操作: REGEXP</li>
+</ol>
+<h1 id="二、数学运算："><a href="#二、数学运算：" class="headerlink" title="二、数学运算："></a>二、数学运算：</h1><ol>
+<li>加法操作: +</li>
+<li>减法操作: –</li>
+<li>乘法操作: *</li>
+<li>除法操作: /</li>
+<li>取余操作: %</li>
+<li>位与操作: &amp;</li>
+<li>位或操作: |</li>
+<li>位异或操作: ^</li>
+<li>位取反操作: ~</li>
+</ol>
+<h1 id="三、逻辑运算："><a href="#三、逻辑运算：" class="headerlink" title="三、逻辑运算："></a>三、逻辑运算：</h1><ol>
+<li>逻辑与操作: AND 、&amp;&amp;</li>
+<li>逻辑或操作: OR 、||</li>
+<li>逻辑非操作: NOT、!</li>
+</ol>
+<h1 id="四、复合类型构造函数"><a href="#四、复合类型构造函数" class="headerlink" title="四、复合类型构造函数"></a>四、复合类型构造函数</h1><ol>
+<li>map结构</li>
+<li>struct结构</li>
+<li>named_struct结构</li>
+<li>array结构</li>
+<li>create_union</li>
+</ol>
+<h1 id="五、复合类型操作符"><a href="#五、复合类型操作符" class="headerlink" title="五、复合类型操作符"></a>五、复合类型操作符</h1><ol>
+<li>获取array中的元素</li>
+<li>获取map中的元素</li>
+<li>获取struct中的元素</li>
+</ol>
+<h1 id="六、数值计算函数"><a href="#六、数值计算函数" class="headerlink" title="六、数值计算函数"></a>六、数值计算函数</h1><ol>
+<li>取整函数: round</li>
+<li>指定精度取整函数: round</li>
+<li>向下取整函数: floor</li>
+<li>向上取整函数: ceil</li>
+<li>向上取整函数: ceiling</li>
+<li>取随机数函数: rand</li>
+<li>自然指数函数: exp</li>
+<li>以10为底对数函数: log10</li>
+<li>以2为底对数函数: log2</li>
+<li>对数函数: log</li>
+<li>幂运算函数: pow</li>
+<li>幂运算函数: power</li>
+<li>开平方函数: sqrt</li>
+<li>二进制函数: bin</li>
+<li>十六进制函数: hex</li>
+<li>反转十六进制函数: unhex</li>
+<li>进制转换函数: conv</li>
+<li>绝对值函数: abs</li>
+<li>正取余函数: pmod</li>
+<li>正弦函数: sin</li>
+<li>反正弦函数: asin</li>
+<li>余弦函数: cos</li>
+<li>反余弦函数: acos</li>
+<li>positive函数: positive</li>
+<li>negative函数: negative</li>
+</ol>
+<h1 id="七、集合操作函数"><a href="#七、集合操作函数" class="headerlink" title="七、集合操作函数"></a>七、集合操作函数</h1><ol>
+<li>map类型大小：size</li>
+<li>array类型大小：size</li>
+<li>判断元素数组是否包含元素：array_contains</li>
+<li>获取map中所有value集合</li>
+<li>获取map中所有key集合</li>
+<li>数组排序</li>
+</ol>
+<h1 id="八、类型转换函数"><a href="#八、类型转换函数" class="headerlink" title="八、类型转换函数"></a>八、类型转换函数</h1><ol>
+<li>二进制转换：binary</li>
+<li>基础类型之间强制转换：cast</li>
+</ol>
+<h1 id="九、日期函数"><a href="#九、日期函数" class="headerlink" title="九、日期函数"></a>九、日期函数</h1><ol>
+<li>UNIX时间戳转日期函数: from_unixtime</li>
+<li>获取当前UNIX时间戳函数: unix_timestamp</li>
+<li>日期转UNIX时间戳函数: unix_timestamp</li>
+<li>指定格式日期转UNIX时间戳函数: unix_timestamp</li>
+<li>日期时间转日期函数: to_date</li>
+<li>日期转年函数: year</li>
+<li>日期转月函数: month</li>
+<li>日期转天函数: day</li>
+<li>日期转小时函数: hour</li>
+<li>日期转分钟函数: minute</li>
+<li>日期转秒函数: second</li>
+<li>日期转周函数: weekofyear</li>
+<li>日期比较函数: datediff</li>
+<li>日期增加函数: date_add</li>
+<li>日期减少函数: date_sub</li>
+</ol>
+<h1 id="十、条件函数"><a href="#十、条件函数" class="headerlink" title="十、条件函数"></a>十、条件函数</h1><ol>
+<li>If函数: if</li>
+<li>非空查找函数: COALESCE</li>
+<li>条件判断函数：CASE</li>
+<li>条件判断函数：CASE</li>
+</ol>
+<h1 id="十一、字符串函数"><a href="#十一、字符串函数" class="headerlink" title="十一、字符串函数"></a>十一、字符串函数</h1><ol>
+<li>字符ascii码函数：ascii</li>
+<li>base64字符串</li>
+<li>字符串连接函数：concat</li>
+<li>带分隔符字符串连接函数：concat_ws</li>
+<li>数组转换成字符串的函数：concat_ws</li>
+<li>小数位格式化成字符串函数：format_number</li>
+<li>字符串截取函数：substr,substring</li>
+<li>字符串截取函数：substr,substring</li>
+<li>字符串查找函数：instr</li>
+<li>字符串长度函数：length</li>
+<li>字符串查找函数：locate</li>
+<li>字符串格式化函数：printf</li>
+<li>字符串转换成map函数：str_to_map</li>
+<li>base64解码函数：unbase64(string str)</li>
+<li>字符串转大写函数：upper,ucase</li>
+<li>字符串转小写函数：lower,lcase</li>
+<li>去空格函数：trim</li>
+<li>左边去空格函数：ltrim</li>
+<li>右边去空格函数：rtrim</li>
+<li>正则表达式替换函数：regexp_replace</li>
+<li>正则表达式解析函数：regexp_extract</li>
+<li>URL解析函数：parse_url</li>
+<li>json解析函数：get_json_object</li>
+<li>空格字符串函数：space</li>
+<li>重复字符串函数：repeat</li>
+<li>左补足函数：lpad</li>
+<li>右补足函数：rpad</li>
+<li>分割字符串函数: split</li>
+<li>集合查找函数: find_in_set</li>
+<li>分词函数：sentences</li>
+<li>分词后统计一起出现频次最高的TOP-K</li>
+<li>分词后统计与指定单词一起出现频次最高的TOP-K</li>
+</ol>
+<h1 id="十二、混合函数"><a href="#十二、混合函数" class="headerlink" title="十二、混合函数"></a>十二、混合函数</h1><ol>
+<li>调用Java函数：java_method</li>
+<li>调用Java函数：reflect</li>
+<li>字符串的hash值：hash</li>
+</ol>
+<h1 id="十三、XPath解析XML函数"><a href="#十三、XPath解析XML函数" class="headerlink" title="十三、XPath解析XML函数"></a>十三、XPath解析XML函数</h1><ol>
+<li>xpath</li>
+<li>xpath_string</li>
+<li>xpath_boolean</li>
+<li>xpath_short, xpath_int, xpath_long</li>
+<li>xpath_float, xpath_double, xpath_number</li>
+</ol>
+<h1 id="十四、汇总统计函数（UDAF）"><a href="#十四、汇总统计函数（UDAF）" class="headerlink" title="十四、汇总统计函数（UDAF）"></a>十四、汇总统计函数（UDAF）</h1><ol>
+<li>个数统计函数: count</li>
+<li>总和统计函数: sum</li>
+<li>平均值统计函数: avg</li>
+<li>最小值统计函数: min</li>
+<li>最大值统计函数: max</li>
+<li>非空集合总体变量函数: var_pop</li>
+<li>非空集合样本变量函数: var_samp</li>
+<li>总体标准偏离函数: stddev_pop</li>
+<li>样本标准偏离函数: stddev_samp</li>
+<li>中位数函数: percentile</li>
+<li>中位数函数: percentile</li>
+<li>近似中位数函数: percentile_approx</li>
+<li>近似中位数函数: percentile_approx</li>
+<li>直方图: histogram_numeric</li>
+<li>集合去重数：collect_set</li>
+<li>集合不去重函数：collect_list</li>
+</ol>
+<h1 id="十五、表格生成函数Table-Generating-Functions-UDTF"><a href="#十五、表格生成函数Table-Generating-Functions-UDTF" class="headerlink" title="十五、表格生成函数Table-Generating Functions (UDTF)"></a>十五、表格生成函数Table-Generating Functions (UDTF)</h1><ol>
+<li>数组拆分成多行：explode</li>
+<li>Map拆分成多行：explode</li>
+</ol>
+<h1 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h1><h2 id="一、关系运算：-1"><a href="#一、关系运算：-1" class="headerlink" title="一、关系运算："></a>一、关系运算：</h2><ol>
+<li>等值比较: =</li>
+</ol>
+<p>语法：A=B<br>操作类型：所有基本类型<br>描述: 如果表达式 A 与表达式 B 相等，则为 TRUE；否则为 FALSE；只要有任意比较项为<br>NULL,均返回 FALSE;<br>举例：<br>hive&gt; select 1 from lxw1234 where 1=1;<br>1<br>hive&gt; select 1 from lxw1234 where NULL = NULL; OK</p>
+<hr>
+<ol>
+<li>等值比较:&lt;=&gt;</li>
+</ol>
+<p>语法：A &lt;=&gt; B<br>操作类型：所有基本类型<br>描述：如果 A 和 B 都是非 NULL 值，则返回结果和=一样，如果两者都为 NULL，返回 TRUE,<br>如果有一个为 NULL，则返回 FALSE。 举例：<br>hive&gt; select 1 from lxw1234 where NULL &lt;=&gt; NULL; OK<br>1</p>
+<hr>
+<ol>
+<li>不等值比较: &lt;&gt;和!=</li>
+</ol>
+<p>语法: A &lt;&gt; B A != B<br>操作类型: 所有基本类型<br>描述: 如果表达式 A 为 NULL，或者表达式 B 为 NULL，返回 NULL；如果表达式 A 与表 达式 B 不相等，则为 TRUE；否则为 FALSE<br>举例：<br>hive&gt; select 1 from lxw1234 where 1 &lt;&gt; 2;<br>1</p>
+<hr>
+<ol>
+<li>小于比较: &lt;</li>
+</ol>
+<p>语法: A &lt; B 操作类型: 所有基本类型 描述: 如果表达式 A 为 NULL，或者表达式 B 为 NULL，返回 NULL；如果表达式 A 小于 表达式 B，则为 TRUE；否则为 FALSE 举例： hive&gt; select 1 from lxw1234 where 1 &lt; 2;<br>1</p>
+<hr>
+<ol>
+<li>小于等于比较: &lt;=</li>
+</ol>
+<p>语法: A &lt;= B 操作类型: 所有基本类型 描述: 如果表达式 A 为 NULL，或者表达式 B 为 NULL，返回 NULL；如果表达式 A 小于 或者等于表达式 B，则为 TRUE；否则为 FALSE 举例： hive&gt; select 1 from lxw1234 where 1 &lt;= 1; 1 6. 大于比较: &gt;</p>
+<p>语法: A &gt; B<br>操作类型: 所有基本类型<br>描述: 如果表达式 A 为 NULL，或者表达式 B 为 NULL，返回 NULL；如果表达式 A 大于 表达式 B，则为 TRUE；否则为 FALSE<br>举例：<br>hive&gt; select 1 from lxw1234 where 2 &gt; 1;<br>1</p>
+<hr>
+<ol>
+<li>大于等于比较: &gt;=</li>
+</ol>
+<p>语法: A &gt;= B<br>操作类型: 所有基本类型<br>描述: 如果表达式 A 为 NULL，或者表达式 B 为 NULL，返回 NULL；如果表达式 A 大于 或者等于表达式 B，则为 TRUE；否则为 FALSE<br>举例：<br>hive&gt; select 1 from lxw1234 where 1 &gt;= 1;<br>1</p>
+<p>注意：String 的比较要注意(常用的时间比较可以先 to_date 之后再比较)<br>hive&gt; select * from lxw1234; OK</p>
+<p>2011111209 00:00:00 2011111209</p>
+<p>hive&gt; select a,b,a<b,a>b,a=b from lxw1234;<br>2011111209 00:00:00 2011111209 false true false</b,a></p>
+<hr>
+<ol>
+<li>区间比较</li>
+</ol>
+<p>语法: A [NOT] BETWEEN B AND C<br>操作类型: 所有类型<br>描述: 如果 A、B、C 有任一个为 NULL,则返回 FALSE. 等价于 B &lt;= A &lt; C. 举例： hive&gt; select 1 from lxw1234 where 1 between 1 and 2; OK<br>1</p>
+<hr>
+<ol>
+<li>空值判断: IS NULL</li>
+</ol>
+<p>语法: A IS NULL<br>操作类型: 所有类型<br>描述: 如果表达式 A 的值为 NULL，则为 TRUE；否则为 FALSE<br>举例：<br>hive&gt; select 1 from lxw1234 where null is null;<br>1<br>版权所有：<a href="http://lxw1234.com" target="_blank" rel="external">http://lxw1234.com</a></p>
+<hr>
+<ol>
+<li>非空判断: IS NOT NULL</li>
+</ol>
+<p>语法: A IS NOT NULL<br>操作类型: 所有类型<br>描述: 如果表达式 A 的值为 NULL，则为 FALSE；否则为 TRUE<br>举例：<br>hive&gt; select 1 from lxw1234 where 1 is not null;<br>1</p>
+<hr>
+<ol>
+<li>LIKE 比较: LIKE</li>
+</ol>
+<p>语法: A LIKE B<br>操作类型: strings</p>
+<p>描述: 如果字符串 A 或者字符串 B 为 NULL，则返回 NULL；如果字符串 A 符合表达式 B 的正则语法，则为 TRUE；否则为 FALSE。B 中字符”<em>”表示任意单个字符，而字 符”%”表示任意数量的字符。<br>举例：<br>hive&gt; select 1 from lxw1234 where ‘football’ like ‘foot%’;<br>1<br>hive&gt; select 1 from lxw1234 where ‘football’ like ‘foot </em>’;<br>1<br>注意：否定比较时候用 NOT A LIKE B<br>hive&gt; select 1 from lxw1234 where NOT ‘football’ like ‘fff%’;<br>1</p>
+<hr>
+<ol>
+<li>JAVA 的 LIKE 操作: RLIKE</li>
+</ol>
+<p>语法: A RLIKE B<br>操作类型: strings<br>描述: 如果字符串 A 或者字符串 B 为 NULL，则返回 NULL；如果字符串 A 符合 JAVA 正 则表达式 B 的正则语法，则为 TRUE；否则为 FALSE。<br>举例：<br>hive&gt; select 1 from lxw1234 where ‘footbar’ rlike ‘^f.*r$’;<br>1<br>注意：判断一个字符串是否全为数字：<br>hive&gt;select 1 from lxw1234 where ‘123456’ rlike ‘^\d+$’;<br>1<br>hive&gt; select 1 from lxw1234 where ‘123456aa’ rlike ‘^\d+$’;</p>
+<hr>
+<ol>
+<li>REGEXP 操作: REGEXP</li>
+</ol>
+<p>语法: A REGEXP B<br>操作类型: strings<br>描述: 功能与 RLIKE 相同 举例：<br>hive&gt; select 1 from lxw1234 where ‘footbar’ REGEXP ‘^f.*r$’;<br>1<br>版权所有：<a href="http://lxw1234.com" target="_blank" rel="external">http://lxw1234.com</a></p>
+<hr>
+<h2 id="二、数学运算：-1"><a href="#二、数学运算：-1" class="headerlink" title="二、数学运算："></a>二、数学运算：</h2><ol>
+<li>加法操作: +</li>
+</ol>
+<p>语法: A + B<br>操作类型：所有数值类型<br>说明：返回 A 与 B 相加的结果。结果的数值类型等于 A 的类型和 B 的类型的最小父类 型（详见数据类型的继承关系）。比如，int + int 一般结果为 int 类型，而 int + double 一般 结果为 double 类型<br>举例：<br>hive&gt; select 1 + 9 from lxw1234;<br>10<br>hive&gt; create table lxw1234 as select 1 + 1.2 from lxw1234;<br>hive&gt; describe lxw1234;<br>_c0 double</p>
+<hr>
+<ol>
+<li>减法操作: –</li>
+</ol>
+<p>语法: A – B<br>操作类型：所有数值类型<br>说明：返回 A 与 B 相减的结果。结果的数值类型等于 A 的类型和 B 的类型的最小父类 型（详见数据类型的继承关系）。比如，int – int 一般结果为 int 类型，而 int – double 一 般结果为 double 类型<br>举例：<br>hive&gt; select 10 – 5 from lxw1234;<br>5<br>hive&gt; create table lxw1234 as select 5.6 – 4 from lxw1234;<br>hive&gt; describe lxw1234;<br>_c0 double</p>
+<hr>
+<ol>
+<li>乘法操作: *</li>
+</ol>
+<p>语法: A <em> B<br>操作类型：所有数值类型<br>说明：返回 A 与 B 相乘的结果。结果的数值类型等于 A 的类型和 B 的类型的最小父类 型（详见数据类型的继承关系）。注意，如果 A 乘以 B 的结果超过默认结果类型的数值范围， 则需要通过 cast 将结果转换成范围更大的数值类型<br>举例：<br>hive&gt; select 40 </em> 5 from lxw1234;</p>
+<p>200<br>版权所有：<a href="http://lxw1234.com" target="_blank" rel="external">http://lxw1234.com</a></p>
+<hr>
+<ol>
+<li>除法操作: /</li>
+</ol>
+<p>语法: A / B<br>操作类型：所有数值类型<br>说明：返回 A 除以 B 的结果。结果的数值类型为 double<br>举例：<br>hive&gt; select 40 / 5 from lxw1234;<br>8.0</p>
+<p>注意：hive 中最高精度的数据类型是 double,只精确到小数点后 16 位，在做除法运算的 时候要特别注意<br>hive&gt;select ceil(28.0/6.999999999999999999999) from lxw1234 limit 1;<br>结果为 4<br>hive&gt;select ceil(28.0/6.99999999999999) from lxw1234 limit 1;<br>结果为 5</p>
+<hr>
+<ol>
+<li>取余操作: %</li>
+</ol>
+<p>语法: A % B<br>操作类型：所有数值类型<br>说明：返回 A 除以 B 的余数。结果的数值类型等于 A 的类型和 B 的类型的最小父类型<br>（详见数据类型的继承关系）。 举例：<br>hive&gt; select 41 % 5 from lxw1234;<br>1<br>hive&gt; select 8.4 % 4 from lxw1234;<br>0.40000000000000036<br>注意：精度在 hive 中是个很大的问题，类似这样的操作最好通过 round 指定精度<br>hive&gt; select round(8.4 % 4 , 2) from lxw1234;<br>0.4</p>
+<hr>
+<ol>
+<li>位与操作: &amp;</li>
+</ol>
+<p>语法: A &amp; B<br>操作类型：所有数值类型<br>说明：返回 A 和 B 按位进行与操作的结果。结果的数值类型等于 A 的类型和 B 的类型 的最小父类型（详见数据类型的继承关系）。</p>
+<p>举例：<br>hive&gt; select 4 &amp; 8 from lxw1234;<br>0<br>hive&gt; select 6 &amp; 4 from lxw1234;<br>4</p>
+<hr>
+<ol>
+<li>位或操作: |</li>
+</ol>
+<p>语法: A | B<br>操作类型：所有数值类型<br>说明：返回 A 和 B 按位进行或操作的结果。结果的数值类型等于 A 的类型和 B 的类型 的最小父类型（详见数据类型的继承关系）。<br>举例：<br>hive&gt; select 4 | 8 from lxw1234;<br>12<br>hive&gt; select 6 | 8 from lxw1234;<br>14</p>
+<hr>
+<ol>
+<li>位异或操作: ^</li>
+</ol>
+<p>语法: A ^ B<br>操作类型：所有数值类型<br>说明：返回 A 和 B 按位进行异或操作的结果。结果的数值类型等于 A 的类型和 B 的类 型的最小父类型（详见数据类型的继承关系）。<br>举例：<br>hive&gt; select 4 ^ 8 from lxw1234;<br>12<br>hive&gt; select 6 ^ 4 from lxw1234;<br>2</p>
+<hr>
+<p>9．位取反操作: ~</p>
+<p>语法: ~A<br>操作类型：所有数值类型<br>说明：返回 A 按位取反操作的结果。结果的数值类型等于 A 的类型。 举例：<br>hive&gt; select ~6 from lxw1234;<br>-7</p>
+<p>hive&gt; select ~4 from lxw1234;<br>-5</p>
+<hr>
+<h2 id="三、逻辑运算：-1"><a href="#三、逻辑运算：-1" class="headerlink" title="三、逻辑运算："></a>三、逻辑运算：</h2><ol>
+<li>逻辑与操作: AND 、&amp;&amp;</li>
+</ol>
+<p>语法: A AND B<br>操作类型：boolean<br>说明：如果 A 和 B 均为 TRUE，则为 TRUE；否则为 FALSE。如果 A 为 NULL 或 B 为 NULL， 则为 NULL<br>举例：<br>hive&gt; select 1 from lxw1234 where 1=1 and 2=2;<br>1</p>
+<hr>
+<ol>
+<li>逻辑或操作: OR 、||</li>
+</ol>
+<p>语法: A OR B<br>操作类型：boolean<br>说明：如果 A 为 TRUE，或者 B 为 TRUE，或者 A 和 B 均为 TRUE，则为 TRUE；否则为 FALSE<br>举例：<br>hive&gt; select 1 from lxw1234 where 1=2 or 2=2;<br>1</p>
+<hr>
+<ol>
+<li>逻辑非操作: NOT、!</li>
+</ol>
+<p>语法: NOT A、!A<br>操作类型：boolean<br>说明：如果 A 为 FALSE，或者 A 为 NULL，则为 TRUE；否则为 FALSE<br>举例：<br>hive&gt; select 1 from lxw1234 where not 1=2;<br>1<br>hive&gt; select 1 from lxw1234 where !1=2; OK<br>1</p>
+<hr>
+<h2 id="四、复合类型构造函数-1"><a href="#四、复合类型构造函数-1" class="headerlink" title="四、复合类型构造函数"></a>四、复合类型构造函数</h2><ol>
+<li>map 结构</li>
+</ol>
+<p>语法：map(k1,v1,k2,v2,…)<br>操作类型：map<br>说明：使用给定的 key-value 对，构造一个 map 数据结构 举例：<br>hive&gt; select map(‘k1′,’v1′,’k2′,’v2′) from lxw1234; OK<br>{“k2″:”v2″,”k1″:”v1”}</p>
+<hr>
+<ol>
+<li>struct 结构</li>
+</ol>
+<p>语法：struct(val1,val2,val3,…) 操作类型：struct 说明：使用给定的表达式，构造一个 struct 数据结构 举例：<br>hive&gt; select struct(1,’aaa’,FALSE) from lxw1234; OK<br>{“col1″:1,”col2″:”aaa”,”col3″:false}</p>
+<hr>
+<ol>
+<li>named_struct 结构</li>
+</ol>
+<p>语法：named_struct(name1,val1,name2,val2,name3,val3,…) 操作类型：struct 说明：使用给定的表达式，构造一个指定列名的 struct 数据结构 举例：<br>hive&gt; select named_struct(‘a’,1,’b’,’aaa’,’c’,FALSE) from lxw1234; OK<br>{“a”:1,”b”:”aaa”,”c”:false}</p>
+<hr>
+<ol>
+<li>array 结构</li>
+</ol>
+<p>语法：array(val1,val2,val3,…) 操作类型：array 说明：使用给定的表达式，构造一个 array 数据结构 举例：</p>
+<p>hive&gt; select array(1,2,3) from lxw1234; OK<br>[1,2,3]</p>
+<hr>
+<ol>
+<li>create_union</li>
+</ol>
+<p>语法：create_union (tag, val1, val2, …)<br>操作类型：uniontype<br>说明：使用给定的 tag 和表达式，构造一个 uniontype 数据结构。tag 表示使用第 tag 个 表达式作为 uniontype 的 value<br>举例：<br>hive&gt; select create_union(0,’ss’,array(1,2,3)) from lxw1234; OK<br>{0:”ss”}<br>hive&gt; select create_union(1,’ss’,array(1,2,3)) from lxw1234; OK<br>{1:[1,2,3]}</p>
+<hr>
+<h2 id="五、复合类型操作符-1"><a href="#五、复合类型操作符-1" class="headerlink" title="五、复合类型操作符"></a>五、复合类型操作符</h2><ol>
+<li>获取 array 中的元素</li>
+</ol>
+<p>语法：A[n]<br>操作类型：所有基础类型<br>说明：返回数组 A 中第 n 个索引的元素值。 举例：<br>hive&gt; select array(‘a’,’b’,’c’)[1] from lxw1234; OK<br>b</p>
+<hr>
+<ol>
+<li>获取 map 中的元素</li>
+</ol>
+<p>语法：M[key]<br>操作类型：所有基础类型<br>说明：返回 map 结构 M 中 key 对应的 value。 举例：<br>hive&gt; select map(‘k1′,’v1’)[‘k1’] from lxw1234; OK</p>
+<p>v1</p>
+<hr>
+<ol>
+<li>获取 struct 中的元素</li>
+</ol>
+<p>语法：S.x<br>操作类型：所有类型<br>说明：返回 struct 结构 S 中名为 x 的元素。 举例：<br>hive&gt; select named_struct(‘a’,1,’b’,’aaa’,’c’,FALSE).c from lxw1234; OK<br>false</p>
+<hr>
+<h2 id="六、数值计算函数-1"><a href="#六、数值计算函数-1" class="headerlink" title="六、数值计算函数"></a>六、数值计算函数</h2><ol>
+<li>取整函数: round</li>
+</ol>
+<p>语法: round(double a)<br>返回值: BIGINT<br>说明: 返回 double 类型的整数值部分 （遵循四舍五入） 举例：<br>hive&gt; select round(3.1415926) from lxw1234;<br>3<br>hive&gt; select round(3.5) from lxw1234;<br>4<br>hive&gt; create table lxw1234 as select round(9542.158) from lxw1234;<br>hive&gt; describe lxw1234;<br>_c0 bigint</p>
+<hr>
+<ol>
+<li>指定精度取整函数: round</li>
+</ol>
+<p>语法: round(double a, int d)<br>返回值: DOUBLE<br>说明: 返回指定精度 d 的 double 类型 举例：<br>hive&gt; select round(3.1415926,4) from lxw1234;<br>3.1416</p>
+<hr>
+<ol>
+<li>向下取整函数: floor</li>
+</ol>
+<p>语法: floor(double a)<br>返回值: BIGINT<br>说明: 返回等于或者小于该 double 变量的最大的整数 举例：<br>hive&gt; select floor(3.1415926) from lxw1234;<br>3<br>hive&gt; select floor(25) from lxw1234;<br>25</p>
+<hr>
+<ol>
+<li>向上取整函数: ceil</li>
+</ol>
+<p>语法: ceil(double a)<br>返回值: BIGINT<br>说明: 返回等于或者大于该 double 变量的最小的整数 举例：<br>hive&gt; select ceil(3.1415926) from lxw1234;<br>4<br>hive&gt; select ceil(46) from lxw1234;<br>46</p>
+<hr>
+<ol>
+<li>向上取整函数: ceiling</li>
+</ol>
+<p>语法: ceiling(double a)<br>返回值: BIGINT<br>说明: 与 ceil 功能相同 举例：<br>hive&gt; select ceiling(3.1415926) from lxw1234;<br>4<br>hive&gt; select ceiling(46) from lxw1234;<br>46</p>
+<hr>
+<ol>
+<li>取随机数函数: rand</li>
+</ol>
+<p>语法: rand(),rand(int seed)<br>返回值: double</p>
+<p>说明: 返回一个 0 到 1 范围内的随机数。如果指定种子 seed，则会等到一个稳定的随机 数序列<br>举例：<br>hive&gt; select rand() from lxw1234;<br>0.5577432776034763<br>hive&gt; select rand() from lxw1234;<br>0.6638336467363424<br>hive&gt; select rand(100) from lxw1234;<br>0.7220096548596434<br>hive&gt; select rand(100) from lxw1234;<br>0.7220096548596434</p>
+<hr>
+<ol>
+<li>自然指数函数: exp</li>
+</ol>
+<p>语法: exp(double a)<br>返回值: double<br>说明: 返回自然对数 e 的 a 次方 举例：<br>hive&gt; select exp(2) from lxw1234;<br>7.38905609893065 自然对数函数: ln 语法: ln(double a) 返回值: double<br>说明: 返回 a 的自然对数 举例：<br>hive&gt; select ln(7.38905609893065) from lxw1234;<br>2.0</p>
+<hr>
+<ol>
+<li>绝对值函数: abs</li>
+</ol>
+<p>语法: abs(double a) abs(int a) 返回值: double int 说明: 返回数值 a 的绝对值 举例：<br>hive&gt; select abs(-3.9) from lxw1234;<br>3.9<br>hive&gt; select abs(10.9) from lxw1234;<br>10.9</p>
+<hr>
+<ol>
+<li>positive 函数: positive</li>
+</ol>
+<p>语法: positive(int a), positive(double a)<br>返回值: int double 说明: 返回 a 举例：<br>hive&gt; select positive(-10) from lxw1234;<br>-10<br>hive&gt; select positive(12) from lxw1234;<br>12</p>
+<hr>
+<ol>
+<li>negative 函数: negative</li>
+</ol>
+<p>语法: negative(int a), negative(double a)<br>返回值: int double 说明: 返回-a 举例：<br>hive&gt; select negative(-5) from lxw1234;<br>5<br>hive&gt; select negative(8) from lxw1234;<br>-8</p>
+<hr>
+<h2 id="七、集合操作函数-1"><a href="#七、集合操作函数-1" class="headerlink" title="七、集合操作函数"></a>七、集合操作函数</h2><ol>
+<li>map 类型大小：size</li>
+</ol>
+<p>语法: size(Map)<br>返回值: int<br>说明: 返回 map 类型的 size<br>举例：<br>hive&gt; select size(map(‘k1′,’v1′,’k2′,’v2’)) from lxw1234; OK<br>2</p>
+<hr>
+<ol>
+<li>array 类型大小：size</li>
+</ol>
+<p>语法: size(Array)</p>
+<p>返回值: int<br>说明: 返回 array 类型的 size<br>举例：<br>hive&gt; select size(array(1,2,3,4,5)) from lxw1234; OK<br>5</p>
+<hr>
+<ol>
+<li>判断元素数组是否包含元素：array_contains</li>
+</ol>
+<p>语法: array_contains(Array, value)<br>返回值: boolean<br>说明: 返回 Array中是否包含元素 value<br>举例：<br>hive&gt; select array_contains(array(1,2,3,4,5),3) from lxw1234; OK<br>true</p>
+<hr>
+<ol>
+<li>获取 map 中所有 value 集合</li>
+</ol>
+<p>语法: map_values(Map)<br>返回值: array<br>说明: 返回 Map中所有 value 的集合 举例：<br>hive&gt; select map_values(map(‘k1′,’v1′,’k2′,’v2’)) from lxw1234; OK<br>[“v2″,”v1”]</p>
+<hr>
+<ol>
+<li>获取 map 中所有 key 集合</li>
+</ol>
+<p>语法: map_keys(Map)<br>返回值: array<br>说明: 返回 Map中所有 key 的集合 举例：<br>hive&gt; select map_keys(map(‘k1′,’v1′,’k2′,’v2’)) from lxw1234; OK<br>[“k2″,”k1”]</p>
+<hr>
+<ol>
+<li>数组排序</li>
+</ol>
+<p>语法: sort_array(Array)<br>返回值: array</p>
+<p>说明: 对 Array进行升序排序 举例：<br>hive&gt; select sort_array(array(5,7,3,6,9)) from lxw1234; OK<br>[3,5,6,7,9]</p>
+<hr>
+<h2 id="八、类型转换函数-1"><a href="#八、类型转换函数-1" class="headerlink" title="八、类型转换函数"></a>八、类型转换函数</h2><ol>
+<li>二进制转换：binary</li>
+</ol>
+<p>语法: binary(string|binary)<br>返回值: binary<br>说明: 将 string 类型转换为二进制 举例：<br>hive&gt; select binary(‘lxw1234’) from lxw1234; OK<br>lxw1234</p>
+<hr>
+<ol>
+<li>基础类型之间强制转换：cast</li>
+</ol>
+<p>语法: cast(expr as )<br>返回值:<br>说明: 将 expr 转换成<br>举例：<br>hive&gt; select cast(‘1′ as DOUBLE) from lxw1234; OK<br>1.0</p>
+<hr>
+<h2 id="九、日期函数-1"><a href="#九、日期函数-1" class="headerlink" title="九、日期函数"></a>九、日期函数</h2><ol>
+<li>UNIX 时间戳转日期函数: from_unixtime</li>
+</ol>
+<p>语法: from_unixtime(bigint unixtime[, string format])<br>返回值: string<br>说明: 转化 UNIX 时间戳（从 1970-01-01 00:00:00 UTC 到指定时间的秒数）到当前时区 的时间格式</p>
+<p>举例：<br>hive&gt; select from_unixtime(1323308943,’yyyyMMdd’) from lxw1234;<br>20111208</p>
+<hr>
+<ol>
+<li>获取当前 UNIX 时间戳函数: unix_timestamp</li>
+</ol>
+<p>语法: unix_timestamp()<br>返回值: bigint<br>说明: 获得当前时区的 UNIX 时间戳 举例：<br>hive&gt; select unix_timestamp() from lxw1234;<br>1323309615</p>
+<hr>
+<ol>
+<li>日期转 UNIX 时间戳函数: unix_timestamp</li>
+</ol>
+<p>语法: unix_timestamp(string date)<br>返回值: bigint<br>说明: 转换格式为”yyyy-MM-dd HH:mm:ss”的日期到 UNIX 时间戳。如果转化失败，则返 回 0。<br>举例：<br>hive&gt; select unix_timestamp(‘2011-12-07 13:01:03’) from lxw1234;<br>1323234063</p>
+<hr>
+<ol>
+<li>指定格式日期转 UNIX 时间戳函数: unix_timestamp</li>
+</ol>
+<p>语法: unix_timestamp(string date, string pattern)<br>返回值: bigint<br>说明: 转换 pattern 格式的日期到 UNIX 时间戳。如果转化失败，则返回 0。 举例：<br>hive&gt; select unix_timestamp(‘20111207 13:01:03′,’yyyyMMdd HH:mm:ss’) from lxw1234;<br>1323234063</p>
+<hr>
+<ol>
+<li>日期时间转日期函数: to_date</li>
+</ol>
+<p>语法: to_date(string timestamp)<br>返回值: string<br>说明: 返回日期时间字段中的日期部分。 举例：</p>
+<p>hive&gt; select to_date(‘2011-12-08 10:03:01’) from lxw1234;<br>2011-12-08</p>
+<hr>
+<ol>
+<li>日期转年函数: year</li>
+</ol>
+<p>语法: year(string date)<br>返回值: int<br>说明: 返回日期中的年。 举例：<br>hive&gt; select year(‘2011-12-08 10:03:01’) from lxw1234;<br>2011<br>hive&gt; select year(‘2012-12-08’) from lxw1234;<br>2012</p>
+<hr>
+<ol>
+<li>日期转月函数: month</li>
+</ol>
+<p>语法: month (string date)<br>返回值: int<br>说明: 返回日期中的月份。 举例：<br>hive&gt; select month(‘2011-12-08 10:03:01’) from lxw1234;<br>12<br>hive&gt; select month(‘2011-08-08’) from lxw1234;<br>8</p>
+<hr>
+<ol>
+<li>日期转天函数: day</li>
+</ol>
+<p>语法: day (string date)<br>返回值: int<br>说明: 返回日期中的天。 举例：<br>hive&gt; select day(‘2011-12-08 10:03:01’) from lxw1234;<br>8<br>hive&gt; select day(‘2011-12-24’) from lxw1234;<br>24</p>
+<hr>
+<ol>
+<li>日期转小时函数: hour</li>
+</ol>
+<p>语法: hour (string date)<br>返回值: int<br>说明: 返回日期中的小时。 举例：<br>hive&gt; select hour(‘2011-12-08 10:03:01’) from lxw1234;<br>10</p>
+<hr>
+<ol>
+<li>日期转分钟函数: minute</li>
+</ol>
+<p>语法: minute (string date)<br>返回值: int<br>说明: 返回日期中的分钟。 举例：<br>hive&gt; select minute(‘2011-12-08 10:03:01’) from lxw1234;<br>3</p>
+<hr>
+<ol>
+<li>日期转秒函数: second</li>
+</ol>
+<p>语法: second (string date)<br>返回值: int<br>说明: 返回日期中的秒。 举例：<br>hive&gt; select second(‘2011-12-08 10:03:01’) from lxw1234;<br>1</p>
+<hr>
+<ol>
+<li>日期转周函数: weekofyear</li>
+</ol>
+<p>语法: weekofyear (string date)<br>返回值: int<br>说明: 返回日期在当前的周数。 举例：<br>hive&gt; select weekofyear(‘2011-12-08 10:03:01’) from lxw1234;<br>49</p>
+<hr>
+<ol>
+<li>日期比较函数: datediff</li>
+</ol>
+<p>语法: datediff(string enddate, string startdate)<br>返回值: int<br>说明: 返回结束日期减去开始日期的天数。 举例：<br>hive&gt; select datediff(‘2012-12-08′,’2012-05-09’) from lxw1234;<br>213</p>
+<hr>
+<ol>
+<li>日期增加函数: date_add</li>
+</ol>
+<p>语法: date_add(string startdate, int days)<br>返回值: string<br>说明: 返回开始日期 startdate 增加 days 天后的日期。 举例：<br>hive&gt; select date_add(‘2012-12-08’,10) from lxw1234;<br>2012-12-18</p>
+<hr>
+<ol>
+<li>日期减少函数: date_sub</li>
+</ol>
+<p>语法: date_sub (string startdate, int days)<br>返回值: string<br>说明: 返回开始日期 startdate 减少 days 天后的日期。 举例：<br>hive&gt; select date_sub(‘2012-12-08′,10) from lxw1234;<br>2012-11-28</p>
+<hr>
+<h2 id="十、条件函数-1"><a href="#十、条件函数-1" class="headerlink" title="十、条件函数"></a>十、条件函数</h2><ol>
+<li>If 函数: if</li>
+</ol>
+<p>语法: if(boolean testCondition, T valueTrue, T valueFalseOrNull)<br>返回值: T</p>
+<p>说明: 当条件 testCondition 为 TRUE 时，返回 valueTrue；否则返回 valueFalseOrNull<br>举例：<br>hive&gt; select if(1=2,100,200) from lxw1234;<br>200<br>hive&gt; select if(1=1,100,200) from lxw1234;<br>100</p>
+<hr>
+<ol>
+<li>非空查找函数: COALESCE</li>
+</ol>
+<p>语法: COALESCE(T v1, T v2, …)<br>返回值: T<br>说明: 返回参数中的第一个非空值；如果所有值都为 NULL，那么返回 NULL<br>举例：<br>hive&gt; select COALESCE(null,’100’,’50′) from lxw1234;<br>100</p>
+<hr>
+<ol>
+<li>条件判断函数：CASE</li>
+</ol>
+<p>语法: CASE a WHEN b THEN c [WHEN d THEN e]* [ELSE f] END<br>返回值: T<br>说明：如果 a 等于 b，那么返回 c；如果 a 等于 d，那么返回 e；否则返回 f<br>举例：<br>hive&gt; Select case 100 when 50 then ‘tom’ when 100 then ‘mary’ else ‘tim’ end from lxw1234;<br>mary<br>hive&gt; Select case 200 when 50 then ‘tom’ when 100 then ‘mary’ else ‘tim’ end from lxw1234;<br>tim</p>
+<hr>
+<h2 id="十一、字符串函数-1"><a href="#十一、字符串函数-1" class="headerlink" title="十一、字符串函数"></a>十一、字符串函数</h2><ol>
+<li>字符 ascii 码函数：ascii</li>
+</ol>
+<p>语法: ascii(string str)<br>返回值: int<br>说明：返回字符串 str 中第一个字符的 ascii 码 举例：<br>hive&gt; select ascii(‘ba’) from lxw1234; OK<br>98</p>
+<hr>
+<ol>
+<li>base64 字符串</li>
+</ol>
+<p>语法: base64(binary bin)<br>返回值: string<br>说明：返回二进制 bin 的 base 编码字符串 举例：<br>hive&gt; select base64(binary(‘lxw1234’)) from lxw1234; OK<br>bHh3MTIzNA==</p>
+<hr>
+<ol>
+<li>字符串连接函数：concat</li>
+</ol>
+<p>语法: concat(string A, string B…) 返回值: string 说明：返回输入字符串连接后的结果，支持任意个输入字符串 举例：<br>hive&gt; select concat(‘abc’,’def’,’gh’) from lxw1234;<br>abcdefgh</p>
+<hr>
+<ol>
+<li>带分隔符字符串连接函数：concat_ws</li>
+</ol>
+<p>语法: concat_ws(string SEP, string A, string B…)<br>返回值: string<br>说明：返回输入字符串连接后的结果，SEP 表示各个字符串间的分隔符</p>
+<p>举例：<br>hive&gt; select concat_ws(‘,’,’abc’,’def’,’gh’) from lxw1234;<br>abc,def,gh</p>
+<hr>
+<ol>
+<li>数组转换成字符串的函数：concat_ws</li>
+</ol>
+<p>语法: concat_ws(string SEP, array)<br>返回值: string<br>说明：返回将数组链接成字符串后的结果，SEP 表示各个字符串间的分隔符 举例：<br>hive&gt; select concat_ws(‘|’,array(‘a’,’b’,’c’)) from lxw1234; OK<br>a|b|c</p>
+<hr>
+<ol>
+<li>小数位格式化成字符串函数：format_number</li>
+</ol>
+<p>语法: format_number(number x, int d)<br>返回值: string<br>说明：将数值 x 的小数位格式化成 d 位，四舍五入 举例：<br>hive&gt; select format_number(5.23456,3) from lxw1234; OK<br>5.235</p>
+<hr>
+<ol>
+<li>字符串截取函数：substr,substring</li>
+</ol>
+<p>语法: substr(string A, int start),substring(string A, int start)<br>返回值: string<br>说明：返回字符串 A 从 start 位置到结尾的字符串 举例：<br>hive&gt; select substr(‘abcde’,3) from lxw1234;<br>cde<br>hive&gt; select substring(‘abcde’,3) from lxw1234;<br>cde<br>hive&gt; select substr(‘abcde’,-1) from lxw1234; （和 ORACLE 相同）<br>e</p>
+<hr>
+<ol>
+<li>字符串截取函数：substr,substring</li>
+</ol>
+<p>语法: substr(string A, int start, int len),substring(string A, int start, int len)<br>返回值: string<br>说明：返回字符串 A 从 start 位置开始，长度为 len 的字符串 举例：<br>hive&gt; select substr(‘abcde’,3,2) from lxw1234;<br>cd<br>hive&gt; select substring(‘abcde’,3,2) from lxw1234;<br>cd<br>hive&gt;select substring(‘abcde’,-2,2) from lxw1234;<br>de</p>
+<hr>
+<ol>
+<li>字符串查找函数：instr</li>
+</ol>
+<p>语法: instr(string str, string substr)<br>返回值: int<br>说明：返回字符串 substr 在 str 中首次出现的位置 举例：<br>hive&gt; select instr(‘abcdf’,’df’) from lxw1234; OK<br>4</p>
+<hr>
+<ol>
+<li>字符串长度函数：length</li>
+</ol>
+<p>语法: length(string A) 返回值: int 说明：返回字符串的长度 举例：<br>hive&gt; select length(‘abc’) from lxw1234; OK<br>3</p>
+<hr>
+<ol>
+<li>字符串查找函数：locate</li>
+</ol>
+<p>语法: locate(string substr, string str[, int pos])<br>返回值: int</p>
+<p>说明：返回字符串 substr 在 str 中从 pos 后查找，首次出现的位置 举例：<br>hive&gt; select locate(‘a’,’abcda’,1) from lxw1234; OK<br>1<br>hive&gt; select locate(‘a’,’abcda’,2) from lxw1234; OK<br>5</p>
+<hr>
+<ol>
+<li>字符串格式化函数：printf</li>
+</ol>
+<p>语法: printf(String format, Obj… args)<br>返回值: string<br>说明：将指定对象用 format 格式进行格式化.<br>举例：<br>hive&gt; select printf(“%08X”,123) from lxw1234; OK<br>0000007B</p>
+<hr>
+<ol>
+<li>字符串转换成 map 函数：str_to_map</li>
+</ol>
+<p>语法: str_to_map(text[, delimiter1, delimiter2]) 返回值: map<string,string> 说明：将字符串按照给定的分隔符转换成 map 结构. 举例：<br>hive&gt; select str_to_map(‘k1:v1,k2:v2’) from lxw1234; OK<br>{“k2″:”v2″,”k1″:”v1”}<br>hive&gt; select str_to_map(‘k1=v1,k2=v2′,’,’,’=’) from lxw1234; OK<br>{“k2″:”v2″,”k1″:”v1″}</string,string></p>
+<hr>
+<ol>
+<li>base64 解码函数：unbase64(string str)</li>
+</ol>
+<p>语法: unbase64(string str)<br>返回值: binary<br>说明：将给定的 base64 字符串解码成二进制.</p>
+<p>举例：<br>hive&gt; select unbase64(‘bHh3MTIzNA==’) from lxw1234; OK<br>lxw1234</p>
+<hr>
+<ol>
+<li>字符串转大写函数：upper,ucase</li>
+</ol>
+<p>语法: upper(string A) ucase(string A)<br>返回值: string<br>说明：返回字符串 A 的大写格式 举例：<br>hive&gt; select upper(‘abSEd’) from lxw1234; ABSED<br>hive&gt; select ucase(‘abSEd’) from lxw1234; ABSED</p>
+<hr>
+<ol>
+<li>字符串转小写函数：lower,lcase</li>
+</ol>
+<p>语法: lower(string A) lcase(string A)<br>返回值: string<br>说明：返回字符串 A 的小写格式 举例：<br>hive&gt; select lower(‘abSEd’) from lxw1234;<br>absed<br>hive&gt; select lcase(‘abSEd’) from lxw1234;<br>absed</p>
+<hr>
+<ol>
+<li>去空格函数：trim</li>
+</ol>
+<p>语法: trim(string A) 返回值: string 说明：去除字符串两边的空格 举例：<br>hive&gt; select trim(‘ abc ‘) from lxw1234;<br>abc</p>
+<hr>
+<ol>
+<li>左边去空格函数：ltrim</li>
+</ol>
+<p>语法: ltrim(string A) 返回值: string 说明：去除字符串左边的空格 举例：<br>hive&gt; select ltrim(‘ abc ‘) from lxw1234;<br>abc</p>
+<hr>
+<ol>
+<li>右边去空格函数：rtrim</li>
+</ol>
+<p>语法: rtrim(string A) 返回值: string 说明：去除字符串右边的空格 举例：<br>hive&gt; select rtrim(‘ abc ‘) from lxw1234;<br>abc</p>
+<hr>
+<ol>
+<li>正则表达式替换函数：regexp_replace</li>
+</ol>
+<p>语法: regexp_replace(string A, string B, string C)<br>返回值: string<br>说明：将字符串 A 中的符合 java 正则表达式 B 的部分替换为 C。注意，在有些情况下要 使用转义字符,类似 oracle 中的 regexp_replace 函数。<br>举例：<br>hive&gt; select regexp_replace(‘foobar’, ‘oo|ar’, ”) from lxw1234;<br>fb</p>
+<hr>
+<ol>
+<li>正则表达式解析函数：regexp_extract</li>
+</ol>
+<p>语法: regexp_extract(string subject, string pattern, int index)<br>返回值: string<br>说明：将字符串 subject 按照 pattern 正则表达式的规则拆分，返回 index 指定的字符。 举例：<br>hive&gt; select regexp_extract(‘foothebar’, ‘foo(.*?)(bar)’, 1) from lxw1234;<br>the</p>
+<p>hive&gt; select regexp_extract(‘foothebar’, ‘foo(.<em>?)(bar)’, 2) from lxw1234;<br>bar<br>hive&gt; select regexp_extract(‘foothebar’, ‘foo(.</em>?)(bar)’, 0) from lxw1234;<br>foothebar<br>注意，在有些情况下要使用转义字符，下面的等号要用双竖线转义，这是 java 正则表 达式的规则。<br>select data_field, regexp_extract(data_field,’.<em>?bgStart\=([^&amp;]+)’,1) as aaa, regexp_extract(data_field,’.</em>?contentLoaded_headStart\=([^&amp;]+)’,1) as bbb, regexp_extract(data_field,’.*?AppLoad2Req\=([^&amp;]+)’,1) as ccc<br>from pt_nginx_loginlog_st where pt = ‘2012-03-26’ limit 2;</p>
+<hr>
+<ol>
+<li>URL 解析函数：parse_url</li>
+</ol>
+<p>语法: parse_url(string urlString, string partToExtract [, string keyToExtract])<br>返回值: string<br>说明：返回 URL 中指定的部分。partToExtract 的有效值为：HOST, PATH, QUERY, REF, PROTOCOL, AUTHORITY, FILE, and USERINFO.<br>举例：<br>hive&gt; select parse_url(‘<a href="http://facebook.com/path1/p.php?k1=v1&amp;k2=v2#Ref1’" target="_blank" rel="external">http://facebook.com/path1/p.php?k1=v1&amp;k2=v2#Ref1’</a>, ‘HOST’) from lxw1234;<br>facebook.com<br>hive&gt; select parse_url(‘<a href="http://facebook.com/path1/p.php?k1=v1&amp;k2=v2#Ref1’" target="_blank" rel="external">http://facebook.com/path1/p.php?k1=v1&amp;k2=v2#Ref1’</a>, ‘QUERY’, ‘k1’)<br>from lxw1234;<br>v1</p>
+<hr>
+<ol>
+<li>json 解析函数：get_json_object</li>
+</ol>
+<p>语法: get_json_object(string json_string, string path)<br>返回值: string<br>说明：解析 json 的字符串 json_string,返回 path 指定的内容。如果输入的 json 字符串无 效，那么返回 NULL。<br>举例：<br>hive&gt; select get_json_object(‘{“store”:</p>
+<blockquote>
+<p>{“fruit”:[{“weight”:8,”type”:”apple”},{“weight”:9,”type”:”pear”}],<br>“bicycle”:{“price”:19.95,”color”:”red”}<br>},<br>“email”:”amy@only_for_json_udf_test.net”,</p>
+<p>“owner”:”amy”<br>}<br>‘,’$.owner’) from lxw1234;<br>amy</p>
+</blockquote>
+<hr>
+<ol>
+<li>空格字符串函数：space</li>
+</ol>
+<p>语法: space(int n) 返回值: string 说明：返回长度为 n 的字符串 举例：<br>hive&gt; select space(10) from lxw1234;<br>hive&gt; select length(space(10)) from lxw1234;<br>10</p>
+<hr>
+<ol>
+<li>重复字符串函数：repeat</li>
+</ol>
+<p>语法: repeat(string str, int n)<br>返回值: string<br>说明：返回重复 n 次后的 str 字符串 举例：<br>hive&gt; select repeat(‘abc’,5) from lxw1234;<br>abcabcabcabcabc</p>
+<hr>
+<ol>
+<li>左补足函数：lpad</li>
+</ol>
+<p>语法: lpad(string str, int len, string pad)<br>返回值: string<br>说明：将 str 进行用 pad 进行左补足到 len 位 举例：<br>hive&gt; select lpad(‘abc’,10,’td’) from lxw1234;<br>tdtdtdtabc<br>注意：与 GP，ORACLE 不同，pad 不能默认</p>
+<hr>
+<ol>
+<li>右补足函数：rpad</li>
+</ol>
+<p>语法: rpad(string str, int len, string pad)<br>返回值: string<br>说明：将 str 进行用 pad 进行右补足到 len 位 举例：<br>hive&gt; select rpad(‘abc’,10,’td’) from lxw1234;<br>abctdtdtdt</p>
+<hr>
+<ol>
+<li>分割字符串函数: split</li>
+</ol>
+<p>语法: split(string str, string pat)<br>返回值: array<br>说明: 按照 pat 字符串分割 str，会返回分割后的字符串数组 举例：<br>hive&gt; select split(‘abtcdtef’,’t’) from lxw1234; [“ab”,”cd”,”ef”]</p>
+<hr>
+<ol>
+<li>集合查找函数: find_in_set</li>
+</ol>
+<p>语法: find_in_set(string str, string strList)<br>返回值: int<br>说明: 返回 str 在 strlist 第一次出现的位置，strlist 是用逗号分割的字符串。如果没有找 该 str 字符，则返回 0<br>举例：<br>hive&gt; select find_in_set(‘ab’,’ef,ab,de’) from lxw1234;<br>2<br>hive&gt; select find_in_set(‘at’,’ef,ab,de’) from lxw1234;<br>0</p>
+<hr>
+<p>30.分词函数：sentences</p>
+<p>语法: sentences(string str, string lang, string locale)</p>
+<p>返回值: array<array> 说明：返回输入 str 分词后的单词数组 举例：<br>hive&gt; select sentences(‘hello word!hello hive,hi hive,hello hive’) from lxw1234; OK<br>[[“hello”,”word”],[“hello”,”hive”,”hi”,”hive”,”hello”,”hive”]]</array></p>
+<hr>
+<ol>
+<li>分词后统计一起出现频次最高的 TOP-K</li>
+</ol>
+<p>语法: ngrams(array<array>, int N, int K, int pf)<br>返回值: array<struct<string,double>&gt;<br>说明：与 sentences()函数一起使用，分词后，统计分词结果中一起出现频次最高的<br>TOP-K 结果 举例：<br>hive&gt; SELECT ngrams(sentences(‘hello word!hello hive,hi hive,hello hive’),2,2) FROM lxw1234; [{“ngram”:[“hello”,”hive”],”estfrequency”:2.0},{“ngram”:[“hive”,”hello”],”estfrequency”:1.0}]<br>该查询中，统计的是两个词在一起出现频次最高的 TOP-2<br>结果中，hello 与 hive 同时出现 2 次</struct<string,double></array></p>
+<hr>
+<ol>
+<li>分词后统计与指定单词一起出现频次最高的 TOP-K</li>
+</ol>
+<p>语法: context_ngrams(array<array>, array, int K, int pf)<br>返回值: array<struct<string,double>&gt;<br>说明：与 sentences()函数一起使用，分词后，统计分词结果中与数组中指定的单词一 起出现(包括顺序)频次最高的 TOP-K 结果<br>举例：<br>hive&gt; SELECT context_ngrams(sentences(‘hello word!hello hive,hi hive,hello hive’),array(‘hello’,null),3) FROM lxw1234; [{“ngram”:[“hive”],”estfrequency”:2.0},{“ngram”:[“word”],”estfrequency”:1.0}]<br>该查询中，统计的是与’hello’一起出现，并且在 hello 后面的频次最高的 TOP-3<br>结果中，hello 与 hive 同时出现 2 次，hello 与 word 同时出现 1 次。</struct<string,double></array></p>
+<p>hive&gt; SELECT context_ngrams(sentences(‘hello word!hello hive,hi hive,hello hive’),array(null,’hive’),3) FROM lxw1234; [{“ngram”:[“hello”],”estfrequency”:2.0},{“ngram”:[“hi”],”estfrequency”:1.0}]<br>该查询中，统计的是与’hive’一起出现，并且在 hive 之前的频次最高的 TOP-3</p>
+<hr>
+<h2 id="十二、混合函数-1"><a href="#十二、混合函数-1" class="headerlink" title="十二、混合函数"></a>十二、混合函数</h2><ol>
+<li>字符串的 hash 值：hash</li>
+</ol>
+<p>语法: hash(a1[, a2…])<br>返回值: int<br>说明: 返回字符串的 hash 值。 举例：<br>hive&gt; select hash(‘lxw1234.com’) from lxw1234; OK<br>-809268416</p>
+<hr>
+<h2 id="十四、汇总统计函数（UDAF）-1"><a href="#十四、汇总统计函数（UDAF）-1" class="headerlink" title="十四、汇总统计函数（UDAF）"></a>十四、汇总统计函数（UDAF）</h2><ol>
+<li>个数统计函数: count</li>
+</ol>
+<p>语法: count(<em>), count(expr), count(DISTINCT expr[, expr_.])<br>返回值: int<br>说明: count(</em>)统计检索出的行的个数，包括 NULL 值的行；count(expr)返回指定字段的 非空值的个数；count(DISTINCT expr[, expr_.])返回指定字段的不同的非空值的个数 举例：<br>hive&gt; select count(*) from lxw1234;<br>20<br>hive&gt; select count(distinct t) from lxw1234;<br>10</p>
+<hr>
+<ol>
+<li>总和统计函数: sum</li>
+</ol>
+<p>语法: sum(col), sum(DISTINCT col)<br>返回值: double<br>说明: sum(col)统计结果集中 col 的相加的结果；sum(DISTINCT col)统计结果中 col 不同值 相加的结果<br>举例：<br>hive&gt; select sum(t) from lxw1234;<br>100<br>hive&gt; select sum(distinct t) from lxw1234;<br>70</p>
+<hr>
+<ol>
+<li>平均值统计函数: avg</li>
+</ol>
+<p>语法: avg(col), avg(DISTINCT col)<br>返回值: double<br>说明: avg(col)统计结果集中 col 的平均值；avg(DISTINCT col)统计结果中 col 不同值相加 的平均值<br>举例：<br>hive&gt; select avg(t) from lxw1234;<br>50<br>hive&gt; select avg (distinct t) from lxw1234;<br>30</p>
+<hr>
+<ol>
+<li>最小值统计函数: min</li>
+</ol>
+<p>语法: min(col)<br>返回值: double<br>说明: 统计结果集中 col 字段的最小值 举例：<br>hive&gt; select min(t) from lxw1234;<br>20</p>
+<hr>
+<ol>
+<li>最大值统计函数: max</li>
+</ol>
+<p>语法: maxcol)<br>返回值: double<br>说明: 统计结果集中 col 字段的最大值 举例：<br>hive&gt; select max(t) from lxw1234;<br>120</p>
+<hr>
+<ol>
+<li>非空集合总体变量函数: var_pop</li>
+</ol>
+<p>语法: var_pop(col)<br>返回值: double<br>说明: 统计结果集中 col 非空集合的总体变量（忽略 null） 举例：</p>
+<hr>
+<ol>
+<li>非空集合样本变量函数: var_samp</li>
+</ol>
+<p>语法: var_samp (col)<br>返回值: double<br>说明: 统计结果集中 col 非空集合的样本变量（忽略 null） 举例：</p>
+<hr>
+<ol>
+<li>总体标准偏离函数: stddev_pop</li>
+</ol>
+<p>语法: stddev_pop(col)<br>返回值: double<br>说明: 该函数计算总体标准偏离，并返回总体变量的平方根，其返回值与 VAR_POP 函 数的平方根相同<br>举例：</p>
+<hr>
+<ol>
+<li>样本标准偏离函数: stddev_samp</li>
+</ol>
+<p>语法: stddev_samp (col)<br>返回值: double<br>说明: 该函数计算样本标准偏离 举例：</p>
+<hr>
+<p>10．中位数函数: percentile</p>
+<p>语法: percentile(BIGINT col, p)<br>返回值: double<br>说明: 求准确的第 pth 个百分位数，p 必须介于 0 和 1 之间，但是 col 字段目前只支持 整数，不支持浮点数类型<br>举例：</p>
+<hr>
+<ol>
+<li>中位数函数: percentile</li>
+</ol>
+<p>语法: percentile(BIGINT col, array(p1 [, p2]…))<br>返回值: array</p>
+<p>说明: 功能和上述类似，之后后面可以输入多个百分位数，返回类型也为 array， 其中为对应的百分位数。<br>举例：<br>select percentile(score,<0.2,0.4>) from lxw1234； 取 0.2，0.4 位置的数据</0.2,0.4></p>
+<hr>
+<ol>
+<li>近似中位数函数: percentile_approx</li>
+</ol>
+<p>语法: percentile_approx(DOUBLE col, p [, B])<br>返回值: double<br>说明: 求近似的第 pth 个百分位数，p 必须介于 0 和 1 之间，返回类型为 double，但是 col 字段支持浮点类型。参数 B 控制内存消耗的近似精度，B 越大，结果的准确度越高。 默认为 10,000。当 col 字段中的 distinct 值的个数小于 B 时，结果为准确的百分位数 举例：</p>
+<hr>
+<ol>
+<li>近似中位数函数: percentile_approx</li>
+</ol>
+<p>语法: percentile_approx(DOUBLE col, array(p1 [, p2]…) [, B])<br>返回值: array<br>说明: 功能和上述类似，之后后面可以输入多个百分位数，返回类型也为 array， 其中为对应的百分位数。<br>举例：</p>
+<hr>
+<ol>
+<li>直方图: histogram_numeric</li>
+</ol>
+<p>语法: histogram_numeric(col, b)<br>返回值: array<br>说明: 以 b 为基准计算 col 的直方图信息。 举例：<br>hive&gt; select histogram_numeric(100,5) from lxw1234; [{“x”:100.0,”y”:1.0}]</p>
+<hr>
+<ol>
+<li>集合去重数：collect_set</li>
+</ol>
+<p>语法: collect_set (col)</p>
+<p>返回值: array<br>说明: 将 col 字段进行去重，合并成一个数组。 举例：<br>hive&gt; select cookie,ip from lxw1234;<br>cookie1 127.0.0.1 cookie1 127.0.0.1 cookie1 127.0.0.2 cookie1 127.0.0.3<br>hive&gt; select cookie,collect_set(ip) from lxw1234 group by cookie;<br>cookie1 [“127.0.0.1″,”127.0.0.2″,”127.0.0.3”]</p>
+<hr>
+<ol>
+<li>集合不去重函数：collect_list</li>
+</ol>
+<p>语法: collect_list (col)<br>返回值: array<br>说明: 将 col 字段合并成一个数组,不去重 举例：<br>hive&gt; select cookie,ip from lxw1234;<br>cookie1 127.0.0.1 cookie1 127.0.0.1 cookie1 127.0.0.2 cookie1 127.0.0.3<br>hive&gt;select cookie,collect_list(ip) from lxw1234 group by cookie;<br>cookie1 [“127.0.0.1″,”127.0.0.1″,”127.0.0.2″,”127.0.0.3”]</p>
+<hr>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hive/" rel="tag"># hive</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hive/Hive基本操作/" rel="next" title="Hive基本操作">
+                <i class="fa fa-chevron-left"></i> Hive基本操作
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hbase/mapreduce操作hbase/" rel="prev" title="mapreduce操作hbase">
+                mapreduce操作hbase <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、关系运算："><span class="nav-number">1.</span> <span class="nav-text">一、关系运算：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、数学运算："><span class="nav-number">2.</span> <span class="nav-text">二、数学运算：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、逻辑运算："><span class="nav-number">3.</span> <span class="nav-text">三、逻辑运算：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、复合类型构造函数"><span class="nav-number">4.</span> <span class="nav-text">四、复合类型构造函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、复合类型操作符"><span class="nav-number">5.</span> <span class="nav-text">五、复合类型操作符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、数值计算函数"><span class="nav-number">6.</span> <span class="nav-text">六、数值计算函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#七、集合操作函数"><span class="nav-number">7.</span> <span class="nav-text">七、集合操作函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#八、类型转换函数"><span class="nav-number">8.</span> <span class="nav-text">八、类型转换函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#九、日期函数"><span class="nav-number">9.</span> <span class="nav-text">九、日期函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十、条件函数"><span class="nav-number">10.</span> <span class="nav-text">十、条件函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十一、字符串函数"><span class="nav-number">11.</span> <span class="nav-text">十一、字符串函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十二、混合函数"><span class="nav-number">12.</span> <span class="nav-text">十二、混合函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十三、XPath解析XML函数"><span class="nav-number">13.</span> <span class="nav-text">十三、XPath解析XML函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十四、汇总统计函数（UDAF）"><span class="nav-number">14.</span> <span class="nav-text">十四、汇总统计函数（UDAF）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十五、表格生成函数Table-Generating-Functions-UDTF"><span class="nav-number">15.</span> <span class="nav-text">十五、表格生成函数Table-Generating Functions (UDTF)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#举例"><span class="nav-number">16.</span> <span class="nav-text">举例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、关系运算：-1"><span class="nav-number">16.1.</span> <span class="nav-text">一、关系运算：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、数学运算：-1"><span class="nav-number">16.2.</span> <span class="nav-text">二、数学运算：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、逻辑运算：-1"><span class="nav-number">16.3.</span> <span class="nav-text">三、逻辑运算：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、复合类型构造函数-1"><span class="nav-number">16.4.</span> <span class="nav-text">四、复合类型构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、复合类型操作符-1"><span class="nav-number">16.5.</span> <span class="nav-text">五、复合类型操作符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、数值计算函数-1"><span class="nav-number">16.6.</span> <span class="nav-text">六、数值计算函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、集合操作函数-1"><span class="nav-number">16.7.</span> <span class="nav-text">七、集合操作函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、类型转换函数-1"><span class="nav-number">16.8.</span> <span class="nav-text">八、类型转换函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九、日期函数-1"><span class="nav-number">16.9.</span> <span class="nav-text">九、日期函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十、条件函数-1"><span class="nav-number">16.10.</span> <span class="nav-text">十、条件函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十一、字符串函数-1"><span class="nav-number">16.11.</span> <span class="nav-text">十一、字符串函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十二、混合函数-1"><span class="nav-number">16.12.</span> <span class="nav-text">十二、混合函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十四、汇总统计函数（UDAF）-1"><span class="nav-number">16.13.</span> <span class="nav-text">十四、汇总统计函数（UDAF）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

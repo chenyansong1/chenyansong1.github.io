@@ -1,0 +1,890 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="sqoop," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.Sqoop的数据导入&amp;emsp;“导入工具”导入单个表从RDBMS到HDFS。表中的每一行被视为HDFS的记录。所有记录都存储为文本文件的文本数据（或者Avro、sequence文件等二进制数据） 1.1.语法1$ sqoop import (generic-args) (import-args)">
+<meta name="keywords" content="sqoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqoop的数据导入导出实例">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/sqoop/sqoop的数据导入导出实例/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.Sqoop的数据导入&amp;emsp;“导入工具”导入单个表从RDBMS到HDFS。表中的每一行被视为HDFS的记录。所有记录都存储为文本文件的文本数据（或者Avro、sequence文件等二进制数据） 1.1.语法1$ sqoop import (generic-args) (import-args)">
+<meta property="og:updated_time" content="2017-02-28T04:52:24.405Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sqoop的数据导入导出实例">
+<meta name="twitter:description" content="1.Sqoop的数据导入&amp;emsp;“导入工具”导入单个表从RDBMS到HDFS。表中的每一行被视为HDFS的记录。所有记录都存储为文本文件的文本数据（或者Avro、sequence文件等二进制数据） 1.1.语法1$ sqoop import (generic-args) (import-args)">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/sqoop/sqoop的数据导入导出实例/"/>
+
+
+
+
+
+  <title> sqoop的数据导入导出实例 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/sqoop/sqoop的数据导入导出实例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                sqoop的数据导入导出实例
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/sqoop/" itemprop="url" rel="index">
+                    <span itemprop="name">sqoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-Sqoop的数据导入"><a href="#1-Sqoop的数据导入" class="headerlink" title="1.Sqoop的数据导入"></a>1.Sqoop的数据导入</h1><p>&emsp;“导入工具”导入单个表从RDBMS到HDFS。表中的每一行被视为HDFS的记录。所有记录都存储为文本文件的文本数据（或者Avro、sequence文件等二进制数据）</p>
+<h2 id="1-1-语法"><a href="#1-1-语法" class="headerlink" title="1.1.语法"></a>1.1.语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sqoop import (generic-args) (import-args)</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="1-2-实例"><a href="#1-2-实例" class="headerlink" title="1.2.实例"></a>1.2.实例</h2><h3 id="1-2-1-表数据"><a href="#1-2-1-表数据" class="headerlink" title="1.2.1.表数据"></a>1.2.1.表数据</h3><p>在mysql中有一个库userdb中三个表：emp, emp_add和emp_contact<br>表emp:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">id</th>
+<th style="text-align:center">name</th>
+<th style="text-align:center">deg</th>
+<th style="text-align:center">salary</th>
+<th style="text-align:center">dept</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1201</td>
+<td style="text-align:center">gopal</td>
+<td style="text-align:center">manager</td>
+<td style="text-align:center">50,000</td>
+<td style="text-align:center">TP</td>
+</tr>
+<tr>
+<td style="text-align:center">1202</td>
+<td style="text-align:center">manisha</td>
+<td style="text-align:center">Proof reader</td>
+<td style="text-align:center">50,000</td>
+<td style="text-align:center">TP</td>
+</tr>
+<tr>
+<td style="text-align:center">1203</td>
+<td style="text-align:center">khalil</td>
+<td style="text-align:center">php dev</td>
+<td style="text-align:center">30,000</td>
+<td style="text-align:center">AC</td>
+</tr>
+<tr>
+<td style="text-align:center">1204</td>
+<td style="text-align:center">prasanth</td>
+<td style="text-align:center">php dev</td>
+<td style="text-align:center">30,000</td>
+<td style="text-align:center">AC</td>
+</tr>
+<tr>
+<td style="text-align:center">1205</td>
+<td style="text-align:center">kranthi</td>
+<td style="text-align:center">admin</td>
+<td style="text-align:center">20,000</td>
+<td style="text-align:center">TP</td>
+</tr>
+</tbody>
+</table>
+<p>表emp_add:地址</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">id</th>
+<th style="text-align:center">hno</th>
+<th style="text-align:center">street</th>
+<th style="text-align:center">city</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1201</td>
+<td style="text-align:center">288A</td>
+<td style="text-align:center">vgiri</td>
+<td style="text-align:center">jublee</td>
+</tr>
+<tr>
+<td style="text-align:center">1202</td>
+<td style="text-align:center">108I</td>
+<td style="text-align:center">aoc</td>
+<td style="text-align:center">sec-bad</td>
+</tr>
+<tr>
+<td style="text-align:center">1203</td>
+<td style="text-align:center">144Z</td>
+<td style="text-align:center">pgutta    hyd</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">1204</td>
+<td style="text-align:center">78B</td>
+<td style="text-align:center">old city</td>
+<td style="text-align:center">sec-bad</td>
+</tr>
+<tr>
+<td style="text-align:center">1205</td>
+<td style="text-align:center">720X</td>
+<td style="text-align:center">hitec</td>
+<td style="text-align:center">sec-bad</td>
+</tr>
+</tbody>
+</table>
+<p>表emp_conn:联系表</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">id</th>
+<th style="text-align:center">phno</th>
+<th style="text-align:center">email</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1201</td>
+<td style="text-align:center">2356742</td>
+<td style="text-align:center">gopal@tp.com</td>
+</tr>
+<tr>
+<td style="text-align:center">1202</td>
+<td style="text-align:center">1661663</td>
+<td style="text-align:center">manisha@tp.com</td>
+</tr>
+<tr>
+<td style="text-align:center">1203</td>
+<td style="text-align:center">8887776</td>
+<td style="text-align:center">khalil@ac.com</td>
+</tr>
+<tr>
+<td style="text-align:center">1204</td>
+<td style="text-align:center">9988774</td>
+<td style="text-align:center">prasanth@ac.com</td>
+</tr>
+<tr>
+<td style="text-align:center">1205</td>
+<td style="text-align:center">1231231</td>
+<td style="text-align:center">kranthi@tp.com</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-2-2-导入表表数据到HDFS"><a href="#1-2-2-导入表表数据到HDFS" class="headerlink" title="1.2.2.导入表表数据到HDFS"></a>1.2.2.导入表表数据到HDFS</h3><p>下面的命令用于从MySQL数据库服务器中的emp表导入HDFS。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$bin/sqoop import   \</div><div class="line">--connect jdbc:mysql://hdp-node-01:3306/test   \</div><div class="line">--username root  \</div><div class="line">--password root   \</div><div class="line">--table emp   \</div><div class="line">--m 1 </div><div class="line"></div><div class="line"></div><div class="line">#查看</div><div class="line">$ $HADOOP_HOME/bin/hadoop fs -cat /user/hadoop/emp/part-m-00000</div><div class="line"></div><div class="line">1201, gopal,    manager, 50000, TP</div><div class="line">1202, manisha,  preader, 50000, TP</div><div class="line">1203, kalil,    php dev, 30000, AC</div><div class="line">1204, prasanth, php dev, 30000, AC</div><div class="line">1205, kranthi,  admin,   20000, TP</div></pre></td></tr></table></figure></p>
+<h3 id="1-2-3-导入关系表到HIVE"><a href="#1-2-3-导入关系表到HIVE" class="headerlink" title="1.2.3.导入关系表到HIVE"></a>1.2.3.导入关系表到HIVE</h3><p>其实就是：首先导入到hdfs，然后从hdfs中load到hive中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/sqoop import --connect jdbc:mysql://hdp-node-01:3306/test --username root --password root --table emp --hive-import --m 1</div></pre></td></tr></table></figure></p>
+<h3 id="1-2-4-导入到HDFS指定目录"><a href="#1-2-4-导入到HDFS指定目录" class="headerlink" title="1.2.4.导入到HDFS指定目录"></a>1.2.4.导入到HDFS指定目录</h3><p>&emsp;在导入表数据到HDFS使用Sqoop导入工具，我们可以指定目标目录。以下是指定目标目录选项的Sqoop导入命令的语法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--target-dir &lt;new or exist directory in HDFS&gt;</div></pre></td></tr></table></figure>
+<p> 下面的命令是用来导入emp_add表数据到’/queryresult’目录。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">bin/sqoop import \</div><div class="line">--connect jdbc:mysql://hdp-node-01:3306/test \</div><div class="line">--username root \</div><div class="line">--password root \</div><div class="line">--target-dir /queryresult \</div><div class="line">--table emp --m 1</div><div class="line"></div><div class="line">#查看</div><div class="line"> $HADOOP_HOME/bin/hadoop fs -cat /queryresult/part-m-*</div><div class="line"></div><div class="line">1201, 288A, vgiri,   jublee</div><div class="line">1202, 108I, aoc,     sec-bad</div><div class="line">1203, 144Z, pgutta,  hyd</div><div class="line">1204, 78B,  oldcity, sec-bad</div><div class="line">1205, 720C, hitech,  sec-bad</div></pre></td></tr></table></figure></p>
+<h3 id="1-2-5-导入表数据子集"><a href="#1-2-5-导入表数据子集" class="headerlink" title="1.2.5.导入表数据子集"></a>1.2.5.导入表数据子集</h3><p>&emsp;我们可以导入表的使用Sqoop导入工具，”where”子句的一个子集。它执行在各自的数据库服务器相应的SQL查询，并将结果存储在HDFS的目标目录。<br>where子句的语法如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--where &lt;condition&gt;</div></pre></td></tr></table></figure></p>
+<p> 下面的命令用来导入emp_add表数据的子集。子集查询检索员工ID和地址，居住城市为：Secunderabad<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">bin/sqoop import \</div><div class="line">--connect jdbc:mysql://hdp-node-01:3306/test \</div><div class="line">--username root \</div><div class="line">--password root \</div><div class="line">--where &quot;city =&apos;sec-bad&apos;&quot; \</div><div class="line">--target-dir /wherequery \</div><div class="line">--table emp_add --m 1</div></pre></td></tr></table></figure></p>
+<p> 按需导入：query<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">bin/sqoop import \</div><div class="line">--connect jdbc:mysql://hdp-node-01:3306/test \</div><div class="line">--username root \</div><div class="line">--password root \</div><div class="line">--target-dir /wherequery2 \    </div><div class="line">--query &apos;select id,name,deg from emp WHERE  id&gt;1207 and $CONDITIONS&apos; \                                #query和$CONDITIONS是固定的格式 </div><div class="line">--split-by id \</div><div class="line">--fields-terminated-by &apos;\t&apos; \</div><div class="line">--m 1</div></pre></td></tr></table></figure></p>
+<h3 id="1-2-6-增量导入"><a href="#1-2-6-增量导入" class="headerlink" title="1.2.6.增量导入"></a>1.2.6.增量导入</h3><p>&emsp;增量导入是仅导入新添加的表中的行的技术。<br>它需要添加‘incremental’, ‘check-column’, 和 ‘last-value’选项来执行增量导入。<br>下面的语法用于Sqoop导入命令增量选项。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">--incremental &lt;mode&gt;</div><div class="line">--check-column &lt;column name&gt;</div><div class="line">--last value &lt;last check column value&gt;</div></pre></td></tr></table></figure></p>
+<p> 假设新添加的数据转换成emp表如下：<br>1206, satish p, grp des, 20000, GR<br>下面的命令用于在EMP表执行增量导入。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">bin/sqoop import \</div><div class="line">--connect jdbc:mysql://hdp-node-01:3306/test \</div><div class="line">--username root \</div><div class="line">--password root \</div><div class="line">--table emp --m 1 \</div><div class="line">--incremental append \            #增量</div><div class="line">--check-column id \            #检查ID的值为1208</div><div class="line">--last-value 1208</div></pre></td></tr></table></figure></p>
+<h1 id="2-Sqoop的数据导出"><a href="#2-Sqoop的数据导出" class="headerlink" title="2.Sqoop的数据导出"></a>2.Sqoop的数据导出</h1><p>&emsp;将数据从HDFS导出到RDBMS数据库，导出前，目标表必须存在于目标数据库中。</p>
+<ul>
+<li>默认操作是从将文件中的数据使用INSERT语句插入到表中</li>
+<li>更新模式下，是生成UPDATE语句更新表数据</li>
+</ul>
+<h2 id="2-1-语法"><a href="#2-1-语法" class="headerlink" title="2.1.语法"></a>2.1.语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sqoop export (generic-args) (export-args)</div></pre></td></tr></table></figure>
+<h2 id="2-2-示例"><a href="#2-2-示例" class="headerlink" title="2.2.示例"></a>2.2.示例</h2><p> 数据是在HDFS 中“EMP/”目录的emp_data文件中。所述emp_data如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1201, gopal,     manager, 50000, TP</div><div class="line">1202, manisha,   preader, 50000, TP</div><div class="line">1203, kalil,     php dev, 30000, AC</div><div class="line">1204, prasanth,  php dev, 30000, AC</div><div class="line">1205, kranthi,   admin,   20000, TP</div><div class="line">1206, satish p,  grp des, 20000, GR</div></pre></td></tr></table></figure>
+<p> 1、首先需要手动创建mysql中的目标表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ mysql</div><div class="line">mysql&gt; USE db;</div><div class="line">mysql&gt; CREATE TABLE employee (</div><div class="line">   id INT NOT NULL PRIMARY KEY,</div><div class="line">   name VARCHAR(20),</div><div class="line">   deg VARCHAR(20),</div><div class="line">   salary INT,</div><div class="line">   dept VARCHAR(10));</div></pre></td></tr></table></figure></p>
+<p> 2、然后执行导出命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">bin/sqoop export \</div><div class="line">--connect jdbc:mysql://hdp-node-01:3306/test \</div><div class="line">--username root \</div><div class="line">--password root \</div><div class="line">--table employee \</div><div class="line">--export-dir /user/hadoop/emp/</div></pre></td></tr></table></figure>
+<p> 3、验证表mysql命令行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">mysql&gt;select * from employee;</div><div class="line">如果给定的数据存储成功，那么可以找到数据在如下的employee表。</div><div class="line">+------+--------------+-------------+-------------------+--------+</div><div class="line">| Id   | Name         | Designation | Salary            | Dept   |</div><div class="line">+------+--------------+-------------+-------------------+--------+</div><div class="line">| 1201 | gopal        | manager     | 50000             | TP     |</div><div class="line">| 1202 | manisha      | preader     | 50000             | TP     |</div><div class="line">| 1203 | kalil        | php dev     | 30000               | AC     |</div><div class="line">| 1204 | prasanth     | php dev     | 30000             | AC     |</div><div class="line">| 1205 | kranthi      | admin       | 20000             | TP     |</div><div class="line">| 1206 | satish p     | grp des     | 20000             | GR     |</div><div class="line">+------+--------------+-------------+-------------------+--------+</div></pre></td></tr></table></figure>
+<h1 id="3-Sqoop作业-job"><a href="#3-Sqoop作业-job" class="headerlink" title="3.Sqoop作业(job)"></a>3.Sqoop作业(job)</h1><p>&emsp;Sqoop作业——将事先定义好的数据导入导出任务按照指定流程运行</p>
+<h2 id="3-1-语法"><a href="#3-1-语法" class="headerlink" title="3.1.语法"></a>3.1.语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ sqoop job (generic-args) (job-args)</div><div class="line">   [-- [subtool-name] (subtool-args)]</div><div class="line"> </div><div class="line">$ sqoop-job (generic-args) (job-args)</div><div class="line">   [-- [subtool-name] (subtool-args)]</div></pre></td></tr></table></figure>
+<h2 id="3-2-创建作业-–create"><a href="#3-2-创建作业-–create" class="headerlink" title="3.2.创建作业(–create)"></a>3.2.创建作业(–create)</h2><p> 在这里，我们创建一个名为myjob，这可以从RDBMS表的数据导入到HDFS作业。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bin/sqoop job --create myimportjob -- import --connect jdbc:mysql://hdp-node-01:3306/test --username root --password root --table emp --m 1</div><div class="line">#该命令创建了一个从db库的employee表导入到HDFS文件的作业。</div></pre></td></tr></table></figure>
+<h2 id="3-3-验证作业-–list"><a href="#3-3-验证作业-–list" class="headerlink" title="3.3.验证作业 (–list)"></a>3.3.验证作业 (–list)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">‘--list’ 参数是用来验证保存的作业。下面的命令用来验证保存Sqoop作业的列表。</div><div class="line">$ sqoop job --list</div><div class="line">它显示了保存作业列表。</div><div class="line">Available jobs:</div><div class="line">   myimportjob</div><div class="line">检查作业(--show)</div><div class="line">‘--show’ 参数用于检查或验证特定的工作，及其详细信息。以下命令和样本输出用来验证一个名为myjob的作业。</div><div class="line">$ sqoop job --show myjob</div><div class="line">它显示了工具和它们的选择，这是使用在myjob中作业情况。</div><div class="line"></div><div class="line">Job: myjob</div><div class="line">Tool: import Options:</div><div class="line">----------------------------</div><div class="line">direct.import = true</div><div class="line">codegen.input.delimiters.record = 0</div><div class="line">hdfs.append.dir = false</div><div class="line">db.table = employee</div><div class="line">...</div><div class="line">incremental.last.value = 1206</div><div class="line">...</div></pre></td></tr></table></figure>
+<h2 id="3-4-执行作业-–exec"><a href="#3-4-执行作业-–exec" class="headerlink" title="3.4.执行作业 (–exec)"></a>3.4.执行作业 (–exec)</h2><p>&emsp;‘–exec’ 选项用于执行保存的作业。下面的命令用于执行保存的作业称为myjob。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sqoop job --exec myjob</div><div class="line">它会显示下面的输出。</div><div class="line">10/08/19 13:08:45 INFO tool.CodeGenTool: Beginning code generation</div><div class="line">...</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/sqoop/" rel="tag"># sqoop</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/storm/storm内部通信机制1/" rel="next" title="storm内部通信机制1">
+                <i class="fa fa-chevron-left"></i> storm内部通信机制1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/sqoop/sqoop常见的导入导出参数说明/" rel="prev" title="sqoop常见的导入导出参数说明">
+                sqoop常见的导入导出参数说明 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Sqoop的数据导入"><span class="nav-number">1.</span> <span class="nav-text">1.Sqoop的数据导入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-语法"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-实例"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-表数据"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1.表数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-导入表表数据到HDFS"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2.2.导入表表数据到HDFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-3-导入关系表到HIVE"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.2.3.导入关系表到HIVE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-4-导入到HDFS指定目录"><span class="nav-number">1.2.4.</span> <span class="nav-text">1.2.4.导入到HDFS指定目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-5-导入表数据子集"><span class="nav-number">1.2.5.</span> <span class="nav-text">1.2.5.导入表数据子集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-6-增量导入"><span class="nav-number">1.2.6.</span> <span class="nav-text">1.2.6.增量导入</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Sqoop的数据导出"><span class="nav-number">2.</span> <span class="nav-text">2.Sqoop的数据导出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-语法"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-示例"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Sqoop作业-job"><span class="nav-number">3.</span> <span class="nav-text">3.Sqoop作业(job)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-语法"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-创建作业-–create"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.创建作业(–create)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-验证作业-–list"><span class="nav-number">3.3.</span> <span class="nav-text">3.3.验证作业 (–list)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-执行作业-–exec"><span class="nav-number">3.4.</span> <span class="nav-text">3.4.执行作业 (–exec)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

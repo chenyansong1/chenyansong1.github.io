@@ -1,0 +1,987 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;python和c语言不一样，没有单个字符的数据类型，取而代之的是一个字符的字符串，python的字符串被划分为不可变序列，意味着这些字符串所包含的字符串存在从左到右的位置顺序，并且他们不可以在原处修改。 下表是常见的字符串和表达式    表达式 含义     s = ‘’ 空字符串   s = “sam” 或 s = ‘sam’ 单引号和双引号相同   s = ‘’’ abcde ‘’">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python数据类型之字符串">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/python/python数据类型字符串/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="&amp;emsp;python和c语言不一样，没有单个字符的数据类型，取而代之的是一个字符的字符串，python的字符串被划分为不可变序列，意味着这些字符串所包含的字符串存在从左到右的位置顺序，并且他们不可以在原处修改。 下表是常见的字符串和表达式    表达式 含义     s = ‘’ 空字符串   s = “sam” 或 s = ‘sam’ 单引号和双引号相同   s = ‘’’ abcde ‘’">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/str/1.png">
+<meta property="og:updated_time" content="2017-02-24T17:10:36.824Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python数据类型之字符串">
+<meta name="twitter:description" content="&amp;emsp;python和c语言不一样，没有单个字符的数据类型，取而代之的是一个字符的字符串，python的字符串被划分为不可变序列，意味着这些字符串所包含的字符串存在从左到右的位置顺序，并且他们不可以在原处修改。 下表是常见的字符串和表达式    表达式 含义     s = ‘’ 空字符串   s = “sam” 或 s = ‘sam’ 单引号和双引号相同   s = ‘’’ abcde ‘’">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/python/str/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/python/python数据类型字符串/"/>
+
+
+
+
+
+  <title> python数据类型之字符串 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/python/python数据类型字符串/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python数据类型之字符串
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;python和c语言不一样，<strong>没有单个字符的数据类型</strong>，取而代之的是一个字符的字符串，<strong>python的字符串被划分为不可变序列</strong>，意味着这些字符串所包含的字符串存在从左到右的位置顺序，并且他们不可以在原处修改。</p>
+<p>下表是常见的字符串和表达式</p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s = ‘’</td>
+<td>空字符串</td>
+</tr>
+<tr>
+<td>s = “sam” 或 s = ‘sam’</td>
+<td>单引号和双引号相同</td>
+</tr>
+<tr>
+<td>s = ‘’’ abcde ‘’’</td>
+<td>三引号字符串（单引号和双引号都可）</td>
+</tr>
+<tr>
+<td>s = “\temp \n dfsdfsf”</td>
+<td>其中包含转义字符</td>
+</tr>
+<tr>
+<td>s1 + s2</td>
+<td>合并</td>
+</tr>
+<tr>
+<td>s * 3</td>
+<td>重复</td>
+</tr>
+<tr>
+<td>s[i]</td>
+<td>索引</td>
+</tr>
+<tr>
+<td>s[i:j]</td>
+<td>分片</td>
+</tr>
+<tr>
+<td>len(s)</td>
+<td>取长度</td>
+</tr>
+<tr>
+<td>“my name is {0} ,age is {1}”.format(name,age)</td>
+<td>字符串格式化表达式</td>
+</tr>
+<tr>
+<td>s.find(“aaaa”)</td>
+<td>搜素</td>
+</tr>
+<tr>
+<td>s.rstrip()</td>
+<td>移除空格</td>
+</tr>
+<tr>
+<td>s.split(‘,’)</td>
+<td>加入分隔符</td>
+</tr>
+<tr>
+<td>s.isdigit()</td>
+<td>内容测试（是否是digit）</td>
+</tr>
+<tr>
+<td>s.lower()</td>
+<td>大小写转换</td>
+</tr>
+<tr>
+<td>s.endwith(“spam”)</td>
+<td>结束测试</td>
+</tr>
+<tr>
+<td>”spam”.join(strlist)</td>
+<td>插入分隔符</td>
+</tr>
+</tbody>
+</table>
+<h1 id="1-字符串常量"><a href="#1-字符串常量" class="headerlink" title="1.字符串常量"></a>1.字符串常量</h1><ul>
+<li>单引号： ‘spa”m’</li>
+<li>双引号：“spa’m”</li>
+<li>三引号：’’’ …….spam…’’’     /          “””……..spam…….”””</li>
+</ul>
+<p>单引号和双引号是可以互换的，可以在一个单引号字符串中嵌入一个双引号，反之，亦然。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&apos;knsdfsfsi&quot;ssss&apos; , &quot;dfsfldsfsldf&apos;sdfsdf&quot;</div></pre></td></tr></table></figure></p>
+<p>Python会自动的合并相邻的字符串常量，尽管可以简单的在他们之间增加+操作符来说明这一合并操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">title = &quot;meaning&quot; &apos;of&apos; &quot;life&quot;</div><div class="line">&gt;&gt;title</div><div class="line">meaning of life</div></pre></td></tr></table></figure></p>
+<h1 id="2-转义字符"><a href="#2-转义字符" class="headerlink" title="2.转义字符"></a>2.转义字符</h1><p>&emsp;转义序列让我们可以在字符串中嵌入不容易通过键盘输入的字节，字符串常量中字符“\”，以及在它后面的一个或者多个字符，在最终字符串对象中会被一个单个字符所替代，这个字符通过转义序列定义了一个二进制值例如：有一个五个字符的字符串，其中嵌入了一个换行符和一个制表符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;s = &apos;a\nb\tc&apos;</div><div class="line"></div><div class="line">&gt;&gt;print(s)</div><div class="line">a</div><div class="line">b    c</div><div class="line"></div><div class="line">&gt;&gt;len(s)</div><div class="line">5</div></pre></td></tr></table></figure></p>
+<p><strong>注意原始的反斜杠字符并不真正的和字符串一起存在在内存中</strong></p>
+<p>下面是常见的反斜杠字符表</p>
+<table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>\newline</td>
+<td>忽视连续</td>
+</tr>
+<tr>
+<td>\</td>
+<td>反斜杠</td>
+</tr>
+<tr>
+<td>\’</td>
+<td>单引号</td>
+</tr>
+<tr>
+<td>\”</td>
+<td>双引号</td>
+</tr>
+<tr>
+<td>\a</td>
+<td>响铃</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>换行</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>水平制表符</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>垂直制表符</td>
+</tr>
+<tr>
+<td>\xhh</td>
+<td>十六进制值</td>
+</tr>
+<tr>
+<td>\ooo</td>
+<td>八进制值</td>
+</tr>
+<tr>
+<td>\0</td>
+<td>Null（不是字符串结尾）</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;s = &apos;a\ob\oc&apos;</div><div class="line">&gt;&gt;s</div><div class="line">&apos;a\x00b\x00c&apos;</div><div class="line"></div><div class="line">&gt;&gt;len(s)</div><div class="line">5</div></pre></td></tr></table></figure>
+<p>如果python没有作为一个合法的转义编码识别出在“\”后的字符，他就直接在最终的字符串中保留反斜杠<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;x = &quot;C:\py\code&quot;</div><div class="line">&gt;&gt;x</div><div class="line">&apos;C:\\py\\code&apos;</div><div class="line"></div><div class="line">&gt;&gt;len(x)</div><div class="line">10</div></pre></td></tr></table></figure></p>
+<h1 id="3-raw-转义抑制"><a href="#3-raw-转义抑制" class="headerlink" title="3.raw 转义抑制"></a>3.raw 转义抑制</h1><p>&emsp;有时我们会像这样打开一个文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">myfile = open(&apos;C:\new\test.data&apos;,&apos;w&apos;)                        #因为有转义的存在，所以最终显示的是：   C:(换行）ew(制表符）est.data      的文件</div></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;为了解决上面的问题，使用字母r（大写或小写）放在字符串的第一个引号的前面，这样会自动的关闭转义机制<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">myfile = open(r&apos;C:\new\test.data&apos;,&apos;w&apos;)               # r会抑制转义</div></pre></td></tr></table></figure></p>
+<p>另外一种方法是，加入反斜杠的转义序列，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">myfile = open(&apos;C:\\new\\test.data&apos;,&apos;w&apos;)</div></pre></td></tr></table></figure></p>
+<h1 id="4-三引号"><a href="#4-三引号" class="headerlink" title="4.三引号"></a>4.三引号</h1><p>作用：</p>
+<ul>
+<li><p>编写多行字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; a = &apos;&apos;&apos; my name is </div><div class="line">chenyansong , age is 24 &apos;&apos;&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>作为多行注释</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&quot;&quot;&quot; this is print result&quot;&quot;&quot;                                    #表示注释</div><div class="line">print(s)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="5-字符串的基本操作"><a href="#5-字符串的基本操作" class="headerlink" title="5.字符串的基本操作"></a>5.字符串的基本操作</h1><h2 id="5-1"><a href="#5-1" class="headerlink" title="5.1.+"></a>5.1.+</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&apos;abc&apos; + &apos;def&apos;               #字符串合并，两个字符串对象相加创建了一个新的字符串对象</div><div class="line">&apos;abcdef&apos;</div></pre></td></tr></table></figure>
+<h2 id="5-2"><a href="#5-2" class="headerlink" title="5.2.*"></a>5.2.*</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;print(&apos;------------ ...more....-----------&apos;)               #90个横线</div><div class="line">&gt;&gt;print( &apos;-&apos; * 90)                                                  #90个横线，这就是重复的作用，可以避免我们冗余的操作</div></pre></td></tr></table></figure>
+<p>注意：在应用于数字时，执行加法和乘法的相同的操作符+和* ，python不允许你在+表达式中混合数字和字符串：‘aaa’+9会跑出一个异常</p>
+<h2 id="5-3-in"><a href="#5-3-in" class="headerlink" title="5.3.in"></a>5.3.in</h2><p>&emsp;&emsp;in表达式操作符用于对字符和子字符串进行<strong>成员关系的测试</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;myjob = &apos;hacker&apos;</div><div class="line"></div><div class="line">&gt;&gt; &apos;k&apos; in myjob                                       </div><div class="line">True</div><div class="line"></div><div class="line">&gt;&gt;&apos;z&apos; in myjob</div><div class="line">False</div><div class="line"></div><div class="line">&gt;&gt;&quot;spam&quot; in &quot;abcdAspam&quot;                                    #用来测试子串在父串中是否存在</div><div class="line">True</div></pre></td></tr></table></figure></p>
+<h1 id="6-索引和分片"><a href="#6-索引和分片" class="headerlink" title="6.索引和分片"></a>6.索引和分片</h1><h2 id="6-1-索引"><a href="#6-1-索引" class="headerlink" title="6.1.索引"></a>6.1.索引</h2><ul>
+<li>第一个元素的偏移为0</li>
+<li>负偏移索引意味着从最后或右边反向进行计数</li>
+<li>s[0] 获取了第一个元素</li>
+<li>s[-2] 获取了倒数第二个元素，（就像s[len(s)-2]一样）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;s = &apos;spam&apos;</div><div class="line">&gt;&gt;s[0], s[-2]</div><div class="line">(&apos;s&apos;, &apos;a&apos;)</div></pre></td></tr></table></figure>
+<h2 id="6-2-分片"><a href="#6-2-分片" class="headerlink" title="6.2.分片"></a>6.2.分片</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/python/str/1.png" alt=""></p>
+<ul>
+<li>上边界并不包含在内</li>
+<li>分片的默认边界为0和序列的长度，如果没有给出的话</li>
+<li>s[1:3] 获取了从偏移为1的元素，知道但不包含偏移为3的元素</li>
+<li>s[1:] 获取了从偏移为1直到结尾（偏移为序列长度）之间的元素</li>
+<li>s[:3] 获取了偏移为0直到但不包含偏移为3之间的元素</li>
+<li>s[:-1] 获取了从偏移为0直到但是不包含最后一个元素之间的元素</li>
+<li>s[:] 获取了从偏移0到末尾之间的元素，这有效的实现了顶层s拷贝</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;s = &apos;spam&apos;</div><div class="line">&gt;&gt;s[1:3],s[1:],s[:-1]</div><div class="line">(&apos;pa&apos;, &apos;pam&apos;, &apos;spa&apos;)</div></pre></td></tr></table></figure>
+<h2 id="6-3-分片扩展：第三个限制值"><a href="#6-3-分片扩展：第三个限制值" class="headerlink" title="6.3.分片扩展：第三个限制值"></a>6.3.分片扩展：第三个限制值</h2><p>&emsp;在python2.3中，分片表达式增加了一个可选的第三个索引，用作步进，如下<br>x[I:J:K]  表示：索引x对象中的元素，从偏移为I直到偏移为J-1，每隔K元素索引一次，默认K=1 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;s = &apos;abcdefg&apos;</div><div class="line">&gt;&gt;s[1:5:2]</div><div class="line">&apos;bdf&apos;</div><div class="line"></div><div class="line">&gt;&gt;s = &apos;hello&apos;</div><div class="line">&gt;&gt;s[::-1]</div><div class="line">&apos;olleh&apos;                                       #步进-1表示分片将会从右至左进行而不是通常的从左至右，实际的意义就是将取得的字符串反转</div></pre></td></tr></table></figure>
+<h1 id="7-字符串转换工具"><a href="#7-字符串转换工具" class="headerlink" title="7.字符串转换工具"></a>7.字符串转换工具</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;int(&apos;42&apos;),str(42)</div><div class="line">(42,&apos;42&apos;)</div><div class="line"></div><div class="line">&gt;&gt;s = &apos;42&apos;</div><div class="line">&gt;&gt;I = 1</div><div class="line">&gt;&gt;s +I</div><div class="line">TypeError:cannot concatenate &apos;str&apos; and &apos;int&apos; object</div><div class="line"></div><div class="line">&gt;&gt;int(s) +I                                                      #转换成int</div><div class="line">43</div><div class="line"></div><div class="line">&gt;&gt;s + str(I)                                                   #转换成str</div><div class="line">&apos;431&apos;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;ord(&apos;s&apos;)                                                   #ord函数将单个字符转换成ASCII码</div><div class="line">115</div><div class="line"></div><div class="line">&gt;&gt;chr(115)                                                #chr将ASCII码转成对应的字符</div><div class="line">&apos;s&apos;</div></pre></td></tr></table></figure>
+<h1 id="8-字符串方法"><a href="#8-字符串方法" class="headerlink" title="8.字符串方法"></a>8.字符串方法</h1><h2 id="8-1-修改字符串"><a href="#8-1-修改字符串" class="headerlink" title="8.1.修改字符串"></a>8.1.修改字符串</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">#方法1</div><div class="line">&gt;&gt; s = &apos;spamy&apos;</div><div class="line">&gt;&gt; s = s[:3] + &apos;xx&apos; + s[5:]                                          #切片+拼接</div><div class="line">&gt;&gt;s</div><div class="line">&apos;spaxxy&apos;</div><div class="line"></div><div class="line"></div><div class="line">#方法2</div><div class="line">&gt;&gt; s = &apos;spammymmy&apos;</div><div class="line">&gt;&gt; s = s.replace(&apos;mm&apos;,&apos;xx&apos;)                                    #replace直接替换，会替换匹配到的所有</div><div class="line">&gt;&gt; s</div><div class="line">&apos;spaxxyxxy&apos;</div><div class="line"></div><div class="line">&gt;&gt; s = &apos;spammymmy&apos;</div><div class="line">&gt;&gt; s = s.replace(&apos;mm&apos;,&apos;xx&apos;,1)                                    #replace直接替换，只是替换第一个</div><div class="line">&gt;&gt; s</div><div class="line">&apos;spaxxymmy&apos;</div><div class="line"></div><div class="line"></div><div class="line">#方法3</div><div class="line">&gt;&gt; s = &apos;xxxxSPAMxxxxSPAMxxxx&apos;</div><div class="line">&gt;&gt; where = s.find(&apos;SPAM&apos;)</div><div class="line">&gt;&gt;where</div><div class="line">5</div><div class="line">&gt;&gt;s = s[:where] + &apos;EGGS&apos; + s[(where + 4):]</div><div class="line">&gt;&gt;s</div><div class="line">&apos;xxxxEGGSxxxxSPAMxxxx&apos;</div><div class="line"></div><div class="line"></div><div class="line">#方法4</div><div class="line">&gt;&gt; s = &apos;spammy&apos;</div><div class="line">&gt;&gt; L =list(s)</div><div class="line">&gt;&gt; L</div><div class="line">[&apos;s&apos;, &apos;p&apos;, &apos;a&apos;, &apos;m&apos;, &apos;m&apos;, &apos;y&apos;]</div><div class="line"></div><div class="line">&gt;L[3] = &apos;x&apos;</div><div class="line">&gt;L[4] = &apos;x&apos;</div><div class="line">&gt;&gt;L</div><div class="line">[&apos;s&apos;, &apos;p&apos;, &apos;a&apos;, &apos;x&apos;, &apos;x&apos;, &apos;y&apos;]</div><div class="line"></div><div class="line">&gt;&gt;s = &apos;&apos;.join(L)                        #使用join函数去拼接</div><div class="line">&gt;&gt;s</div><div class="line">&apos;spaxxy&apos;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#join的用法</div><div class="line">&gt;&gt; &apos;SPAM&apos;.join([&apos;eggs&apos;, &apos;sausage&apos;, &apos;ham&apos;, &apos;toast&apos;])               #使用SPAM去连接，组成新的字符串</div><div class="line"> &apos;eggsSPAMsausageSPAMhamSPAMtoast&apos;</div></pre></td></tr></table></figure>
+<h2 id="8-2-split"><a href="#8-2-split" class="headerlink" title="8.2.split"></a>8.2.split</h2><p>&emsp;将一个字符串分割为一个子字符串的列表，以分隔符字符串为标准，默认的分隔符为空格<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; line = &apos;aaa bbb ccc&apos;</div><div class="line">&gt;&gt; cols = line.split()</div><div class="line">&gt;&gt; cols</div><div class="line">[&apos;aaa&apos;, &apos;bbb&apos;, &apos;ccc&apos;]</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;line = &quot;i&apos;mSPAMaSPAMboy&quot;                           </div><div class="line">&gt;&gt; line.split(SPAM)                                          #使用“SPAM”去分割</div><div class="line">[&quot;i&apos;m&quot;, &apos;a&apos;, &apos;boy&apos;]</div></pre></td></tr></table></figure></p>
+<h2 id="8-3-rstrip-清除每行末尾空白"><a href="#8-3-rstrip-清除每行末尾空白" class="headerlink" title="8.3.rstrip 清除每行末尾空白"></a>8.3.rstrip 清除每行末尾空白</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;line = &quot;the knigts who say Ni!\n&quot;</div><div class="line">&gt;&gt;line.rstrip()</div><div class="line">&quot;the knights who say Ni!&quot;                           #去掉每行末尾的换行符</div></pre></td></tr></table></figure>
+<h2 id="8-4-大小写转换"><a href="#8-4-大小写转换" class="headerlink" title="8.4.大小写转换"></a>8.4.大小写转换</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;s = &apos;my name is cys&apos;</div><div class="line">&gt;&gt;s.upper()</div><div class="line">&apos;MY NAME IS CYS&apos;</div></pre></td></tr></table></figure>
+<h2 id="8-5-内容检测"><a href="#8-5-内容检测" class="headerlink" title="8.5.内容检测"></a>8.5.内容检测</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;s = &apos;my name is cys&apos;</div><div class="line">&gt;&gt;&quot;cys&quot; in s</div><div class="line">True</div></pre></td></tr></table></figure>
+<h2 id="8-6-检测末尾或起始字符串"><a href="#8-6-检测末尾或起始字符串" class="headerlink" title="8.6.检测末尾或起始字符串"></a>8.6.检测末尾或起始字符串</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;s = &apos;my name is cys&apos;</div><div class="line">&gt;&gt;s.endswith(cys)</div><div class="line">True</div></pre></td></tr></table></figure>
+<h1 id="9-字符串格式化表达式"><a href="#9-字符串格式化表达式" class="headerlink" title="9.字符串格式化表达式%"></a>9.字符串格式化表达式%</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&apos;This is %d %s bird&apos; % (1,&apos;dead&apos;)</div><div class="line">This is 1 dead bird</div></pre></td></tr></table></figure>
+<p>格式化字符串：</p>
+<ul>
+<li>在%操作符的左侧放置一个需要进行格式化的字符串，这个字符串带有一个或多个嵌入的转换目标，都以%开头（例如：%d)</li>
+<li>在%操作符右侧放置一个（或多个，嵌入到元组中）对象，这些对象将会插入到左侧想让python进行格式化字符串的一个或多个转换目标的位置上去</li>
+<li>注意：当不止一个值待插入的时候，应该在右侧用括号把它们括起来，即将他们放入到元组中去，%格式化表达式操作符在其右侧期待一个或多个项（此时就是元组）</li>
+</ul>
+<p>字符串格式化代码</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>s</td>
+<td>字符串（或任何对象）</td>
+</tr>
+<tr>
+<td>r</td>
+<td>s,但使用repr ,而不是str</td>
+</tr>
+<tr>
+<td>c</td>
+<td>字符</td>
+</tr>
+<tr>
+<td>d</td>
+<td>十进制</td>
+</tr>
+<tr>
+<td>i</td>
+<td>整数</td>
+</tr>
+<tr>
+<td>u</td>
+<td>无符号整数</td>
+</tr>
+<tr>
+<td>o</td>
+<td>八进制整数</td>
+</tr>
+<tr>
+<td>X</td>
+<td>打印大写</td>
+</tr>
+<tr>
+<td>e</td>
+<td>浮点指数</td>
+</tr>
+<tr>
+<td>f</td>
+<td>浮点十进制</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-1-基于字典的格式化"><a href="#9-1-基于字典的格式化" class="headerlink" title="9.1.基于字典的格式化"></a>9.1.基于字典的格式化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&quot;%(n)d %(x)s&quot; % &#123;&quot;n&quot;:1, &quot;x&quot;:&quot;spam&quot;&#125;               #格式化字符串里（n)和（x）引用了右边字典中的键，并提取他们相应的值</div><div class="line">&apos;1 spam&apos;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;reply = &apos;&apos;&apos;</div><div class="line">my name is %(name)s</div><div class="line">my birthday is %(birthday)s</div><div class="line">my work is %(work)s</div><div class="line">&apos;&apos;&apos;</div><div class="line">&gt;&gt;values = &#123;&quot;name&quot;:&quot;cys&quot;,&quot;birthday&quot;:&quot;1992.12.21&quot;,&quot;work&quot;:&quot;IT worker&quot;&#125;</div><div class="line"></div><div class="line">&gt;&gt;print(reply % values)</div><div class="line">my name is  cys</div><div class="line">my birthday is 1992.12.21</div><div class="line">my work is IT worker</div></pre></td></tr></table></figure>
+<h1 id="10-字符串格式化调用方法：format"><a href="#10-字符串格式化调用方法：format" class="headerlink" title="10.字符串格式化调用方法：format"></a>10.字符串格式化调用方法：format</h1><p>在主体字符串中，花括号通过位置（例如：{1}）或关键字（例如：{food}）指出替换目标即将要插入的参数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&quot;&#123;0&#125;, &#123;1&#125;, and &#123;2&#125;&quot;.format(&apos;spam&apos;, &apos;ham&apos;, &apos;eggs&apos;)                  #通过位置</div><div class="line">&apos;spam , ham and eggs&apos;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;&quot;my name is &#123;name&#125;, old is &#123;age&#125;&quot;.format( name=&quot;cys&quot;, age=&quot;24&quot; )               #通过关键字</div><div class="line">&apos;my name is cys, old is 24&apos;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;&quot;my name is &#123;name&#125;, old is &#123;0&#125;, and my favious is &#123;food&#125;&quot;.format( 24, name=&quot;cys&quot;, food=[1,3] )         #位置和关键字混合</div><div class="line">&apos;my name is cys, old is 24, and my favious is [1,3]&apos;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;import sys</div><div class="line">&gt;&gt;&quot;My &#123;1[spam]&#125; runs &#123;0.platform&#125;&quot;.format(sys, &#123;&apos;spam&quot;:&quot;laptop&quot;&#125;)                                             #1表示第一个参数，而1[spam]表示取第一个参数的属性</div><div class="line">&apos;My laptop runs win32&apos;</div><div class="line"></div><div class="line">&gt;&gt;&quot;My &#123;config[spam]&#125; runs &#123;sys.platform&#125;&quot;.format(sys = sys , config = &#123;&quot;spam&quot;:&quot;laptop&quot;&#125;)            </div><div class="line">&apos;My laptop runs win32&apos;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;someList = list(&apos;SPAM&apos;)</div><div class="line">&gt;&gt;parts = someList[0],someList[-1], someList[1:3]</div><div class="line">&gt;&gt;&quot;first=&#123;0&#125;,last=&#123;1&#125;, middle=&#123;2&#125;&quot;.format(*parts)</div><div class="line">&quot;first=S, last=M, middle=[&apos;P&apos;,&apos;A&apos;]&quot;</div></pre></td></tr></table></figure></p>
+<p>具体格式化<br>{fieldname!conversionflag:formatspec}</p>
+<ul>
+<li>fieldname是指参数的一个数字或关键字，后面跟着可选的“.name” 或者”[index]“成分引用</li>
+<li>conversionflag 可以是r、s、或者是a分别表示该值上对repr,str、或ascii内置函数的一次调用</li>
+<li>formatspec 指定了如何表示该值，包括字段宽度、对齐方式、不零、小数点精度等细节<br>冒号后的formatspec 组成形式<br>[ [fill]align] [sign] [#] [0] [widht] [.precision] [typecode]<br>align可能是&lt;   &gt;    =    ^  表示左对齐、右对齐、一个标记字符后的补充或居中对齐</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&gt;&gt; &apos;&#123;0:&lt;10&#125; = &#123;1:&gt;10&#125;&apos;.format(&apos;spam&apos;, 123,4567)</div><div class="line">&apos;spam      =   123.4567&apos;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;&apos;&#123;0:f&#125;, &#123;1:.2f&#125;, &#123;2:06.2f&#125;&apos;.format(3.14159, 3.14159, 3.14159)</div><div class="line">&apos;3.141590,  3.14,  003.14&apos;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;&apos;&#123;0:.&#123;1&#125;f&#125;&apos;.format(1/3.0, 4)</div><div class="line">&apos;0.3333&apos;</div><div class="line"></div><div class="line"></div><div class="line">&gt;&gt;format(1.2345, &apos;.2f&apos;)</div><div class="line">&apos;1.23&apos;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/python/python的作用域/" rel="next" title="python的作用域">
+                <i class="fa fa-chevron-left"></i> python的作用域
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/python数据类型之文件/" rel="prev" title="python数据类型之文件">
+                python数据类型之文件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-字符串常量"><span class="nav-number">1.</span> <span class="nav-text">1.字符串常量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-转义字符"><span class="nav-number">2.</span> <span class="nav-text">2.转义字符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-raw-转义抑制"><span class="nav-number">3.</span> <span class="nav-text">3.raw 转义抑制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-三引号"><span class="nav-number">4.</span> <span class="nav-text">4.三引号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-字符串的基本操作"><span class="nav-number">5.</span> <span class="nav-text">5.字符串的基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1"><span class="nav-number">5.1.</span> <span class="nav-text">5.1.+</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2"><span class="nav-number">5.2.</span> <span class="nav-text">5.2.*</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-in"><span class="nav-number">5.3.</span> <span class="nav-text">5.3.in</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-索引和分片"><span class="nav-number">6.</span> <span class="nav-text">6.索引和分片</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-索引"><span class="nav-number">6.1.</span> <span class="nav-text">6.1.索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-分片"><span class="nav-number">6.2.</span> <span class="nav-text">6.2.分片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-分片扩展：第三个限制值"><span class="nav-number">6.3.</span> <span class="nav-text">6.3.分片扩展：第三个限制值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-字符串转换工具"><span class="nav-number">7.</span> <span class="nav-text">7.字符串转换工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-字符串方法"><span class="nav-number">8.</span> <span class="nav-text">8.字符串方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1-修改字符串"><span class="nav-number">8.1.</span> <span class="nav-text">8.1.修改字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2-split"><span class="nav-number">8.2.</span> <span class="nav-text">8.2.split</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-3-rstrip-清除每行末尾空白"><span class="nav-number">8.3.</span> <span class="nav-text">8.3.rstrip 清除每行末尾空白</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-4-大小写转换"><span class="nav-number">8.4.</span> <span class="nav-text">8.4.大小写转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-5-内容检测"><span class="nav-number">8.5.</span> <span class="nav-text">8.5.内容检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-6-检测末尾或起始字符串"><span class="nav-number">8.6.</span> <span class="nav-text">8.6.检测末尾或起始字符串</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-字符串格式化表达式"><span class="nav-number">9.</span> <span class="nav-text">9.字符串格式化表达式%</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#9-1-基于字典的格式化"><span class="nav-number">9.1.</span> <span class="nav-text">9.1.基于字典的格式化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-字符串格式化调用方法：format"><span class="nav-number">10.</span> <span class="nav-text">10.字符串格式化调用方法：format</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="spark," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="除了查看web ui上的统计来监控作业，还可以通过Spark提供的REST API来获取作业信息，并进行作业监控。REST API就给我们自己开发Spark的一些监控系统或平台提供了可能。REST API是通过http协议发送的，并给我们返回JSON格式的数据。因此无论你是用java，还是python，亦或是php，都可以获取Spark的监控信息。">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark运维管理之curl+REST API作业监控">
+<meta property="og:url" content="http://yoursite.com/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之curl+REST API作业监控/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="除了查看web ui上的统计来监控作业，还可以通过Spark提供的REST API来获取作业信息，并进行作业监控。REST API就给我们自己开发Spark的一些监控系统或平台提供了可能。REST API是通过http协议发送的，并给我们返回JSON格式的数据。因此无论你是用java，还是python，亦或是php，都可以获取Spark的监控信息。">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/rest_api_1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/rest_api_2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/rest_api_3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/rest_api_4.png">
+<meta property="og:updated_time" content="2017-04-22T07:23:06.409Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spark运维管理之curl+REST API作业监控">
+<meta name="twitter:description" content="除了查看web ui上的统计来监控作业，还可以通过Spark提供的REST API来获取作业信息，并进行作业监控。REST API就给我们自己开发Spark的一些监控系统或平台提供了可能。REST API是通过http协议发送的，并给我们返回JSON格式的数据。因此无论你是用java，还是python，亦或是php，都可以获取Spark的监控信息。">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/rest_api_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之curl+REST API作业监控/"/>
+
+
+
+
+
+  <title> Spark运维管理之curl+REST API作业监控 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之curl+REST API作业监控/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark运维管理之curl+REST API作业监控
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-17T21:06:13+08:00">
+                2017-04-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>除了查看web ui上的统计来监控作业，还可以通过Spark提供的REST API来获取作业信息，并进行作业监控。REST API就给我们自己开发Spark的一些监控系统或平台提供了可能。REST API是通过http协议发送的，并给我们返回JSON格式的数据。因此无论你是用java，还是python，亦或是php，都可以获取Spark的监控信息。</p>
+<a id="more"></a>
+<p>运行中的作业以及history server中的历史作业，都可以获取到信息</p>
+<p>1、如果是要获取运行中的作业的信息，可以通过<a href="http://host:4040/api/v1/...的方式来获取" target="_blank" rel="external">http://host:4040/api/v1/...的方式来获取</a><br>2、如果是要获取历史作业的信息，可以通过<a href="http://host:18080/api/v1/...的方式来获取" target="_blank" rel="external">http://host:18080/api/v1/...的方式来获取</a></p>
+<p>比如说，<a href="http://192.168.0.103:18080/api/v1/applications，就可以获取到所有历史作业的基本信息" target="_blank" rel="external">http://192.168.0.103:18080/api/v1/applications，就可以获取到所有历史作业的基本信息</a></p>
+<p>以下是所有API的说明<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">/applications																	获取作业列表</div><div class="line">/applications/[app-id]/jobs														指定作业的job列表</div><div class="line">/applications/[app-id]/jobs/[job-id]											指定job的信息</div><div class="line">/applications/[app-id]/stages													指定作业的stage列表</div><div class="line">/applications/[app-id]/stages/[stage-id]										指定stage的所有attempt列表</div><div class="line">/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]						指定stage attempt的信息</div><div class="line">/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskSummary			指定stage attempt所有task的metrics统计信息</div><div class="line">/applications/[app-id]/stages/[stage-id]/[stage-attempt-id]/taskList			指定stage attempt的task列表</div><div class="line">/applications/[app-id]/executors												指定作业的executor列表</div><div class="line">/applications/[app-id]/storage/rdd												指定作业的持久化rdd列表</div><div class="line">/applications/[app-id]/storage/rdd/[rdd-id]										指定持久化rdd的信息</div><div class="line">/applications/[app-id]/logs														下载指定作业的所有日志的压缩包</div><div class="line">/applications/[app-id]/[attempt-id]/logs										下载指定作业的某次attempt的所有日志的压缩包</div></pre></td></tr></table></figure></p>
+<p>当作业运行在yarn中时，每个作业都可能会尝试多次运行，所以上述的所有[app-id]都必须替换为[app-id]/[attempt-id]</p>
+<p>这些API都非常便于让我们去基于它们开发各种监控系统或应用。特别是，spark保证以下几点: </p>
+<p>1、API永远不会因为版本的变更而更改<br>2、JSON中的字段用于不会被移除<br>3、新的API接口可能会被增加<br>4、已有API接口中可能会增加新的字段<br>5、API的新版本可能会作为新接口被添加进来。新版本的接口不要求向后兼容。<br>6、API版本可能会被删除掉，但是肯定是在一个相关的新API版本发布之后。</p>
+<p>要注意的是，当查看运行中作业的UI时，applications/[app-id]还是需要提供的，尽管此时在那个4040端口上可能只有一个作业在运行。比如说，要查看正在运行的作业的job列表，可能需要使用以下API: <a href="http://host:4040/api/v1/applications/[app-id]/jobs" target="_blank" rel="external">http://host:4040/api/v1/applications/[app-id]/jobs</a><br>这主要是为了尽可能地复用API接口</p>
+<p>实验</p>
+<p>1、安装curl工具，来发送http请求: yum install -y curl<br>2、试一试以上的几个API，去获取历史作业的信息</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/rest_api_1.png" alt=""></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/rest_api_2.png" alt=""></p>
+<p>standalone模式和yarn模式运行中的作业和历史作业的获取相同,也就是将http请求的端口换成作业的4040端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">spark-shell --master spark://192.168.0.103:7077</div><div class="line"></div><div class="line">scala&gt;val lines = sc.textFile(&quot;hdfs://192.168.0.103:9000/test/hello.txt&quot;)</div><div class="line">scala&gt;val words = lines.flatMap(_.split(&quot; &quot;)).map((_,1))</div><div class="line">scala&gt;val counts = words.reduceByKey(_+_)</div><div class="line">scala&gt;counts.collect</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/rest_api_3.png" alt=""><br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/rest_api_4.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之spark Metrics系统以及自定义Metrics Sink/" rel="next" title="Spark运维管理之spark Metrics系统以及自定义Metrics Sink">
+                <i class="fa fa-chevron-left"></i> Spark运维管理之spark Metrics系统以及自定义Metrics Sink
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之查看Web UI/" rel="prev" title="Spark运维管理之查看Web UI进行作业监控">
+                Spark运维管理之查看Web UI进行作业监控 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="nginx," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="官网：www.nginx.org 1.检查版本&amp;emsp;在安装之前，要先检查机器的版本，否则安装的时候可能出现系统不兼容的情况 1234567[root@lamp01 ~]# cat /etc/redhat-releaseCentOS release 6.3 (Final)[root@lamp01 ~]# uname -r2.6.32-279.el6.i686[root@lamp01 ~]# u">
+<meta name="keywords" content="nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx安装">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/Linux/nginx/nginx安装/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="官网：www.nginx.org 1.检查版本&amp;emsp;在安装之前，要先检查机器的版本，否则安装的时候可能出现系统不兼容的情况 1234567[root@lamp01 ~]# cat /etc/redhat-releaseCentOS release 6.3 (Final)[root@lamp01 ~]# uname -r2.6.32-279.el6.i686[root@lamp01 ~]# u">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/4.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/5.png">
+<meta property="og:updated_time" content="2017-02-24T17:09:32.456Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx安装">
+<meta name="twitter:description" content="官网：www.nginx.org 1.检查版本&amp;emsp;在安装之前，要先检查机器的版本，否则安装的时候可能出现系统不兼容的情况 1234567[root@lamp01 ~]# cat /etc/redhat-releaseCentOS release 6.3 (Final)[root@lamp01 ~]# uname -r2.6.32-279.el6.i686[root@lamp01 ~]# u">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/Linux/nginx/nginx安装/"/>
+
+
+
+
+
+  <title> nginx安装 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/Linux/nginx/nginx安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                nginx安装
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>官网：www.nginx.org</p>
+<h1 id="1-检查版本"><a href="#1-检查版本" class="headerlink" title="1.检查版本"></a>1.检查版本</h1><p>&emsp;在安装之前，要先检查机器的版本，否则安装的时候可能出现系统不兼容的情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">[root@lamp01 ~]# cat /etc/redhat-release</div><div class="line">CentOS release 6.3 (Final)</div><div class="line">[root@lamp01 ~]# uname -r</div><div class="line">2.6.32-279.el6.i686</div><div class="line">[root@lamp01 ~]# uname -m</div><div class="line">i686</div></pre></td></tr></table></figure>
+<h1 id="2-安装pcre-pcre-devel"><a href="#2-安装pcre-pcre-devel" class="headerlink" title="2.安装pcre pcre-devel"></a>2.安装pcre pcre-devel</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#Pcre (Perl Compatible Regular Expressions) perl兼容的正则表达式，官网：www.pcre.org</div><div class="line">#HTTP rewrite modul requires the PCRE library (rewrite伪静态需要pcre的支持)</div><div class="line"></div><div class="line">rpm -qa pcre pcre-devel</div><div class="line">yum install pcre-devel -y</div></pre></td></tr></table></figure>
+<h1 id="3-安装openssl"><a href="#3-安装openssl" class="headerlink" title="3.安装openssl"></a>3.安装openssl</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">ssh的加密软件</div><div class="line">SSL module require the OpenSSL library</div><div class="line"> */</div><div class="line">yum install openssl-devel -y</div></pre></td></tr></table></figure>
+<h1 id="4-安装nginx"><a href="#4-安装nginx" class="headerlink" title="4.安装nginx"></a>4.安装nginx</h1><p><a href="http://nginx.org/download/nginx-1.6.3.tar.gz" target="_blank" rel="external">http://nginx.org/download/nginx-1.6.3.tar.gz</a></p>
+<h2 id="4-1-下载"><a href="#4-1-下载" class="headerlink" title="4.1.下载"></a>4.1.下载</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">mkdir /root/oldboy/tools -p</div><div class="line">cd /root/oldboy/tools</div><div class="line">wget -q http://nginx.org/download/nginx-1.6.3.tar.gz</div><div class="line">/*</div><div class="line">其中：-q是取消输出</div><div class="line">下载地址， 可以去nginx的官网download页面，然后右键复制地址</div><div class="line">*/</div><div class="line"></div><div class="line">#解压  </div><div class="line">tar -zxvf nginx-1.6.3.tar.gz</div></pre></td></tr></table></figure>
+<h2 id="4-2-编译"><a href="#4-2-编译" class="headerlink" title="4.2.编译"></a>4.2.编译</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">./configure --prefix=/application/nginx-1.6.3 --user=nginx --group=nginx --with-http_ssl_module --with-http_stub_status_module</div><div class="line"></div><div class="line"># prefix : 表示软件安装在哪</div><div class="line">#user,  group 是以什么用户和组来安装软件</div><div class="line">#http_ssl_module 是安全模块;      http_stub_status_module 是监控模块</div><div class="line"></div><div class="line">#之所以用编译的方式，不用yum的方式，是我们可以定制，哪些模块需要我们就安装，哪些模块不需要我们就不编译安装</div><div class="line">#我们将：--without-pcre 我们就可以取消对pcre模块的加入,对于陌生的软件，我们需要看他的readme：</div><div class="line">#查看编译的参数：如果软件不是我们安装的，我们要知道其中安装了哪些模块，使用:-V 来查看，如下：</div></pre></td></tr></table></figure>
+<h2 id="4-3-安装"><a href="#4-3-安装" class="headerlink" title="4.3.安装"></a>4.3.安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make &amp;&amp; make install</div></pre></td></tr></table></figure>
+<h2 id="4-4-创建需要的用户"><a href="#4-4-创建需要的用户" class="headerlink" title="4.4.创建需要的用户"></a>4.4.创建需要的用户</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">useradd nginx -s /sbin/nologin -M</div></pre></td></tr></table></figure>
+<h2 id="4-5-创建软链接"><a href="#4-5-创建软链接" class="headerlink" title="4.5.创建软链接"></a>4.5.创建软链接</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ln -s /application/nginx-1.6.3/ /application/nginx</div></pre></td></tr></table></figure>
+<h1 id="5-启动测试"><a href="#5-启动测试" class="headerlink" title="5.启动测试"></a>5.启动测试</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#1.启动</div><div class="line">/application/nginx/sbin/nginx</div><div class="line"></div><div class="line">#2.检查端口</div><div class="line">lsof -i :80     ##查看服务和端口（默认端口是80）</div><div class="line">ps -ef |grep nginx</div><div class="line"></div><div class="line">#3.使用浏览器访问（安装nginx的主机ip为：http://192.168.0.106/）默认端口是：80</div><div class="line">http://192.168.0.106/</div><div class="line"> </div><div class="line">#这里有点相当于tomcat</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/1.png" alt=""></p>
+<p>&emsp;如果使用浏览器访问不了：1.先ping ip ，2然后Telnet ip port 3.查看防火墙是否关闭，或者是selinux打开了，使用setgotten 0将其临时关闭即可</p>
+<h1 id="6-启动参数说明"><a href="#6-启动参数说明" class="headerlink" title="6.启动参数说明"></a>6.启动参数说明</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# cd /application/nginx/</div><div class="line">[root@lamp01 nginx]# ./sbin/nginx -h</div><div class="line">nginx version: nginx/1.6.3</div><div class="line">Usage: nginx [-?hvVtq] [-s signal] [-c filename] [-p prefix] [-g directives]</div><div class="line"> </div><div class="line">Options:</div><div class="line">  -?,-h         : this help</div><div class="line">  -v            : show version and exit</div><div class="line">  -V            : show version and configure options then exit        #显示编译的时候加入的模块</div><div class="line">  -t            : test configuration and exit    #相当于语法检查</div><div class="line">  -q            : suppress non-error messages during configuration testing</div><div class="line">  -s signal     : send signal to a master process: stop, quit, reopen, reload        #启动参数</div><div class="line">  -p prefix     : set prefix path (default: /application/nginx-1.6.3/)</div><div class="line">  -c filename   : set configuration file (default: conf/nginx.conf)</div><div class="line">  -g directives : set global directives out of configuration file</div></pre></td></tr></table></figure>
+<h1 id="Nginx目录结构说明"><a href="#Nginx目录结构说明" class="headerlink" title="Nginx目录结构说明"></a>Nginx目录结构说明</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 nginx]# ll /application/nginx/</div><div class="line">总用量 36</div><div class="line">drwx------ 2 nginx root 4096 8月   1 2016 client_body_temp</div><div class="line">drwxr-xr-x 3 root  root 4096 2月  15 18:21 conf</div><div class="line">drwx------ 2 nginx root 4096 8月   1 2016 fastcgi_temp</div><div class="line">drwxr-xr-x 4 root  root 4096 8月   1 2016 html</div><div class="line">drwxr-xr-x 2 root  root 4096 8月   3 2016 logs</div><div class="line">drwx------ 2 nginx root 4096 8月   1 2016 proxy_temp</div><div class="line">drwxr-xr-x 2 root  root 4096 8月   1 2016 sbin</div><div class="line">drwx------ 2 nginx root 4096 8月   1 2016 scgi_temp</div><div class="line">drwx------ 2 nginx root 4096 8月   1 2016 uwsgi_temp</div><div class="line"></div><div class="line">#其中temp都是一些临时文件</div><div class="line"></div><div class="line">[root@lamp01 nginx]# ll|grep -v temp      </div><div class="line">总用量 36</div><div class="line">drwxr-xr-x 3 root  root 4096 2月  15 18:21 conf    #配置文件目录</div><div class="line">drwxr-xr-x 4 root  root 4096 8月   1 2016 html    #站点目录</div><div class="line">drwxr-xr-x 2 root  root 4096 8月   3 2016 logs    #日志目录</div><div class="line">drwxr-xr-x 2 root  root 4096 8月   1 2016 sbin    #启动目录</div></pre></td></tr></table></figure>
+<h1 id="7-错误排查"><a href="#7-错误排查" class="headerlink" title="7.错误排查"></a>7.错误排查</h1><p>没有安装pcre-devel<br><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/2.png" alt=""></p>
+<p>安装操作系统的时候没有安装gcc</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/3.png" alt=""></p>
+<p>需要安装下面的软件包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum groupinstall &quot;Development tools&quot;</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/4.png" alt=""></p>
+<p>查看log日志</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/linux/nginx/install/5.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/Linux/nginx/nginx官方文档指南/" rel="next" title="nginx官方文档指南">
+                <i class="fa fa-chevron-left"></i> nginx官方文档指南
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/Linux/nginx/nginx健康检查/" rel="prev" title="nginx健康检查">
+                nginx健康检查 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-检查版本"><span class="nav-number">1.</span> <span class="nav-text">1.检查版本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-安装pcre-pcre-devel"><span class="nav-number">2.</span> <span class="nav-text">2.安装pcre pcre-devel</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-安装openssl"><span class="nav-number">3.</span> <span class="nav-text">3.安装openssl</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-安装nginx"><span class="nav-number">4.</span> <span class="nav-text">4.安装nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-下载"><span class="nav-number">4.1.</span> <span class="nav-text">4.1.下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-编译"><span class="nav-number">4.2.</span> <span class="nav-text">4.2.编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-安装"><span class="nav-number">4.3.</span> <span class="nav-text">4.3.安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-创建需要的用户"><span class="nav-number">4.4.</span> <span class="nav-text">4.4.创建需要的用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-创建软链接"><span class="nav-number">4.5.</span> <span class="nav-text">4.5.创建软链接</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-启动测试"><span class="nav-number">5.</span> <span class="nav-text">5.启动测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-启动参数说明"><span class="nav-number">6.</span> <span class="nav-text">6.启动参数说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx目录结构说明"><span class="nav-number">7.</span> <span class="nav-text">Nginx目录结构说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-错误排查"><span class="nav-number">8.</span> <span class="nav-text">7.错误排查</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

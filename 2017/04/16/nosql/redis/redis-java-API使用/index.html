@@ -1,0 +1,746 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="官网：https://redis.io/commands 1.string使用1.1.set、get、mset、mget、setex、expire1234567891011121314151617181920212223242526272829303132333435363738public class StringMain &amp;#123;    public static void main(St">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis-java-API使用">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/redis/redis-java-API使用/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="官网：https://redis.io/commands 1.string使用1.1.set、get、mset、mget、setex、expire1234567891011121314151617181920212223242526272829303132333435363738public class StringMain &amp;#123;    public static void main(St">
+<meta property="og:updated_time" content="2017-02-24T17:10:17.012Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis-java-API使用">
+<meta name="twitter:description" content="官网：https://redis.io/commands 1.string使用1.1.set、get、mset、mget、setex、expire1234567891011121314151617181920212223242526272829303132333435363738public class StringMain &amp;#123;    public static void main(St">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/redis/redis-java-API使用/"/>
+
+
+
+
+
+  <title> redis-java-API使用 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/redis/redis-java-API使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                redis-java-API使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>官网：<a href="https://redis.io/commands" target="_blank" rel="external">https://redis.io/commands</a></p>
+<h1 id="1-string使用"><a href="#1-string使用" class="headerlink" title="1.string使用"></a>1.string使用</h1><h2 id="1-1-set、get、mset、mget、setex、expire"><a href="#1-1-set、get、mset、mget、setex、expire" class="headerlink" title="1.1.set、get、mset、mget、setex、expire"></a>1.1.set、get、mset、mget、setex、expire</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">public class StringMain &#123;</div><div class="line">    public static void main(String[] args) throws InterruptedException &#123;</div><div class="line">        //创建Jedis客户端</div><div class="line">        Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">        //操作一个String字符串</div><div class="line">        jedis.set(&quot;name&quot;, &quot;liudehua&quot;); //插入一个名字，叫做刘德华</div><div class="line">        System.out.println(jedis.get(&quot;name&quot;)); //读取一个名字</div><div class="line">        //对string类型数据进行增减,前提是kv对应的值是数字</div><div class="line">        jedis.set(&quot;age&quot;, &quot;17&quot;);//给用户刘德华设置年龄，17岁</div><div class="line">        jedis.incr(&quot;age&quot;);//让用户刘德华年龄增加一岁</div><div class="line">        System.out.println(jedis.get(&quot;age&quot;)); //打印结果 18</div><div class="line">        jedis.decr(&quot;age&quot;);//让刘德华年轻一岁</div><div class="line">        System.out.println(jedis.get(&quot;age&quot;));//在18的基础上，减一岁，变回17</div><div class="line">        //一次性插入多条数据 。为江湖大侠设置绝杀技能</div><div class="line">        jedis.mset(&quot;AAA&quot;, &quot;Mysql数据库的操作&quot;</div><div class="line">                , &quot;BBB&quot;, &quot;熟悉LINXU操作系统&quot;</div><div class="line">                , &quot;CCC&quot;, &quot;熟悉SSH、SSM框架及配置&quot;</div><div class="line">                , &quot;DDD&quot;, &quot;熟悉Spring框架，mybatis框架，Spring IOC MVC的整合，Spring和Mybatis的整合&quot;);</div><div class="line">        List&lt;String&gt; results = jedis.mget(&quot;AAA&quot;, &quot;BBB&quot;, &quot;CCC&quot;, &quot;DDD&quot;);</div><div class="line">        for (String value : results) &#123;</div><div class="line">            System.out.println(value);</div><div class="line">    &#125;</div><div class="line">        //设置字段的自动过期</div><div class="line">        jedis.setex(&quot;wumai&quot;, 10, &quot;我们活在仙境中&quot;); //让仙境保持10秒钟</div><div class="line">        while (jedis.exists(&quot;wumai&quot;)) &#123;</div><div class="line">            System.out.println(&quot;真是天上人间呀！&quot;);</div><div class="line">            Thread.sleep(1000);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line">        //对已经存在的字段设置过期时间</div><div class="line">        jedis.set(&quot;wumai&quot;, &quot;我们活在仙境中&quot;);</div><div class="line">        jedis.expire(&quot;wumai&quot;, 10); //让天上人间的感觉保持更长的时间</div><div class="line">        while (jedis.exists(&quot;wumai&quot;)) &#123;</div><div class="line">            System.out.println(&quot;真是天上人间呀！&quot;);</div><div class="line">            Thread.sleep(1000);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="1-2-多线程操作Counter计数器"><a href="#1-2-多线程操作Counter计数器" class="headerlink" title="1.2.多线程操作Counter计数器"></a>1.2.多线程操作Counter计数器</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">package redis.string;</div><div class="line"></div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line"></div><div class="line">import java.util.concurrent.ExecutorService;</div><div class="line">import java.util.concurrent.Executors;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Describe: 擂台比武</div><div class="line"> */</div><div class="line">public class Counter &#123;</div><div class="line">    /**</div><div class="line">     * 计算 武林大会 三个擂台的比武次数</div><div class="line">     *</div><div class="line">     * @param args</div><div class="line">     */</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        //创建一个固定大小的线程池，3个擂台</div><div class="line">        ExecutorService executorService = Executors.newFixedThreadPool(10);</div><div class="line">        //擂台1：天龙八部</div><div class="line">        executorService.submit(new Arena(&quot;biwu:totalNum&quot;,&quot;天龙八部&quot;));</div><div class="line">        //擂台2：神雕侠侣</div><div class="line">        executorService.submit(new Arena(&quot;biwu:totalNum&quot;,&quot;神雕侠侣&quot;));</div><div class="line">        //擂台3：倚天屠龙记</div><div class="line">        executorService.submit(new Arena(&quot;biwu:totalNum&quot;,&quot;倚天屠龙记&quot;));</div><div class="line">        //报幕人员，一秒统计一次总共比了多少场</div><div class="line">        executorService.submit(new BaoMu(&quot;biwu:totalNum&quot;));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">package redis.string;</div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line">import java.util.Random;</div><div class="line">/**</div><div class="line"> * Describe: 擂台</div><div class="line"> */</div><div class="line">public class Arena implements Runnable &#123;</div><div class="line">    private Random random = new Random();</div><div class="line">    private String redisKey;</div><div class="line">    private Jedis jedis;</div><div class="line">    private String arenaName;</div><div class="line">    public Arena(String redisKey, String arenaName) &#123;</div><div class="line">        this.redisKey = redisKey;</div><div class="line">        this.arenaName = arenaName;</div><div class="line">    &#125;</div><div class="line">    public void run() &#123;</div><div class="line">        jedis = new Jedis(&quot;127.0.0.1&quot;,6379);</div><div class="line">        String[] daxias = new String[]&#123;&quot;郭靖&quot;, &quot;黄蓉&quot;, &quot;令狐冲&quot;, &quot;杨过&quot;, &quot;林冲&quot;,</div><div class="line">                &quot;鲁智深&quot;, &quot;小女龙&quot;, &quot;虚竹&quot;, &quot;独孤求败&quot;, &quot;张三丰&quot;, &quot;王重阳&quot;, &quot;张无忌&quot;</div><div class="line">                , &quot;王重阳&quot;, &quot;东方不败&quot;, &quot;逍遥子&quot;, &quot;乔峰&quot;, &quot;虚竹&quot;, &quot;段誉&quot;</div><div class="line">                , &quot;韦小宝&quot;, &quot;王语嫣&quot;, &quot;周芷若&quot;, &quot;峨眉师太&quot;, &quot;慕容复&quot;&#125;;</div><div class="line">        while (true) &#123;</div><div class="line">            try &#123;</div><div class="line">                Thread.sleep(100);</div><div class="line">            &#125; catch (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            int p1 = random.nextInt(daxias.length);</div><div class="line">            int p2 = random.nextInt(daxias.length);</div><div class="line">            while (p1 == p2) &#123; //如果两个大侠出场名字一样，换一个人</div><div class="line">                p2 = random.nextInt(daxias.length);</div><div class="line">            &#125;</div><div class="line">            System.out.println(&quot;在擂台&quot; + arenaName + &quot;上   大侠&quot; + daxias[p1] + &quot; VS &quot; + daxias[p2]);</div><div class="line">            //多个线程，将调用redis取出同一个变量，不需要加锁，因为redis底层的increase操作时原子性的</div><div class="line">            jedis.incr(redisKey);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="1-3-保存对象到redis中"><a href="#1-3-保存对象到redis中" class="headerlink" title="1.3.保存对象到redis中"></a>1.3.保存对象到redis中</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">package redis.string;</div><div class="line"></div><div class="line">import com.google.gson.Gson;</div><div class="line">import org.junit.Test;</div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line"></div><div class="line">import java.io.ByteArrayInputStream;</div><div class="line">import java.io.ByteArrayOutputStream;</div><div class="line">import java.io.ObjectInputStream;</div><div class="line">import java.io.ObjectOutputStream;</div><div class="line">import java.util.Map;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Describe: 保存Product对象到redis中</div><div class="line"> */</div><div class="line">public class ProductService &#123;</div><div class="line"></div><div class="line">    @Test</div><div class="line">    public void saveProduct2Redis() throws Exception &#123;</div><div class="line">        //初始化刘德华的基本信息</div><div class="line">        Person person = new Person(&quot;刘德华&quot;, 17);</div><div class="line">        //将刘德华的信息保存到Redis中</div><div class="line">        Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">        //直接保存对象的toString方法，这种方法不反序列化对象</div><div class="line">        jedis.set(&quot;user:liudehua:str&quot;, person.toString());</div><div class="line">        System.out.println(jedis.get(&quot;user:liudehua:str&quot;));</div><div class="line"></div><div class="line">        //保存序列化之后的对象</div><div class="line">        jedis.set(&quot;user:liudehua:obj&quot;.getBytes(), getBytesByProduct(person));</div><div class="line">        byte[] productBytes = jedis.get(&quot;user:liudehua:obj&quot;.getBytes());</div><div class="line">        Person pByte = getProductByBytes(productBytes);</div><div class="line">        System.out.println(pByte.getName()+&quot;  &quot; +pByte.getAge());</div><div class="line"></div><div class="line">        //保存Json化之后的对象</div><div class="line">        jedis.set(&quot;user:liudehua:json&quot;, new Gson().toJson(person));</div><div class="line">        String personJson = jedis.get(&quot;user:liudehua:json&quot;);</div><div class="line">        Person pjson = new Gson().fromJson(personJson, Person.class);</div><div class="line">        System.out.println(pjson.getName()+&quot;  &quot;+ pjson.getAge());</div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 从字节数组中读取Java对象</div><div class="line">     *</div><div class="line">     * @param productBytes</div><div class="line">     * @return</div><div class="line">     * @throws Exception</div><div class="line">     */</div><div class="line">    public Person getProductByBytes(byte[] productBytes) throws Exception &#123;</div><div class="line">        ByteArrayInputStream byteInputStream = new ByteArrayInputStream(productBytes);</div><div class="line">        //读对象的流</div><div class="line">        ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);</div><div class="line">        return (Person) objectInputStream.readObject();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 将对象转化成Byte数组</div><div class="line">     *</div><div class="line">     * @param product</div><div class="line">     * @return</div><div class="line">     * @throws Exception</div><div class="line">     */</div><div class="line">    public byte[] getBytesByProduct(Person product) throws Exception &#123;</div><div class="line">        ByteArrayOutputStream ba = new ByteArrayOutputStream();</div><div class="line">        //能够输出对象的流</div><div class="line">        ObjectOutputStream oos = new ObjectOutputStream(ba);</div><div class="line">        //写对象</div><div class="line">        oos.writeObject(product);</div><div class="line">        oos.flush();</div><div class="line">        return ba.toByteArray();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Person<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">package redis.string;</div><div class="line">import java.io.Serializable;</div><div class="line">/**</div><div class="line"> */</div><div class="line">public class Person implements Serializable&#123;</div><div class="line">    private static final long serialVersionUID = -9012113097419111583L;</div><div class="line">    private String name;//姓名</div><div class="line">    private int age;//年龄</div><div class="line">    public Person() &#123;</div><div class="line">    &#125;</div><div class="line">    public Person(String name, int age) &#123;</div><div class="line">        this.name = name;</div><div class="line">        this.age = age;</div><div class="line">    &#125;</div><div class="line">    public String getName() &#123;</div><div class="line">        return name;</div><div class="line">    &#125;</div><div class="line">    public void setName(String name) &#123;</div><div class="line">        this.name = name;</div><div class="line">    &#125;</div><div class="line">    public int getAge() &#123;</div><div class="line">        return age;</div><div class="line">    &#125;</div><div class="line">    public void setAge(int age) &#123;</div><div class="line">        this.age = age;</div><div class="line">    &#125;</div><div class="line">    @Override</div><div class="line">    public String toString() &#123;</div><div class="line">        return &quot;Product&#123;&quot; +</div><div class="line">                &quot;name=&apos;&quot; + name + &apos;\&apos;&apos; +</div><div class="line">                &quot;, age=&quot; + age +</div><div class="line">                &apos;&#125;&apos;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="2-map"><a href="#2-map" class="headerlink" title="2.map"></a>2.map</h1><h2 id="2-1-map基本操作"><a href="#2-1-map基本操作" class="headerlink" title="2.1.map基本操作"></a>2.1.map基本操作</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line">package redis.map;</div><div class="line"></div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line"></div><div class="line">import java.util.List;</div><div class="line">import java.util.Map;</div><div class="line">import java.util.Set;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Describe: 请补充类描述</div><div class="line"> */</div><div class="line">public class MapMain &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">        jedis.del(&quot;daxia:jingzhongyue&quot;);</div><div class="line">        //创建一个对象</div><div class="line">        jedis.hset(&quot;daxia:jingzhongyue&quot;, &quot;姓名&quot;, &quot;不为人知&quot;);</div><div class="line">        jedis.hset(&quot;daxia:jingzhongyue&quot;, &quot;年龄&quot;, &quot;18&quot;);</div><div class="line">        jedis.hset(&quot;daxia:jingzhongyue&quot;, &quot;技能&quot;, &quot;杀人于无形&quot;);</div><div class="line"></div><div class="line">        //打印对象</div><div class="line">        Map&lt;String, String&gt; jingzhongyue = jedis.hgetAll(&quot;daxia:jingzhongyue&quot;);</div><div class="line">        System.out.println(&quot;hgetAll  大侠的基本信息：&quot;);</div><div class="line">        for (Map.Entry entry : jingzhongyue.entrySet()) &#123;</div><div class="line">                    System.out.println(entry.getKey() + &quot;：-----------------&quot; + entry.getValue());</div><div class="line">        &#125;</div><div class="line">    </div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //获取大侠的所有字段信息</div><div class="line">        Set&lt;String&gt; fields = jedis.hkeys(&quot;daxia:jingzhongyue&quot;);</div><div class="line">        System.out.println(&quot;hkeys  &quot;);</div><div class="line">        for (String field : fields) &#123;</div><div class="line">            System.out.print(field + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line">        //获取大侠的所有值的信息</div><div class="line">        List&lt;String&gt; values = jedis.hvals(&quot;daxia:jingzhongyue&quot;);</div><div class="line">        System.out.println(&quot;hvals &quot; );</div><div class="line">        for (String value : values) &#123;</div><div class="line">            System.out.print(value + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //值获取大侠的年龄，进行研究</div><div class="line">        String age = jedis.hget(&quot;daxia:jingzhongyue&quot;, &quot;年龄&quot;);</div><div class="line">        System.out.println(&quot;对大侠的年龄有质疑：&quot; + age);</div><div class="line">        //给大侠的年龄增加十岁</div><div class="line">        jedis.hincrBy(&quot;daxia:jingzhongyue&quot;, &quot;年龄&quot;, 10);</div><div class="line">        System.out.println(&quot;经过验核，大侠的实际年龄为：&quot; + jedis.hget(&quot;daxia:jingzhongyue&quot;, &quot;年龄&quot;));</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //删除大侠的姓名</div><div class="line">        jedis.hdel(&quot;daxia:jingzhongyue&quot;, &quot;姓名&quot;);</div><div class="line">        for (Map.Entry entry : jedis.hgetAll(&quot;daxia:jingzhongyue&quot;).entrySet()) &#123;</div><div class="line">            System.out.println(entry.getKey() + &quot;:&quot; + entry.getValue());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2-2-购物车redis"><a href="#2-2-购物车redis" class="headerlink" title="2.2.购物车redis"></a>2.2.购物车redis<username,map<produceid, num="">&gt;</username,map<produceid,></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">package redis.map;</div><div class="line"></div><div class="line">import com.google.gson.Gson;</div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line">import redis.string.StringMain;</div><div class="line"></div><div class="line">import java.math.BigDecimal;</div><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line">import java.util.Map;</div><div class="line">import java.util.Set;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Describe: 购物车</div><div class="line"> */</div><div class="line">public class Cart &#123;</div><div class="line">    private Jedis jedis;</div><div class="line"></div><div class="line">    public Cart() &#123;</div><div class="line">        jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public Cart(Jedis jedis) &#123;</div><div class="line">        this.jedis = jedis;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 修改购物车中的商品</div><div class="line">     *</div><div class="line">     * @param userName  用户名</div><div class="line">     * @param productId 商品编号</div><div class="line">     * @param num       操作商品的数量</div><div class="line">     */</div><div class="line">    public void updateProduct2Cart(String userName, String productId, int num) &#123;</div><div class="line">        jedis.hincrBy(&quot;shop:cart:&quot; + userName, productId, num);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 获取用户购物车的商品信息</div><div class="line">     */</div><div class="line">    public List&lt;Product&gt; getProductsByUserName(String userName) &#123;</div><div class="line">        List&lt;Product&gt; products = new ArrayList&lt;Product&gt;();</div><div class="line">        Map&lt;String, String&gt; productMap = jedis.hgetAll(&quot;shop:cart:&quot; + userName);</div><div class="line">        if (productMap == null || productMap.size() == 0) &#123;</div><div class="line">            return products;</div><div class="line">        &#125;</div><div class="line">        for (Map.Entry entry : productMap.entrySet()) &#123;</div><div class="line">            Product product = new Product();</div><div class="line">            product.setId((String) entry.getKey());//获取用户购物车中商品的编号</div><div class="line">            int num = Integer.parseInt((String) entry.getValue());//获取用户购物车中商品的数量</div><div class="line">            /*如果商品数量大于0，返回正常的值，如果商品小于0，初始化为0</div><div class="line">                                  这样不友好，因为商品数量为0，就应该不显示的，解决方法：</div><div class="line">            1.在前台js判断，是否显示</div><div class="line">            2.在此处判断，如果数量小于0，就跳出此次循环进入下一次循环</div><div class="line">            */</div><div class="line">            product.setNum(num &gt; 0 ? num : 0);</div><div class="line">            complementOtherField(product);//补全商品的其他信息</div><div class="line">            products.add(product);</div><div class="line">        &#125;</div><div class="line">        return products;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void complementOtherField(Product product) &#123;</div><div class="line">        String productId = product.getId();</div><div class="line">        String productJsonStr = jedis.get(&quot;shop:product:&quot; + productId);</div><div class="line">        Product productJson = (Product) new Gson().fromJson(productJsonStr, Product.class);</div><div class="line">        if (productJson != null) &#123;</div><div class="line">            product.setName(productJson.getName());</div><div class="line">            product.setPrice(productJson.getPrice());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        //初始化商品的信息</div><div class="line">        initData();</div><div class="line">        //创建购物车对象</div><div class="line">        Cart cart = new Cart();</div><div class="line">        //创建用户</div><div class="line">        String userName = &quot;liudehua&quot;;</div><div class="line">        //往用户购物车中添加商品：Map</div><div class="line">        cart.updateProduct2Cart(userName, &quot;1645080454&quot;, 10);</div><div class="line">        cart.updateProduct2Cart(userName, &quot;1788744384&quot;, 1000);</div><div class="line">        cart.updateProduct2Cart(userName, &quot;1645139266&quot;, -1000);</div><div class="line">        //打印当前用户的购物车信息</div><div class="line">        List&lt;Product&gt; products = cart.getProductsByUserName(userName);</div><div class="line">        for (Product product : products) &#123;</div><div class="line">            System.out.println(product);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private static void initData() &#123;</div><div class="line">        System.out.println(&quot;========================初始化商品信息===========================&quot;);</div><div class="line">        Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">        //准备数据</div><div class="line">        Product product1 = new Product(&quot;1645139266&quot;, &quot;战地鳄2015秋冬新款马甲可脱卸帽休闲时尚无袖男士羽绒棉外套马甲&quot;, new BigDecimal(&quot;168&quot;));</div><div class="line">        Product product2 = new Product(&quot;1788744384&quot;, &quot;天乐时 爸爸装加厚马甲秋冬装中年大码男士加绒马夹中老年坎肩老年人&quot;, new BigDecimal(&quot;40&quot;));</div><div class="line">        Product product3 = new Product(&quot;1645080454&quot;, &quot;战地鳄2015秋冬新款马甲可脱卸帽休闲时尚无袖男士羽绒棉外套马甲&quot;, new BigDecimal(&quot;230&quot;));</div><div class="line">        //将数据写入到Redis</div><div class="line">        jedis.set(&quot;shop:product:&quot; + product1.getId(), new Gson().toJson(product1));</div><div class="line">        jedis.set(&quot;shop:product:&quot; + product2.getId(), new Gson().toJson(product2));</div><div class="line">        jedis.set(&quot;shop:product:&quot; + product3.getId(), new Gson().toJson(product3));</div><div class="line">        //打印所有产品信息</div><div class="line">        Set&lt;String&gt; allProductKeys = jedis.keys(&quot;shop:product:*&quot;); //获取所有的商品信息，不建议使用正则表达式*，因为耗性能</div><div class="line">        for (String key : allProductKeys) &#123;</div><div class="line">            String json = jedis.get(key);</div><div class="line">            Product product = new Gson().fromJson(json, Product.class);//从字符串中解析出对象</div><div class="line">            System.out.println(product);</div><div class="line">        &#125;</div><div class="line">        System.out.println(&quot;========================用户购物车信息如下===========================&quot;);</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Produce<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class Product &#123;</div><div class="line">    private String id;//商品编号</div><div class="line">    private String name;//商品名称</div><div class="line">    private BigDecimal price;//商品价格</div><div class="line">    private int num;//商品数量</div><div class="line">    public Product() &#123;</div><div class="line">    &#125;</div><div class="line">    public Product(String id, String name, BigDecimal price) &#123;</div><div class="line">        this.id = id;</div><div class="line">        this.name = name;</div><div class="line">        this.price = price;</div><div class="line">    &#125; </div><div class="line">    //...............</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="3-list"><a href="#3-list" class="headerlink" title="3.list"></a>3.list</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">package redis.list;</div><div class="line"></div><div class="line">import redis.clients.jedis.BinaryClient;</div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line"></div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 天龙八部外传-麦当劳风云lpush/rpush/lrange/linsert/lpop/rpop/ltrim</div><div class="line"> */</div><div class="line">public class ListMain &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        //创建一个Redis的客户端</div><div class="line">        Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">        jedis.del(&quot;柜台1&quot;);</div><div class="line"></div><div class="line">        //鸠摩智，虚竹，段誉，乔峰 排队买肯德基</div><div class="line">        jedis.lpush(&quot;柜台1&quot;, &quot;乔峰&quot;, &quot;段誉&quot;, &quot;虚竹&quot;, &quot;鸠摩智&quot;);//lpush(String key, String... strings)</div><div class="line">        for (String name : jedis.lrange(&quot;柜台1&quot;, 0, -1)) &#123;//lrange(String key, long start, long end)</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //剧情：新来一个人 王语嫣，插队，到第一名。</div><div class="line">        jedis.rpush(&quot;柜台1&quot;, &quot;王语嫣&quot;);</div><div class="line">        List&lt;String&gt; list = jedis.lrange(&quot;柜台1&quot;, 0, -1);</div><div class="line">        for (String name : list) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //剧情：鸠摩智很不高兴，正好慕容复来了，说：慕容兄，你插我前面</div><div class="line">        jedis.linsert(&quot;柜台1&quot;, BinaryClient.LIST_POSITION.AFTER, &quot;鸠摩智&quot;, &quot;慕容复&quot;);//linsert(String key, LIST_POSITION where, String pivot, String value)</div><div class="line">        //linsert 的意思是：以left为前面，然后进行插入</div><div class="line">        List&lt;String&gt; list1 = jedis.lrange(&quot;柜台1&quot;, 0, -1);</div><div class="line">        for (String name : list1) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //剧情：看到慕容复插队大家很生气，正好阿紫和游坦之。让阿紫和游坦之依次插到虚竹的后面</div><div class="line">        jedis.linsert(&quot;柜台1&quot;, BinaryClient.LIST_POSITION.BEFORE, &quot;虚竹&quot;, &quot;阿紫&quot;);</div><div class="line">        jedis.linsert(&quot;柜台1&quot;, BinaryClient.LIST_POSITION.BEFORE, &quot;阿紫&quot;, &quot;游坦之&quot;);</div><div class="line">        List&lt;String&gt; list2 = jedis.lrange(&quot;柜台1&quot;, 0, -1);</div><div class="line">        for (String name : list2) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //剧情：插队不文明，为了遏制这种不文明的现象，大决决定打一架。  鸠摩智被打跑了。</div><div class="line">        jedis.lpop(&quot;柜台1&quot;);</div><div class="line">        for (String name : jedis.lrange(&quot;柜台1&quot;, 0, -1)) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //剧情：慕容复一看情况不好，以表哥的身份忽悠王语嫣，把王语嫣打伤。</div><div class="line">        jedis.rpop(&quot;柜台1&quot;);</div><div class="line">        for (String name : jedis.lrange(&quot;柜台1&quot;, 0, -1)) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //剧情：在大家打架的时候，我偷偷插队，买了肯德基。</div><div class="line">        jedis.rpush(&quot;柜台1&quot;, &quot;井中月&quot;);</div><div class="line">        for (String name : jedis.lrange(&quot;柜台1&quot;, 0, -1)) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //剧情；等我买了肯德基，慕容复被打跑了</div><div class="line">        jedis.lpop(&quot;柜台1&quot;);</div><div class="line">        for (String name : jedis.lrange(&quot;柜台1&quot;, 0, -1)) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        //剧情：星宿老怪 突然来了，把 阿紫和游坦之同时弄走了。</div><div class="line">        String result = jedis.ltrim(&quot;柜台1&quot;, 2, 5);//ltrim(String key, long start, long end)截取其中的一段，剩下的去掉</div><div class="line">        if (&quot;OK&quot;.equals(result)) &#123;</div><div class="line">            for (String name : jedis.lrange(&quot;柜台1&quot;, 0, -1)) &#123;</div><div class="line">                System.out.print(name + &quot;  &quot;);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        System.out.println(&quot;&quot;);</div><div class="line"></div><div class="line">        //剧情：这时候，乔峰三人发现了我，与我大战三百回合，我全身而退</div><div class="line">        String res = jedis.ltrim(&quot;柜台1&quot;, 0, 2);//.ltrim(String key, long start, long end)</div><div class="line">        if (&quot;OK&quot;.equals(res)) &#123;</div><div class="line">            for (String name : jedis.lrange(&quot;柜台1&quot;, 0, -1)) &#123;</div><div class="line">                System.out.print(name + &quot;  &quot;);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="4-set"><a href="#4-set" class="headerlink" title="4.set"></a>4.set</h1><h2 id="4-1-基本操作"><a href="#4-1-基本操作" class="headerlink" title="4.1.基本操作"></a>4.1.基本操作</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">package redis.set;</div><div class="line"></div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line"></div><div class="line">import java.util.Set;</div><div class="line"></div><div class="line">/**</div><div class="line"> * set集合的特点：无序、无重复元素</div><div class="line"> * sadd（添加）、sismember（是否存在）、scard（统计总数）、sinter（交集）、sunion（并集）、sdiff（差集）、sdiffstore（差集保存为新的set）</div><div class="line"> */</div><div class="line">public class SetMain &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">        //河南武林人物登记表---杜绝冒名顶替的情况</div><div class="line">        String[] daxias = new String[]&#123;&quot;郭靖&quot;, &quot;黄蓉&quot;, &quot;令狐冲&quot;, &quot;杨过&quot;, &quot;林冲&quot;,</div><div class="line">                &quot;鲁智深&quot;, &quot;小女龙&quot;, &quot;虚竹&quot;, &quot;独孤求败&quot;, &quot;张三丰&quot;, &quot;王重阳&quot;, &quot;张无忌&quot;</div><div class="line">                , &quot;王重阳&quot;, &quot;东方不败&quot;, &quot;逍遥子&quot;, &quot;乔峰&quot;, &quot;虚竹&quot;, &quot;段誉&quot;</div><div class="line">                , &quot;韦小宝&quot;, &quot;王语嫣&quot;, &quot;周芷若&quot;, &quot;峨眉师太&quot;, &quot;慕容复&quot;, &quot;郭靖&quot;, &quot;乔峰&quot;, &quot;王重阳&quot;&#125;;</div><div class="line"></div><div class="line">        //创建并设置一个set的值</div><div class="line">        jedis.sadd(&quot;biwu:dengji&quot;, daxias);</div><div class="line">        //获取一个set中所有的元素</div><div class="line">        Set&lt;String&gt; daxiaSet = jedis.smembers(&quot;biwu:dengji&quot;);</div><div class="line">        for (String name : daxiaSet) &#123;</div><div class="line">            System.out.print(name + &quot; &quot;);  //set集合的特点：无序、无重复元素</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line"></div><div class="line">        //判断一个成员是否属于某条指定的set数据</div><div class="line">        boolean isComing = jedis.sismember(&quot;biwu:dengji&quot;, &quot;井中月&quot;); //判断大侠井中月是否到来</div><div class="line">        if (!isComing) &#123;</div><div class="line">            System.out.println(&quot;大侠 井中月尚未登记.&quot;);</div><div class="line">        &#125;</div><div class="line">        //计算一个set中有多少元素</div><div class="line">        long totalNum = jedis.scard(&quot;biwu:dengji&quot;);</div><div class="line">        System.out.println(&quot;有&quot; + totalNum + &quot; 位大侠已经登记了！&quot;);</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">        //大侠井中月没有来，是因为报名参与另外一个会议 国际武林大会</div><div class="line">        String[] daxiaArr = new String[]&#123;&quot;王语嫣&quot;, &quot;周芷若&quot;, &quot;峨眉师太&quot;, &quot;慕容复&quot;,&quot;郭靖&quot;, &quot;乔峰&quot;, &quot;井中月&quot;&#125;;</div><div class="line">        jedis.sadd(&quot;guoji:dengji&quot;, daxiaArr); //国际武林大会登记表</div><div class="line">        Set&lt;String&gt; xindaxias = jedis.smembers(&quot;guoji:dengji&quot;);</div><div class="line">        for (String name : xindaxias) &#123;</div><div class="line">            System.out.print(name + &quot;--- &quot;);  //集合的特点：无序、无重复元素</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line"></div><div class="line">        //计算两个Set之间的交集</div><div class="line">        Set&lt;String&gt; users = jedis.sinter(&quot;biwu:dengji&quot;, &quot;guoji:dengji&quot;);</div><div class="line">        for (String name : users) &#123;</div><div class="line">            System.out.print(name + &quot; &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line"></div><div class="line">        //计算两个Set之间的并集</div><div class="line">        users = jedis.sunion(&quot;biwu:dengji&quot;, &quot;guoji:dengji&quot;);</div><div class="line">        for (String name : users) &#123;</div><div class="line">            System.out.print(name + &quot; &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line">        System.out.println(&quot;井中月出来了&quot;);</div><div class="line"></div><div class="line"></div><div class="line">        //计算两个集合的差集</div><div class="line">        users = jedis.sdiff(&quot;biwu:dengji&quot;, &quot;guoji:dengji&quot;);</div><div class="line">        for (String name : users) &#123;</div><div class="line">            System.out.print(name + &quot; &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line">        System.out.println();</div><div class="line">        //将两个集合计算出来的差集保存起来，升级为超级Vip</div><div class="line">        jedis.sdiffstore(&quot;vipdaxia&quot;,&quot;biwu:dengji&quot;, &quot;guoji:dengji&quot;);</div><div class="line">        for (String name : jedis.smembers(&quot;vipdaxia&quot;)) &#123;</div><div class="line">            System.out.print(name + &quot; &quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="4-2-实例-浏览用户、下单、支付之间的转化率"><a href="#4-2-实例-浏览用户、下单、支付之间的转化率" class="headerlink" title="4.2.实例(浏览用户、下单、支付之间的转化率)"></a>4.2.实例(浏览用户、下单、支付之间的转化率)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">package redis.set;</div><div class="line"></div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line"></div><div class="line">import java.text.DecimalFormat;</div><div class="line">import java.text.NumberFormat;</div><div class="line">import java.util.Set;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 浏览某商品的用户----&gt;下单用户-------&gt;支付用户 </div><div class="line"> * 1.求浏览并下单的用户</div><div class="line"> * 2.计算浏览某商品的用户数量 和 既浏览又下单的用户的数量</div><div class="line"> * 3.浏览并且下单的用户，最终支付的转化</div><div class="line"> * 4.浏览并最终支付的用户的转化</div><div class="line"> */</div><div class="line">public class Transform &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">        //浏览某商品的用户</div><div class="line">        jedis.sadd(&quot;viewUsers&quot;, &quot;郭靖&quot;, &quot;黄蓉&quot;, &quot;令狐冲&quot;, &quot;杨过&quot;, &quot;林冲&quot;,</div><div class="line">                &quot;鲁智深&quot;, &quot;小女龙&quot;, &quot;虚竹&quot;, &quot;独孤求败&quot;, &quot;张三丰&quot;, &quot;王重阳&quot;, &quot;张无忌&quot;</div><div class="line">                , &quot;王重阳&quot;, &quot;东方不败&quot;, &quot;逍遥子&quot;, &quot;乔峰&quot;, &quot;虚竹&quot;, &quot;段誉&quot;);</div><div class="line"></div><div class="line">        //下单用户</div><div class="line">        jedis.sadd(&quot;orderUsers&quot;, &quot;郭靖&quot;, &quot;黄蓉&quot;, &quot;令狐冲&quot;, &quot;杨过&quot;, &quot;林冲&quot;,</div><div class="line">                &quot;鲁智深&quot;, &quot;小女龙&quot;, &quot;虚竹&quot;, &quot;独孤求败&quot;, &quot;乔峰&quot;, &quot;虚竹&quot;, &quot;段誉&quot;);</div><div class="line">        //支付用户</div><div class="line">        jedis.sadd(&quot;paymentUsers&quot;, &quot;郭靖&quot;, &quot;黄蓉&quot;, &quot;令狐冲&quot;, &quot;杨过&quot;, &quot;独孤求败&quot;, &quot;段誉&quot;);</div><div class="line"></div><div class="line">        //浏览过商品的用户，有哪些下单了。</div><div class="line">        jedis.sinterstore(&quot;view2order&quot;, &quot;viewUsers&quot;, &quot;orderUsers&quot;); //求两个集合的交集</div><div class="line"></div><div class="line"></div><div class="line">        //计算浏览某商品的用户数量 和 既浏览又下单的用户的数量</div><div class="line">        double viewUserNum = jedis.scard(&quot;viewUsers&quot;);</div><div class="line">        double orderUserNum = jedis.scard(&quot;view2order&quot;);</div><div class="line">        NumberFormat formatter = new DecimalFormat(&quot;0.00&quot;);</div><div class="line">        Double x = new Double(orderUserNum / viewUserNum);</div><div class="line">        System.out.print(&quot;订单&quot; + orderUserNum + &quot;/浏览&quot; + viewUserNum + &quot;转化：&quot; + formatter.format(x) + &quot;     他们是：&quot;);</div><div class="line">        for (String name : jedis.smembers(&quot;view2order&quot;)) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line"></div><div class="line"></div><div class="line">        //浏览并且下单的用户，最终支付的转化</div><div class="line">        jedis.sinterstore(&quot;order2Payment&quot;, &quot;view2order&quot;, &quot;paymentUsers&quot;); //求两个集合的交集</div><div class="line">        double paymentUserNum = jedis.scard(&quot;paymentUsers&quot;);</div><div class="line">        x = new Double(paymentUserNum / orderUserNum);</div><div class="line">        System.out.print(&quot;支付&quot; + paymentUserNum + &quot;/订单&quot; + orderUserNum + &quot;转化：&quot; + formatter.format(x) + &quot;     他们是：&quot;);</div><div class="line">        for (String name : jedis.smembers(&quot;order2Payment&quot;)) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line">        //浏览并最终支付的用户的转化</div><div class="line">        x = new Double(paymentUserNum / viewUserNum);</div><div class="line">        System.out.print(&quot;支付&quot; + paymentUserNum + &quot;/浏览&quot; + viewUserNum + &quot;转化：&quot; + formatter.format(x)+&quot;    他们是：&quot;);</div><div class="line">        for (String name : jedis.smembers(&quot;order2Payment&quot;)) &#123;</div><div class="line">            System.out.print(name + &quot;  &quot;);</div><div class="line">        &#125;</div><div class="line">        System.out.println();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="5-有序set"><a href="#5-有序set" class="headerlink" title="5.有序set"></a>5.有序set</h1><h2 id="5-1-基本操作"><a href="#5-1-基本操作" class="headerlink" title="5.1.基本操作"></a>5.1.基本操作</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">package redis.sortSet;</div><div class="line"></div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line"></div><div class="line">import java.util.Set;</div><div class="line"></div><div class="line">/**</div><div class="line"> * sortedset</div><div class="line"> * zadd、zrange（排序）、zrevrange(翻转排序)、zrank（排名）、zscore（分数比重）</div><div class="line"> * member	score	rank</div><div class="line"> * 张三		88		3</div><div class="line"> * 李四		99		2</div><div class="line"> * 王五		77		4</div><div class="line"> * 赵六		100		1</div><div class="line"> */</div><div class="line">public class SortMain &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">        //往redis库中插入一条sortedset数据</div><div class="line">        jedis.zadd(&quot;比武成绩&quot;, 10, &quot;乔峰&quot;);//zadd(String key, double score, String member)</div><div class="line">        jedis.zadd(&quot;比武成绩&quot;, 5, &quot;王重阳&quot;);</div><div class="line">        jedis.zadd(&quot;比武成绩&quot;, 7, &quot;虚竹&quot;);</div><div class="line">        jedis.zadd(&quot;比武成绩&quot;, 2, &quot;王语嫣&quot;);</div><div class="line">        jedis.zadd(&quot;比武成绩&quot;, 5, &quot;段誉&quot;);</div><div class="line">        jedis.zadd(&quot;比武成绩&quot;, 4, &quot;峨眉师太&quot;);</div><div class="line">        jedis.zadd(&quot;比武成绩&quot;, 20, &quot;张三丰&quot;);</div><div class="line">        //获取sortSet中所有的元素</div><div class="line">        Set&lt;String&gt; names = jedis.zrange(&quot;比武成绩&quot;, 0, -1);</div><div class="line">        for (String name : names) &#123;</div><div class="line">            System.out.println(name + &quot;        排名： &quot;</div><div class="line">                    //打印用户升序排行</div><div class="line">                    + jedis.zrank(&quot;比武成绩&quot;, name) + &quot;           赢的场次： &quot;</div><div class="line">                    //打印用户的比武成绩</div><div class="line">                    + jedis.zscore(&quot;比武成绩&quot;, name));</div><div class="line">        &#125;</div><div class="line">        System.out.println(&quot;==============================&quot;);</div><div class="line"></div><div class="line">        names = jedis.zrevrange(&quot;比武成绩&quot;, 0, -1);</div><div class="line">        for (String name : names) &#123;</div><div class="line">            System.out.println(name + &quot;         &quot;</div><div class="line">                    + jedis.zrevrank(&quot;比武成绩&quot;, name) + &quot;            &quot;</div><div class="line">                    + jedis.zscore(&quot;比武成绩&quot;, name));</div><div class="line">        &#125;</div><div class="line">        System.out.println(&quot;==============================&quot;);</div><div class="line"></div><div class="line">        //修改用户的分数</div><div class="line">        jedis.zincrby(&quot;比武成绩&quot;,100,&quot;王语嫣&quot;);    //zincrby(String key, double score, String member)</div><div class="line">        names = jedis.zrevrange(&quot;比武成绩&quot;, 0, -1);</div><div class="line">        for (String name : names) &#123;</div><div class="line">            System.out.println(name + &quot;         &quot;</div><div class="line">                    + jedis.zrevrank(&quot;比武成绩&quot;, name) + &quot;            &quot;</div><div class="line">                    + jedis.zscore(&quot;比武成绩&quot;, name));</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="5-2-示例"><a href="#5-2-示例" class="headerlink" title="5.2.示例"></a>5.2.示例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div></pre></td><td class="code"><pre><div class="line">package redis.sortSet;</div><div class="line"></div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line"></div><div class="line">import java.util.Random;</div><div class="line">import java.util.Set;</div><div class="line">import java.util.concurrent.ExecutorService;</div><div class="line">import java.util.concurrent.Executors;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 各种排行榜（bang)</div><div class="line"> * 其实就是向有序的set中添加&lt;member,score&gt;，在有序set中按照score对member进行排序</div><div class="line"> */</div><div class="line">public class Bang &#123;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        //创建线程池</div><div class="line">        ExecutorService executorService = Executors.newFixedThreadPool(10);</div><div class="line">        //创建销售线程-销售商品</div><div class="line">        executorService.submit(new Sale());</div><div class="line">        executorService.submit(new Sale());</div><div class="line">        //创建报表线程-周期型计算排行榜</div><div class="line">        executorService.submit(new BangView());</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Sale implements Runnable &#123;</div><div class="line">    //店铺销售排行榜</div><div class="line">    private static final String amountBang = &quot;tmall:amountBang&quot;;</div><div class="line">    //店铺订单排行榜</div><div class="line">    private static final String orderBang = &quot;tmall:orderBang&quot;;</div><div class="line">    //店铺名称</div><div class="line">    private static final String[] shops = new String[]&#123;&quot;小米&quot;, &quot;华为&quot;, &quot;魅族&quot;, &quot;苹果&quot;, &quot;联想&quot;, &quot;奇酷&quot;, &quot;中兴&quot;, &quot;一加&quot;, &quot;oppo&quot;&#125;;</div><div class="line">    //Redis客户端</div><div class="line">    private Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">    //随机获取店铺</div><div class="line">    private Random random = new Random();</div><div class="line">    //随机计算价格</div><div class="line">    private Random priceRandom = new Random();</div><div class="line"></div><div class="line">    public void run() &#123;</div><div class="line">        while (true) &#123;</div><div class="line">            try &#123;</div><div class="line">                int shopIndex = random.nextInt(shops.length);</div><div class="line">                //将店铺销售的有序set中的某个商品的score自增</div><div class="line">                /* member	score</div><div class="line">                 * 小米		1500	</div><div class="line">                 * 华为</div><div class="line">                 * 魅族</div><div class="line">                 * */</div><div class="line">                jedis.zincrby(amountBang, priceRandom.nextInt(2500), shops[shopIndex]);</div><div class="line">                jedis.zincrby(orderBang, 1, shops[shopIndex]);</div><div class="line"></div><div class="line">                Thread.sleep(1000);</div><div class="line">            &#125; catch (InterruptedException e) &#123;</div><div class="line">                System.out.println(e);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">class BangView implements Runnable &#123;</div><div class="line">    //店铺销售排行榜</div><div class="line">    private static final String amountBang = &quot;tmall:amountBang&quot;;</div><div class="line">    //店铺订单排行榜</div><div class="line">    private static final String orderBang = &quot;tmall:orderBang&quot;;</div><div class="line">    //Redis客户端</div><div class="line">    private Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line"></div><div class="line">    public void run() &#123;</div><div class="line">        while (true) &#123;</div><div class="line">            try &#123;</div><div class="line">                Thread.sleep(1000);</div><div class="line">                System.out.println(&quot;==============店铺销售额排行==============================&quot;);</div><div class="line">                Set&lt;String&gt; names = jedis.zrevrange(amountBang, 0, 4);</div><div class="line">                for (String name : names) &#123;</div><div class="line">                    System.out.println(name + &quot;         &quot;</div><div class="line">                            + jedis.zrevrank(amountBang, name) + &quot;            &quot;</div><div class="line">                            + jedis.zscore(amountBang, name));</div><div class="line">                &#125;</div><div class="line">                System.out.println(&quot;==============店铺订单量排行==============================&quot;);</div><div class="line">                names = jedis.zrevrange(orderBang, 0, 1);</div><div class="line">                for (String name : names) &#123;</div><div class="line">                    System.out.println(name + &quot;         &quot;</div><div class="line">                            + jedis.zrevrank(orderBang, name) + &quot;            &quot;</div><div class="line">                            + jedis.zscore(orderBang, name));</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                System.out.println();</div><div class="line">                System.out.println();</div><div class="line">            &#125; catch (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="6-连接池"><a href="#6-连接池" class="headerlink" title="6.连接池"></a>6.连接池</h1><h2 id="6-1-简单使用"><a href="#6-1-简单使用" class="headerlink" title="6.1.简单使用"></a>6.1.简单使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">package redis.other;</div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line">/**</div><div class="line"> * Describe: 请补充类描述</div><div class="line"> */</div><div class="line">public class RedisQuickStart &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        // 根据redis主机和端口号实例化Jedis对象</div><div class="line">        Jedis jedis = new Jedis(&quot;127.0.0.1&quot;, 6379);</div><div class="line">        // 添加key-value对象，如果key对象存在就覆盖该对象</div><div class="line">        jedis.set(&quot;name&quot;, &quot;maoxiangyi&quot;);</div><div class="line">        // 查取key的value值，如果key不存在返回null</div><div class="line">        String name = jedis.get(&quot;name&quot;);</div><div class="line">        String company = jedis.get(&quot;company&quot;);</div><div class="line">        System.out.println(company+&quot;:&quot;+name);</div><div class="line">        // 删除key-value对象，如果key不存在则忽略此操作</div><div class="line">        jedis.del(&quot;name&quot;);</div><div class="line">        // 判断key是否存在，不存在返回false存在返回true</div><div class="line">        jedis.exists(&quot;name&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="6-2-JedisPool"><a href="#6-2-JedisPool" class="headerlink" title="6.2.JedisPool"></a>6.2.JedisPool</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">package redis.other;</div><div class="line"></div><div class="line">import redis.clients.jedis.Jedis;</div><div class="line">import redis.clients.jedis.JedisPool;</div><div class="line">import redis.clients.jedis.JedisPoolConfig;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Describe: 请补充类描述</div><div class="line"> */</div><div class="line">public class MyJedisPool &#123;</div><div class="line">    // jedis池</div><div class="line">    public static JedisPool pool;</div><div class="line"></div><div class="line">    // 静态代码初始化池配置</div><div class="line">    static &#123;</div><div class="line">        //change &quot;maxActive&quot; -&gt; &quot;maxTotal&quot; and &quot;maxWait&quot; -&gt; &quot;maxWaitMillis&quot; in all examples</div><div class="line">        JedisPoolConfig config = new JedisPoolConfig();</div><div class="line">        //控制一个pool最多有多少个状态为idle(空闲的)的jedis实例。</div><div class="line">        config.setMaxIdle(5);</div><div class="line">        //控制一个pool可分配多少个jedis实例，通过pool.getResource()来获取；</div><div class="line">        //如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)。</div><div class="line">        //在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的；</div><div class="line">        config.setMaxTotal(1000 * 100);</div><div class="line">        //表示当borrow(引入)一个jedis实例时，最大的等待时间，如果超过等待时间，则直接抛出JedisConnectionException；</div><div class="line">        config.setMaxWaitMillis(5);</div><div class="line">        config.setTestOnBorrow(true);</div><div class="line">        config.setTestOnReturn(true);</div><div class="line">        try &#123;</div><div class="line">            //如果你遇到 java.net.SocketTimeoutException: Read timed out exception的异常信息</div><div class="line">            //请尝试在构造JedisPool的时候设置自己的超时值. JedisPool默认的超时时间是2秒(单位毫秒)</div><div class="line">            pool = new JedisPool(config, &quot;127.0.0.1&quot;, 6379, 20);</div><div class="line">        &#125; catch (Exception e) &#123;</div><div class="line">            throw new RuntimeException(&quot;redis 连接池初始化失败！&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        // 从jedis池中获取一个jedis实例</div><div class="line">        Jedis jedis = MyJedisPool.pool.getResource();</div><div class="line">        // 添加key-value对象，如果key对象存在就覆盖该对象</div><div class="line">        jedis.set(&quot;name&quot;, &quot;maoxiangyi&quot;);</div><div class="line">        jedis.set(&quot;company&quot;, &quot;aaa&quot;);</div><div class="line">        // 查取key的value值，如果key不存在返回null</div><div class="line">        String name = jedis.get(&quot;name&quot;);</div><div class="line">        String company = jedis.get(&quot;company&quot;);</div><div class="line">        System.out.println(company + &quot;:&quot; + name);</div><div class="line">        // 删除key-value对象，如果key不存在则忽略此操作</div><div class="line">        jedis.del(&quot;name&quot;);</div><div class="line">        // 判断key是否存在，不存在返回false存在返回true</div><div class="line">        jedis.exists(&quot;name&quot;);</div><div class="line">        //关闭jedis链接，自动回收</div><div class="line">        jedis.close();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="6-3-ShardedJedisPool"><a href="#6-3-ShardedJedisPool" class="headerlink" title="6.3.ShardedJedisPool"></a>6.3.ShardedJedisPool</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">package redis.other;</div><div class="line"></div><div class="line">import redis.clients.jedis.JedisPoolConfig;</div><div class="line">import redis.clients.jedis.JedisShardInfo;</div><div class="line">import redis.clients.jedis.ShardedJedis;</div><div class="line">import redis.clients.jedis.ShardedJedisPool;</div><div class="line"></div><div class="line">import java.util.LinkedList;</div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Describe: 请补充类描述</div><div class="line"> */</div><div class="line">public class MyShardedJedisPool &#123;</div><div class="line"></div><div class="line">    private static ShardedJedisPool shardedJedisPool;</div><div class="line"></div><div class="line">    // 静态代码初始化池配置</div><div class="line">    static &#123;</div><div class="line">        //change &quot;maxActive&quot; -&gt; &quot;maxTotal&quot; and &quot;maxWait&quot; -&gt; &quot;maxWaitMillis&quot; in all examples</div><div class="line">        JedisPoolConfig config = new JedisPoolConfig();</div><div class="line">        //控制一个pool最多有多少个状态为idle(空闲的)的jedis实例。</div><div class="line">        config.setMaxIdle(5);</div><div class="line">        //控制一个pool可分配多少个jedis实例，通过pool.getResource()来获取；</div><div class="line">        //如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)。</div><div class="line">        //在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的；</div><div class="line">        config.setMaxTotal(1000 * 100);</div><div class="line">        //表示当borrow(引入)一个jedis实例时，最大的等待时间，如果超过等待时间，则直接抛出JedisConnectionException；</div><div class="line">        config.setMaxWaitMillis(5);</div><div class="line">        config.setTestOnBorrow(true);</div><div class="line">        config.setTestOnReturn(true);</div><div class="line">        //创建四个redis服务实例，并封装在list中</div><div class="line">        List&lt;JedisShardInfo&gt; list = new LinkedList&lt;JedisShardInfo&gt;();</div><div class="line">        list.add(new JedisShardInfo(&quot;127.0.0.1&quot;, 6379));</div><div class="line">        list.add(new JedisShardInfo(&quot;127.0.0.1&quot;, 6380));</div><div class="line">        list.add(new JedisShardInfo(&quot;127.0.0.1&quot;, 6381));</div><div class="line">        list.add(new JedisShardInfo(&quot;127.0.0.1&quot;, 6382));</div><div class="line">        //创建具有分片功能的的Jedis连接池</div><div class="line">        shardedJedisPool = new ShardedJedisPool(config, list);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static ShardedJedisPool getShardedJedisPool() &#123;</div><div class="line">        return shardedJedisPool;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        ShardedJedis jedis = MyShardedJedisPool.getShardedJedisPool().getResource();</div><div class="line">        jedis.set(&quot;1&quot;, &quot;maoxiangyi&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/redis主从同步及切换主从配置示例(转)/" rel="next" title="redis主从同步及切换主从配置示例(转)">
+                <i class="fa fa-chevron-left"></i> redis主从同步及切换主从配置示例(转)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转)/" rel="prev" title="redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转)">
+                redis setbit(bitmaps)的妙用实现节省存储，快速查询，操作，统计(转) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-string使用"><span class="nav-number">1.</span> <span class="nav-text">1.string使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-set、get、mset、mget、setex、expire"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.set、get、mset、mget、setex、expire</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-多线程操作Counter计数器"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.多线程操作Counter计数器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-保存对象到redis中"><span class="nav-number">1.3.</span> <span class="nav-text">1.3.保存对象到redis中</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-map"><span class="nav-number">2.</span> <span class="nav-text">2.map</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-map基本操作"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.map基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-购物车redis"><span class="nav-number">2.2.</span> <span class="nav-text">2.2.购物车redis></span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-list"><span class="nav-number">3.</span> <span class="nav-text">3.list</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-set"><span class="nav-number">4.</span> <span class="nav-text">4.set</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-基本操作"><span class="nav-number">4.1.</span> <span class="nav-text">4.1.基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-实例-浏览用户、下单、支付之间的转化率"><span class="nav-number">4.2.</span> <span class="nav-text">4.2.实例(浏览用户、下单、支付之间的转化率)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-有序set"><span class="nav-number">5.</span> <span class="nav-text">5.有序set</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-基本操作"><span class="nav-number">5.1.</span> <span class="nav-text">5.1.基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-示例"><span class="nav-number">5.2.</span> <span class="nav-text">5.2.示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-连接池"><span class="nav-number">6.</span> <span class="nav-text">6.连接池</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-简单使用"><span class="nav-number">6.1.</span> <span class="nav-text">6.1.简单使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-JedisPool"><span class="nav-number">6.2.</span> <span class="nav-text">6.2.JedisPool</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-ShardedJedisPool"><span class="nav-number">6.3.</span> <span class="nav-text">6.3.ShardedJedisPool</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

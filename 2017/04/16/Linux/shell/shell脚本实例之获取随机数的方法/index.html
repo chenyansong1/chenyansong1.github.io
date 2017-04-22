@@ -1,0 +1,736 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="shell," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.获取随机数的方法1.1.RANDOM123456789101112131415161718192021#RANDOM是bash中的内置变量[root@lnmp02 shell]# man bashRANDOM Each time this parameter is referenced, a random integer between 0 and 32767 is generated.  [">
+<meta name="keywords" content="shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell脚本实例之获取随机数的方法">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/Linux/shell/shell脚本实例之获取随机数的方法/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.获取随机数的方法1.1.RANDOM123456789101112131415161718192021#RANDOM是bash中的内置变量[root@lnmp02 shell]# man bashRANDOM Each time this parameter is referenced, a random integer between 0 and 32767 is generated.  [">
+<meta property="og:updated_time" content="2017-02-24T17:09:32.503Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shell脚本实例之获取随机数的方法">
+<meta name="twitter:description" content="1.获取随机数的方法1.1.RANDOM123456789101112131415161718192021#RANDOM是bash中的内置变量[root@lnmp02 shell]# man bashRANDOM Each time this parameter is referenced, a random integer between 0 and 32767 is generated.  [">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/Linux/shell/shell脚本实例之获取随机数的方法/"/>
+
+
+
+
+
+  <title> shell脚本实例之获取随机数的方法 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/Linux/shell/shell脚本实例之获取随机数的方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                shell脚本实例之获取随机数的方法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/shell/" itemprop="url" rel="index">
+                    <span itemprop="name">shell</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-获取随机数的方法"><a href="#1-获取随机数的方法" class="headerlink" title="1.获取随机数的方法"></a>1.获取随机数的方法</h1><h2 id="1-1-RANDOM"><a href="#1-1-RANDOM" class="headerlink" title="1.1.RANDOM"></a>1.1.RANDOM</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">#RANDOM是bash中的内置变量</div><div class="line">[root@lnmp02 shell]# man bash</div><div class="line">RANDOM Each time this parameter is referenced, a random integer between 0 and 32767 is generated. </div><div class="line"> </div><div class="line">[root@lnmp02 shell]# echo $RANDOM</div><div class="line">6421</div><div class="line"></div><div class="line">#使用md5去加密</div><div class="line">[root@lnmp02 shell]# echo $RANDOM|md5sum    </div><div class="line">0ee03cc589c2d6c87a55dfb12837992d  -</div><div class="line"></div><div class="line">#取md5加密之后的5-10</div><div class="line">[root@lnmp02 shell]# echo $RANDOM|md5sum|cut -c 5-10  </div><div class="line">f61bc1</div><div class="line"></div><div class="line"> </div><div class="line">#因为$RANDOM的范围是：between 0 and 32767,数量还是有限的,所以通过遍历32767次,然后md5sum加密,还是能够算出密码的, 所以一般($RANDOM str)一起使用(因为str是不确定的)</div><div class="line">[root@lnmp02 shell]# echo $RANDOM oldboy</div><div class="line">18449 oldboy</div><div class="line">[root@lnmp02 shell]# echo $RANDOM oldboy|md5sum|cut -c 5-10</div><div class="line">96fe97</div></pre></td></tr></table></figure>
+<h2 id="1-2-openssl-rand产生随机数"><a href="#1-2-openssl-rand产生随机数" class="headerlink" title="1.2.openssl rand产生随机数"></a>1.2.openssl rand产生随机数</h2><p>&emsp;openssl rand 用于产生指定长度个bytes的随机字符。-base64或-hex对随机字符串进行base64编码或用hex格式显示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@lnmp02 shell]# openssl rand -base64 8  #八位字母和数字的组合</div><div class="line">NHKIT0Q4Els=</div><div class="line">[root@lnmp02 shell]#</div><div class="line"> </div><div class="line">openssl rand -base64 8 | md5sum | cut -c1-8      #openssl rand 之后再使用md5加密 ，cut 截取</div></pre></td></tr></table></figure></p>
+<h2 id="1-3-时间随机数"><a href="#1-3-时间随机数" class="headerlink" title="1.3.时间随机数"></a>1.3.时间随机数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">date +%s%N       #生成19位数字，1287764807051101270 ，%s 是秒数，%N是纳秒数</div><div class="line"> </div><div class="line">date +%s%N | cut -c 6-13   #取八位数字，21793709</div><div class="line">date +%s%N | md5sum | head -c 8   #八位字母和数字的组合，87022fda ，-c是字节</div><div class="line"> </div><div class="line">#生成一个m-n之间的随机数</div><div class="line">function rand()&#123;</div><div class="line">    min=$1</div><div class="line">    max=$(($2-$min+1))</div><div class="line">    num=$(date +%s%N)</div><div class="line">    echo $(($num%$max+$min))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="1-4-UUID"><a href="#1-4-UUID" class="headerlink" title="1.4.UUID"></a>1.4.UUID</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#UUID码全称是通用唯一识别码 (Universally Unique Identifier, UUID)，UUID格式是：包含32个16进制数字，以“-”连接号分为五段，形式为8-4-4-4-12的32个字符。linux的uuid码也是有内核提供的，在/proc/sys/kernel/random/uuid这个文件内。cat /proc/sys/kernel/random/uuid每次获取到的数据都会不同。</div><div class="line"> </div><div class="line">[root@lnmp02 shell]# cat /proc/sys/kernel/random/uuid</div><div class="line">1f309506-c862-4b94-9d1a-bcb0f3486b4b</div></pre></td></tr></table></figure>
+<h2 id="1-5-expect中的mkpasswd"><a href="#1-5-expect中的mkpasswd" class="headerlink" title="1.5.expect中的mkpasswd"></a>1.5.expect中的mkpasswd</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">yum install expect -y</div><div class="line"></div><div class="line">#mkpasswd语法</div><div class="line">usage: mkpasswd [args] [user]</div><div class="line">  where arguments are:</div><div class="line">    -l #      (length of password, default = 9)</div><div class="line">    -d #      (min # of digits, default = 2)</div><div class="line">    -c #      (min # of lowercase chars, default = 2)</div><div class="line">    -C #      (min # of uppercase chars, default = 2)</div><div class="line">    -s #      (min # of special chars, default = 1)</div><div class="line">    -v        (verbose, show passwd interaction)</div><div class="line">    -p prog   (program to set password, default = passwd)</div><div class="line"></div><div class="line">#使用</div><div class="line">[root@lamp01 ~]# mkpasswd -l 8</div><div class="line">B8ir8^qG</div><div class="line">[root@lamp01 ~]# mkpasswd -l 8</div><div class="line">uVD,49rm</div></pre></td></tr></table></figure>
+<h1 id="2-测试随机数的唯一性"><a href="#2-测试随机数的唯一性" class="headerlink" title="2.测试随机数的唯一性"></a>2.测试随机数的唯一性</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#通过对产生的随机数统计排序,查看是否唯一性</div><div class="line">for n in `seq 20`;do date +%s%N|md5sum|cut -c 1-9;done|sort|uniq -c|sort -rn -k1</div><div class="line"></div><div class="line">for n in `seq 20`;do echo $RANDOM|md5sum|cut -c 1-9;done|sort|uniq -c|sort -rn -k1</div><div class="line"></div><div class="line"># sort -rn -k1    # 其中k1是以第一个字段进行排序</div></pre></td></tr></table></figure>
+<h1 id="3-组合使用"><a href="#3-组合使用" class="headerlink" title="3.组合使用"></a>3.组合使用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@lamp01 ~]# echo $RANDOM `mkpasswd -l 8`</div><div class="line">14081 F~1zeBw6</div><div class="line"></div><div class="line">[root@lamp01 ~]# echo $RANDOM `mkpasswd -l 8`|md5sum</div><div class="line">9570c8be65dbfafb2eb644593b2d3b38  -</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/shell/" rel="tag"># shell</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/Linux/shell/shell脚本实例之解决DOS攻击脚本/" rel="next" title="shell脚本实例之解决DOS攻击脚本">
+                <i class="fa fa-chevron-left"></i> shell脚本实例之解决DOS攻击脚本
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/Linux/shell/shell脚本实例之监控MySQL主从同步是否异常/" rel="prev" title="shell脚本实例之监控MySQL主从同步是否异常">
+                shell脚本实例之监控MySQL主从同步是否异常 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-获取随机数的方法"><span class="nav-number">1.</span> <span class="nav-text">1.获取随机数的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-RANDOM"><span class="nav-number">1.1.</span> <span class="nav-text">1.1.RANDOM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-openssl-rand产生随机数"><span class="nav-number">1.2.</span> <span class="nav-text">1.2.openssl rand产生随机数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-时间随机数"><span class="nav-number">1.3.</span> <span class="nav-text">1.3.时间随机数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-UUID"><span class="nav-number">1.4.</span> <span class="nav-text">1.4.UUID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5-expect中的mkpasswd"><span class="nav-number">1.5.</span> <span class="nav-text">1.5.expect中的mkpasswd</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-测试随机数的唯一性"><span class="nav-number">2.</span> <span class="nav-text">2.测试随机数的唯一性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-组合使用"><span class="nav-number">3.</span> <span class="nav-text">3.组合使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

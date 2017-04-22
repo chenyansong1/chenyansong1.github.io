@@ -1,0 +1,802 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.列表字面量123456789101112val fruit = List(&amp;quot;apples&amp;quot;, &amp;quot;oranges&amp;quot;, &amp;quot;pears&amp;quot;)val nums = List(1,2,3,4)val diag3 =   List(    List(1,0,1),    List(0,1,0),    List(0,0,1)  )val empty">
+<meta name="keywords" content="scala,scala编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第十六章 使用列表">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/scala编程/第十六章 使用列表/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.列表字面量123456789101112val fruit = List(&amp;quot;apples&amp;quot;, &amp;quot;oranges&amp;quot;, &amp;quot;pears&amp;quot;)val nums = List(1,2,3,4)val diag3 =   List(    List(1,0,1),    List(0,1,0),    List(0,0,1)  )val empty">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/16/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/16/2.png">
+<meta property="og:updated_time" content="2017-03-04T11:22:09.086Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第十六章 使用列表">
+<meta name="twitter:description" content="1.列表字面量123456789101112val fruit = List(&amp;quot;apples&amp;quot;, &amp;quot;oranges&amp;quot;, &amp;quot;pears&amp;quot;)val nums = List(1,2,3,4)val diag3 =   List(    List(1,0,1),    List(0,1,0),    List(0,0,1)  )val empty">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/16/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/scala编程/第十六章 使用列表/"/>
+
+
+
+
+
+  <title> 第十六章 使用列表 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第十六章 使用列表/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第十六章 使用列表
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-列表字面量"><a href="#1-列表字面量" class="headerlink" title="1.列表字面量"></a>1.列表字面量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">val fruit = List(&quot;apples&quot;, &quot;oranges&quot;, &quot;pears&quot;)</div><div class="line">val nums = List(1,2,3,4)</div><div class="line">val diag3 = </div><div class="line">  List(</div><div class="line">    List(1,0,1),</div><div class="line">    List(0,1,0),</div><div class="line">    List(0,0,1)</div><div class="line">  )</div><div class="line">val empty = List()</div><div class="line">/*</div><div class="line">列表与数组非常相似,不过有两点重要的差别,首先,列表时不可变的,也就是说,不能通过赋值改变列表的元素,其次列表具有递归的结构,而数组是连续的</div><div class="line"> */</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1 id="2-list类型"><a href="#2-list类型" class="headerlink" title="2.list类型"></a>2.list类型</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">列表的所有元素具有相同的类型,元素类型为T的列表类型写成List[T] ,例如:以下四个列表的例子都明确指定了类型:</div><div class="line">*/</div><div class="line">val fruit: List[String] = List(&quot;apples&quot;, &quot;oranges&quot;, &quot;pears&quot;)</div><div class="line">val nums: List[Int] = List(1,2,3,4)</div><div class="line">val diag3: List[List[Int]] = </div><div class="line">  List(</div><div class="line">    List(1,0,1),</div><div class="line">    List(0,1,0),</div><div class="line">    List(0,0,1)</div><div class="line">  )</div><div class="line">val empty = List()</div><div class="line"></div><div class="line">/*</div><div class="line">scala里的列表类型是协变的,这意味着对于每一对类型S和T来说,如果S是T的子类型,那么List[S] 是List[T]的子类型,比如说,List[String] 是List[Object]的子类型,这很自然,因为每个字符串列表都同样可以被看做是对象列表</div><div class="line"></div><div class="line">注意空列表的类型为List[Nothing] ,Nothing是scala的类层级的底层类型,他是每个scala类型的子类,因为列表时协变的,所以对于任意类型的T的列表List[T]来说,List[Nothing] 都是其子类,因此类型为List[Nothing]的空列表对象,还可以被当做是其他任何形式为List[T] 的列表类型的对象,这也是为何如下的代码是正确的</div><div class="line">*/</div><div class="line">//List() 同样也是List[String] 的</div><div class="line">val xs: List[String] = List()</div></pre></td></tr></table></figure>
+<h1 id="3-构造列表"><a href="#3-构造列表" class="headerlink" title="3.构造列表"></a>3.构造列表</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">所有的列表都是由两个基础构造块Nil和:: 构造出来的,Nil代表空列表,中缀操作符:: ,表示列表从前端扩展,也就是说, x::xs 代表了第一个元素为x ,后面跟着xs的列表,因此之前的列表值可以如下的方式定义:</div><div class="line">*/</div><div class="line">val fruit = &quot;apple&quot; :: (&quot;orange&quot;::(&quot;pears&quot;::Nil))</div><div class="line">val nums = 1::(2::(3::(4::Nil)))</div><div class="line">val diag3 = (1::(0::(1::Nil)))::</div><div class="line">  (0::(1::(0::Nil)))::</div><div class="line">  (0::(0::(1::Nil)))::Nil</div><div class="line">val empty = Nil</div><div class="line"></div><div class="line">//实际上之前的List(...) 形式是对fruits,nums, diag3 和empty的定义只不过是扩展为这些定义的包装,例如:List(1,2,3)创建了列表 1::(2::(3::Nil))</div><div class="line"></div><div class="line"></div><div class="line">/*由于以冒号结尾, :: 操作遵循右结合规则:  A::B::C 等同于 A::(B::C) 因此,你可以去掉前面定义里用到的括号,例如:</div><div class="line">*/</div><div class="line">val nums = 1::2::3::4::Nil</div></pre></td></tr></table></figure>
+<h1 id="4-列表的基本操作"><a href="#4-列表的基本操作" class="headerlink" title="4.列表的基本操作"></a>4.列表的基本操作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//对列表的所有操作都可以表达Wie以下三种形式</div><div class="line">head     //返回列表的第一个元素</div><div class="line">tail        //返回除第一个之外所有元素组成的列表</div><div class="line">isEmpty    //如果列表为空,则返回真</div><div class="line"></div><div class="line">//这些操作都定义了List类的方法,如下表:</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">操作</th>
+<th style="text-align:center">行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">empty.isEmpty</td>
+<td style="text-align:center">返回true</td>
+</tr>
+<tr>
+<td style="text-align:center">fruits.isEmpty</td>
+<td style="text-align:center">返回false</td>
+</tr>
+<tr>
+<td style="text-align:center">fruits.head</td>
+<td style="text-align:center">返回”apples”</td>
+</tr>
+<tr>
+<td style="text-align:center">fruits.tail.head</td>
+<td style="text-align:center">返回”orange”</td>
+</tr>
+<tr>
+<td style="text-align:center">diag3.head</td>
+<td style="text-align:center">返回List(1,0,0)</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">head和tail方法仅能够作用在非空列表上,如果执行在空列表上,会抛出异常:</div><div class="line">*/</div><div class="line">scala&gt; Nil.head</div><div class="line">java.util.NoSuchElementException: head of empty list</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">可以考虑把数值列表以升序的方式排序,较简单的做法是插入排序</div><div class="line">工作方式如下:排序非空列表x::xs , 可以先排序列表xs,然后把x插入正确的地方,而对空列表的排序结果还是空列表:</div><div class="line">插入排序算法大致如下:</div><div class="line">*/</div><div class="line"></div><div class="line">def isort(xs: List[Int]): List[Int] = </div><div class="line">  if (xs.isEmpty) Nil</div><div class="line">  else insert(xs.head, isort(xs.tail))</div><div class="line"></div><div class="line">def insert(x: Int, xs: List[Int]): List[Int] =</div><div class="line">  if (xs.isEmpty || x &lt;= xs.head) x::xs</div><div class="line">  else xs.head :: insert(x, xs.tail)</div></pre></td></tr></table></figure>
+<h1 id="5-列表模式"><a href="#5-列表模式" class="headerlink" title="5.列表模式"></a>5.列表模式</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">列表还可以使用模式匹配做拆分,这时列表模式需要逐一匹配要拆分的列表表达式,你既可以用List(...) 形式的模式对列表所有的元素做匹配,也可以用:: 操作符和Nil常量组成的模式逐位拆分列表</div><div class="line">*/</div><div class="line">scala&gt; val fruit = &quot;apple&quot; :: (&quot;orange&quot;::(&quot;pears&quot;::Nil))</div><div class="line">fruit: List[String] = List(apple, orange, pears)</div><div class="line"></div><div class="line">scala&gt; val List(a,b,c) = fruit</div><div class="line">a: String = apple</div><div class="line">b: String = orange</div><div class="line">c: String = pears</div><div class="line"></div><div class="line"></div><div class="line">//如果起先不知道列表元素的数量,那么最好还是使用:: 做匹配,例如, 模式a::b::rest可以匹配长度至少为2的列表</div><div class="line">scala&gt; val a::b::rest = fruit</div><div class="line">a: String = apple</div><div class="line">b: String = orange</div><div class="line">rest: List[String] = List(pears)</div></pre></td></tr></table></figure>
+<p>List的模式匹配<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//使用模式匹配实现插入排序</div><div class="line">def isort(xs: List[Int]): List[Int] = xs match &#123;</div><div class="line">  case List() =&gt; List()</div><div class="line">  case x::xsl =&gt; insert(x, isort(xsl))</div><div class="line">&#125;</div><div class="line"></div><div class="line">def insert(x: Int, xs: List[Int]): List[Int] = xs match &#123;</div><div class="line">  case List() =&gt; List()</div><div class="line">  case y::ys =&gt; if (x&lt;=y) x::xs</div><div class="line">                else y::insert(x,ys)</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">通常,采用模式匹配做拆分会比使用那些基本方法更为清晰,因此你的列表处理工具箱中应该加入模式匹配这样的工具</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<h1 id="6-list类的一阶方法"><a href="#6-list类的一阶方法" class="headerlink" title="6.list类的一阶方法"></a>6.list类的一阶方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">//一阶方法是指不以函数作为传入参数的方法</div></pre></td></tr></table></figure>
+<p>连接列表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">//连接操作是与 :: 接近的一种操作,写做&quot; ::&quot; 不过不像 ::: 的两个操作都是列表, xs:::ys 的结果依次包含xs和ys所有元素的新列表</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; List(1,2):::List(3,4,5)</div><div class="line">res20: List[Int] = List(1, 2, 3, 4, 5)</div><div class="line"></div><div class="line">scala&gt; List():::List(1,2,3)</div><div class="line">res21: List[Int] = List(1, 2, 3)</div><div class="line"></div><div class="line">scala&gt; List(1,2,3):::List(4)</div><div class="line">res22: List[Int] = List(1, 2, 3, 4)</div><div class="line"></div><div class="line">//与:: 一样,列表的连接操作也是右结合的,如下:</div><div class="line">xs:::ys:::zs</div><div class="line">//等价于</div><div class="line">xs:::(ys:::zs)</div></pre></td></tr></table></figure></p>
+<p> 分治原则<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">连接操作(:::) 被实现为List类的方法,下面是通过使用模式匹配来&quot;手工&quot;实现</div><div class="line">*/</div><div class="line">def append[T](xs: List[T], ys: List[T]): List[T]</div><div class="line"></div><div class="line">/*</div><div class="line">列表的许多算法首先使用模式匹配把输入列表拆分为更简单的样本,这是原则里所说的&quot;分&quot;,然后根据每个样本构建结果,</div><div class="line">如果结果是非空列表,那么一块块部件将通过同样的递归遍历算法构建出来,这就是原则里说的&quot;治&quot;</div><div class="line">*/</div><div class="line">def append[T](xs: List[T], ys: List[T]): List[T] = xs match &#123;</div><div class="line">  case List() =&gt; ys</div><div class="line">  case x::xsl =&gt; x::append(xsl,ys)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p> 计算列表的长度:length方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">scala&gt; List(1,2,3).length</div><div class="line">res23: Int = 3</div><div class="line"></div><div class="line">/*</div><div class="line">相对于数组来说,列表的length方法是较费时的操作,为了找到尾部,需要遍历整个列表,因此其花费的时间和列表元素数量成正比,这也是在判断列表是否为空时,应当采用xs.isEmpty方法,而不采用xs.length==0的理由,虽然两种测试的结果一致,但是第二种更加的慢,尤其是列表xs较长的时候</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<p> 访问列表的尾部:init方法和last方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">你已经知道了head和tail基本操作,相应可以获得列表的第一个元素及除了第一个元素之外余下的列表,他们都有成对的操作: last返回(非空)列表的最后一个元素,init返回除了最后一个元素之外余下的列表</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; val abcde = List(&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;)</div><div class="line">abcde: List[Char] = List(a, b, c, d, e)</div><div class="line"></div><div class="line">scala&gt; abcde.last</div><div class="line">res24: Char = e</div><div class="line"></div><div class="line">scala&gt; abcde.init</div><div class="line">init    inits</div><div class="line"></div><div class="line">scala&gt; abcde.init</div><div class="line">res25: List[Char] = List(a, b, c, d)</div><div class="line"></div><div class="line">//与head和tail一样的是,对空列表调用这些方法的时候,会抛出异常</div><div class="line">scala&gt; List().init</div><div class="line">java.lang.UnsupportedOperationException: empty.init</div><div class="line"></div><div class="line"></div><div class="line">//不一样的是,head和tail运行的时间都是常量,但是init和last需要遍历整个列表以计算结果,因此所耗的时间与列表长度成正比</div><div class="line">//组织好数据,以便让所有的访问都集中在列表的头部,而不是尾部</div></pre></td></tr></table></figure></p>
+<p> 反转列表:reverse方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//如果出于某种原因,某种算法需要频繁的访问列表的尾部,那么可以首先把列表反转过来然后再处理,如下:</div><div class="line">scala&gt; abcde</div><div class="line">res29: List[Char] = List(a, b, c, d, e)</div><div class="line"></div><div class="line">scala&gt; abcde.reverse</div><div class="line">res27: List[Char] = List(e, d, c, b, a)</div><div class="line"></div><div class="line">//与所有其他列表操作一样,reverse创建了新的列表而不是就地改变被操作列表</div><div class="line">scala&gt; abcde</div><div class="line">res28: List[Char] = List(a, b, c, d, e)</div></pre></td></tr></table></figure></p>
+<p> 前缀与后缀:drop,take,和splitAt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">drop和take操作泛化了tail和init,他们可以返回列表任意长度的前缀或后缀,表达式&quot; xs take n &quot; 返回xs列表的前n个元素,如果n大于xs.length,则返回整个xs,操作 &quot; xs drop n&quot;返回xs列表除了前n个元素之外的所有元素,如果n大于xs.length,则返回空列表</div><div class="line"></div><div class="line">splitAt操作在指定位置拆分列表,并返回对偶列表</div><div class="line">xs splitAt n  //等价于 ( xs take n, xs drop n)</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; abcde</div><div class="line">res29: List[Char] = List(a, b, c, d, e)</div><div class="line"></div><div class="line">scala&gt; abcde take 2</div><div class="line">res30: List[Char] = List(a, b)</div><div class="line"></div><div class="line">scala&gt; abcde drop 2</div><div class="line">res31: List[Char] = List(c, d, e)</div><div class="line"></div><div class="line">scala&gt; abcde splitAt 2</div><div class="line">res32: (List[Char], List[Char]) = (List(a, b),List(c, d, e))</div></pre></td></tr></table></figure></p>
+<p>元素选择:apply方法和indices方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//apply方法实现了随机元素的元素,不过与数组中的同名方法相比,他使用的并不广泛</div><div class="line"></div><div class="line">scala&gt; abcde</div><div class="line">res29: List[Char] = List(a, b, c, d, e)</div><div class="line"></div><div class="line">abcde(2)    // c</div><div class="line"></div><div class="line"></div><div class="line">//indices 方法可以返回指定列表的所有有效索引值组成的列表</div><div class="line">scala&gt; abcde.indices</div><div class="line">res35: scala.collection.immutable.Range = Range(0, 1, 2, 3, 4)</div></pre></td></tr></table></figure></p>
+<p> 齿合列表:zip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//zip操作可以把两个列表组成一个对偶列表</div><div class="line"></div><div class="line">scala&gt; abcde.indices zip abcde</div><div class="line">res36: scala.collection.immutable.IndexedSeq[(Int, Char)] = Vector((0,a), (1,b), (2,c), (3,d), (4,e))</div><div class="line"></div><div class="line">//如果两个列表的长度不一致,那么任何不能匹配的元素将被丢弃</div><div class="line">scala&gt; val zipped = abcde zip List(1,2,3)</div><div class="line">zipped: List[(Char, Int)] = List((a,1), (b,2), (c,3))</div><div class="line"></div><div class="line">//常用到的情况是把列表元素与索引值啮合在一起,这是使用zipWithIndex方法更为有效</div><div class="line">scala&gt; abcde.zipWithIndex</div><div class="line">res37: List[(Char, Int)] = List((a,0), (b,1), (c,2), (d,3), (e,4))</div></pre></td></tr></table></figure></p>
+<p> 显示列表:toString方法和mkString方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">//toString操作返回列表的标准字符串表达形式</div><div class="line">scala&gt; abcde.toString</div><div class="line">res39: String = List(a, b, c, d, e)</div><div class="line"></div><div class="line">/*</div><div class="line">xs mkString (pre, sep, post) 操作有四个操作元,带显示的列表xs ,需要显示在所有元素之前的前缀字符串pre,需要显示在每两个元素之间的分隔符字符串sep,以及显示在最后面的后缀字符串post,操作的结果就是字符串</div><div class="line">*/</div><div class="line"></div><div class="line">//mkString方法有两个重载的变体以便让你可以忽略部分乃至全部参数,第一个变体仅带有分隔符字符串:</div><div class="line">xs mkString sep  //等价于 xs mkString (&quot;&quot;, sep, &quot;&quot;)</div><div class="line">//第二个变体让你可以忽略所有的参数:</div><div class="line">xx.mkString     //等价于 xs mkString &quot;&quot;</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; abcde mkString(&quot;++++&quot;, &quot;,&quot;, &quot;%%%%&quot;)</div><div class="line">res40: String = ++++a,b,c,d,e%%%%</div><div class="line"></div><div class="line">scala&gt; abcde mkString &quot;&quot;</div><div class="line">res42: String = abcde</div><div class="line"></div><div class="line">scala&gt; abcde.mkString</div><div class="line">res44: String = abcde</div><div class="line"></div><div class="line">//mkString方法还有addString的变体,他可以把构建好的字符串添加到StringBuilder对象中,而不是作为结果返回</div><div class="line"></div><div class="line">scala&gt; val buf = new StringBuilder</div><div class="line">buf: StringBuilder =</div><div class="line"></div><div class="line">scala&gt; abcde addString (buf,&quot;(&quot;,&quot;:&quot;,&quot;)&quot;)</div><div class="line">res45: StringBuilder = (a:b:c:d:e)</div><div class="line"></div><div class="line">//mkString和addString方法都继承自List的超特质Iterable ,因此他们可以应用到各种可枚举的集合类上</div></pre></td></tr></table></figure></p>
+<p>转换列表:elements,toArray. copyToArray<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">//要想让数据存储格式在连续存放的数组和递归存放的列表之间进行转换,可以使用List类的toArray方法和Array类的toList方法</div><div class="line"></div><div class="line">scala&gt; abcde</div><div class="line">res46: List[Char] = List(a, b, c, d, e)</div><div class="line"></div><div class="line">scala&gt; val arr = abcde.toArray</div><div class="line">arr: Array[Char] = Array(a, b, c, d, e)</div><div class="line"></div><div class="line">scala&gt; arr.toList</div><div class="line">res47: List[Char] = List(a, b, c, d, e)</div><div class="line"></div><div class="line">//另外还有一个方法叫copyToArray ,可以把列表元素复制到目标数组的一段连续空间,操作如下:</div><div class="line">xs copyToArray (arr, start)</div><div class="line">/*</div><div class="line">这将把列表xs的所有元素复制到数组arr中,填入位置开始为start,必须确保目标数组arr有足够的空间可以全部放下列表元素,如下:</div><div class="line">*/</div><div class="line">scala&gt; val arr2 = new Array[Int](10)</div><div class="line">arr2: Array[Int] = Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)</div><div class="line"></div><div class="line">scala&gt; List(1,2,3) copyToArray (arr2,3)</div><div class="line"></div><div class="line">scala&gt; arr2</div><div class="line">res51: Array[Int] = Array(0, 0, 0, 1, 2, 3, 0, 0, 0, 0)</div><div class="line"></div><div class="line"></div><div class="line">//如果你需要使用枚举器访问列表元素,可以使用elements方法</div></pre></td></tr></table></figure></p>
+<p> 举例:归并排序<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">//前面看到的插入排序编写起来较为简洁,但是效率不高,归并排序是更为有效的排序算法</div><div class="line">/*</div><div class="line">归并排序的工作原理:</div><div class="line">首先如果列表长度为零或仅有一个元素,他就已经是排好序的了,因此可以不加改变的返回,长列表可以拆分为两个子列表,每个包含大概一半的原列表元素,每个子列表采用对排序函数的递归调用完成排序,然后再用归并操作把生产的两个排好序的列表合并在一起</div><div class="line">*/</div><div class="line"></div><div class="line">def msort[T](less: (T, T) =&gt; Boolean)(xs: List[T]):List[T] = &#123;</div><div class="line">  def merge(xs:List[T], ys:List[T]): List[T] = (xs,ys) match &#123;</div><div class="line">    case (Nil,_) =&gt; ys</div><div class="line">    case (_,Nil) =&gt; xs</div><div class="line">    case (x::xsl, y::ysl) =&gt;</div><div class="line">      if (less(x,y)) x::merge(xsl,ys)</div><div class="line">      else y::merge(xs,ysl)</div><div class="line">  &#125;</div><div class="line">  val n = xs.length/2</div><div class="line">  if (n==0) xs</div><div class="line">  else &#123;</div><div class="line">    val (ys,zs) = xs splitAt n</div><div class="line">    merge(msort(less)(ys), msort(less)(zs))</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="7-list类的高级方法"><a href="#7-list类的高级方法" class="headerlink" title="7.list类的高级方法"></a>7.list类的高级方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">对于列表的许多操作都具有相同的结构,模式重复不断的出现,例如:用某种方式转变列表的所有元素,检查列表的所有元素是否都具有某种特质,取出列表中满足特定条件的元素,或使用某种操作符合并列表的元素,在java中,这样的模式通常需要用for或while循环的固定组合表达,scala中,可以通过使用以List类的方法实现的高阶操作符来更为简洁和直接的表达这些模式</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p>列表见映射:map , flatMap, 和foreach<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">xs map f //操作以类型为List[T] 的列表xs和类型为T=&gt;U的函数f为操作单元,返回把函数f应用在xs的每个列表元素之后由此组成的新列表</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; List(1,2,3) map (_+1)</div><div class="line">res0: List[Int] = List(2, 3, 4)</div><div class="line"></div><div class="line">scala&gt; val words = List(&quot;the&quot;, &quot;quick&quot;, &quot;brown&quot;, &quot;fox&quot;)</div><div class="line">words: List[String] = List(the, quick, brown, fox)</div><div class="line"></div><div class="line">scala&gt; words map (_.length)</div><div class="line">res1: List[Int] = List(3, 5, 5, 3)</div><div class="line"></div><div class="line">scala&gt; words map (_.toList.reverse.mkString)</div><div class="line">res2: List[String] = List(eht, kciuq, nworb, xof)</div><div class="line"></div><div class="line">//flatMap操作符与map类似,不过他的右操作元是能够返回元素列表的函数,他对列表的每个元素调用该方法,然后连接所有方法的结果并返回,map和flatMap的差异如下:</div><div class="line"></div><div class="line">scala&gt; words map (_.toList)</div><div class="line">res3: List[List[Char]] = List(List(t, h, e), List(q, u, i, c, k), List(b, r, o,w, n), List(f, o, x))</div><div class="line"></div><div class="line">scala&gt; words flatMap (_.toList)</div><div class="line">res4: List[Char] = List(t, h, e, q, u, i, c, k, b, r, o, w, n, f, o, x)</div><div class="line"></div><div class="line">//可以发现map返回的是包含列表的列表,而flatMap返回的是把所有元素列表连接之后的单个列表</div><div class="line"></div><div class="line">scala&gt; List.range(1,5) flatMap (</div><div class="line">     i=&gt; List.range(1,i) map (j =&gt; (i,j))</div><div class="line">     )</div><div class="line">res5: List[(Int, Int)] = List((2,1), (3,1), (3,2), (4,1), (4,2), (4,3))</div><div class="line"></div><div class="line">//List.range是可以创建某范围内所有整数列表的工具方法</div><div class="line"></div><div class="line">scala&gt; List.range(1,1)</div><div class="line">res6: List[Int] = List()</div><div class="line"></div><div class="line">scala&gt; List.range(1,2)</div><div class="line">res7: List[Int] = List(1)</div><div class="line"></div><div class="line"></div><div class="line">//请注意:使用for表达式也能得到同样的列表</div><div class="line">scala&gt; for(i&lt;-List.range(1,5);j&lt;-List.range(1,i)) yield (i,j)</div><div class="line">res8: List[(Int, Int)] = List((2,1), (3,1), (3,2), (4,1), (4,2), (4,3))</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">foreach是第三种与映射类似的操作,然而不像map和flatMap,foreach的右操作元是过程(返回类型为Unit的函数),他只是对每个列表元素都调用一遍过程,操作的结果仍然是Unit,不会产生结果列表</div><div class="line">*/</div><div class="line">var sum = 0</div><div class="line">List(1,2,3,4,5) foreach (sum += _)</div></pre></td></tr></table></figure></p>
+<p>列表过滤:filter,partition, find, takeWhile, dropWhile和span<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">xs filter p     //操作把类型为List[T]的列表xs和类型为T=&gt;Boolean的判断函数作为操作元,产生xs中符合p(x) 为true的所有元素x组成的列表</div><div class="line">*/</div><div class="line">scala&gt; List(1,2,3,4,5) filter (_ % 2==0)</div><div class="line">res9: List[Int] = List(2, 4)</div><div class="line"></div><div class="line">scala&gt; words</div><div class="line">res10: List[String] = List(the, quick, brown, fox)</div><div class="line"></div><div class="line">scala&gt; words filter(_.length == 3)</div><div class="line">res11: List[String] = List(the, fox)</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">partition方法与filter方法类似,不过返回的是列表对,其中一个包含所有论断为真的元素,另外一个包含所有论断为假的元素</div><div class="line">*/</div><div class="line">xs partition p        //等价于    (xs filter p,    xs filter (!p(_)))    //相当于分组,返回p成立的组,和p不成立的组</div><div class="line"></div><div class="line">scala&gt; List(1,2,3,4,5) partition (_%2==0)</div><div class="line">res12: (List[Int], List[Int]) = (List(2, 4),List(1, 3, 5))</div><div class="line"></div><div class="line">xs find p</div><div class="line">/*</div><div class="line">find方法同样与filter类似,不过返回的是第一个满足给定论断的元素,而并非全部, xs find p 操作以列表xs和论断p为操作元,返回可选值,如果xs中存在元素x使得p(x) 为真, Some(x) 将被返回,若p对所有的元素都不成立,None将返回</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; List(1,2,3,4,5) find (_ %2 ==0)</div><div class="line">res14: Option[Int] = Some(2)</div><div class="line"></div><div class="line">scala&gt; List(1,2,3,4,5) find (_ &lt;= 0)</div><div class="line">res15: Option[Int] = None</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">takeWhile和dropWhile操作符同样带有论断做右操作元,xs takeWhile p 操作返回列表xs 中最长的更够满足p的前缀,类似的,xs dropWhile p 操作符最长的不满足p的前缀</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; List(1,2,3,-4,5) takeWhile (_ &gt; 0)</div><div class="line">res16: List[Int] = List(1, 2, 3)</div><div class="line"></div><div class="line">scala&gt; words</div><div class="line">res17: List[String] = List(the, quick, brown, fox)</div><div class="line"></div><div class="line">scala&gt; words dropWhile (_ startsWith &quot;t&quot;)</div><div class="line">res18: List[String] = List(quick, brown, fox)</div><div class="line"></div><div class="line">/*</div><div class="line">span 方法把takeWhile和dropWhile组合成一个操作,就好像splitAt组合了take和drop一样,他返回一对列表</div><div class="line">*/</div><div class="line">xs span p  // 等价于 (xs takeWhile p,  xs dropWhile p)</div><div class="line"></div><div class="line">scala&gt; List(1,2,3,-4,5) span (_ &gt; 0)</div><div class="line">res19: (List[Int], List[Int]) = (List(1, 2, 3),List(-4, 5))</div></pre></td></tr></table></figure></p>
+<p>列表的论断:forall和exists<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">操作xs forall p 以列表xs和论断p为参数,如果列表的所有元素满足p则返回true,与之相对,在xs exists p操作里,xs 中只要有一个值满足论断p就返回true</div><div class="line">*/</div><div class="line">def hasZeroRow(m: List[List[Int]]) </div><div class="line">  = m exists(row =&gt; row forall (_ == 0))</div></pre></td></tr></table></figure></p>
+<p>折叠列表: /: 和:\<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">其他常用的操作会对列表元素始终执行某种操作</div><div class="line">*/</div><div class="line">sum(List(a, b, c))    //等价于 0+a+b+c</div><div class="line">//下面可以认为是折叠操作的一个具体实例</div><div class="line">def sum(xs: List[Int]): Int = (0 /: xs)(_ + _)</div><div class="line"></div><div class="line">product(List(a, b, c))     //等价于 1*a*b*c</div><div class="line">//下面是具体实现:</div><div class="line">def produce(xs: List[Int]): Int = (0 /: xs)(_ * _)</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">左折叠(fold left) 操作 (z /: xs)(op) 与三个对象有关,开始值z , 列表xs , 以及二元操作op,折叠的结果是op应用到前缀值z及每个相邻元素上,如下:</div><div class="line">*/</div><div class="line">(z /: List(a, b, c))(op)   //等价于 下面的图形操作</div></pre></td></tr></table></figure></p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/16/1.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">//另一个例子: 用空格连接所有字符串列表中的所有单词</div><div class="line">scala&gt; (&quot;&quot; /: words)(_ + &quot; &quot; + _)</div><div class="line">res21: String = &quot; the quick brown fox&quot;</div><div class="line"></div><div class="line"></div><div class="line">//结果在最开始的地方多了一个空格,要去掉他,可以稍微改变为:</div><div class="line">scala&gt; (words.head /: words.tail)(_ +&quot; &quot;+ _)</div><div class="line">res22: String = the quick brown fox</div><div class="line"></div><div class="line"></div><div class="line">/*</div><div class="line">与上面类似的操作是: :\ ,表示如下:</div><div class="line">*/</div><div class="line">(List(a, b, c) :\ z)(op)        //等价于 下图</div></pre></td></tr></table></figure>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/scala_programming/16/2.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">看冒号在哪一边,与冒号连接时列表,用于连接的字符在左侧就是左折叠,用于连接的字符在右侧就是右折叠</div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">最后,尽管/:和:\操作符已经从斜杠的方向上描绘了他们的操作树的倾斜方向,并且冒号字符的结合性也保证了开始值在操作树和表达式中同样的位置,但还是有很多人感觉产生与直觉相去甚远,因此如果你喜欢,可以使用名为foldLeft和foldRight的方法,他们同样定义在List类中</div><div class="line">*/</div><div class="line">//foldLeft的方法签名</div><div class="line">def foldLeft[B](z: B)(f: (B, A) =&gt; B): B = &#123;</div></pre></td></tr></table></figure>
+<p>例子:使用折叠操作完成列表反转<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">通过折叠实现列表反转</div><div class="line">*/</div><div class="line">def reverseLeft[T](xs: List[T]) = (startValue /: xs)(operation)</div><div class="line">//实现如下:</div><div class="line">def reverseLeft[T](xs: List[T]) = (List[T]() /: xs)&#123;</div><div class="line">  (ys,y) =&gt; y::ys</div><div class="line">&#125;</div><div class="line"></div><div class="line">//或者:下面使用了圆括号</div><div class="line">def reverseLeft[T](xs: List[T]) = (List[T]() /: xs)(</div><div class="line">  (ys,y) =&gt; y::ys</div><div class="line"> )</div></pre></td></tr></table></figure></p>
+<p>列表排序: sort<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">对列表xs的操作, xs sort before 可以对列表的元素执行排序,其中 &quot;before&quot; 是比较元素的方法,表达式 x beforey在x应按照顺序处于y之前的时候要能够返回true </div><div class="line">*/</div><div class="line">List(1, -3, 4, 2, 6) sort (_ &lt; _)    //List(-3, 1, 2, 4, 6)</div><div class="line">/*</div><div class="line">解析:    </div><div class="line">fn(x,y) = _ &lt; _ 是一个函数</div><div class="line">最后的结果是 x before y 为true    ,所以可以看出是升序</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<h1 id="8-list对象的方法"><a href="#8-list对象的方法" class="headerlink" title="8.list对象的方法"></a>8.list对象的方法</h1><p>&emsp;目前为止,上面所看到的所有操作都实现为List类的方法,因此你是在独立的类对象上调用他们,还有些方法是定义在全局可访问对象scala.List上的,他是List类的伴生对象,其中的一些操作是创建列表的工厂方法,另外一些是对某些特定类型列表的操作</p>
+<p>通过元素创建列表: List.apply<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">你已经在很多场合看到过以List(1,2,3) 形式出现的列表字面量,他的语法没有什么特别的,类似于List(1,2,3)这样的字面量只是List对象对元素1,2,3的简单应用,也就说,他等价于List.apply(1,2,3)</div><div class="line">*/</div><div class="line">List.apply(1,2,3)</div></pre></td></tr></table></figure></p>
+<p>创建数值范围: List.range<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">最简单的形式是List.range(from, until) ,可以创建从from开始到until-1 的所有数值的列表,因此尾部值until不再范围之内</div><div class="line">还有一个版本的range可以带step值作为第三参数,这个操作可以产生from开始的,间隔为step的列表元素,step可以为正,也可以为负</div><div class="line">*/</div><div class="line"></div><div class="line">scala&gt; List.range(1,5)</div><div class="line">res24: List[Int] = List(1, 2, 3, 4)</div><div class="line"></div><div class="line">scala&gt; List.range(1,9,2)</div><div class="line">res25: List[Int] = List(1, 3, 5, 7)</div><div class="line"></div><div class="line">scala&gt; List.range(9,1,-3)</div><div class="line">res26: List[Int] = List(9, 6, 3)</div></pre></td></tr></table></figure></p>
+<p>创建统一的列表: List.make<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">make方法创建由相同元素的零份或多份拷贝组成的列表,他带两个参数: 待创建列表的长度,需重复的元素</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">scala&gt; List.make(5,&apos;a&apos;)</div><div class="line">warning: there were 1 deprecation warning(s); re-run with -deprecation for detals</div><div class="line">res28: List[Char] = List(a, a, a, a, a)</div><div class="line"></div><div class="line">scala&gt; List.make(3,&quot;hello&quot;)</div><div class="line">warning: there were 1 deprecation warning(s); re-run with -deprecation for detals</div><div class="line">res29: List[String] = List(hello, hello, hello)</div></pre></td></tr></table></figure></p>
+<p> 解除啮合列表:List.unzip<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">unzip操作是zip的相反,zip把两个列表组成对偶列表,unzip把对偶列表拆分还原为两个列表,其中一个列表由每对对偶的第一个元素组成,另一个由第二个元素组成</div><div class="line">*/</div><div class="line">scala&gt; val zipped = &quot;abcde&quot;.toList zip List(1,2,3)</div><div class="line">zipped: List[(Char, Int)] = List((a,1), (b,2), (c,3))</div><div class="line"></div><div class="line">scala&gt; List.unzip(zipped)</div><div class="line">res31: (List[Char], List[Int]) = (List(a, b, c),List(1, 2, 3))</div></pre></td></tr></table></figure></p>
+<p> 连接列表: List.flatten, List.concat<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">flatten方法以列表的列表做参数,并把所有的元素列表连接在一起</div><div class="line">*/</div><div class="line">scala&gt; List.flatten(test)</div><div class="line">warning: there were 1 deprecation warning(s); re-run with -deprecation for detals</div><div class="line">res32: List[Char] = List(a, b, c, d, e)</div><div class="line"></div><div class="line"></div><div class="line">//concat方法与flatten类似,它能够连接多个元素列表,将多个列表以重复参数的形式直接传递给方法,数量不限</div><div class="line"></div><div class="line">scala&gt; List.concat(List(&apos;a&apos;,&apos;b&apos;), List(&apos;c&apos;))</div><div class="line">res33: List[Char] = List(a, b, c)</div><div class="line"></div><div class="line">scala&gt; List.concat(List(),List(&apos;b&apos;),List(&apos;c&apos;))</div><div class="line">res34: List[Char] = List(b, c)</div><div class="line"></div><div class="line">scala&gt; List.concat()</div><div class="line">res35: List[Nothing] = List()</div></pre></td></tr></table></figure></p>
+<p> 映射及测试配对列表: List.map2, List.forall2 , List.exists2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// map2方法与map相似,不过他同时带两个列表及能够把两个元素值映射为结果的函数做参数,函数会应用到两个列表相关的元素上,然后把这些结果值变为列表</div><div class="line"></div><div class="line">scala&gt; List.map2(List(10,20),List(7,4,5))(_ * _)    //分别取两个list的参数,然后交给 _*_ </div><div class="line">warning: there were 1 deprecation warning(s); re-run with -deprecation for detals</div><div class="line">res37: List[Int] = List(70, 80)</div><div class="line"></div><div class="line">scala&gt; List.forall2(List(&quot;abc&quot;,&quot;de&quot;),List(3,2))(_.length == _)    //分别取两个list的参数,交给 _.length == _</div><div class="line">warning: there were 1 deprecation warning(s); re-run with -deprecation for detals</div><div class="line">res38: Boolean = true</div><div class="line"></div><div class="line">scala&gt; List.exists2(List(&quot;abc&quot;,&quot;de&quot;),List(3,2))(_.length != _)</div><div class="line">warning: there were 1 deprecation warning(s); re-run with -deprecation for detals</div><div class="line">res40: Boolean = false</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala编程/" rel="tag"># scala编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十章 组合与继承/" rel="next" title="第十章 组合与继承">
+                <i class="fa fa-chevron-left"></i> 第十章 组合与继承
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/scala编程/第十五章 样本类和模式匹配/" rel="prev" title="第十五章 样本类和模式匹配">
+                第十五章 样本类和模式匹配 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-列表字面量"><span class="nav-number">1.</span> <span class="nav-text">1.列表字面量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-list类型"><span class="nav-number">2.</span> <span class="nav-text">2.list类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-构造列表"><span class="nav-number">3.</span> <span class="nav-text">3.构造列表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-列表的基本操作"><span class="nav-number">4.</span> <span class="nav-text">4.列表的基本操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-列表模式"><span class="nav-number">5.</span> <span class="nav-text">5.列表模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-list类的一阶方法"><span class="nav-number">6.</span> <span class="nav-text">6.list类的一阶方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-list类的高级方法"><span class="nav-number">7.</span> <span class="nav-text">7.list类的高级方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-list对象的方法"><span class="nav-number">8.</span> <span class="nav-text">8.list对象的方法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

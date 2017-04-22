@@ -1,0 +1,759 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.namenode 的职责 负责客户端请求的响应 元数据的管理（查询，修改）  2.namenode对数据的管理形式namenode对数据的管理采用了三种存储形式:1.内存元数据(NameSystem)2.磁盘元数据镜像文件(Image)3.数据操作日志文件（可通过日志运算出元数据）(edits)">
+<meta name="keywords" content="hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="namenode工作机制">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/bigdata/hadoop/namenode工作机制/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.namenode 的职责 负责客户端请求的响应 元数据的管理（查询，修改）  2.namenode对数据的管理形式namenode对数据的管理采用了三种存储形式:1.内存元数据(NameSystem)2.磁盘元数据镜像文件(Image)3.数据操作日志文件（可通过日志运算出元数据）(edits)">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/namenode/secondarynamenode_checkpoint.png">
+<meta property="og:updated_time" content="2017-02-27T05:55:04.761Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="namenode工作机制">
+<meta name="twitter:description" content="1.namenode 的职责 负责客户端请求的响应 元数据的管理（查询，修改）  2.namenode对数据的管理形式namenode对数据的管理采用了三种存储形式:1.内存元数据(NameSystem)2.磁盘元数据镜像文件(Image)3.数据操作日志文件（可通过日志运算出元数据）(edits)">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/namenode/secondarynamenode_checkpoint.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/bigdata/hadoop/namenode工作机制/"/>
+
+
+
+
+
+  <title> namenode工作机制 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/hadoop/namenode工作机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                namenode工作机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-namenode-的职责"><a href="#1-namenode-的职责" class="headerlink" title="1.namenode 的职责"></a>1.namenode 的职责</h1><ol>
+<li>负责客户端请求的响应</li>
+<li>元数据的管理（查询，修改）</li>
+</ol>
+<h1 id="2-namenode对数据的管理形式"><a href="#2-namenode对数据的管理形式" class="headerlink" title="2.namenode对数据的管理形式"></a>2.namenode对数据的管理形式</h1><p>namenode对数据的管理采用了三种存储形式:<br>1.内存元数据(NameSystem)<br>2.磁盘元数据镜像文件(Image)<br>3.数据操作日志文件（可通过日志运算出元数据）(edits)</p>
+<a id="more"></a>
+<h1 id="3-元数据存储机制"><a href="#3-元数据存储机制" class="headerlink" title="3.元数据存储机制"></a>3.元数据存储机制</h1><p>A、内存中有一份完整的元数据(<font color="red">内存meta data</font>)<br>B、磁盘有一个“准完整”的元数据镜像（fsimage）文件(<font color="red">在namenode的工作目录中</font>)<br>C、用于衔接内存metadata和持久化元数据镜像fsimage之间的操作日志（<font color="red">edits文件</font>）<br>注：当客户端对hdfs中的文件进行新增或者修改操作，操作记录首先被记入edits日志文件中，当客户端操作成功后，相应的元数据会更新到内存meta.data中</p>
+<h1 id="4-元数据手动查看"><a href="#4-元数据手动查看" class="headerlink" title="4.元数据手动查看"></a>4.元数据手动查看</h1><p>可以通过hdfs的一个工具来查看edits中的信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bin/hdfs oev -i edits -o edits.xml</div><div class="line">bin/hdfs oiv -i fsimage_0000000000000000087 -p XML -o fsimage.xml</div></pre></td></tr></table></figure></p>
+<h1 id="5-元数据的checkpoint"><a href="#5-元数据的checkpoint" class="headerlink" title="5.元数据的checkpoint"></a>5.元数据的checkpoint</h1><p>每隔一段时间，会由secondary namenode将namenode上积累的所有edits和一个最新的fsimage下载到本地(fsimage只会下载一次)，并加载到内存进行merge（这个过程称为checkpoint）</p>
+<h2 id="5-1-checkpoint的详细过程"><a href="#5-1-checkpoint的详细过程" class="headerlink" title="5.1.checkpoint的详细过程"></a>5.1.checkpoint的详细过程</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/hadoop/namenode/secondarynamenode_checkpoint.png" alt=""></p>
+<h2 id="5-2-checkpoint操作的触发条件配置参数"><a href="#5-2-checkpoint操作的触发条件配置参数" class="headerlink" title="5.2.checkpoint操作的触发条件配置参数"></a>5.2.checkpoint操作的触发条件配置参数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">dfs.namenode.checkpoint.check.period=60  #检查触发条件是否满足的频率，60秒</div><div class="line">dfs.namenode.checkpoint.dir=file://$&#123;hadoop.tmp.dir&#125;/dfs/namesecondary      #以上两个参数做checkpoint操作时，secondary namenode的本地工作目录</div><div class="line">dfs.namenode.checkpoint.edits.dir=$&#123;dfs.namenode.checkpoint.dir&#125;</div><div class="line"> </div><div class="line">dfs.namenode.checkpoint.max-retries=3  #最大重试次数</div><div class="line">dfs.namenode.checkpoint.period=3600  #两次checkpoint之间的时间间隔3600秒</div><div class="line">dfs.namenode.checkpoint.txns=1000000 #两次checkpoint之间最大的操作记录</div></pre></td></tr></table></figure>
+<h2 id="5-3-checkpoint的附带作用（元数据恢复）"><a href="#5-3-checkpoint的附带作用（元数据恢复）" class="headerlink" title="5.3.checkpoint的附带作用（元数据恢复）"></a>5.3.checkpoint的附带作用（元数据恢复）</h2><p>&emsp;namenode和secondary namenode的工作目录存储结构完全相同，所以，当namenode故障退出需要重新恢复时，可以从secondary namenode的工作目录中将fsimage拷贝到namenode的工作目录，以恢复namenode的元数据</p>
+<p>参见: namenode目录故障时解决方案.md</p>
+<h1 id="6-元数据目录说明"><a href="#6-元数据目录说明" class="headerlink" title="6.元数据目录说明"></a>6.元数据目录说明</h1><h2 id="6-1-总体结构"><a href="#6-1-总体结构" class="headerlink" title="6.1.总体结构"></a>6.1.总体结构</h2><p>在第一次部署好Hadoop集群的时候，我们需要在NameNode（NN）节点上格式化磁盘：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$HADOOP_HOME/bin/hdfs namenode -format</div></pre></td></tr></table></figure></p>
+<p>格式化完成之后，将会在$dfs.namenode.name.dir/current目录下如下的文件结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">current/</div><div class="line">|-- VERSION</div><div class="line">|-- edits_*</div><div class="line">|-- fsimage_0000000000008547077</div><div class="line">|-- fsimage_0000000000008547077.md5</div><div class="line">`-- seen_txid</div></pre></td></tr></table></figure></p>
+<p>其中的dfs.namenode.dir是在hdfs-site.xml文件中配置的，默认值如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</div><div class="line">  &lt;value&gt;file://$&#123;hadoop.tmp.dir&#125;/dfs/name&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"> </div><div class="line">hadoop.tmp.dir是在core-site.xml中配置的，默认值如下</div><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</div><div class="line">  &lt;value&gt;/tmp/hadoop-$&#123;user.name&#125;&lt;/value&gt;</div><div class="line">  &lt;description&gt;A base for other temporary directories.&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure></p>
+<p>dfs.namenode.name.dir属性可以配置多个目录:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">如/data1/dfs/name,/data2/dfs/name,/data3/dfs/name,....</div><div class="line">各个目录存储的文件结构和内容都完全一样，相当于备份，这样做的好处是当其中一个目录损坏了，也不会影响到Hadoop的元数据，</div><div class="line">特别是当其中一个目录是NFS（网络文件系统Network File System，NFS）之上，即使你这台机器损坏了，元数据也得到保存。</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<h2 id="6-2-VERSION文件"><a href="#6-2-VERSION文件" class="headerlink" title="6.2.VERSION文件"></a>6.2.VERSION文件</h2><p>VERSION文件是Java属性文件，内容大致如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#Fri Nov 15 19:47:46 CST 2013</div><div class="line">namespaceID=934548976                #namespaceID是文件系统的唯一标识符，在文件系统首次格式化之后生成的；</div><div class="line">clusterID=CID-cdff7d73-93cd-4783-9399-0a22e6dce196</div><div class="line">cTime=0        #cTime表示NameNode存储时间的创建时间，由于我的NameNode没有更新过，所以这里的记录值为0，以后对NameNode升级之后，cTime将会记录更新时间戳；</div><div class="line">storageType=NAME_NODE        #storageType说明这个文件存储的是什么进程的数据结构信息（如果是DataNode，storageType=DATA_NODE）；</div><div class="line">blockpoolID=BP-893790215-192.168.24.72-1383809616115</div><div class="line">layoutVersion=-47    #layoutVersion表示HDFS永久性数据结构的版本信息， 只要数据结构变更，版本号也要递减，此时的HDFS也需要升级，否则磁盘仍旧是使用旧版本的数据结构，这会导致新版本的NameNode无法使用；</div></pre></td></tr></table></figure>
+<p>clusterID是系统生成或手动指定的集群ID，在-clusterid选项中可以使用它；如下说明</p>
+<ol>
+<li>使用如下命令格式化一个Namenode：$HADOOP_HOME/bin/hdfs namenode -format [-clusterId <cluster_id>]<br>&emsp;选择一个唯一的cluster_id，并且这个cluster_id不能与环境中其他集群有冲突。如果没有提供cluster_id，则会自动生成一个唯一的ClusterID。</cluster_id></li>
+<li>使用如下命令格式化其他Namenode：$HADOOP_HOME/bin/hdfs namenode -format -clusterId <cluster_id></cluster_id></li>
+<li>升级集群至最新版本。在升级过程中需要提供一个ClusterID，例如：\$HADOOP_PREFIX_HOME/bin/hdfs start namenode –config $HADOOP_CONF_DIR  -upgrade -clusterId <cluster_id>,如果没有提供ClusterID，则会自动生成一个ClusterID。</cluster_id></li>
+</ol>
+<p><strong>blockpoolID</strong></p>
+<p>是针对每一个Namespace所对应的blockpool的ID，上面的这个BP-893790215-192.168.24.72-1383809616115就是在我的ns1的namespace下的存储块池的ID，这个ID包括了其对应的NameNode节点的ip地址。</p>
+<h2 id="6-3-seen-txid文件"><a href="#6-3-seen-txid文件" class="headerlink" title="6.3.seen_txid文件"></a>6.3.seen_txid文件</h2><p>&emsp;非常重要，是存放transactionId的文件，format之后是0，它代表的是namenode里面的edits_*文件的尾数，namenode重启的时候，会按照seen_txid的数字，循序从头跑edits_0000001~到seen_txid的数字。所以当你的hdfs发生异常重启的时候，一定要比对seen_txid内的数字是不是你edits最后的尾数，不然会发生建置namenode时metaData的资料有缺少，导致误删Datanode上多余Block的资讯<br>&emsp;文件中记录的是edits滚动的序号，每次重启namenode时，namenode就知道要将哪些edits进行加载edits</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/namenode目录故障时解决方案/" rel="next" title="namenode目录故障时解决方案">
+                <i class="fa fa-chevron-left"></i> namenode目录故障时解决方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/bigdata/hadoop/map端join算法实现/" rel="prev" title="map端join算法实现">
+                map端join算法实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-namenode-的职责"><span class="nav-number">1.</span> <span class="nav-text">1.namenode 的职责</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-namenode对数据的管理形式"><span class="nav-number">2.</span> <span class="nav-text">2.namenode对数据的管理形式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-元数据存储机制"><span class="nav-number">3.</span> <span class="nav-text">3.元数据存储机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-元数据手动查看"><span class="nav-number">4.</span> <span class="nav-text">4.元数据手动查看</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-元数据的checkpoint"><span class="nav-number">5.</span> <span class="nav-text">5.元数据的checkpoint</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-checkpoint的详细过程"><span class="nav-number">5.1.</span> <span class="nav-text">5.1.checkpoint的详细过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-checkpoint操作的触发条件配置参数"><span class="nav-number">5.2.</span> <span class="nav-text">5.2.checkpoint操作的触发条件配置参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-checkpoint的附带作用（元数据恢复）"><span class="nav-number">5.3.</span> <span class="nav-text">5.3.checkpoint的附带作用（元数据恢复）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-元数据目录说明"><span class="nav-number">6.</span> <span class="nav-text">6.元数据目录说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-总体结构"><span class="nav-number">6.1.</span> <span class="nav-text">6.1.总体结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-VERSION文件"><span class="nav-number">6.2.</span> <span class="nav-text">6.2.VERSION文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-seen-txid文件"><span class="nav-number">6.3.</span> <span class="nav-text">6.3.seen_txid文件</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

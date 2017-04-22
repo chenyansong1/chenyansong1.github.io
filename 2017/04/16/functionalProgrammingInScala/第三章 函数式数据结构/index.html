@@ -1,0 +1,853 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,scala函数式编程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.定义函数式数据结构123456789101112131415161718192021package fpinscala.datastructuressealed trait List[+A]case object Nil extends List[Nothing]case class Cons[+A](head: A, tail: List[A]) extends List[A]object">
+<meta name="keywords" content="scala,scala函数式编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第三章 函数式数据结构">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第三章 函数式数据结构/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.定义函数式数据结构123456789101112131415161718192021package fpinscala.datastructuressealed trait List[+A]case object Nil extends List[Nothing]case class Cons[+A](head: A, tail: List[A]) extends List[A]object">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/3/1.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/3/2.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/3/3.png">
+<meta property="og:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/3/4.png">
+<meta property="og:updated_time" content="2017-02-24T17:08:20.387Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第三章 函数式数据结构">
+<meta name="twitter:description" content="1.定义函数式数据结构123456789101112131415161718192021package fpinscala.datastructuressealed trait List[+A]case object Nil extends List[Nothing]case class Cons[+A](head: A, tail: List[A]) extends List[A]object">
+<meta name="twitter:image" content="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/3/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第三章 函数式数据结构/"/>
+
+
+
+
+
+  <title> 第三章 函数式数据结构 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/functionalProgrammingInScala/第三章 函数式数据结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                第三章 函数式数据结构
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-定义函数式数据结构"><a href="#1-定义函数式数据结构" class="headerlink" title="1.定义函数式数据结构"></a>1.定义函数式数据结构</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">package fpinscala.datastructures</div><div class="line"></div><div class="line">sealed trait List[+A]</div><div class="line">case object Nil extends List[Nothing]</div><div class="line">case class Cons[+A](head: A, tail: List[A]) extends List[A]</div><div class="line"></div><div class="line">object List&#123;</div><div class="line">  def sum(ints: List[Int]): Int = ints match &#123;</div><div class="line">    case Nil =&gt; 0</div><div class="line">    case Cons(x,xs) =&gt; x+sum(xs)</div><div class="line">  &#125;</div><div class="line">  def product(ds: List[Double]): Double = ds match &#123;</div><div class="line">    case Nil =&gt; 1.0</div><div class="line">    case Cons(0.0, _) =&gt; 0.0</div><div class="line">    case Cons(x, xs) =&gt; x*product(xs)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def apply[A](as: A*): List[A] =</div><div class="line">    if (as.isEmpty) Nil</div><div class="line">    else Cons(as.head, apply(as.tail:_*))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>&emsp;List有两种实现,或者是说构造器(每种都由case关键字引入),表示List有两种可能的形式,如上面的代码所示,List如果为空,使用数据构造器Nil表示,如果非空,使用数据构造器Cons表示,一个非空List由初始元素head和后续紧跟的也是List结构的tail组成</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/3/1.png" alt="单项链表" title="单项链表"></p>
+<blockquote>
+<p>关于型变</p>
+</blockquote>
+<p>&emsp;在trait List[+A]声明里,类型参数A前面的+是一个型变的符号,标志着A是协变的或正向的参数,意味着假设Dog是Animal的子类,那么List[Dog] 是List[Animal]的子类,(多数情况下,所有类型X和Y,如果X是Y的子类型,那么List[X]是List[Y]的子类型),我们可以在A的前面去掉+号,那么标记List的参数类型是非协变的<br>&emsp;注意:Nil继承List[Nothing] ,Nothing是所有类型的子类型,也就是说使用型变符号后Nil可以当成是List[Int],或List[Double]等任何List的具体类型</p>
+<h1 id="2-模式匹配"><a href="#2-模式匹配" class="headerlink" title="2.模式匹配"></a>2.模式匹配</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def sum(ints: List[Int]): Int = ints match &#123;</div><div class="line">  case Nil =&gt; 0</div><div class="line">  case Cons(x,xs) =&gt; x+sum(xs)</div><div class="line">&#125;</div><div class="line">def product(ds: List[Double]): Double = ds match &#123;</div><div class="line">  case Nil =&gt; 1.0</div><div class="line">  case Cons(0.0, _) =&gt; 0.0</div><div class="line">  case Cons(x, xs) =&gt; x*product(xs)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>&emsp;模式匹配有点像一个别致的switch声明,他可以侵入到表达式的数据结构内部,对这个结构进行检验和提取子表达式,他由一个表达式引入,例如ds(目标或被检验者)后边跟着一个关键字match和一个用花括号封装起来的一系列case语句,每一条case语句由=&gt;箭头左边的模式(如Cons(x,xs)) 和=&gt;箭头右边的结果(如 x*product(xs))组成,如果目标匹配其中的一种模式,他的结果就是整个match表达式的结果,如果目标与多个模式都匹配,scala选择第一个匹配的模式</p>
+<blockquote>
+<p>scala中的伴生对象<br>&emsp;除了经常声明数据类型和数据构造器之外,我们也经常声明伴生对象,他只是与数据类型同名的一个单例,通常在里面定义一些用于创建或处理数据类型的便捷方法,例如我们想让函数def  fill<a href="n:Int, a:A" target="_blank" rel="external">A</a>: List[A]创建一个有n个拷贝元素的List,很适合把它放在List伴生对象里,用伴生对象是scala中的一种惯例</p>
+</blockquote>
+<p>来看几个模式匹配的例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List(1,2,3) match &#123;case _ =&gt; 42&#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;结果是42,这里使用变量模式<em>,匹配任何表达式,我们可以用x或foo替代</em>,但通常使用_指示一个在匹配结果里不关心的变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List(1,2,3) match &#123;case Cons(h, _) =&gt; h&#125;</div></pre></td></tr></table></figure>
+<p>&emsp;结果是1,这里使用了一个数据构造器模式结合一个变量模式捕获目标的子表达式</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/3/2.png" alt="匹配一个List" title="匹配一个List"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List(1,2,3) match &#123;case Cons(_, t) =&gt; t&#125;</div></pre></td></tr></table></figure>
+<p>&emsp;结果是List(2,3)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List(1,2,3) match &#123;case Nil =&gt; 42&#125;</div></pre></td></tr></table></figure>
+<p>&emsp;结果是运行时匹配错误(Match-Error),表示没有表达式与目标匹配</p>
+<p>&emsp;表达式是否符合模式匹配是由什么决定的?一个模式或许包含只能匹配常量的诸如3或”hi”这样的字面量;或能匹配任何表达式的以小写字母开头的如x,xs这样的变量;或以下划线和只能匹配相应形式的如Cons(x,xs) 和Nil这样的数据构造器,模式IDE组成可以是任意嵌套的—Cons(x1, Cons(x2, Nil))和 Cons(y1, Cons(y2, Cons(y3,_)))都是有效的模式,如果将模式中的变量分配给目标子表达式,使得他在结构上与目标一致,模式与目标就是匹配的,匹配上的话,结果表达式可以访问这些模式中定义的局部变量</p>
+<p>&emsp;下面的匹配表达式结果是什么?</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  val x = List(1,2,3,4,5) match &#123;</div><div class="line">    case Cons(x, Cons(2, Cons(4, _))) =&gt; x</div><div class="line">    case Nil =&gt; 42</div><div class="line">    case Cons(x, Cons(y, Cons(3, Cons(4, _)))) =&gt; x + y    //匹配</div><div class="line">    case Cons(h, t) =&gt; h + sum(t)</div><div class="line">    case _ =&gt; 101</div><div class="line">  &#125;</div><div class="line"></div><div class="line">//x = 3</div></pre></td></tr></table></figure>
+<h1 id="3-函数式数据结构中的数据共享"><a href="#3-函数式数据结构中的数据共享" class="headerlink" title="3.函数式数据结构中的数据共享"></a>3.函数式数据结构中的数据共享</h1><p>&emsp;当数据不可变时,我们该怎么写一些例如从List中删除元素之类的函数?答案很简单,当我们对一个以存在的列表xs在前面添加一个元素1的时候,返回一个新的元素,即Cons(1, xs) ,既然列表是不可变的,我们不需要真的去复制一份xs,可以直接复用他,这也称为数据共享,共享不可变数据可以让函数实现更高的效率,我们可以返回不可变数据结构而不用担心后续代码修改他,不需要悲观的复制一份数据以避免对其修改或污染<br>&emsp;以同样的方式,删除一个列表的第一个元素,比如:myList = Cons(x, xs) ,只需要返回尾部的xs,并没有真的删除元素,原始列表myList依然可用,丝毫未受影响,我们说函数式数据结构是持久的,意味着已存在的引用不会因为数据结构的操作而改变</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/3/3.png" alt="数据共享" title="数据共享"></p>
+<p> &emsp;练习: 实现tail函数,删除一个List的第一个函数,注意这个函数的时间开销是常量级的,如果列表是Nil,在实现的时候会有什么不同的选择?<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def tail[A](l: List[A]): List[A] =</div><div class="line">  l match &#123;</div><div class="line">    case Nil =&gt; sys.error(&quot;tail of empty list&quot;)</div><div class="line">    case Cons(_,t) =&gt; t</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;练习2: 使用相同的思路,实现函数setHead用一个不同的值替代列表中的第一个元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def setHead[A](l: List[A], h: A): List[A] = l match &#123;</div><div class="line">  case Nil =&gt; sys.error(&quot;setHead on empty list&quot;)</div><div class="line">  case Cons(_,t) =&gt; Cons(h,t)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="3-1-数据共享的效率"><a href="#3-1-数据共享的效率" class="headerlink" title="3.1.数据共享的效率"></a>3.1.数据共享的效率</h2><p>&emsp;练习1:把tail泛化为drop函数,用于从列表中删除前n个元素,注意,这个函数的时间开销只需要与drop的元素个数成正比—-不需要复制整个列表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">def drop[A](l: List[A], n: Int): List[A] =</div><div class="line">  if (n &lt;= 0) l</div><div class="line">  else l match &#123;</div><div class="line">    case Nil =&gt; Nil</div><div class="line">    case Cons(_,t) =&gt; drop(t, n-1)</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;练习2:实现dropWhile函数,删除列表中前缀全部符合判定的元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def dropWhile[A](l: List[A], f: A =&gt; Boolean): List[A] =</div><div class="line">  l match &#123;</div><div class="line">    case Cons(h,t) if f(h) =&gt; dropWhile(t, f)</div><div class="line">    case _ =&gt; l</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;练习3:利用数据共享的特性将一个列表的所有元素加到另一个列表的后面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">def append[A](a1: List[A], a2: List[A]): List[A] = </div><div class="line">    a1 match &#123;</div><div class="line">        case Nil =&gt; a2</div><div class="line">        case Cons(h,t) =&gt; Cons(h, append(t, a2))</div><div class="line">    &#125;</div><div class="line">//这样之后的结果是:Cons(1.1, Cons(1.2, Cons(1.3, a2)    //假设a1(1.1, 1.2, 1.3)</div></pre></td></tr></table></figure></p>
+<p>&emsp;这个定义只做数据复制,直到第一个列表中没有元素可用,所以他的时间和内存开销只取决于a1的长度,如果我们用两个数组实现相同的函数,被迫要复制两个数组中的所有元素到一个结果集中,这种情况下不可变链表比数组更有效率</p>
+<p>&emsp;练习4:不是所有的实现都令人满意,实现一个init函数,返回一个列表,他包含源列表中除了最后一个元素之外的所有元素,比如,传入List(1,2,3,4)返回List(1,2,3),为什么这个函数不能实现同tail一样的常量级时间开销呢?<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">def init[A](l: List[A]): List[A] =</div><div class="line">  l match &#123;</div><div class="line">    case Nil =&gt; sys.error(&quot;init of empty list&quot;)</div><div class="line">    case Cons(_,Nil) =&gt; Nil    //去掉最后一个元素的关键步</div><div class="line">    case Cons(h,t) =&gt; Cons(h,init(t))</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;由上面知道,只有将列表的所有的元素迭代一遍之后,才能得到的结果,所以时间复杂度与列表的大小相关</p>
+<h2 id="3-2-改进高阶函数的类型推导"><a href="#3-2-改进高阶函数的类型推导" class="headerlink" title="3.2.改进高阶函数的类型推导"></a>3.2.改进高阶函数的类型推导</h2><p>&emsp;高阶函数如dropWhile经常传递匿名函数,看一个典型的例子,回忆一下dropWhile的签名:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">def dropWhile[A](l: List[A], f: A =&gt; Boolean): List[A]</div></pre></td></tr></table></figure></p>
+<p>&emsp;当我们传入一个匿名函数来调用它时,我们必须指定他的参数类型,这里是x:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">val xs: List[Int] = List(1,2,3,4,5)</div><div class="line">val ex1 = dropWhile(xs, (x: Int)=&gt; x&lt;4)    //ex1的值为List(4,5)</div></pre></td></tr></table></figure></p>
+<p>&emsp;不幸的是,我们需要声明x类型是Int,dropWhile的第一个参数是一个List[Int],所以函数上的第二个参数必须接受Int类型,scala可以推导这种情况,如果我们把dropWhile的参数分成两组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def dropWhile[A](l: List[A])( f: A =&gt; Boolean): List[A] =</div><div class="line">  l match &#123;</div><div class="line">    case Cons(h,t) if f(h) =&gt; dropWhile(t)(f)</div><div class="line">    case _ =&gt; l</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;这个版本的dropWhile的语法看起来像dropWhile(xs)(f), 这里dropWhile(xs)返回一个函数,然后对这个函数传入参数调用(换句话说dropWhile是柯里化的),使用这种方式把参数分组的目的是帮助类型推导,现在我们可以使用dropWhile时不加类型标注<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">val xs: List[Int] = List(1,2,3,4,5)</div><div class="line">val ex1 = dropWhile(xs)(x=&gt;x&lt;4)        //注意变量x没有使用类型标注</div></pre></td></tr></table></figure></p>
+<p>&emsp;一般来讲,当函数定义包含多个参数数组时,参数里的类型信息从左到右传递,这里第一个参数组确定A类型参数为Int,所以x=&gt;x&lt;4里的类型标注可以不需要</p>
+<h1 id="4-基于list的递归并泛化为高阶函数"><a href="#4-基于list的递归并泛化为高阶函数" class="headerlink" title="4.基于list的递归并泛化为高阶函数"></a>4.基于list的递归并泛化为高阶函数</h1><p>&emsp;再看一下sum和product的实现,我们已经稍微简化了product的实现,不引入检测0.0的短路逻辑<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">def sum(ints: List[Int]): Int = ints match &#123;</div><div class="line">    case Nil =&gt; 0</div><div class="line">    case Cons(x,xs) =&gt; x+sum(xs)</div><div class="line">  &#125;</div><div class="line">  def product(ds: List[Double]): Double = ds match &#123;</div><div class="line">    case Nil =&gt; 1.0</div><div class="line">    case Cons(x, xs) =&gt; x*product(xs)</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>&emsp;注意:这两个定义很相似,他们操作不同的数据类型(List[Int]与List[Double]), 除此之外的差异还有在List为空时的返回值(sum返回0,product返回1.0), 以及对结果的组合操作(sum是+,而product是*),如果再遇到类似重复的情况,可以把子表达式放到函数参数里来进行泛化,如果一个子表达式引用任何局部变量(+操作引用了模式中的x和xs局部变量,product里也存在相同的情况),把子表达式放入一个接收这些变量作为参数的函数,现在就改一下,函数的参数包含当列表为空时返回的值,以及列表非空时用于将元素添加到结果的函数</p>
+<p>&emsp;下面是右折叠的简单运用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">def foldRight[A,B](as: List[A], z:B)(f: (A,B)=&gt;B): B = as match &#123;</div><div class="line">  case Nil =&gt; z</div><div class="line">  case Cons(x,xs) =&gt; f(x, foldRight(xs,z)(f))</div><div class="line">&#125;</div><div class="line"></div><div class="line">def sum(ints: List[Int]): Int = foldRight(ints, 0)((x,y)=&gt;x+y)</div><div class="line">def product(ds: List[Double]): Double = foldRight(ds, 1.0)(_ * _)</div><div class="line">// _ * _ 是对(x,y) =&gt; x*y 更简练的写法</div></pre></td></tr></table></figure></p>
+<p>&emsp;来看一下sum函数调用foldRight的执行过程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//sum(List(1,2,3))</div><div class="line"></div><div class="line">foldRight(Cons(1, Cons(2, Cons(3,Nil))), 0)((x,y) =&gt; x+y)</div><div class="line">1 + foldRight(Cons(2, Cons(3,Nil)), 0)((x,y) =&gt; x+y)</div><div class="line">1 + (2 + foldRight(Cons(Cons(3, Nil), 0)((x,y) =&gt; x+y))</div><div class="line">1 + (2 + 3 + foldRight(Cons(Nil), 0)((x,y) =&gt; x+y))</div><div class="line">1 + (2 + (3 + (0)))</div><div class="line">6</div><div class="line">//注意foldRight在开始迭代之前,必须一路遍历到列表的末尾(在处理过程中不断压栈)</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>针对匿名函数的下划线</p>
+</blockquote>
+<p>&emsp;匿名函数(x,y)=&gt; x+y ,在x和y类型可以被scala推导的情况下可以缩写为<em>+</em>,对那些函数参数只在函数体中出现一次的函数,这种缩写很适用,匿名函数表达式中的每一个下划线,例如<em>+</em>会引入一个新的(未命名的)函数参数,并对其引用,参数的引入按照从左到右的顺序<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">_ + _     // (x,y) =&gt; x+y</div><div class="line">_ * 2     // x =&gt; x*2</div><div class="line">_.head     // xs =&gt; xs.head</div><div class="line">_ drop _     // (xs, n) =&gt; xs drop n</div></pre></td></tr></table></figure></p>
+<h2 id="4-1-更多与列表相关的函数"><a href="#4-1-更多与列表相关的函数" class="headerlink" title="4.1.更多与列表相关的函数"></a>4.1.更多与列表相关的函数</h2><blockquote>
+<p>练习题1:使用foldRight计算List的长度</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def length[A](l: List[A]): Int =</div><div class="line">  foldRight(l, 0)((_,acc) =&gt; acc + 1)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习题2:使用尾递归的方式写一个递归函数foldLeft</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@annotation.tailrec</div><div class="line">def foldLeft[A,B](l: List[A], z: B)(f: (B, A) =&gt; B): B = l match &#123;   //注意函数f的参数的位置变了</div><div class="line">  case Nil =&gt; z</div><div class="line">  case Cons(h,t) =&gt; foldLeft(t, f(z,h))(f)</div><div class="line">&#125;</div><div class="line"></div><div class="line">def sum3(l: List[Int]) = foldLeft(l, 0)(_ + _)   //实现sum函数</div><div class="line">def product3(l: List[Double]) = foldLeft(l, 1.0)(_ * _)   //实现product函数</div><div class="line">def length2[A](l: List[A]): Int = foldLeft(l, 0)((acc,h) =&gt; acc + 1)   //计算列表的长度</div><div class="line">def reverse[A](l: List[A]): List[A] = foldLeft(l, List[A]())((acc,h) =&gt; Cons(h,acc))   //对列表的元素颠倒顺序</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习题3:写一个函数将List[Int]中的每一个元素都加1</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def add1(l: List[Int]): List[Int] =</div><div class="line">  foldRight(l, Nil:List[Int])((h,t) =&gt; Cons(h+1,t))</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习题4:写一个函数将List[Double] 中每一个元素转成String, 形成List[String]</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def doubleToString(l: List[Double]): List[String] =</div><div class="line">  foldRight(l, Nil:List[String])((h,t) =&gt; Cons(h.toString,t))</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习题5:写一个函数,将列表中的每个元素进行修改,并维持列表结构,签名如下:<br>def map<a href="as: List[A]" target="_blank" rel="external">A,B</a>(f: A=&gt;B): List[B] </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def map[A,B](l: List[A])(f: A =&gt; B): List[B] =</div><div class="line">  foldRight(l, Nil:List[B])((h,t) =&gt; Cons(f(h),t))    //f(h)就是对每一个元素进行操作</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习题6:写一个filter函数,从列表中删除所有不满足断言的元素,并用他删除一个List[Int]中的所有奇数</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def filter[A](l: List[A])(f: A =&gt; Boolean): List[A] =</div><div class="line">  foldRight(l, Nil:List[A])((h,t) =&gt; if (f(h)) Cons(h,t) else t)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习题7:写一个flatMap函数,他跟map函数有些像,除了传入的函数f返回的是列表而非单个结果,这个f所返回的列表会被塞到flatMap最终所返回的列表中,如下签名:<br>def flatMap<a href="as: List[A]" target="_blank" rel="external">A,B</a>(f: A=&gt;List[B]): List[B]<br>&emsp; 例如:flatMap[List(1,2,3))(i=&gt;List(i,i))    ,结果是List(1,1,2,2,3,3)</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def flatMap[A,B](l: List[A])(f: A =&gt; List[B]): List[B] =</div><div class="line">  concat(map(l)(f))</div><div class="line"></div><div class="line">def concat[A](l: List[List[A]]): List[A] =</div><div class="line">  foldRight(l, Nil:List[A])(append)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习题8:写一个函数,接收2个列表,通过对相应元素的相加构造出一个新的列表,比如:List(1,2,3) 和List(4,5,6) ,构造出List(5,7,9)</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def addPairwise(a: List[Int], b: List[Int]): List[Int] = (a,b) match &#123;</div><div class="line">  case (Nil, _) =&gt; Nil</div><div class="line">  case (_, Nil) =&gt; Nil</div><div class="line">  case (Cons(h1,t1), Cons(h2,t2)) =&gt; Cons(h1+h2, addPairwise(t1,t2))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习题9:针对上面的函数进行泛化,不只是针对整数或相加操作,将这个泛化函数命名 为zipWith</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def zipWith[A,B,C](a: List[A], b: List[B])(f: (A,B) =&gt; C): List[C] = (a,b) match &#123;</div><div class="line">  case (Nil, _) =&gt; Nil</div><div class="line">  case (_, Nil) =&gt; Nil</div><div class="line">  case (Cons(h1,t1), Cons(h2,t2)) =&gt; Cons(f(h1,h2), zipWith(t1,t2)(f))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>标准库中的列表</p>
+</blockquote>
+<p>&emsp;列表(List)存在于scala标准库中,我们写的List和标准库中的List不同的是,Cons在标准库的版本写为::, 他使用右结合,所以1::2::Nil等于1::(2::Nil) ,也等于List(1,2,3) ,进行模式匹配时,case Cons(h,t) 变为了case h::t<br>&emsp;下面是一个其他的List 的方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">def take(n: Int): List[A]    </div><div class="line">//返回一个由当前列表中前n个元素构成的列表</div><div class="line"></div><div class="line">def takeWhile(f: A=&gt;Boolean): List[A]</div><div class="line">//返回当前列表中最长的多个连续元素的列表,这些元素都必须满足断言f</div><div class="line"></div><div class="line">def forall(f: A=&gt;Boolean): Boolean</div><div class="line">//如果存在所有的元素都满足断言f就返回true</div><div class="line"></div><div class="line">def exists(f: A=&gt;Boolean): Boolean</div><div class="line">//如果存在任何一个元素满足断言f就返回true</div><div class="line"></div><div class="line">scanLeft和scanRight </div><div class="line">//就像foldLeft和foldRight,但他们都返回部分结果,而非最终的累计值列表</div></pre></td></tr></table></figure></p>
+<h2 id="4-2-用简单组件组合list函数时的效率损失"><a href="#4-2-用简单组件组合list函数时的效率损失" class="headerlink" title="4.2.用简单组件组合list函数时的效率损失"></a>4.2.用简单组件组合list函数时的效率损失</h2><blockquote>
+<p>练习:写一个hasSubsequence 来检测List子序列是否包含一个另外指定的一个List,比如List(1,2,3,4) 包含List(1,2),List(1,2,3),List(2,3,4)等,下面是用一种方式实现,第五章,会有改进</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">@annotation.tailrec</div><div class="line">def startsWith[A](l: List[A], prefix: List[A]): Boolean = (l,prefix) match &#123;</div><div class="line">  case (_,Nil) =&gt; true</div><div class="line">  case (Cons(h,t),Cons(h2,t2)) if h == h2 =&gt; startsWith(t, t2)</div><div class="line">  case _ =&gt; false</div><div class="line">&#125;</div><div class="line">@annotation.tailrec</div><div class="line">def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = sup match &#123;</div><div class="line">  case Nil =&gt; sub == Nil</div><div class="line">  case _ if startsWith(sup, sub) =&gt; true    //如果是开头匹配</div><div class="line">  case Cons(h,t) =&gt; hasSubsequence(t, sub)    //如果不是开头匹配,那么去掉开头的元素</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="5-树"><a href="#5-树" class="headerlink" title="5.树"></a>5.树</h1><blockquote>
+<p>scala中的元组</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">scala&gt; val p = (&quot;Bob&quot;, 42)</div><div class="line">p: (String, Int) = (Bob,42)</div><div class="line"></div><div class="line">scala&gt; p._1</div><div class="line">res0: String = Bob</div><div class="line"></div><div class="line">scala&gt; p._2</div><div class="line">res1: Int = 42</div><div class="line"></div><div class="line">scala&gt; p match &#123;case (a,b) =&gt; b&#125;</div><div class="line">res2: Int = 42</div><div class="line"></div><div class="line">//这个例子中(&quot;Bob&quot;, 42) 是一个类型为(String,Int)的数据对(pair),他其实是Tuple2[String, Int] 的语法糖,</div></pre></td></tr></table></figure>
+<blockquote>
+<p>二叉树数据结构</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sealed trait Tree[+A]</div><div class="line">case class Leaf[A](value: A) extends Tree[A]</div><div class="line">case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]</div></pre></td></tr></table></figure>
+<p>&emsp;如下是图示</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/Functional_Programming_in_Scala/3/4.png" alt="树" title="树"></p>
+<blockquote>
+<p>练习1:写一个size函数,统计一颗树中的节点数(叶子节点和分支节点)</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def size[A](t: Tree[A]): Int = t match &#123;</div><div class="line">  case Leaf(_) =&gt; 1</div><div class="line">  case Branch(l,r) =&gt; 1 + size(l) + size(r)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习2:写一个maxinum返回Tree[Int]中的最大的元素</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def maximum(t: Tree[Int]): Int = t match &#123;</div><div class="line">  case Leaf(n) =&gt; n</div><div class="line">  case Branch(l,r) =&gt; maximum(l) max maximum(r)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习3:写一个depth函数,返回一颗树中从根节点到任何叶子节点最大的路径长度</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def depth[A](t: Tree[A]): Int = t match &#123;</div><div class="line">  case Leaf(_) =&gt; 0</div><div class="line">  case Branch(l,r) =&gt; 1 + (depth(l) max depth(r))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>练习4:写一个map函数,类似于List中的同名函数,接受一个函数,对树中的每个元素进行修改</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def map[A,B](t: Tree[A])(f: A =&gt; B): Tree[B] = t match &#123;</div><div class="line">  case Leaf(a) =&gt; Leaf(f(a))</div><div class="line">  case Branch(l,r) =&gt; Branch(map(l)(f), map(r)(f))   //map(l)(f) 再次进入map的时候会调用第一个case</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/scala函数式编程/" rel="tag"># scala函数式编程</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/functionalProgrammingInScala/第二章 在scala中使用函数式编程/" rel="next" title="第二章 在scala中使用函数式编程">
+                <i class="fa fa-chevron-left"></i> 第二章 在scala中使用函数式编程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/functionalProgrammingInScala/第一章 什么是函数式编程/" rel="prev" title="第一章 什么是函数式编程">
+                第一章 什么是函数式编程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-定义函数式数据结构"><span class="nav-number">1.</span> <span class="nav-text">1.定义函数式数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-模式匹配"><span class="nav-number">2.</span> <span class="nav-text">2.模式匹配</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-函数式数据结构中的数据共享"><span class="nav-number">3.</span> <span class="nav-text">3.函数式数据结构中的数据共享</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-数据共享的效率"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.数据共享的效率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-改进高阶函数的类型推导"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.改进高阶函数的类型推导</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-基于list的递归并泛化为高阶函数"><span class="nav-number">4.</span> <span class="nav-text">4.基于list的递归并泛化为高阶函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-更多与列表相关的函数"><span class="nav-number">4.1.</span> <span class="nav-text">4.1.更多与列表相关的函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-用简单组件组合list函数时的效率损失"><span class="nav-number">4.2.</span> <span class="nav-text">4.2.用简单组件组合list函数时的效率损失</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-树"><span class="nav-number">5.</span> <span class="nav-text">5.树</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

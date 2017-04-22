@@ -1,0 +1,759 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="zadd 添加ZADD key [NX|XX] [CH] [INCR] score member [score member …]如果指定添加的成员已经是有序集合里面的成员，则会更新改成员的分数（scrore）并更新到正确的排序位置如果key不存在，将会创建一个新的有序集合（sorted set）并将分数/成员（score/member）对添加到有序集合，就像原来存在一个空的有序集合一样。如果ke">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="order set(有序set)结构及命令详解">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/nosql/redis/order set(有序set)结构及命令详解/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="zadd 添加ZADD key [NX|XX] [CH] [INCR] score member [score member …]如果指定添加的成员已经是有序集合里面的成员，则会更新改成员的分数（scrore）并更新到正确的排序位置如果key不存在，将会创建一个新的有序集合（sorted set）并将分数/成员（score/member）对添加到有序集合，就像原来存在一个空的有序集合一样。如果ke">
+<meta property="og:updated_time" content="2017-02-24T17:10:16.981Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="order set(有序set)结构及命令详解">
+<meta name="twitter:description" content="zadd 添加ZADD key [NX|XX] [CH] [INCR] score member [score member …]如果指定添加的成员已经是有序集合里面的成员，则会更新改成员的分数（scrore）并更新到正确的排序位置如果key不存在，将会创建一个新的有序集合（sorted set）并将分数/成员（score/member）对添加到有序集合，就像原来存在一个空的有序集合一样。如果ke">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/nosql/redis/order set(有序set)结构及命令详解/"/>
+
+
+
+
+
+  <title> order set(有序set)结构及命令详解 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/redis/order set(有序set)结构及命令详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                order set(有序set)结构及命令详解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="zadd-添加"><a href="#zadd-添加" class="headerlink" title="zadd 添加"></a>zadd 添加</h1><p>ZADD key [NX|XX] [CH] [INCR] score member [score member …]<br>如果指定添加的成员已经是有序集合里面的成员，则会更新改成员的分数（scrore）并更新到正确的排序位置<br>如果key不存在，将会创建一个新的有序集合（sorted set）并将分数/成员（score/member）对添加到有序集合，就像原来存在一个空的有序集合一样。如果key存在，但是类型不是有序集合，将会返回一个错误应答<br>历史>= 2.4: 接受多个成员。 在Redis 2.4以前，命令只能添加或者更新一个成员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">XX: 仅仅更新存在的成员，不添加新成员。</div><div class="line">NX: 不更新存在的成员。只添加新成员。</div><div class="line">CH: 修改返回值为发生变化的成员总数，原始是返回新添加成员的总数 (CH 是 changed 的意思)。更改的元素是新添加的成员，已经存在的成员更新分数。 所以在命令中指定的成员有相同的分数将不被计算在内。注：在通常情况下，ZADD返回值只计算新添加成员的数量。</div><div class="line">INCR: 当ZADD指定这个选项时，成员的操作就等同ZINCRBY命令，对成员的分数进行递增操作。</div><div class="line"></div><div class="line">--------------------------------------------------------------------------------------------------------------------------------------------------</div><div class="line"></div><div class="line">redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 1 &quot;uno&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot; 3 &quot;three&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZRANGE myzset 0 -1 WITHSCORES</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;1&quot;</div><div class="line">3) &quot;uno&quot;</div><div class="line">4) &quot;1&quot;</div><div class="line">5) &quot;two&quot;</div><div class="line">6) &quot;2&quot;</div><div class="line">7) &quot;three&quot;</div><div class="line">8) &quot;3&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="zrange-查询一定范围的元素"><a href="#zrange-查询一定范围的元素" class="headerlink" title="zrange 查询一定范围的元素"></a>zrange 查询一定范围的元素</h1><p>ZRANGE key start stop [WITHSCORES]<br>把集合排序后，返回名次【start，stop】的元素<br>默认是升序排列<br>withscores 是把score也打印出来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANGE myzset 0 -1</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">redis&gt; ZRANGE myzset 2 3</div><div class="line">1) &quot;three&quot;</div><div class="line">redis&gt; ZRANGE myzset -2 -1</div><div class="line">1) &quot;two&quot;</div><div class="line">2) &quot;three&quot;</div><div class="line">redis&gt;</div><div class="line"></div><div class="line">redis&gt; ZRANGE myzset 0 1 WITHSCORES            #打印分数</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;1&quot;</div><div class="line">3) &quot;two&quot;</div><div class="line">4) &quot;2&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="zrangebyscore-指定分数的最大与最小值查询"><a href="#zrangebyscore-指定分数的最大与最小值查询" class="headerlink" title="zrangebyscore 指定分数的最大与最小值查询"></a>zrangebyscore 指定分数的最大与最小值查询</h1><p>ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]<br>作用：集合（升序）排序后，取score在【start，max】内的元素<br>返回分数在min和max之间（包含）的有序的元素<br>如果有limit， 则跳过offset，取出count个<br>withscores 是打印分数和元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">&apos;区间的控制&apos;</div><div class="line">min和max可以是-inf和+inf，这样一来，你就可以在不知道有序集的最低和最高score值的情况下，使用ZRANGEBYSCORE这类命令。</div><div class="line">默认情况下，区间的取值使用闭区间(小于等于或大于等于)，你也可以通过给参数前增加(符号来使用可选的开区间(小于或大于)。</div><div class="line">举个例子：</div><div class="line">ZRANGEBYSCORE zset (1 5</div><div class="line">返回所有符合条件1 &lt; score &lt;= 5的成员；</div><div class="line">ZRANGEBYSCORE zset (5 (10</div><div class="line">返回所有符合条件5 &lt; score &lt; 10 的成员。</div><div class="line"></div><div class="line"></div><div class="line">redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANGEBYSCORE myzset -inf +inf</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">redis&gt; ZRANGEBYSCORE myzset 1 2</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">redis&gt; ZRANGEBYSCORE myzset (1 2</div><div class="line">1) &quot;two&quot;</div><div class="line">redis&gt; ZRANGEBYSCORE myzset (1 (2</div><div class="line">(empty list or set)</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="zrank-升序时查看排名"><a href="#zrank-升序时查看排名" class="headerlink" title="zrank 升序时查看排名"></a>zrank 升序时查看排名</h1><p>ZRANK key member<br>从低到高排序，第一个元素排名是0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANK myzset &quot;three&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZRANK myzset &quot;four&quot;        #元素不存在就返回nil</div><div class="line">(nil)</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="zrevrank-降序时查看排名"><a href="#zrevrank-降序时查看排名" class="headerlink" title="zrevrank 降序时查看排名"></a>zrevrank 降序时查看排名</h1><p>ZREVRANK key member<br>从高到低排序，第一个元素排名是0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZREVRANK myzset &quot;one&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZREVRANK myzset &quot;four&quot;</div><div class="line">(nil)</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="zremrangebyscore删除：通过分数来删"><a href="#zremrangebyscore删除：通过分数来删" class="headerlink" title="zremrangebyscore删除：通过分数来删"></a>zremrangebyscore删除：通过分数来删</h1><p>ZREMRANGEBYSCORE key min max</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZREMRANGEBYSCORE myzset -inf (2                    #（-inf，2） 不包含2</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANGE myzset 0 -1 WITHSCORES</div><div class="line">1) &quot;two&quot;</div><div class="line">2) &quot;2&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">4) &quot;3&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="zremrangebyrank删除：通过排名来删"><a href="#zremrangebyrank删除：通过排名来删" class="headerlink" title="zremrangebyrank删除：通过排名来删"></a>zremrangebyrank删除：通过排名来删</h1><p>ZREMRANGEBYRANK key start stop<br> 排名是从0开始的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZREMRANGEBYRANK myzset 0 1</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZRANGE myzset 0 -1 WITHSCORES</div><div class="line">1) &quot;three&quot;</div><div class="line">2) &quot;3&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="zrem删除；指定元素"><a href="#zrem删除；指定元素" class="headerlink" title="zrem删除；指定元素"></a>zrem删除；指定元素</h1><p>ZREM key member [member …]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZREM myzset &quot;two&quot;            #删除指定值的元素</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANGE myzset 0 -1 WITHSCORES</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;1&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">4) &quot;3&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="zcard-统计集合的数量"><a href="#zcard-统计集合的数量" class="headerlink" title="zcard 统计集合的数量"></a>zcard 统计集合的数量</h1><p>ZCARD key</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZCARD myzset        #统计</div><div class="line">(integer) 2</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="zcount：统计在特殊分数段的元素的个数"><a href="#zcount：统计在特殊分数段的元素的个数" class="headerlink" title="zcount：统计在特殊分数段的元素的个数"></a>zcount：统计在特殊分数段的元素的个数</h1><p>ZCOUNT key min max</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZCOUNT myzset -inf +inf                    #【-inf , +inf 】</div><div class="line">(integer) 3    </div><div class="line">redis&gt; ZCOUNT myzset (1 3                    #（1,3】 的个数</div><div class="line">(integer) 2</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+<h1 id="zunionstore求并集："><a href="#zunionstore求并集：" class="headerlink" title="zunionstore求并集："></a>zunionstore求并集：</h1><p>ZUNIONSTORE destination numkeys key [key …] [WEIGHTS weight [weight …]] [AGGREGATE SUM|MIN|MAX]</p>
+<ol>
+<li>计算给定的numkeys个有序集合的并集，并且把结果放到destination中。在给定要计算的key和其它参数之前，必须先给定key个数(numberkeys)。 默认情况下，结果集中某个成员的score值是所有给定集下该成员score值之和。</li>
+<li>使用WEIGHTS选项，你可以为每个给定的有序集指定一个乘法因子，意思就是，每个给定有序集的所有成员的score值在传递给聚合函数之前都要先乘以该因子。如果WEIGHTS没有给定，默认就是1。</li>
+<li>使用AGGREGATE选项，你可以指定并集的结果集的聚合方式。默认使用的参数SUM，可以将所有集合中某个成员的score值之和作为结果集中该成员的score值。如果使用参数MIN或者MAX，结果集就是所有集合中元素最小或最大的元素。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD zset1 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset1 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZUNIONSTORE out 2 zset1 zset2 WEIGHTS 2 3</div><div class="line">(integer) 3</div><div class="line">redis&gt; ZRANGE out 0 -1 WITHSCORES</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;5&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">4) &quot;9&quot;</div><div class="line">5) &quot;two&quot;</div><div class="line">6) &quot;10&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="ZINTERSTORE求交集："><a href="#ZINTERSTORE求交集：" class="headerlink" title="ZINTERSTORE求交集："></a>ZINTERSTORE求交集：</h1><p>ZINTERSTORE destination numkeys key [key …] [WEIGHTS weight [weight …]] [AGGREGATE SUM|MIN|MAX]</p>
+<ol>
+<li>语法参见zunionstore<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD zset1 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset1 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZINTERSTORE out 2 zset1 zset2 WEIGHTS 2 3</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZRANGE out 0 -1 WITHSCORES</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;5&quot;</div><div class="line">3) &quot;two&quot;</div><div class="line">4) &quot;10&quot;</div><div class="line">redis&gt;</div><div class="line">#1.将单个集合中的所有元素乘以weights, 2.将每个集合间key相同的score相加(aggregate默认是求sum),然后求交集</div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/RDB 文件结构（转）/" rel="next" title="RDB 文件结构（转）">
+                <i class="fa fa-chevron-left"></i> RDB 文件结构（转）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/nosql/redis/flushall故障处理和rdb服务器间的迁移/" rel="prev" title="flushall故障处理和rdb服务器间的迁移">
+                flushall故障处理和rdb服务器间的迁移 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#zadd-添加"><span class="nav-number">1.</span> <span class="nav-text">zadd 添加</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zrange-查询一定范围的元素"><span class="nav-number">2.</span> <span class="nav-text">zrange 查询一定范围的元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zrangebyscore-指定分数的最大与最小值查询"><span class="nav-number">3.</span> <span class="nav-text">zrangebyscore 指定分数的最大与最小值查询</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zrank-升序时查看排名"><span class="nav-number">4.</span> <span class="nav-text">zrank 升序时查看排名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zrevrank-降序时查看排名"><span class="nav-number">5.</span> <span class="nav-text">zrevrank 降序时查看排名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zremrangebyscore删除：通过分数来删"><span class="nav-number">6.</span> <span class="nav-text">zremrangebyscore删除：通过分数来删</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zremrangebyrank删除：通过排名来删"><span class="nav-number">7.</span> <span class="nav-text">zremrangebyrank删除：通过排名来删</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zrem删除；指定元素"><span class="nav-number">8.</span> <span class="nav-text">zrem删除；指定元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zcard-统计集合的数量"><span class="nav-number">9.</span> <span class="nav-text">zcard 统计集合的数量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zcount：统计在特殊分数段的元素的个数"><span class="nav-number">10.</span> <span class="nav-text">zcount：统计在特殊分数段的元素的个数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zunionstore求并集："><span class="nav-number">11.</span> <span class="nav-text">zunionstore求并集：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ZINTERSTORE求交集："><span class="nav-number">12.</span> <span class="nav-text">ZINTERSTORE求交集：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

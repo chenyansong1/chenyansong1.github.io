@@ -1,0 +1,741 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1.python连接mysql的第三方驱动 pymysql MySQL-Python MySQL官方连接库（MySQL connector Python）  2.连接数据库的几种方式123456789101112131415161718import MySQLdb as mdb # 连接数据库conn = mdb.connect(&amp;apos;localhost&amp;apos;, &amp;apos;root&amp;">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python数据库之MySQLdb访问mysql数据库">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/python/python数据库之MySQLdb访问mysql数据库/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="1.python连接mysql的第三方驱动 pymysql MySQL-Python MySQL官方连接库（MySQL connector Python）  2.连接数据库的几种方式123456789101112131415161718import MySQLdb as mdb # 连接数据库conn = mdb.connect(&amp;apos;localhost&amp;apos;, &amp;apos;root&amp;">
+<meta property="og:updated_time" content="2017-02-24T17:10:36.793Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python数据库之MySQLdb访问mysql数据库">
+<meta name="twitter:description" content="1.python连接mysql的第三方驱动 pymysql MySQL-Python MySQL官方连接库（MySQL connector Python）  2.连接数据库的几种方式123456789101112131415161718import MySQLdb as mdb # 连接数据库conn = mdb.connect(&amp;apos;localhost&amp;apos;, &amp;apos;root&amp;">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/python/python数据库之MySQLdb访问mysql数据库/"/>
+
+
+
+
+
+  <title> python数据库之MySQLdb访问mysql数据库 | Chen's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/python/python数据库之MySQLdb访问mysql数据库/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python数据库之MySQLdb访问mysql数据库
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-python连接mysql的第三方驱动"><a href="#1-python连接mysql的第三方驱动" class="headerlink" title="1.python连接mysql的第三方驱动"></a>1.python连接mysql的第三方驱动</h1><ul>
+<li>pymysql</li>
+<li>MySQL-Python</li>
+<li>MySQL官方连接库（MySQL connector Python）</li>
+</ul>
+<h1 id="2-连接数据库的几种方式"><a href="#2-连接数据库的几种方式" class="headerlink" title="2.连接数据库的几种方式"></a>2.连接数据库的几种方式</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">import MySQLdb as mdb</div><div class="line"> </div><div class="line"># 连接数据库</div><div class="line">conn = mdb.connect(&apos;localhost&apos;, &apos;root&apos;, &apos;root&apos;)</div><div class="line"> </div><div class="line"># 也可以使用关键字参数</div><div class="line">conn = mdb.connect(host=&apos;127.0.0.1&apos;, port=3306, user=&apos;root&apos;, passwd=&apos;root&apos;, db=&apos;test&apos;, charset=&apos;utf8&apos;)</div><div class="line"> </div><div class="line"># 也可以使用字典进行连接参数的管理</div><div class="line">config = &#123;</div><div class="line">    &apos;host&apos;: &apos;127.0.0.1&apos;,</div><div class="line">    &apos;port&apos;: 3306,</div><div class="line">    &apos;user&apos;: &apos;root&apos;,</div><div class="line">    &apos;passwd&apos;: &apos;root&apos;,</div><div class="line">    &apos;db&apos;: &apos;test&apos;,</div><div class="line">    &apos;charset&apos;: &apos;utf8&apos;</div><div class="line">&#125;</div><div class="line">conn = mdb.connect(**config)</div></pre></td></tr></table></figure>
+<h1 id="3-游标（cursor）的方法"><a href="#3-游标（cursor）的方法" class="headerlink" title="3.游标（cursor）的方法"></a>3.游标（cursor）的方法</h1><p>参见：python数据库之python DB API 2.0简绍</p>
+<h2 id="3-1-cursor-rowcount"><a href="#3-1-cursor-rowcount" class="headerlink" title="3.1.cursor.rowcount"></a>3.1.cursor.rowcount</h2><p>返回查询结果的行数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/python</div><div class="line"># -*- coding: utf-8 -*-</div><div class="line"> </div><div class="line">import MySQLdb as mdb</div><div class="line"> </div><div class="line">con = mdb.connect(&apos;localhost&apos;, &apos;testuser&apos;, &apos;test623&apos;, &apos;testdb&apos;);</div><div class="line"> </div><div class="line">with con:</div><div class="line"> </div><div class="line">    cur = con.cursor()</div><div class="line">    cur.execute(&quot;SELECT * FROM Writers&quot;)</div><div class="line"> </div><div class="line">    for i in range(cur.rowcount):                #通过遍历行</div><div class="line"> </div><div class="line">        row = cur.fetchone()</div><div class="line">        print row[0], row[1]</div></pre></td></tr></table></figure></p>
+<h2 id="3-2-查询列名"><a href="#3-2-查询列名" class="headerlink" title="3.2.查询列名"></a>3.2.查询列名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">In [34]: desc = cursor.description</div><div class="line"> </div><div class="line">In [35]: desc</div><div class="line">Out[35]:</div><div class="line">((&apos;id&apos;, 3, 1, 11, 11, 0, 1),</div><div class="line">(&apos;name&apos;, 253, 12, 20, 20, 0, 1),</div><div class="line">(&apos;grade&apos;, 3, 3, 11, 11, 0, 1))</div><div class="line"></div><div class="line">In [37]: print(desc[0][0], desc[1][0],desc[2][0])           </div><div class="line">(&apos;id&apos;, &apos;name&apos;, &apos;grade&apos;)</div></pre></td></tr></table></figure>
+<h1 id="4-简单的CRUD"><a href="#4-简单的CRUD" class="headerlink" title="4.简单的CRUD"></a>4.简单的CRUD</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line">#coding=utf-8</div><div class="line"> </div><div class="line">import MySQLdb</div><div class="line"> </div><div class="line">conn = MySQLdb.connect(host=&apos;localhost&apos;,user=&apos;root&apos;,passwd=&apos;123456&apos;,charset=&apos;utf8&apos;)</div><div class="line">cursor = conn.cursor()</div><div class="line">try:</div><div class="line">    #创建数据库</div><div class="line">    DB_NAME = &apos;test&apos;</div><div class="line">    cursor.execute(&apos;DROP DATABASE IF EXISTS %s&apos; %DB_NAME)</div><div class="line">    cursor.execute(&apos;CREATE DATABASE IF NOT EXISTS %s&apos; %DB_NAME)                        #其实这里的%是python的str的格式化方法</div><div class="line">    conn.select_db(DB_NAME)                                                            #选择数据库</div><div class="line"> </div><div class="line">    #创建表</div><div class="line">    TABLE_NAME = &apos;t_user&apos;</div><div class="line">    cursor.execute(&apos;CREATE TABLE %s(id int primary key,name varchar(30))&apos; %TABLE_NAME)</div><div class="line"> </div><div class="line">    #插入单条数据</div><div class="line">    value = [1,&apos;alexzhou1&apos;]</div><div class="line">   cursor.execute(&apos;INSERT INTO t_user values(%s,%s)&apos;,value)</div><div class="line">   #cursor.execute(&quot;insert into student values(%(id)s,%(name)s,%(grade)s)&quot; , &#123;&apos;id&apos;:6,&apos;name&apos;:&apos;haha&apos;,&apos;grade&apos;:100&#125;)     使用%(name)s作为占位符，以字典的方式提供参数</div><div class="line"> </div><div class="line">    #批量插入数据</div><div class="line">    values = []</div><div class="line">    for i in range(2,10):</div><div class="line">        values.append((i,&apos;alexzhou%s&apos; %(str(i))))</div><div class="line">    cursor.executemany(&apos;INSERT INTO t_user values(%s,%s)&apos;,values)</div><div class="line"> </div><div class="line">    #查询记录数量</div><div class="line">    count = cursor.execute(&apos;SELECT * FROM %s&apos; %TABLE_NAME)</div><div class="line">    print &apos;total records: %d&apos;,count</div><div class="line"> </div><div class="line">    #查询一条记录</div><div class="line">    print &apos;fetch one record:&apos;</div><div class="line">    result = cursor.fetchone()</div><div class="line">    print result</div><div class="line">    print &apos;id: %s,name: %s&apos; %(result[0],result[1])</div><div class="line"> </div><div class="line">    #查询多条记录</div><div class="line">    print &apos;fetch five record:&apos;</div><div class="line">    results = cursor.fetchmany(5)</div><div class="line">    for r in results:</div><div class="line">        print r</div><div class="line"> </div><div class="line">    #查询所有记录</div><div class="line">    #重置游标位置，偏移量:大于0向后移动;小于0向前移动，mode默认是relative</div><div class="line">    #relative:表示从当前所在的行开始移动,absolute:表示从第一行开始移动</div><div class="line">    cursor.scroll(0,mode=&apos;absolute&apos;)</div><div class="line">    results = cursor.fetchall()</div><div class="line">    for r in results:</div><div class="line">        print r</div><div class="line"> </div><div class="line">    cursor.scroll(-2)</div><div class="line">    results = cursor.fetchall()</div><div class="line">    for r in results:</div><div class="line">        print r</div><div class="line"> </div><div class="line">    #更新记录</div><div class="line">    cursor.execute(&apos;UPDATE %s SET name = &quot;%s&quot; WHERE id = %s&apos; %(TABLE_NAME,&apos;zhoujianghai&apos;,1))</div><div class="line">    #删除记录</div><div class="line">    cursor.execute(&apos;DELETE FROM %s WHERE id = %s&apos; %(TABLE_NAME,2))</div><div class="line"> </div><div class="line">    #必须提交，否则不会插入数据</div><div class="line">    conn.commit()</div><div class="line">except:</div><div class="line">    import traceback</div><div class="line">    traceback.print_exc()</div><div class="line">    # 发生错误时会滚</div><div class="line">    conn.rollback()</div><div class="line">finally:</div><div class="line">    # 关闭游标连接</div><div class="line">    if cursor:</div><div class="line">       cursor.close()</div><div class="line">    # 关闭数据库连接</div><div class="line">    if conn:  </div><div class="line">        conn.close()</div></pre></td></tr></table></figure>
+<h1 id="5-查询时返回字典结构"><a href="#5-查询时返回字典结构" class="headerlink" title="5.查询时返回字典结构"></a>5.查询时返回字典结构</h1><p>MySQLdb默认查询结果都是返回tuple，通过使用不同的游标可以改变输出格式，这里传递一个cursors.DictCursor参数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">#方式一</div><div class="line">import MySQLdb.cursors</div><div class="line"> </div><div class="line">conn = MySQLdb.connect(host=&apos;localhost&apos;, user=&apos;root&apos;, passwd=&apos;root&apos;, db=&apos;test&apos;, cursorclass=MySQLdb.cursors.DictCursor)            #在连接的时候指定 DictCursor</div><div class="line">cursor = conn.cursor()</div><div class="line"> </div><div class="line">cursor.execute(&apos;select * from user&apos;)</div><div class="line">r = cursor.fetchall()</div><div class="line">print r</div><div class="line"># 当使用位置参数或字典管理参数时，必须导入MySQLdb.cursors模块</div><div class="line"> </div><div class="line">-------------------------------------------------------</div><div class="line"></div><div class="line">#方式二</div><div class="line">import MySQLdb as mdb</div><div class="line">conn  = mdb.connect(&apos;localhost&apos;, &apos;root&apos;, &apos;root&apos;, &apos;test&apos;)</div><div class="line">cursor = conn.cursor(cursorclass=mdb.cursors.DictCursor)                            #在返回游标的时候指定</div><div class="line"> </div><div class="line">cursor.execute(&apos;select * from user&apos;)</div><div class="line">r = cursor.fetchall()</div><div class="line">print r</div><div class="line"></div><div class="line"></div><div class="line">#--------------------          执行结果如下            ------------------------</div><div class="line"></div><div class="line">In [24]: cursor = conn.cursor(cursorclass=MySQLdb.cursors.DictCursor)</div><div class="line"> </div><div class="line">In [25]: cursor.execute(&quot;select *from student&quot;)                     </div><div class="line">Out[25]: 6L</div><div class="line"> </div><div class="line">In [26]: for item in cursor:                                        </div><div class="line">    print(item)</div><div class="line">   ....:    </div><div class="line">&#123;&apos;grade&apos;: 99L, &apos;id&apos;: 1L, &apos;name&apos;: &apos;chengyansong&apos;&#125;</div><div class="line">&#123;&apos;grade&apos;: 99L, &apos;id&apos;: 2L, &apos;name&apos;: &apos;zhangsan&apos;&#125;</div><div class="line">&#123;&apos;grade&apos;: 99L, &apos;id&apos;: 2L, &apos;name&apos;: &apos;zhangsan&apos;&#125;</div><div class="line">&#123;&apos;grade&apos;: 88L, &apos;id&apos;: 7L, &apos;name&apos;: &apos;aaaaa&apos;&#125;</div><div class="line">&#123;&apos;grade&apos;: 0L, &apos;id&apos;: 6L, &apos;name&apos;: &apos;haha&apos;&#125;</div><div class="line">&#123;&apos;grade&apos;: 100L, &apos;id&apos;: 6L, &apos;name&apos;: &apos;haha&apos;&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="6-存入和取出图片数据"><a href="#6-存入和取出图片数据" class="headerlink" title="6.存入和取出图片数据"></a>6.存入和取出图片数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">#存入</div><div class="line">#!/usr/bin/python</div><div class="line"># -*- coding: utf-8 -*-</div><div class="line"> </div><div class="line">import MySQLdb as mdb</div><div class="line"> </div><div class="line"> </div><div class="line">def read_image():</div><div class="line"> </div><div class="line">    fin = open(&quot;woman.jpg&quot;)   </div><div class="line">    img = fin.read()</div><div class="line"> </div><div class="line">    return img</div><div class="line"> </div><div class="line"> </div><div class="line">con = mdb.connect(&apos;localhost&apos;, &apos;testuser&apos;, &apos;test623&apos;, &apos;testdb&apos;)</div><div class="line"> </div><div class="line">with con:</div><div class="line"> </div><div class="line">    cur = con.cursor()</div><div class="line">    data = read_image()            #得到图片数据</div><div class="line">    cur.execute(&quot;INSERT INTO Images VALUES(1, %s)&quot;, (data, ))       #存入存入数据库</div><div class="line"></div><div class="line">#取出</div><div class="line">#!/usr/bin/python</div><div class="line"># -*- coding: utf-8 -*-</div><div class="line"> </div><div class="line">import MySQLdb as mdb</div><div class="line"> </div><div class="line">def writeImage(data):</div><div class="line"> </div><div class="line">    fout = open(&apos;woman2.jpg&apos;, &apos;wb&apos;)</div><div class="line"> </div><div class="line">    with fout:</div><div class="line"> </div><div class="line">        fout.write(data)</div><div class="line"> </div><div class="line">con = mdb.connect(&apos;localhost&apos;, &apos;testuser&apos;, &apos;test623&apos;, &apos;testdb&apos;)</div><div class="line"> </div><div class="line">with con:</div><div class="line"> </div><div class="line">    cur = con.cursor()</div><div class="line"> </div><div class="line">    cur.execute(&quot;SELECT Data FROM Images WHERE Id=1&quot;)</div><div class="line">    data = cur.fetchone()[0]</div><div class="line">    writeImage(data)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/python/python数据库之ORM工具SQLAlchemy/" rel="next" title="python数据库之ORM工具SQLAlchemy">
+                <i class="fa fa-chevron-left"></i> python数据库之ORM工具SQLAlchemy
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/16/python/python数据库之MySQL-python（相当于驱动）安装/" rel="prev" title="python数据库之MySQL-python（相当于驱动）安装">
+                python数据库之MySQL-python（相当于驱动）安装 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">555</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-python连接mysql的第三方驱动"><span class="nav-number">1.</span> <span class="nav-text">1.python连接mysql的第三方驱动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-连接数据库的几种方式"><span class="nav-number">2.</span> <span class="nav-text">2.连接数据库的几种方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-游标（cursor）的方法"><span class="nav-number">3.</span> <span class="nav-text">3.游标（cursor）的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-cursor-rowcount"><span class="nav-number">3.1.</span> <span class="nav-text">3.1.cursor.rowcount</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-查询列名"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.查询列名</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-简单的CRUD"><span class="nav-number">4.</span> <span class="nav-text">4.简单的CRUD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-查询时返回字典结构"><span class="nav-number">5.</span> <span class="nav-text">5.查询时返回字典结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-存入和取出图片数据"><span class="nav-number">6.</span> <span class="nav-text">6.存入和取出图片数据</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
