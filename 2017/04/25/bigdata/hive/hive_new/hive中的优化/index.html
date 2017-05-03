@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>hive中的优化 | Chen&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="hive.fetch.task.conversion有些情况不走MapReduce,这样可以更快 1234567891011121314151617181920212223242526272829vim conf/hive-site.xml  &amp;lt;property&amp;gt;    &amp;lt;name&amp;gt;hive.fetch.task.conversion&amp;lt;/name&amp;gt;    &amp;lt">
+<meta name="keywords" content="hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive中的优化">
+<meta property="og:url" content="http://yoursite.com/2017/04/25/bigdata/hive/hive_new/hive中的优化/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="hive.fetch.task.conversion有些情况不走MapReduce,这样可以更快 1234567891011121314151617181920212223242526272829vim conf/hive-site.xml  &amp;lt;property&amp;gt;    &amp;lt;name&amp;gt;hive.fetch.task.conversion&amp;lt;/name&amp;gt;    &amp;lt">
+<meta property="og:image" content="http://yoursite.com/assert/img/bigdata/hive/hive_new/hive_optimer.png">
+<meta property="og:image" content="http://yoursite.com/assert/img/bigdata/hive/hive_new/hive_optimer_bucket.png">
+<meta property="og:updated_time" content="2017-04-25T09:11:56.800Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive中的优化">
+<meta name="twitter:description" content="hive.fetch.task.conversion有些情况不走MapReduce,这样可以更快 1234567891011121314151617181920212223242526272829vim conf/hive-site.xml  &amp;lt;property&amp;gt;    &amp;lt;name&amp;gt;hive.fetch.task.conversion&amp;lt;/name&amp;gt;    &amp;lt">
+<meta name="twitter:image" content="http://yoursite.com/assert/img/bigdata/hive/hive_new/hive_optimer.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Chen&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个技术渣的自说自话</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-bigdata/hive/hive_new/hive中的优化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/25/bigdata/hive/hive_new/hive中的优化/" class="article-date">
+  <time datetime="2017-04-25T03:02:57.947Z" itemprop="datePublished">2017-04-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hive/">hive</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hive中的优化
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="hive-fetch-task-conversion"><a href="#hive-fetch-task-conversion" class="headerlink" title="hive.fetch.task.conversion"></a>hive.fetch.task.conversion</h1><p>有些情况不走MapReduce,这样可以更快</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">vim conf/hive-site.xml</div><div class="line"></div><div class="line">  &lt;property&gt;</div><div class="line">    &lt;name&gt;hive.fetch.task.conversion&lt;/name&gt;</div><div class="line">    &lt;value&gt;more&lt;/value&gt;</div><div class="line">    &lt;description&gt;</div><div class="line">	对于当前查询只是单表,没有子查询和聚合以及distinct和join下面的情况不会走mapreduce</div><div class="line">	  Some select queries can be converted to single FETCH task minimizing latency.</div><div class="line">      Currently the query should be single sourced not having any subquery and should not have</div><div class="line">      any aggregations or distincts (which incurs RS), lateral views and joins.</div><div class="line">      0. none : disable hive.fetch.task.conversion</div><div class="line">      1. minimal : SELECT STAR, FILTER on partition columns, LIMIT only</div><div class="line">      2. more    : SELECT, FILTER, LIMIT only (support TABLESAMPLE and virtual columns)</div><div class="line">    &lt;/description&gt;</div><div class="line">  &lt;/property&gt;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">1.minimal 对于select* 和where条件是分区字段以及limit等不会走MapReduce</div><div class="line"></div><div class="line">select * from test;</div><div class="line">select * from test where monday=&apos;201509&apos; ; (此时test表有monday=&apos;201509&apos;这个分区)</div><div class="line">select * from test limit 5;</div><div class="line"></div><div class="line">2.more    : SELECT, FILTER, LIMIT only (support TABLESAMPLE and virtual columns)</div><div class="line">	SELECT,filter,limit不走MapReduce</div><div class="line"></div><div class="line">select job, ename from emp ;</div><div class="line">select job, ename from emp_partition where ename=&apos;SMITH&apos;;</div></pre></td></tr></table></figure>
+<h1 id="大表的拆分"><a href="#大表的拆分" class="headerlink" title="大表的拆分"></a>大表的拆分</h1><p>将大表(字段很多的表),我们只需要对其中的某些字段进行操作,那么我们可以创建子表(取我们需要的字段)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">create table if not exists test_sub</div><div class="line">row format delimited fields terminated by &apos;,&apos;</div><div class="line">stored as orc</div><div class="line">as </div><div class="line">select id,name from test</div></pre></td></tr></table></figure>
+<h1 id="外部表和分区表"><a href="#外部表和分区表" class="headerlink" title="外部表和分区表"></a>外部表和分区表</h1><p>通常这两个表是结合使用的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">create external table if not exists test_sub</div><div class="line">(</div><div class="line">id int,</div><div class="line">name string</div><div class="line">)</div><div class="line">comment &apos;xx&apos;</div><div class="line">partitioned by (month string, day string)</div><div class="line">row format delimited fields tereminated by &apos;,&apos;</div><div class="line"></div><div class="line">location &apos;xx.txt&apos; ;</div></pre></td></tr></table></figure>
+<h1 id="数据的存储格式和数据的压缩"><a href="#数据的存储格式和数据的压缩" class="headerlink" title="数据的存储格式和数据的压缩"></a>数据的存储格式和数据的压缩</h1><ul>
+<li>存储格式:orcfitle,parquet</li>
+<li>数据压缩:snappy</li>
+</ul>
+<h1 id="sql优化"><a href="#sql优化" class="headerlink" title="sql优化"></a>sql优化</h1><ul>
+<li>优化sql语句</li>
+</ul>
+<h1 id="join"><a href="#join" class="headerlink" title="join"></a>join</h1><ul>
+<li>Reduce join<br>大表对大表:每个表的数据都是从文件中读取的</li>
+</ul>
+<p><img src="/assert/img/bigdata/hive/hive_new/hive_optimer.png" alt=""></p>
+<ul>
+<li>Map join</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#如果设置了这个参数,那么程序会识别map join</div><div class="line">set hive.auto.convert.join=true ;</div></pre></td></tr></table></figure>
+<p>小表对大表;大表的数据是从文件从读取的,小表的数据放入到内存中<br>DistributedCache 类将小表缓存起来</p>
+<ul>
+<li>SMB join</li>
+</ul>
+<p>Sort-Merge-bucket join 是对上面的大表对大表的优化策略</p>
+<p><img src="/assert/img/bigdata/hive/hive_new/hive_optimer_bucket.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">set hive.auto.convert.sortmerge.join=true;</div><div class="line">set hive.optimize.bucketmapjoin = true;</div><div class="line">set hive.optimize.bucketmapjoin.sortedmerge=true;</div></pre></td></tr></table></figure>
+<p>group by出现数据倾斜的问题:<br>对于group by (col_name) ,如果进行group的col_name字段很多为空,那么会出现数据倾斜的问题,此时最好将该字段变成非空,然后就不会数据倾斜</p>
+<p>count(distinct xx)也是会出现数据倾斜的问题</p>
+<h1 id="执行计划"><a href="#执行计划" class="headerlink" title="执行计划"></a>执行计划</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">explain select * from emp ;</div><div class="line"></div><div class="line">explain select deptno, avg(sal) avg_sal from emp group by deptno;</div><div class="line"></div><div class="line">explain extended select deptno, avg(sal) avg_sal from emp group by deptno;</div></pre></td></tr></table></figure>
+<h1 id="并行执行"><a href="#并行执行" class="headerlink" title="并行执行"></a>并行执行</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">job1 a join b ==&gt; aa</div><div class="line"></div><div class="line">job2 c join d ==&gt; cc</div><div class="line"></div><div class="line">job3 aa join cc</div><div class="line"></div><div class="line">#因为job1和job2没有依赖关系,所以可以并行执行</div></pre></td></tr></table></figure>
+<p>可以设置如下的参数进行配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.exec.parallel&lt;/name&gt;</div><div class="line">  &lt;value&gt;false&lt;/value&gt;</div><div class="line">  &lt;description&gt;Whether to execute jobs in parallel&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div><div class="line">&lt;property&gt;</div><div class="line">  &lt;name&gt;hive.exec.parallel.thread.number&lt;/name&gt;</div><div class="line">  &lt;value&gt;8&lt;/value&gt;</div><div class="line">  &lt;description&gt;How many jobs at most can be executed in parallel&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure>
+<h1 id="jvm重用"><a href="#jvm重用" class="headerlink" title="jvm重用"></a>jvm重用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hive&gt;set mapreduce.job.jvm.numtasks;</div><div class="line"></div><div class="line">#可以设置jvm中跑多少个MapReduce</div></pre></td></tr></table></figure>
+<h1 id="reduce数目"><a href="#reduce数目" class="headerlink" title="reduce数目"></a>reduce数目</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">set mapreduce.job.reduces;</div></pre></td></tr></table></figure>
+<h1 id="推测执行"><a href="#推测执行" class="headerlink" title="推测执行"></a>推测执行</h1><p>关掉推测执行,不然有的时候,对同一个任务会启动两个MapReduce<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; set hive.mapred.reduce.tasks.speculative.execution=false;</div><div class="line"></div><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; set mapreduce.reduce.speculative=false;</div><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; set mapreduce.map.speculative=false;</div></pre></td></tr></table></figure></p>
+<h1 id="动态分区"><a href="#动态分区" class="headerlink" title="动态分区"></a>动态分区</h1><h1 id="Strict-Mode"><a href="#Strict-Mode" class="headerlink" title="Strict Mode"></a>Strict Mode</h1><p>在分区表进行查询,在where子句中没有加分区过滤的话,将禁止提交任务(默认是nostrict)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; set hive.mapred.mode ;</div><div class="line">+-----------------------------+--+</div><div class="line">|             set             |</div><div class="line">+-----------------------------+--+</div><div class="line">| hive.mapred.mode=nonstrict  |</div><div class="line">+-----------------------------+--+</div><div class="line">1 row selected (0.017 seconds)</div><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; set hive.mapred.mode=strict;</div><div class="line">No rows affected (0.016 seconds)</div><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; set hive.mapred.mode ;</div><div class="line">+--------------------------+--+</div><div class="line">|           set            |</div><div class="line">+--------------------------+--+</div><div class="line">| hive.mapred.mode=strict  |</div><div class="line">+--------------------------+--+</div><div class="line">1 row selected (0.01 seconds)</div><div class="line"></div><div class="line">#对分区表执行查询数据</div><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; select * from emp_partition;</div><div class="line">Error: Error while compiling statement: FAILED: SemanticException [Error 10041]: No partition predicate found for Alias &quot;emp_partition&quot; Table &quot;emp_partition&quot; (state=42000,code=10041)</div><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; show partitions emp_partition;</div><div class="line">+---------------+--+</div><div class="line">|   partition   |</div><div class="line">+---------------+--+</div><div class="line">| month=201509  |</div><div class="line">| month=201510  |</div><div class="line">| month=201511  |</div><div class="line">+---------------+--+</div><div class="line">3 rows selected (0.165 seconds)</div><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt; select * from emp_partition where month=&apos;201509&apos; limit 3;</div><div class="line">+----------------------+----------------------+--------------------+--------------------+-------------------------+--------------------+---------------------+-----------------------+----------------------+--+</div><div class="line">| emp_partition.empno  | emp_partition.ename  | emp_partition.job  | emp_partition.mgr  | emp_partition.hiredate  | emp_partition.sal  | emp_partition.comm  | emp_partition.deptno  | emp_partition.month  |</div><div class="line">+----------------------+----------------------+--------------------+--------------------+-------------------------+--------------------+---------------------+-----------------------+----------------------+--+</div><div class="line">| 7369                 | SMITH                | CLERK              | 7902               | 1980-12-17              | 800.0              | NULL                | 20                    | 201509               |</div><div class="line">| 7499                 | ALLEN                | SALESMAN           | 7698               | 1981-2-20               | 1600.0             | 300.0               | 30                    | 201509               |</div><div class="line">| 7521                 | WARD                 | SALESMAN           | 7698               | 1981-2-22               | 1250.0             | 500.0               | 30                    | 201509               |</div><div class="line">+----------------------+----------------------+--------------------+--------------------+-------------------------+--------------------+---------------------+-----------------------+----------------------+--+</div><div class="line">3 rows selected (0.19 seconds)</div><div class="line">0: jdbc:hive2://hdp-node-01:10000&gt;</div></pre></td></tr></table></figure>
+<p>使用严格模式可以禁止3种类型的查询:</p>
+<ul>
+<li>对于分区表,不加分区字段过滤条件的不能执行</li>
+<li>对于order by, 没有使用limit的不能执行</li>
+<li>对于笛卡尔积的查询,使用where但是没有使用on的不能进行查询</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/25/bigdata/hive/hive_new/hive中的优化/" data-id="cj290sd4501mussqqzio9h8le" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hive/">hive</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/25/bigdata/hive/hive_new/hive中使用Snappy压缩/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          hive中数据的存储格式和Snappy压缩
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/25/bigdata/hive/hive_new/hive项目实战之服访问日志处理/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">hive项目实战之服访问日志处理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mr. Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>hive的DDL操作 | Chen&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="创建数据库及数据库相关操作1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556CREATE (DATABASE|SCHEMA) [IF NOT EXISTS] database_name  [COMMENT database_comment]">
+<meta name="keywords" content="hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive的DDL操作">
+<meta property="og:url" content="http://yoursite.com/2017/04/23/bigdata/hive/hive_new/hive的DDL操作/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="创建数据库及数据库相关操作1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556CREATE (DATABASE|SCHEMA) [IF NOT EXISTS] database_name  [COMMENT database_comment]">
+<meta property="og:updated_time" content="2017-04-23T15:27:46.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive的DDL操作">
+<meta name="twitter:description" content="创建数据库及数据库相关操作1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556CREATE (DATABASE|SCHEMA) [IF NOT EXISTS] database_name  [COMMENT database_comment]">
+  
+    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Chen&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个技术渣的自说自话</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-bigdata/hive/hive_new/hive的DDL操作" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/23/bigdata/hive/hive_new/hive的DDL操作/" class="article-date">
+  <time datetime="2017-04-23T11:23:53.688Z" itemprop="datePublished">2017-04-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hive/">hive</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hive的DDL操作
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="创建数据库及数据库相关操作"><a href="#创建数据库及数据库相关操作" class="headerlink" title="创建数据库及数据库相关操作"></a>创建数据库及数据库相关操作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">CREATE (DATABASE|SCHEMA) [IF NOT EXISTS] database_name</div><div class="line">  [COMMENT database_comment]</div><div class="line">  [LOCATION hdfs_path]</div><div class="line">  [WITH DBPROPERTIES (property_name=property_value, ...)];</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#注意一定要使用if如果存在就创建,这样更加的专业</div><div class="line">create database if not exists db_hive_01;</div><div class="line"></div><div class="line">create database if not exists db_hive_02</div><div class="line">location &apos;/user/study/hive/warehouse/db_hive_02.db&apos;</div><div class="line">#如果不指定数据库在HDFS中的位置,默认是在HDFS中的/user/hive/warehouse/以数据库名.db命名的目录</div><div class="line"></div><div class="line"></div><div class="line">#在数据库下创建表,那么将在数据库的目录下创建一个以表名为名字的目录</div><div class="line">create table if not exist db_hive_02.user</div><div class="line"></div><div class="line"></div><div class="line">#查看数据库</div><div class="line">show databases;</div><div class="line"></div><div class="line">#查看以db_hive开头的数据库(有时候我们只是记得数据库的大致的名称的时候,这个命令有用)</div><div class="line">show databases like &apos;db_hive*&apos;;</div><div class="line"></div><div class="line"></div><div class="line">#查看数据库的相关信息</div><div class="line">hive (test_database)&gt; desc database test_database;</div><div class="line">OK</div><div class="line">db_name comment location        owner_name      owner_type      parameters</div><div class="line">test_database           hdfs://hdp-node-01:9000/user/hive/warehouse/test_database.db    root    USER</div><div class="line">Time taken: 0.052 seconds, Fetched: 1 row(s)</div><div class="line"></div><div class="line">#查看数据库的扩展信息</div><div class="line">hive (test_database)&gt; desc database extended test_database;</div><div class="line">OK</div><div class="line">db_name comment location        owner_name      owner_type      parameters</div><div class="line">test_database           hdfs://hdp-node-01:9000/user/hive/warehouse/test_database.db    root    USER</div><div class="line">Time taken: 0.068 seconds, Fetched: 1 row(s)</div><div class="line">hive (test_database)&gt; </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#删除数据库(如果已经存在的话)</div><div class="line">drop database if exists test_database;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">hive (test_database)&gt; drop database test_database;</div><div class="line">FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. InvalidOperationException(message:Database test_database is not empty. One or more tables exist.)</div><div class="line">#数据库中有表存在的数据库,是不能删除的</div><div class="line"></div><div class="line"></div><div class="line">#可以使用级联删除的方式,进行删除,删除的时候,数据库对应的在HDFS中的目录也是会被删除的</div><div class="line">drop database test_database cascad;</div></pre></td></tr></table></figure>
+<h1 id="hive官网完整的建表语句"><a href="#hive官网完整的建表语句" class="headerlink" title="hive官网完整的建表语句"></a>hive官网完整的建表语句</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line">CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name    -- (Note: TEMPORARY available in Hive 0.14.0 and later)</div><div class="line">  [(col_name data_type [COMMENT col_comment], ... [constraint_specification])]</div><div class="line">  [COMMENT table_comment]</div><div class="line">  [PARTITIONED BY (col_name data_type [COMMENT col_comment], ...)]</div><div class="line">  [CLUSTERED BY (col_name, col_name, ...) [SORTED BY (col_name [ASC|DESC], ...)] INTO num_buckets BUCKETS]</div><div class="line">  [SKEWED BY (col_name, col_name, ...)                  -- (Note: Available in Hive 0.10.0 and later)]</div><div class="line">     ON ((col_value, col_value, ...), (col_value, col_value, ...), ...)</div><div class="line">     [STORED AS DIRECTORIES]</div><div class="line">  [</div><div class="line">   [ROW FORMAT row_format] </div><div class="line">   [STORED AS file_format]</div><div class="line">     | STORED BY &apos;storage.handler.class.name&apos; [WITH SERDEPROPERTIES (...)]  -- (Note: Available in Hive 0.6.0 and later)</div><div class="line">  ]</div><div class="line">  [LOCATION hdfs_path]</div><div class="line">  [TBLPROPERTIES (property_name=property_value, ...)]   -- (Note: Available in Hive 0.6.0 and later)</div><div class="line">  [AS select_statement];   -- (Note: Available in Hive 0.5.0 and later; not supported for external tables)</div><div class="line"> </div><div class="line">CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name</div><div class="line">  LIKE existing_table_or_view_name</div><div class="line">  [LOCATION hdfs_path];</div><div class="line"> </div><div class="line">data_type</div><div class="line">  : primitive_type</div><div class="line">  | array_type</div><div class="line">  | map_type</div><div class="line">  | struct_type</div><div class="line">  | union_type  -- (Note: Available in Hive 0.7.0 and later)</div><div class="line"> </div><div class="line">primitive_type</div><div class="line">  : TINYINT</div><div class="line">  | SMALLINT</div><div class="line">  | INT</div><div class="line">  | BIGINT</div><div class="line">  | BOOLEAN</div><div class="line">  | FLOAT</div><div class="line">  | DOUBLE</div><div class="line">  | DOUBLE PRECISION -- (Note: Available in Hive 2.2.0 and later)</div><div class="line">  | STRING</div><div class="line">  | BINARY      -- (Note: Available in Hive 0.8.0 and later)</div><div class="line">  | TIMESTAMP   -- (Note: Available in Hive 0.8.0 and later)</div><div class="line">  | DECIMAL     -- (Note: Available in Hive 0.11.0 and later)</div><div class="line">  | DECIMAL(precision, scale)  -- (Note: Available in Hive 0.13.0 and later)</div><div class="line">  | DATE        -- (Note: Available in Hive 0.12.0 and later)</div><div class="line">  | VARCHAR     -- (Note: Available in Hive 0.12.0 and later)</div><div class="line">  | CHAR        -- (Note: Available in Hive 0.13.0 and later)</div><div class="line"> </div><div class="line">array_type</div><div class="line">  : ARRAY &lt; data_type &gt;</div><div class="line"> </div><div class="line">map_type</div><div class="line">  : MAP &lt; primitive_type, data_type &gt;</div><div class="line"> </div><div class="line">struct_type</div><div class="line">  : STRUCT &lt; col_name : data_type [COMMENT col_comment], ...&gt;</div><div class="line"> </div><div class="line">union_type</div><div class="line">   : UNIONTYPE &lt; data_type, data_type, ... &gt;  -- (Note: Available in Hive 0.7.0 and later)</div><div class="line"> </div><div class="line">row_format</div><div class="line">  : DELIMITED [FIELDS TERMINATED BY char [ESCAPED BY char]] [COLLECTION ITEMS TERMINATED BY char]</div><div class="line">        [MAP KEYS TERMINATED BY char] [LINES TERMINATED BY char]</div><div class="line">        [NULL DEFINED AS char]   -- (Note: Available in Hive 0.13 and later)</div><div class="line">  | SERDE serde_name [WITH SERDEPROPERTIES (property_name=property_value, property_name=property_value, ...)]</div><div class="line"> </div><div class="line">file_format:</div><div class="line">  : SEQUENCEFILE</div><div class="line">  | TEXTFILE    -- (Default, depending on hive.default.fileformat configuration)</div><div class="line">  | RCFILE      -- (Note: Available in Hive 0.6.0 and later)</div><div class="line">  | ORC         -- (Note: Available in Hive 0.11.0 and later)</div><div class="line">  | PARQUET     -- (Note: Available in Hive 0.13.0 and later)</div><div class="line">  | AVRO        -- (Note: Available in Hive 0.14.0 and later)</div><div class="line">  | INPUTFORMAT input_format_classname OUTPUTFORMAT output_format_classname</div><div class="line"> </div><div class="line">constraint_specification:</div><div class="line">  : [, PRIMARY KEY (col_name, ...) DISABLE NOVALIDATE ]</div><div class="line">    [, CONSTRAINT constraint_name FOREIGN KEY (col_name, ...) REFERENCES table_name(col_name, ...) DISABLE NOVALIDATE</div></pre></td></tr></table></figure>
+<h1 id="几种创建表的方法"><a href="#几种创建表的方法" class="headerlink" title="几种创建表的方法"></a>几种创建表的方法</h1><h2 id="自己指定字段建表"><a href="#自己指定字段建表" class="headerlink" title="自己指定字段建表"></a>自己指定字段建表</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">create table if not exists default.test_log_2015_0913</div><div class="line">(</div><div class="line">	ip string comment &apos;remote ip address&apos;,</div><div class="line">	user string ,</div><div class="line">	request_url string comment &apos;user request url&apos;</div><div class="line">)</div><div class="line">#对表进行comment</div><div class="line">COMMENT &apos;WEB Access Logs&apos;</div><div class="line">#指定格式化</div><div class="line">ROW FORMAT DELIMITED</div><div class="line">#  指定字段的分割符</div><div class="line">fields terminated by &apos;,&apos;</div><div class="line">#文件的存储格式(默认的是textFile的格式,但是在实际生产环境中,我们使用的是一般是Parquet或者是ORC</div><div class="line">STORED AS textFile  </div><div class="line">#指定数据在HDFS中存储的位置,默认是在对应的数据库下面创建一个以表名的目录,但是我们可以指定这个目录,就是下面这样的操作</div><div class="line">LOCATION &apos;/user/hive/warehouse/test_log_2015_0913&apos;</div></pre></td></tr></table></figure>
+<h2 id="根据另外一张表的查询结果创建一张表"><a href="#根据另外一张表的查询结果创建一张表" class="headerlink" title="根据另外一张表的查询结果创建一张表"></a>根据另外一张表的查询结果创建一张表</h2><p>这种建表的方式将查询表中查询的数据导入到了新建的表中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">create table if not exists default.test_log_2015_0913</div><div class="line">(</div><div class="line">	ip string comment &apos;remote ip address&apos;,</div><div class="line">	user string ,</div><div class="line">	request_url string comment &apos;user request url&apos;</div><div class="line">)</div><div class="line">#对表进行comment</div><div class="line">COMMENT &apos;WEB Access Logs&apos;</div><div class="line">#指定格式化</div><div class="line">ROW FORMAT DELIMITED</div><div class="line">#  指定字段的分割符</div><div class="line">fields terminated by &apos;,&apos;</div><div class="line">#文件的存储格式(默认的是textFile的格式,但是在实际生产环境中,我们使用的是一般是Parquet或者是ORC</div><div class="line">STORED AS textFile  </div><div class="line">#指定数据在HDFS中存储的位置,默认是在对应的数据库下面创建一个以表名的目录,但是我们可以指定这个目录,就是下面这样的操作</div><div class="line">LOCATION &apos;/user/hive/warehouse/test_log_2015_0913&apos;</div><div class="line">as select * from xxx</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"># 使用查询的结果创建表,此时新创建的表中有数据</div><div class="line">hive (default)&gt; create table if not exists default.test_log </div><div class="line">              &gt; as select id, name from default.test_table;</div><div class="line"></div><div class="line"></div><div class="line">hive (default)&gt; select * from default.test_log;</div><div class="line">OK</div><div class="line">test_log.id     test_log.name</div><div class="line">11      zhangsan</div><div class="line">22      lisi</div><div class="line">33      wangwu</div><div class="line">11      zhangsan</div><div class="line">22      lisi</div><div class="line">33      wangwu</div><div class="line">Time taken: 0.294 seconds, Fetched: 6 row(s)</div><div class="line">hive (default)&gt;</div></pre></td></tr></table></figure>
+<h2 id="使用其他的表或者视图创建表结构"><a href="#使用其他的表或者视图创建表结构" class="headerlink" title="使用其他的表或者视图创建表结构"></a>使用其他的表或者视图创建表结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name</div><div class="line">  LIKE existing_table_or_view_name</div><div class="line">  [LOCATION hdfs_path];</div><div class="line"> </div><div class="line">         </div><div class="line">#查询test_log2的数据</div><div class="line">hive (default)&gt; select * from test_log2;</div><div class="line">OK</div><div class="line">test_log2.id    test_log2.name</div><div class="line">11      zhangsan</div><div class="line">22      lisi</div><div class="line">33      wangwu</div><div class="line">11      zhangsan</div><div class="line">22      lisi</div><div class="line">33      wangwu</div><div class="line">Time taken: 0.108 seconds, Fetched: 6 row(s)</div><div class="line"></div><div class="line">#使用test_log2去创建新的表,这里只是构建新表的结构</div><div class="line">hive (default)&gt; create table if not exists default.test_log6</div><div class="line">              &gt; like test_log2;</div><div class="line">OK</div><div class="line">Time taken: 0.16 seconds</div><div class="line"></div><div class="line">#新表中没有数据</div><div class="line">hive (default)&gt; select * from test_log6;</div><div class="line">OK</div><div class="line">test_log6.id    test_log6.name</div><div class="line">Time taken: 0.106 seconds</div><div class="line">hive (default)&gt;</div></pre></td></tr></table></figure>
+<h1 id="对表的增删改操作"><a href="#对表的增删改操作" class="headerlink" title="对表的增删改操作"></a>对表的增删改操作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 清除表的数据</div><div class="line">truncate table dept_cats;</div><div class="line"></div><div class="line"></div><div class="line"># 修改表的名称</div><div class="line">alter table dept_like rename to dept_like_rename;</div><div class="line"></div><div class="line">#删除表</div><div class="line">drop table if exists dept_like_rename;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/23/bigdata/hive/hive_new/hive的DDL操作/" data-id="cj290sd4s01n9ssqqsv4la58l" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hive/">hive</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/23/bigdata/hive/hive_new/hive交互式命令行中的一些常用操作/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          hive交互式命令行中的一些常用操作
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/23/markdown/markdown的快捷键/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">markdown的快捷键</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mr. Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

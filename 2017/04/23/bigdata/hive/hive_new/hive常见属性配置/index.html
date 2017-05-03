@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>hive常见属性配置 | Chen&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="hive数据仓库位置配置12345678910111213141516171819202122232425262728293031在conf/hive-default.xml.template 中有如下的配置,如果我们想要配置这个参数,可以在hive-site.xml中添加:  &amp;lt;property&amp;gt;    &amp;lt;name&amp;gt;hive.metastore.warehouse.dir">
+<meta name="keywords" content="hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive常见属性配置">
+<meta property="og:url" content="http://yoursite.com/2017/04/23/bigdata/hive/hive_new/hive常见属性配置/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="hive数据仓库位置配置12345678910111213141516171819202122232425262728293031在conf/hive-default.xml.template 中有如下的配置,如果我们想要配置这个参数,可以在hive-site.xml中添加:  &amp;lt;property&amp;gt;    &amp;lt;name&amp;gt;hive.metastore.warehouse.dir">
+<meta property="og:updated_time" content="2017-04-23T08:39:06.728Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive常见属性配置">
+<meta name="twitter:description" content="hive数据仓库位置配置12345678910111213141516171819202122232425262728293031在conf/hive-default.xml.template 中有如下的配置,如果我们想要配置这个参数,可以在hive-site.xml中添加:  &amp;lt;property&amp;gt;    &amp;lt;name&amp;gt;hive.metastore.warehouse.dir">
+  
+    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Chen&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个技术渣的自说自话</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-bigdata/hive/hive_new/hive常见属性配置" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/23/bigdata/hive/hive_new/hive常见属性配置/" class="article-date">
+  <time datetime="2017-04-23T08:25:01.513Z" itemprop="datePublished">2017-04-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hive/">hive</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hive常见属性配置
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="hive数据仓库位置配置"><a href="#hive数据仓库位置配置" class="headerlink" title="hive数据仓库位置配置"></a>hive数据仓库位置配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">在conf/hive-default.xml.template 中有如下的配置,如果我们想要配置这个参数,可以在hive-site.xml中添加:</div><div class="line"></div><div class="line">  &lt;property&gt;</div><div class="line">    &lt;name&gt;hive.metastore.warehouse.dir&lt;/name&gt;</div><div class="line">    &lt;value&gt;/user/hive/warehouse&lt;/value&gt;</div><div class="line">    &lt;description&gt;location of default database for the warehouse&lt;/description&gt;</div><div class="line">  &lt;/property&gt;</div><div class="line"></div><div class="line">在该目录下,没有对默认的数据库(default)创建文件夹,如果某张表数据属于default数据库,那么直接在/user/hive/warehouse以表的名称创建文件夹</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">[root@hdp-node-01 hive]# hdfs dfs -ls /user/hive/warehouse</div><div class="line">Found 5 items</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-11-27 23:34 /user/hive/warehouse/mytable1</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-11-28 13:49 /user/hive/warehouse/stu_buck</div><div class="line">drwxr-xr-x   - root supergroup          0 2016-11-28 10:12 /user/hive/warehouse/student</div><div class="line">drwxr-xr-x   - root supergroup          0 2017-04-23 16:05 /user/hive/warehouse/test_database.db</div><div class="line">drwxr-xr-x   - root supergroup          0 2017-04-23 15:00 /user/hive/warehouse/test_table</div><div class="line"></div><div class="line">上面的test_table表就是在default数据库下创建,所以直接在HDFS的/user/hive/warehouse目录下</div><div class="line"></div><div class="line"></div><div class="line">而如果我们创建了一个数据库,如:test_database,然后在该数据库下创建表:test_table,那么就会在对应的数据库下创建表的目录,如下:</div><div class="line"></div><div class="line">[root@hdp-node-01 hive]# hdfs dfs -ls /user/hive/warehouse/test_database.db</div><div class="line">Found 1 items</div><div class="line">drwxr-xr-x   - root supergroup          0 2017-04-23 16:05 /user/hive/warehouse/test_database.db/test_table</div><div class="line"></div><div class="line">#test_database.db就是我们创建数据库对应的目录,而该目录下的test_table就是我们创建的表对应的目录</div></pre></td></tr></table></figure>
+<h1 id="hive运行日志的信息位置配置及运行日志配置"><a href="#hive运行日志的信息位置配置及运行日志配置" class="headerlink" title="hive运行日志的信息位置配置及运行日志配置"></a>hive运行日志的信息位置配置及运行日志配置</h1><h2 id="hive运行日志的信息位置配置"><a href="#hive运行日志的信息位置配置" class="headerlink" title="hive运行日志的信息位置配置"></a>hive运行日志的信息位置配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">#cp hive-log4j.properties.template hive-log4j.properties</div><div class="line"></div><div class="line"># Define some default values that can be overridden by system properties</div><div class="line">hive.log.threshold=ALL</div><div class="line">#日志的级别</div><div class="line">hive.root.logger=INFO,DRFA</div><div class="line">#配置的是日志的存放目录,默认是在/tmp/当前用户/目录下面</div><div class="line">hive.log.dir=$&#123;java.io.tmpdir&#125;/$&#123;user.name&#125;</div><div class="line">#当前的日志文件</div><div class="line">hive.log.file=hive.log</div><div class="line"></div><div class="line"></div><div class="line">#默认存放日志文件的目录</div><div class="line">[root@hdp-node-01 root]# ll /tmp/root/  </div><div class="line">total 1228</div><div class="line">drwx------ 2 root root   4096 Dec 17 20:54 09fbac45-c45a-45de-bc40-2aeb96a383fc</div><div class="line">-rw-r--r-- 1 root root      0 Dec 17 20:54 09fbac45-c45a-45de-bc40-2aeb96a383fc3011878711548453.pipeout</div><div class="line">drwx------ 2 root root   4096 Dec 17 20:35 3c42d672-333f-4a13-8251-3bd4426979d3</div><div class="line">-rw-r--r-- 1 root root      0 Dec 17 20:35 3c42d672-333f-4a13-8251-3bd4426979d3415307667270826455.pipeout</div><div class="line">drwx------ 2 root root   4096 Nov 28 10:36 95635832-e09c-47a2-a00c-7a30e7ad6a0f</div><div class="line">-rw-r--r-- 1 root root      0 Nov 28 10:36 95635832-e09c-47a2-a00c-7a30e7ad6a0f7702146714156298728.pipeout</div><div class="line">drwx------ 2 root root   4096 Dec 17 20:33 b024d3ea-59d7-4a68-a73a-e6d8b6f18ed8</div><div class="line">-rw-r--r-- 1 root root      0 Dec 17 20:33 b024d3ea-59d7-4a68-a73a-e6d8b6f18ed87234035665673320168.pipeout</div><div class="line">drwx------ 2 root root   4096 Nov 28 09:59 cb503457-399e-46c5-b3fe-8fa18c676db5</div><div class="line">-rw-r--r-- 1 root root      0 Nov 28 08:19 cb503457-399e-46c5-b3fe-8fa18c676db52063284649208370642.pipeout</div><div class="line">drwx------ 2 root root   4096 Dec 17 20:54 e45f3d4c-5ad9-48f5-99cf-2a2424b0883d</div><div class="line">-rw-r--r-- 1 root root      0 Dec 17 20:54 e45f3d4c-5ad9-48f5-99cf-2a2424b0883d2746165294995632557.pipeout</div><div class="line"></div><div class="line">#日志文件</div><div class="line">-rw-r--r-- 1 root root  20054 Apr 23 15:25 hive.log </div><div class="line">-rw-r--r-- 1 root root  40632 Nov 23 00:30 hive.log.2016-11-23</div><div class="line">-rw-r--r-- 1 root root 546704 Nov 27 23:41 hive.log.2016-11-27</div><div class="line">-rw-r--r-- 1 root root 612388 Nov 28 13:50 hive.log.2016-11-28</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">hive.log.threshold=ALL</div><div class="line">hive.root.logger=INFO,DRFA</div><div class="line">#改变日志的目录</div><div class="line">hive.log.dir=/home/hadoop/app/hive/log</div><div class="line">hive.log.file=hive.log</div><div class="line"></div><div class="line"></div><div class="line">[root@hdp-node-01 hive]# ll /home/hadoop/app/hive/log</div><div class="line">total 4</div><div class="line">-rw-r--r-- 1 root root 3065 Apr 23 15:33 hive.log</div></pre></td></tr></table></figure>
+<h2 id="配置hive运行日志在控制台打印-方便调试"><a href="#配置hive运行日志在控制台打印-方便调试" class="headerlink" title="配置hive运行日志在控制台打印,方便调试"></a>配置hive运行日志在控制台打印,方便调试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">#查看启动hive命令的帮助</div><div class="line">[root@hdp-node-01 root]# /home/hadoop/app/hive/bin/hive -help</div><div class="line"></div><div class="line">usage: hive</div><div class="line"> -d,--define &lt;key=value&gt;          Variable subsitution to apply to hive</div><div class="line">                                  commands. e.g. -d A=B or --define A=B</div><div class="line">    --database &lt;databasename&gt;     Specify the database to use</div><div class="line"> -e &lt;quoted-query-string&gt;         SQL from command line</div><div class="line"> -f &lt;filename&gt;                    SQL from files</div><div class="line"> -H,--help                        Print help information</div><div class="line">    --hiveconf &lt;property=value&gt;   Use value for given property</div><div class="line">    --hivevar &lt;key=value&gt;         Variable subsitution to apply to hive</div><div class="line">                                  commands. e.g. --hivevar A=B</div><div class="line"> -i &lt;filename&gt;                    Initialization SQL file</div><div class="line"> -S,--silent                      Silent mode in interactive shell</div><div class="line"> -v,--verbose                     Verbose mode (echo executed SQL to the</div><div class="line">                                  console)</div><div class="line"></div><div class="line">#可以在启动的时候带参数</div><div class="line">/home/hadoop/app/hive/bin/hive --hiveconf hive.root.logger=INFO,console</div><div class="line"></div><div class="line">#这样就可以将log信息打印到控制台,我们可以详细的看到(INFO,console 是将INFO以上的log信息打印到console上)</div><div class="line">#这样在我们程序出错的时候,我们可以通过这样的调试方式进行直观的错误排查</div></pre></td></tr></table></figure>
+<h1 id="显示当前数据库以及表头的信息"><a href="#显示当前数据库以及表头的信息" class="headerlink" title="显示当前数据库以及表头的信息"></a>显示当前数据库以及表头的信息</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">#打印表头</div><div class="line">#需要在hive-site.xml中添加</div><div class="line"></div><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;hive.cli.print.current.db&lt;/name&gt;</div><div class="line">&lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;description&gt;password to use against metastore database&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">#默认的数据库时default</div><div class="line">hive (default)&gt; show databases;</div><div class="line">OK</div><div class="line">database_name</div><div class="line">default</div><div class="line">hadoop_hive</div><div class="line"></div><div class="line">hive (default)&gt; use hadoop_hive;</div><div class="line">OK</div><div class="line"></div><div class="line">#改变数据库为hadoop_hive</div><div class="line">hive (hadoop_hive)&gt; </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#打印当前的数据库信息</div><div class="line">#需要在hive-site.xml中添加</div><div class="line">&lt;property&gt;</div><div class="line">&lt;name&gt;hive.cli.print.header&lt;/name&gt;</div><div class="line">&lt;value&gt;true&lt;/value&gt;</div><div class="line">&lt;description&gt;password to use against metastore database&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line"></div><div class="line">hive (hadoop_hive)&gt; select *from default.test_table;</div><div class="line">OK</div><div class="line">#会将表名+字段名带上</div><div class="line">test_table.id   test_table.name</div><div class="line">11      zhangsan</div><div class="line">22      lisi</div><div class="line">33      wangwu</div><div class="line">11      zhangsan</div><div class="line">22      lisi</div><div class="line">33      wangwu</div></pre></td></tr></table></figure>
+<h1 id="启动hive时指定参数"><a href="#启动hive时指定参数" class="headerlink" title="启动hive时指定参数"></a>启动hive时指定参数</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bin/hive --hiveconf &lt;property=value&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">#查看启动hive命令的帮助</div><div class="line">[root@hdp-node-01 root]# /home/hadoop/app/hive/bin/hive -help</div><div class="line"></div><div class="line">usage: hive</div><div class="line"> -d,--define &lt;key=value&gt;          Variable subsitution to apply to hive</div><div class="line">                                  commands. e.g. -d A=B or --define A=B</div><div class="line">    --database &lt;databasename&gt;     Specify the database to use</div><div class="line"> -e &lt;quoted-query-string&gt;         SQL from command line</div><div class="line"> -f &lt;filename&gt;                    SQL from files</div><div class="line"> -H,--help                        Print help information</div><div class="line">    --hiveconf &lt;property=value&gt;   Use value for given property</div><div class="line">    --hivevar &lt;key=value&gt;         Variable subsitution to apply to hive</div><div class="line">                                  commands. e.g. --hivevar A=B</div><div class="line"> -i &lt;filename&gt;                    Initialization SQL file</div><div class="line"> -S,--silent                      Silent mode in interactive shell</div><div class="line"> -v,--verbose                     Verbose mode (echo executed SQL to the</div><div class="line">                                  console)</div><div class="line"></div><div class="line">#可以在启动的时候带参数</div><div class="line">/home/hadoop/app/hive/bin/hive --hiveconf hive.root.logger=INFO,console</div><div class="line"></div><div class="line">#这样就可以将log信息打印到控制台,我们可以详细的看到(INFO,console 是将INFO以上的log信息打印到console上)</div><div class="line">#这样在我们程序出错的时候,我们可以通过这样的调试方式进行直观的错误排查</div></pre></td></tr></table></figure>
+<h1 id="查看当前所有的命令行配置信息"><a href="#查看当前所有的命令行配置信息" class="headerlink" title="查看当前所有的命令行配置信息"></a>查看当前所有的命令行配置信息</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#查看所有的设置的环境变量的信息</div><div class="line">hive (default)&gt; set;</div><div class="line"></div><div class="line">system:sun.boot.library.path=/home/hadoop/app/jdk1.7.0_80/jre/lib/amd64</div><div class="line">system:sun.cpu.endian=little</div><div class="line">system:sun.cpu.isalist=</div><div class="line">system:sun.io.unicode.encoding=UnicodeLittle</div><div class="line">system:sun.java.command=org.apache.hadoop.util.RunJar /home/hadoop/app/hive/lib/hive-cli-1.2.1.jar org.apache.hadoop.hive.cli.CliDriver</div><div class="line">system:sun.java.launcher=SUN_STANDARD</div><div class="line">system:sun.jnu.encoding=UTF-8</div><div class="line">system:sun.management.compiler=HotSpot 64-Bit Tiered Compilers</div><div class="line">system:sun.os.patch.level=unknown</div><div class="line">system:user.country=US</div><div class="line">system:user.dir=/tmp/root</div><div class="line">system:user.home=/root</div><div class="line">system:user.language=en</div><div class="line">system:user.name=root</div><div class="line">system:user.timezone=Asia/Shanghai</div><div class="line"></div><div class="line">hive (default)&gt; set;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/23/bigdata/hive/hive_new/hive常见属性配置/" data-id="cj290sd4o01n6ssqqjfsjrtvh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hive/">hive</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/22/bigdata/hive/hive_new/hive简介/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          hive简介
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/23/bigdata/hive/hive_new/hive的几种交互式操作/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">hive的几种交互式操作</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mr. Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

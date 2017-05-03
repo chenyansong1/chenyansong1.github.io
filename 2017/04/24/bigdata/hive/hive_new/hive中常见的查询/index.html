@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>hive中常见的查询 | Chen&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="常见的查询语句1234567891011121314151617181920212223242526272829SELECT [ALL | DISTINCT] select_expr, select_expr, ...  FROM table_reference  [WHERE where_condition]  [GROUP BY col_list]  [ORDER BY col_list]">
+<meta name="keywords" content="hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive中常见的查询">
+<meta property="og:url" content="http://yoursite.com/2017/04/24/bigdata/hive/hive_new/hive中常见的查询/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="常见的查询语句1234567891011121314151617181920212223242526272829SELECT [ALL | DISTINCT] select_expr, select_expr, ...  FROM table_reference  [WHERE where_condition]  [GROUP BY col_list]  [ORDER BY col_list]">
+<meta property="og:updated_time" content="2017-04-24T07:32:33.665Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive中常见的查询">
+<meta name="twitter:description" content="常见的查询语句1234567891011121314151617181920212223242526272829SELECT [ALL | DISTINCT] select_expr, select_expr, ...  FROM table_reference  [WHERE where_condition]  [GROUP BY col_list]  [ORDER BY col_list]">
+  
+    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Chen&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个技术渣的自说自话</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-bigdata/hive/hive_new/hive中常见的查询" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/24/bigdata/hive/hive_new/hive中常见的查询/" class="article-date">
+  <time datetime="2017-04-24T06:05:50.012Z" itemprop="datePublished">2017-04-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hive/">hive</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hive中常见的查询
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="常见的查询语句"><a href="#常见的查询语句" class="headerlink" title="常见的查询语句"></a>常见的查询语句</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">SELECT [ALL | DISTINCT] select_expr, select_expr, ...</div><div class="line">  FROM table_reference</div><div class="line">  [WHERE where_condition]</div><div class="line">  [GROUP BY col_list]</div><div class="line">  [ORDER BY col_list]</div><div class="line">  [CLUSTER BY col_list</div><div class="line">    | [DISTRIBUTE BY col_list] [SORT BY col_list]</div><div class="line">  ]</div><div class="line"> [LIMIT number]</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">hive (default)&gt; select * from emp limit 5;</div><div class="line"></div><div class="line">hive (default)&gt; select * from emp t where t.sal between 800 and 1000;</div><div class="line"></div><div class="line">hive (default)&gt; select * from emp t where t.comm is null;</div><div class="line"></div><div class="line">hive (default)&gt; select count(*) cnt from emp;</div><div class="line"></div><div class="line">hive (default)&gt; select max(sal) max_sal from emp;</div><div class="line"></div><div class="line">hive (default)&gt; select sum(sal) sum_sal from emp;</div><div class="line"></div><div class="line">hive (default)&gt; select avg(sal) from emp;</div></pre></td></tr></table></figure>
+<h1 id="group-by-having"><a href="#group-by-having" class="headerlink" title="group by / having"></a>group by / having</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">#每个部门的平均工资</div><div class="line">select t.deptno, avg(t.sal) avg_sal from emp t group by t.deptno</div><div class="line"></div><div class="line"></div><div class="line">#每个部门中每个岗位的最高薪水</div><div class="line">select t.deptno,t.job,max(t.sal) max_sal from emp t group by t.deptno, t.job;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">where是针对单条记录进行筛选的</div><div class="line">having是针对分组结果进行组内筛选的</div><div class="line"></div><div class="line"></div><div class="line">#每个部门的平均薪水大于2000的部门</div><div class="line">select t.deptno, avg(t.sal) avg_sal from emp t group by t.deptno having avg_sal &gt; 2000 ;</div></pre></td></tr></table></figure>
+<h1 id="join操作"><a href="#join操作" class="headerlink" title="join操作"></a>join操作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">#等值join</div><div class="line">select e.empno, e.ename, d.deptno, d.name from emp e </div><div class="line">join dept d on e.deptno=d.deptno ;</div><div class="line"></div><div class="line"></div><div class="line">#左连接:left join</div><div class="line"></div><div class="line">select e.empno, e.ename, d.deptno, d.name from emp e </div><div class="line">left join dept d on e.deptno=d.deptno ;</div><div class="line"></div><div class="line"></div><div class="line">#右连接:right join</div><div class="line"></div><div class="line">select e.empno, e.ename, d.deptno, d.name from emp e </div><div class="line">right join dept d on e.deptno=d.deptno ;</div><div class="line"></div><div class="line"></div><div class="line">#全连接full join</div><div class="line">select e.empno, e.ename, d.deptno, d.name from emp e </div><div class="line">full join dept d on e.deptno=d.deptno ;</div></pre></td></tr></table></figure>
+<h1 id="order-by"><a href="#order-by" class="headerlink" title="order by"></a>order by</h1><p>是对全局数据的排序,仅仅只有一个reduce,如果查询的结果集比较大的时候,会出现内存溢出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from emp order by empno desc ;</div></pre></td></tr></table></figure></p>
+<h1 id="sort-by"><a href="#sort-by" class="headerlink" title="sort by"></a>sort by</h1><p>对每一个reduce内部数据进行排序,对全局的结果集来说不是排序的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">set mapreduce.job.reduces=3;</div><div class="line"></div><div class="line">select * from emp sort by empno asc ;</div><div class="line"></div><div class="line">insert overwrite local directory &apos;/tmp/datas/sortby-res&apos;</div><div class="line">select * from emp sort by empno asc ;</div><div class="line"></div><div class="line"></div><div class="line">[root@hdp-node-01 sortby-res]# ll /tmp/datas/sortby-res/</div><div class="line">total 12</div><div class="line">-rw-r--r-- 1 root root 573 Apr 24 15:18 000000_0</div><div class="line">-rw-r--r-- 1 root root 468 Apr 24 15:18 000001_0</div><div class="line">-rw-r--r-- 1 root root 281 Apr 24 15:18 000002_0</div><div class="line">[root@hdp-node-01 sortby-res]# cat 000000_0 </div><div class="line">7369SMITHCLERK79021980-12-17800.0\N20</div><div class="line">7566JONESMANAGER78391981-4-22975.0\N20</div><div class="line">7654MARTINSALESMAN76981981-9-281250.01400.030</div><div class="line">7654MARTINSALESMAN76981981-9-281250.01400.030</div></pre></td></tr></table></figure>
+<h1 id="distribute-by"><a href="#distribute-by" class="headerlink" title="distribute by"></a>distribute by</h1><p>类似于MapReduce中的分区partition的功能,对数据进行分区,通常结果sort by进行使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">set mapreduce.job.reduces=3;</div><div class="line"></div><div class="line">#按部门尽心分区,那么相同的部门将分到一个reduce中,然后sort 排序,就是在一个部门中进行排序了</div><div class="line">select * from emp distribute by deptno sort by empno asc ;</div><div class="line"></div><div class="line"></div><div class="line">insert overwrite local directory &apos;/tmp/datas/distributeby-res&apos;</div><div class="line">select * from emp distribute by deptno sort by empno asc ;</div><div class="line"></div><div class="line"></div><div class="line">#注意distribute by要在sort by之前</div><div class="line"></div><div class="line">#查看结果</div><div class="line">[root@hdp-node-01 datas]# ll /tmp/datas/distributeby-res/</div><div class="line">total 12</div><div class="line">-rw-r--r-- 1 root root 586 Apr 24 15:26 000000_0</div><div class="line">-rw-r--r-- 1 root root 278 Apr 24 15:26 000001_0</div><div class="line">-rw-r--r-- 1 root root 458 Apr 24 15:26 000002_0</div><div class="line"></div><div class="line">#可以看到在000000_0中的都是部门号为30的,而且empno是升序排列的</div><div class="line">[root@hdp-node-01 datas]# cat /tmp/datas/distributeby-res/000000_0 </div><div class="line">7499ALLENSALESMAN76981981-2-201600.0300.030</div><div class="line">7499ALLENSALESMAN76981981-2-201600.0300.030</div><div class="line">7521WARDSALESMAN76981981-2-221250.0500.030</div><div class="line">7521WARDSALESMAN76981981-2-221250.0500.030</div><div class="line">7654MARTINSALESMAN76981981-9-281250.01400.030</div><div class="line">7654MARTINSALESMAN76981981-9-281250.01400.030</div><div class="line">7698BLAKEMANAGER78391981-5-12850.0\N30</div><div class="line">7698BLAKEMANAGER78391981-5-12850.0\N30</div><div class="line">7844TURNERSALESMAN76981981-9-81500.00.030</div><div class="line">7844TURNERSALESMAN76981981-9-81500.00.030</div><div class="line">7900JAMESCLERK76981981-12-3950.0\N30</div><div class="line">7900JAMESCLERK76981981-12-3950.0\N30</div></pre></td></tr></table></figure>
+<h1 id="cluster-by"><a href="#cluster-by" class="headerlink" title="cluster by"></a>cluster by</h1><p>当distribute by 和sort by字段相同时,可以使用cluster by代替</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from emp cluster by deptno ;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/24/bigdata/hive/hive_new/hive中常见的查询/" data-id="cj290sd3v01mossqqhmsv9kha" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hive/">hive</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/24/bigdata/hive/hive_new/导出hive表数据的几种方式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          导出hive表数据的几种方式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/24/bigdata/hive/hive_new/hive中数据导入导出Import和Export/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">hive中数据导入导出Import和Export</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mr. Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

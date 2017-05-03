@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>hive项目实战之服访问日志处理 | Chen&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="思路 创建原表 针对不同的业务创建不同的子表 数据存储格式:orcfile/parquet 数据压缩:snappy map output 数据压缩:snappy 外部表 分区表    创建原表123456789101112create table if not exists default.log_src(remote_add string,remote_user string,request s">
+<meta name="keywords" content="hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive项目实战之服访问日志处理">
+<meta property="og:url" content="http://yoursite.com/2017/04/25/bigdata/hive/hive_new/hive项目实战之服访问日志处理/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="思路 创建原表 针对不同的业务创建不同的子表 数据存储格式:orcfile/parquet 数据压缩:snappy map output 数据压缩:snappy 外部表 分区表    创建原表123456789101112create table if not exists default.log_src(remote_add string,remote_user string,request s">
+<meta property="og:updated_time" content="2017-04-25T13:15:57.600Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive项目实战之服访问日志处理">
+<meta name="twitter:description" content="思路 创建原表 针对不同的业务创建不同的子表 数据存储格式:orcfile/parquet 数据压缩:snappy map output 数据压缩:snappy 外部表 分区表    创建原表123456789101112create table if not exists default.log_src(remote_add string,remote_user string,request s">
+  
+    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Chen&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个技术渣的自说自话</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-bigdata/hive/hive_new/hive项目实战之服访问日志处理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/25/bigdata/hive/hive_new/hive项目实战之服访问日志处理/" class="article-date">
+  <time datetime="2017-04-25T09:12:51.610Z" itemprop="datePublished">2017-04-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hive/">hive</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hive项目实战之服访问日志处理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><ul>
+<li>创建原表</li>
+<li>针对不同的业务创建不同的子表<ul>
+<li>数据存储格式:orcfile/parquet</li>
+<li>数据压缩:snappy</li>
+<li>map output 数据压缩:snappy</li>
+<li>外部表</li>
+<li>分区表</li>
+</ul>
+</li>
+</ul>
+<h1 id="创建原表"><a href="#创建原表" class="headerlink" title="创建原表"></a>创建原表</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">create table if not exists default.log_src</div><div class="line">(</div><div class="line">remote_add string,</div><div class="line">remote_user string,</div><div class="line">request string,</div><div class="line">host string</div><div class="line">//...其他的字段</div><div class="line">)</div><div class="line">comment &apos;access log&apos;</div><div class="line">row format delimited fields terminated by &apos; &apos;</div><div class="line">stored as textfile ;</div></pre></td></tr></table></figure>
+<h1 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">load data local inpath &apos;/datas/access.log&apos; into table default.log_src ;</div></pre></td></tr></table></figure>
+<p>会发现,我们的数据是不会正确的加载到表中的,因为使用空格的时候会出现错乱</p>
+<p>hive的官网对web log推荐使用正则表达式</p>
+<p>这里是hive官网的例子:</p>
+<p><a href="https://issues.apache.org/jira/browse/HIVE-662" target="_blank" rel="external">https://issues.apache.org/jira/browse/HIVE-662</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE serde_regex(</div><div class="line">  host STRING,</div><div class="line">  identity STRING,</div><div class="line">  user STRING,</div><div class="line">  time STRING,</div><div class="line">  request STRING,</div><div class="line">  status STRING,</div><div class="line">  size STRING,</div><div class="line">  referer STRING,</div><div class="line">  agent STRING)</div><div class="line">ROW FORMAT SERDE &apos;org.apache.hadoop.hive.contrib.serde2.RegexSerDe&apos;</div><div class="line">WITH SERDEPROPERTIES (</div><div class="line">  &quot;input.regex&quot; = &quot;([^ ]*) ([^ ]*) ([^ ]*) (-|\\[[^\\]]*\\]) ([^ \&quot;]*|\&quot;[^\&quot;]*\&quot;) (-|[0-9]*) (-|[0-9]*)(?: ([^ \&quot;]*|\&quot;[^\&quot;]*\&quot;) ([^ \&quot;]*|\&quot;[^\&quot;]*\&quot;))?&quot;,</div><div class="line">  &quot;output.format.string&quot; = &quot;%1$s %2$s %3$s %4$s %5$s %6$s %7$s %8$s %9$s&quot;</div><div class="line">)</div><div class="line">STORED AS TEXTFILE;</div><div class="line"></div><div class="line">LOAD DATA LOCAL INPATH &quot;../data/files/apache.access.log&quot; INTO TABLE serde_regex;</div><div class="line">LOAD DATA LOCAL INPATH &quot;../data/files/apache.access.2.log&quot; INTO TABLE serde_regex;</div><div class="line"></div><div class="line">SELECT * FROM serde_regex ORDER BY time;</div></pre></td></tr></table></figure>
+<p>对于不同的日志格式,我们可能需要些不同的正则表达式去匹配,下面的网站是校验你的正则表达式是否正确的网站,需要提供一条日志和你写的正则表达式</p>
+<p><a href="http://wpjam.qiniudn.com/tool/regexpal/" target="_blank" rel="external">http://wpjam.qiniudn.com/tool/regexpal/</a></p>
+<p>写正则表达式的规律:一个()就是一个字段,每个字段之间使用空格隔开,这样针对每一个字段在括号中写需要匹配的正则表达式</p>
+<p>如果没有正则表达式,那么我们要写MapReduce做预处理了</p>
+<h1 id="根据不同的业务创建不同的子表"><a href="#根据不同的业务创建不同的子表" class="headerlink" title="根据不同的业务创建不同的子表"></a>根据不同的业务创建不同的子表</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">create table if not exists default.log_comm</div><div class="line">(</div><div class="line">remote_add string,</div><div class="line">remote_user string,</div><div class="line">request string,</div><div class="line">host string</div><div class="line">)</div><div class="line">comment &apos;access log common&apos;</div><div class="line">row format delimited fields terminated by &apos;\t&apos;</div><div class="line">stored as orc tblproperties (&quot;orc.compress&quot;=&quot;SNAPPY&quot;) ;</div><div class="line"></div><div class="line"></div><div class="line">insert into table default.log_comm </div><div class="line">select remote_add, remote_user, request, host from default.log_src ;</div></pre></td></tr></table></figure>
+<h1 id="自定义UDF进行数据清洗"><a href="#自定义UDF进行数据清洗" class="headerlink" title="自定义UDF进行数据清洗"></a>自定义UDF进行数据清洗</h1><p>定义UDF对原表数据进行清洗</p>
+<h2 id="定义UDF去除引号"><a href="#定义UDF去除引号" class="headerlink" title="定义UDF去除引号"></a>定义UDF去除引号</h2><p>1.UDF编码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#下面是伪代码</div><div class="line"></div><div class="line">class RemoveQuotesUDF extends UDF&#123;</div><div class="line">	</div><div class="line">	public TEXT evaluate(Text str)&#123;</div><div class="line">		if(null==str.toString())&#123;</div><div class="line">			return null;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		//将所有的引号替换为空</div><div class="line">		return new Text(str.toString().replaceAll(&quot;\&quot;&quot;, &quot;&quot;));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>2.将上面的代码打包导出/opt/jars/udf.jar</p>
+<p>3.add jar /opt/jars/udf.jar ;</p>
+<p>4.create temporary function my_removequotes as “com.study.udf.RemoveQuotesUDF” ;</p>
+<p>5.list jars ;</p>
+<p>6.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">insert overwrite  table default.log_comm </div><div class="line">select my_removequotes(remote_add), remote_user, request, host from default.log_src ;</div></pre></td></tr></table></figure></p>
+<h2 id="定义UDF日期转换"><a href="#定义UDF日期转换" class="headerlink" title="定义UDF日期转换"></a>定义UDF日期转换</h2><p>源数据中的日期的格式为:31/Aug/2015:00:04:37 +0800<br>udf之后的数据为:20150110437</p>
+<p>udf代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">SimpleDateFormat inputFormat = new SimpleDateFormat(&quot;dd/MM/yyyy:HH:mm:ss&quot;, Locale.ENGLISH);</div><div class="line">SimpleDateFormat outputFormat = new SimpleDateFormat(&quot;yyyyMMddHHmmss&quot;, Locale.ENGLISH);</div><div class="line"></div><div class="line">public Text evalue(Text input)&#123;</div><div class="line">	</div><div class="line">	Text output = new Text();</div><div class="line">	</div><div class="line"></div><div class="line">	if(null==str||null==str.toString())&#123;</div><div class="line">		return null;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	String inputDate = input.toString().trim();</div><div class="line">	if(null == inputDate)&#123;</div><div class="line">		return null;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	try&#123;</div><div class="line">		//parse</div><div class="line">		Date parseDate = inputFormat.parse(inputDate);</div><div class="line">		//transform</div><div class="line">		String outputDate = outputFormat.format(parseDate);</div><div class="line">		//set</div><div class="line">		output.set(outputDate);</div><div class="line"></div><div class="line">	&#125;catch&#123;Exception e)&#123;</div><div class="line">		e.printStackTrace();</div><div class="line">	&#125;</div><div class="line">	return output;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>2.将上面的代码打包导出/opt/jars/udf2.jar</p>
+<p>3.add jar /opt/jars/udf2.jar ;</p>
+<p>4.create temporary function my_datetransform as “com.study.udf.DateTransformUDF” ;</p>
+<p>5.list jars ;</p>
+<p>6.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">insert overwrite  table default.log_comm </div><div class="line">select my_removequotes(remote_add), my_datetransform(time_local), remote_user, request, host from default.log_src ;</div></pre></td></tr></table></figure></p>
+<h1 id="根据业务编写hiveQL"><a href="#根据业务编写hiveQL" class="headerlink" title="根据业务编写hiveQL"></a>根据业务编写hiveQL</h1><p>统计每天每小时的访问量,并排序<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">select substring(time_local,9,2) hour from default.log_comm;</div><div class="line"></div><div class="line"></div><div class="line">select t.hour, count(*) cnt from </div><div class="line">(</div><div class="line">select substring(time_local,9,2) hour from default.log_comm</div><div class="line">) t</div><div class="line">group by t.hour order by cnt desc ;</div></pre></td></tr></table></figure></p>
+<p>根据访问的ip地址进行地域统计</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">select t.prex_ip, count(*) cnt from </div><div class="line">(</div><div class="line">select substring(ip, 1, 7) prex_ip from log_comm </div><div class="line">) t</div><div class="line">group by t.prex_ip order by cnt desc ;</div></pre></td></tr></table></figure>
+<h1 id="使用python脚本进行数据清洗和统计"><a href="#使用python脚本进行数据清洗和统计" class="headerlink" title="使用python脚本进行数据清洗和统计"></a>使用python脚本进行数据清洗和统计</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">#数据的格式</div><div class="line">userid	movieid	rate	time</div><div class="line">196		33		4		881250949</div><div class="line"></div><div class="line"></div><div class="line">#创建表</div><div class="line">create table if not exists u_data</div><div class="line">(</div><div class="line">userid int,</div><div class="line">movieid int,</div><div class="line">rating	int,</div><div class="line">unixtime string</div><div class="line">)</div><div class="line">row format delimited</div><div class="line">fields terminated by &apos;\t&apos;</div><div class="line">stored as textfile</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#导入数据</div><div class="line">load data local inpath &apos;/datas/u.data&apos; overwrite into table u_data ;</div><div class="line"></div><div class="line"></div><div class="line">#创建一个新的表(此时时间变成weekday星期几)</div><div class="line">create table if not exists u_data_new</div><div class="line">(</div><div class="line">userid int,</div><div class="line">movieid int,</div><div class="line">rating	int,</div><div class="line">weekday int</div><div class="line">)</div><div class="line">row format delimited</div><div class="line">fields terminated by &apos;\t&apos;</div><div class="line">stored as textfile</div><div class="line"></div><div class="line"></div><div class="line">#加载python文件</div><div class="line">add file weekday_mapper.py ;</div><div class="line"></div><div class="line">#向新表中插入数据</div><div class="line">insert overwrite table u_data_new </div><div class="line">select </div><div class="line">	transform(userid,movieid, rating, unixtime)</div><div class="line">	using &apos;python weekday_mapper.py&apos;</div><div class="line">	as(user, movieid, rating, weekday)</div><div class="line">from u_data ;</div><div class="line"></div><div class="line">/*</div><div class="line">transform方法中传递过去的是u_data表中的指定的字段</div><div class="line">using 表示使用的是哪个python脚本</div><div class="line">as表示调用脚本传递出来的数据</div><div class="line">*/</div><div class="line"></div><div class="line">#按星期分组统计</div><div class="line">select weekd, count(*) from u_data_new  group by weekday ;</div></pre></td></tr></table></figure>
+<p>python脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">import sys</div><div class="line">import datetime</div><div class="line"></div><div class="line">for line in sys.stdin:</div><div class="line">	line = line.strip()</div><div class="line">	userid,movieid, rating, unixtime = line.split(&apos;\t&apos;)</div><div class="line">	weekday = datetime.datetime.fromtimestamp(float(unixtime))</div><div class="line">	print &apos;\t&apos;.join([userid,movieid, rating, str(weekday)])</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/25/bigdata/hive/hive_new/hive项目实战之服访问日志处理/" data-id="cj290sd5701nissqqkd7bcrzt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hive/">hive</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/25/bigdata/hive/hive_new/hive中的优化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          hive中的优化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/26/bigdata/hive/hive_new/hive实战/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">hive实战</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mr. Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

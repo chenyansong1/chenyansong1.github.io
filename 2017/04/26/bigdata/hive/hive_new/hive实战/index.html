@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>hive实战 | Chen&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="hive数据库创建时的编码问题12javax.jdo.option.connectionURLjdbc:mysql://192.168.0.11:3306/metastore_hive_db?createDatabaseIfNotExist=true&amp;amp;amp;characterEncoding=UTF-8 如果数据库不存在,那么创建的库为utf-8,而hive不支持utf-8的格式,将会出">
+<meta name="keywords" content="hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive实战">
+<meta property="og:url" content="http://yoursite.com/2017/04/26/bigdata/hive/hive_new/hive实战/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="hive数据库创建时的编码问题12javax.jdo.option.connectionURLjdbc:mysql://192.168.0.11:3306/metastore_hive_db?createDatabaseIfNotExist=true&amp;amp;amp;characterEncoding=UTF-8 如果数据库不存在,那么创建的库为utf-8,而hive不支持utf-8的格式,将会出">
+<meta property="og:updated_time" content="2017-04-28T03:14:04.018Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive实战">
+<meta name="twitter:description" content="hive数据库创建时的编码问题12javax.jdo.option.connectionURLjdbc:mysql://192.168.0.11:3306/metastore_hive_db?createDatabaseIfNotExist=true&amp;amp;amp;characterEncoding=UTF-8 如果数据库不存在,那么创建的库为utf-8,而hive不支持utf-8的格式,将会出">
+  
+    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Chen&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个技术渣的自说自话</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-bigdata/hive/hive_new/hive实战" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/26/bigdata/hive/hive_new/hive实战/" class="article-date">
+  <time datetime="2017-04-26T01:29:54.618Z" itemprop="datePublished">2017-04-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hive/">hive</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hive实战
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="hive数据库创建时的编码问题"><a href="#hive数据库创建时的编码问题" class="headerlink" title="hive数据库创建时的编码问题"></a>hive数据库创建时的编码问题</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">javax.jdo.option.connectionURL</div><div class="line">jdbc:mysql://192.168.0.11:3306/metastore_hive_db?createDatabaseIfNotExist=true&amp;amp;characterEncoding=UTF-8</div></pre></td></tr></table></figure>
+<p>如果数据库不存在,那么创建的库为utf-8,而hive不支持utf-8的格式,将会出现乱码的情况,此时我们需要手动在mysql库中创建metastore_hive_db,编码为latin1格式,这样就能解决这个问题</p>
+<p>1.手动创建元数据库,设置编码为latin1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">jdbc:mysql://192.168.0.11:3306/metastore_hive_db?createDatabaseIfNotExist=true&amp;amp;characterEncoding=UTF-8</div></pre></td></tr></table></figure></p>
+<p>2.启动hive让其生成元数据库中的表</p>
+<p>3.修改表字段注解和表注解</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">alter table COLUMNS_V2 modify column comment varchar(256) character set utf8;</div><div class="line"></div><div class="line">alter table TABLE_PARAMS modify column PARAM_VALUE varchar(4000) character set utf8;</div></pre></td></tr></table></figure>
+<p>4.修改分区字段注解<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">alter table PARTITION_PARAMS modify column PARAM_VALUE varchar(4000) character set utf8;</div><div class="line"></div><div class="line">alter table PARTITION_KEYS modify column PKEY_COMMENT varchar(4000) character set utf8;</div></pre></td></tr></table></figure></p>
+<p>5.修改索引注释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table INDEX_PARAMS modify column PARAM_VALUE varchar(4000) character set utf8;</div></pre></td></tr></table></figure></p>
+<p>6.去hive中创建建库,建表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">create database ods;</div><div class="line">create database dw;</div><div class="line">create database dim;</div><div class="line">create database app;</div><div class="line"></div><div class="line"></div><div class="line">#然后去每个库下面建我们需要的表,如:</div><div class="line"></div><div class="line">CREATE TABLE `dim.dim_category` (</div><div class="line">  `tree_id` int COMMENT &apos;分类树ID&apos;,</div><div class="line">  `tree_name` varchar(64) COMMENT &apos;分类树名称&apos;,</div><div class="line">  `category_id` int COMMENT &apos;分类ID&apos;,</div><div class="line">  `category_name` varchar(64) COMMENT &apos;分类名称&apos;,</div><div class="line">  `category_type` int COMMENT &apos;分类类型0后台分类1前台分类&apos;,</div><div class="line">  `parent_id` int COMMENT &apos;上级分类树根的是0&apos;,</div><div class="line">  `parent_name` varchar(64) COMMENT &apos;父分类名称&apos;,</div><div class="line">  `layer` tinyint COMMENT &apos;层级&apos;,</div><div class="line">  `sort` int COMMENT &apos;分类排序&apos;,</div><div class="line">  `path` varchar(255) COMMENT &apos;所有上级分类&apos;,</div><div class="line">  `is_fmcg` tinyint comment &apos;是否快消品1是0否&apos;,</div><div class="line">  `is_open` tinyint COMMENT &apos;是否打开1是0否&apos;,</div><div class="line">  `is_show` tinyint COMMENT &apos;app是否显示1是0否&apos;,</div><div class="line">  `visibility` tinyint COMMENT &apos;商户端是否显示1是0否&apos;)</div><div class="line">  comment &apos;分类表&apos;</div><div class="line">ROW FORMAT DELIMITED</div><div class="line">FIELDS TERMINATED BY &apos;\t&apos;</div><div class="line">STORED AS TEXTFILE;</div></pre></td></tr></table></figure>
+<h1 id="远程连接hive元数据库"><a href="#远程连接hive元数据库" class="headerlink" title="远程连接hive元数据库"></a>远程连接hive元数据库</h1><p>启动元数据</p>
+<p>#这个服务可以让远程去连接hive的元数据库<br>bin/hive –service metastore &amp;</p>
+<p>#如果是jdbc去连接hive的话需要启动这个服务<br>bin/hive –service hiveserver2 &amp;</p>
+<p>如果是本地去连接远程,则在本地客户端需要配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;hive.metastore.uris&lt;/name&gt;</div><div class="line">	&lt;value&gt;thrift://192.168.0.11:9083&lt;/value&gt;</div><div class="line">	&lt;description&gt;运行hive的主机地址及端口&lt;/description&gt;</div><div class="line">&lt;/property&gt;</div></pre></td></tr></table></figure></p>
+<h1 id="hive-env-sh-配置"><a href="#hive-env-sh-配置" class="headerlink" title="hive-env.sh 配置"></a>hive-env.sh 配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HADOOP_HOME=</div><div class="line">export HIVE_CONF_DIR=</div></pre></td></tr></table></figure>
+<h1 id="hive的日志"><a href="#hive的日志" class="headerlink" title="hive的日志"></a>hive的日志</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hive -hiveconf hive.root.logger=DEBUG,console</div><div class="line">#将DEBUG以上的所有级别的日志打印到控制台,在调试的时候可以使用</div></pre></td></tr></table></figure>
+<h1 id="常用工作语句"><a href="#常用工作语句" class="headerlink" title="常用工作语句"></a>常用工作语句</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line">create database ods;</div><div class="line">create database dw;</div><div class="line">create database app;</div><div class="line">create database dim;</div><div class="line"></div><div class="line">show databases;</div><div class="line"></div><div class="line">use ods;</div><div class="line"></div><div class="line">show tables;</div><div class="line">show tables like &apos;ods_*&apos;;</div><div class="line"></div><div class="line">#查看表的信息</div><div class="line">desc formatted ods.ods_order;</div><div class="line">可以看表的字段, 分区信息, 表所在的location, 表的类型</div><div class="line"></div><div class="line">#可以看文件的数据</div><div class="line">hive&gt;dfs -ls /user/hive/warehourse/ods.db/ods_order</div><div class="line"></div><div class="line">#查看文件的大小</div><div class="line">hive (ods)&gt; dfs -du -h /user/hive/warehouse/ods.db/;</div><div class="line"></div><div class="line"></div><div class="line">#查看执行计划</div><div class="line">explain select * from ods.ods_order ;</div><div class="line"></div><div class="line"></div><div class="line">#查看执行计划中的执行了哪些分区(对于查询语句中,分区没有卡死的情况下,我们可以很容易的知道)</div><div class="line">explain dependency select * from test where dt=&apos;20151010&apos; ;</div><div class="line"></div><div class="line">hive (ods)&gt; explain dependency select * from ods_order where dt=&apos;20151010&apos;;</div><div class="line">OK</div><div class="line">Explain</div><div class="line">&#123;&quot;input_partitions&quot;:[&#123;&quot;partitionName&quot;:&quot;ods@ods_order@dt=20151010&quot;&#125;],&quot;input_tables&quot;:[&#123;&quot;tablename&quot;:&quot;ods@ods_order&quot;,&quot;tabletype&quot;:&quot;MANAGED_TABLE&quot;&#125;]&#125;</div><div class="line">#可以看到输入分区,表,表类型</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#查看表的分区的信息</div><div class="line">show partitions app_order_city_d;</div><div class="line"></div><div class="line">#查看hadoop的任务</div><div class="line">yarn application -list|grep 用户名</div><div class="line">#有时候,知道hive中出错了,不要让他跑了,此时手动杀掉任务</div><div class="line">yarn application -kill application_143432432432423_86621</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#查看hive的函数</div><div class="line">show functions;</div><div class="line"></div><div class="line">#找到某个我们不记得名字的函数</div><div class="line">show functions like &apos;xpath*&apos;;</div><div class="line"></div><div class="line">#查看某个函数的用法,其中有例子</div><div class="line">desc function extended upper ;</div><div class="line"></div><div class="line"></div><div class="line">#hive查看表存储实际路径,找到location</div><div class="line">desc extended dw_order ;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#添加分区</div><div class="line">alter table ods_order add partition (dt=&apos;20151111&apos;);</div><div class="line"></div><div class="line">#删除分区</div><div class="line">alter table ods_order drop if exists partition (dt=&apos;20151111&apos;);</div><div class="line"></div><div class="line"></div><div class="line">#开启mapreduce</div><div class="line">set hive.fetch.task.conversion=minimal,more</div></pre></td></tr></table></figure>
+<h1 id="创建分区加载数据"><a href="#创建分区加载数据" class="headerlink" title="创建分区加载数据"></a>创建分区加载数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">hive (ods)&gt; alter table ods_customer add partition (dt=&apos;20151210&apos;);</div><div class="line">OK</div><div class="line">Time taken: 0.19 seconds</div><div class="line">hive (ods)&gt; show partitions ods_customer;</div><div class="line">OK</div><div class="line">partition</div><div class="line">dt=20151210</div><div class="line">Time taken: 0.151 seconds, Fetched: 1 row(s)</div><div class="line">hive (ods)&gt; </div><div class="line"></div><div class="line"></div><div class="line">load data local inpath &apos;/home/hadoop/app/hive/script/t_customer.txt&apos; overwrite into table ods_customer partition (dt=&apos;20151210&apos;);</div><div class="line"></div><div class="line">hive (ods)&gt; dfs -du -h /user/hive/warehouse/ods.db/ods_customer/ ;</div><div class="line">7.6 M  /user/hive/warehouse/ods.db/ods_customer/dt=20151210</div><div class="line"></div><div class="line"></div><div class="line">#有的时候采用追加的方式去加载数据</div><div class="line"></div><div class="line">load data local inpath &apos;/home/hadoop/app/hive/script/t_customer.txt&apos; into table ods_customer partition (dt=&apos;20151210&apos;);</div></pre></td></tr></table></figure>
+<h1 id="一些业务逻辑"><a href="#一些业务逻辑" class="headerlink" title="一些业务逻辑"></a>一些业务逻辑</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">select </div><div class="line">city_id,</div><div class="line">sum(case when order_status=5 then 1 else 0 end) as cnt_ord_succ_d,</div><div class="line">sum(case when order_status=3 then 1 else 0 end) as cnt_ord_cacel_d,</div><div class="line">sum(1) as cnt_ord_d,  &lt;----每天的每个城市的下单数</div><div class="line">count(distinct CUST_ID) as cnt_ord_user &lt;----- 下单的用户数</div><div class="line">FROM dw.dw_order </div><div class="line">WHERE dt=&apos;$&#123;day_01&#125;&apos; and city_id is not null</div><div class="line">group by city_id ;</div><div class="line"></div><div class="line"></div><div class="line">1.以城市id作为分组</div><div class="line">2.case when 进行转换</div><div class="line">	case when order_status=5 then 1 else 0 end</div><div class="line">3.sum对case when的结果进行求和</div><div class="line">4.统计每天下单的用户数,因为用户存在多次购买,所以使用distinct去重,然后使用count去统计去重之后的个数</div><div class="line">count(distinct CUST_ID)</div></pre></td></tr></table></figure>
+<p>求商品的复购率</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">需求列出的商品的7日,15日,30复购率，目的了解这几款商品的周期.</div><div class="line">计算口径:当日购买部分商品的用户数/7日重复购买此商品的用户数。</div><div class="line">每天查看每个城市每个商品当日购买用户数，7日15日30日复购率。</div><div class="line"></div><div class="line">SELECT t3.atdate AS cdate,t3.city_id,t3.goods_id,</div><div class="line">COUNT(DISTINCT CASE WHEN days=0 THEN t3.cust_id END) AS cnt_buy_cust_d,		#取当前的购买人数</div><div class="line">COUNT(DISTINCT CASE WHEN days&gt;0 AND days&lt;=7 THEN t3.cust_id END) AS cnt_buy_cust_7_d, 	#取7天的购买人数,同一个用户多次购买,只取一次</div><div class="line">COUNT(DISTINCT CASE WHEN days&gt;0 AND days&lt;=15 THEN t3.cust_id END) AS cnt_buy_cust_15_d, 	#取15天的购买人数</div><div class="line">COUNT(DISTINCT CASE WHEN days&gt;0 AND days&lt;=30 THEN t3.cust_id END) AS cnt_buy_cust_30_d</div><div class="line">FROM (</div><div class="line">	SELECT t1.atdate,t1.city_id,t1.cust_id,t1.goods_id,</div><div class="line">	DATEDIFF(t2.atdate, t1.atdate) days ###第3步</div><div class="line">	FROM (###第一步</div><div class="line">		SELECT o.order_date AS atdate,o.city_id,</div><div class="line">		o.cust_id,og.goods_id</div><div class="line">		FROM dw.dw_order o INNER JOIN dw.dw_order_goods og</div><div class="line">		ON o.order_id=og.order_id </div><div class="line">		AND o.ORDER_STATUS = 5</div><div class="line">		AND og.source_id=1</div><div class="line">		AND o.dt = &apos;20151010&apos; </div><div class="line">	) t1 INNER JOIN (###第2步</div><div class="line">		SELECT o.order_date AS atdate,o.city_id,</div><div class="line">		o.cust_id,og.goods_id,</div><div class="line">		og.goods_name</div><div class="line">		FROM dw.dw_order o INNER JOIN dw.dw_order_goods og</div><div class="line">		ON o.order_id=og.order_id </div><div class="line">		AND o.ORDER_STATUS = 5</div><div class="line">		AND og.source_id=1</div><div class="line">	) t2 ON t1.cust_id=t2.cust_id AND t1.goods_id=t2.goods_id</div><div class="line">) t3 GROUP BY t3.atdate,t3.city_id,t3.goods_id;</div><div class="line"></div><div class="line"></div><div class="line">#这样在做数据展现的时候,求7日复购率</div><div class="line">select round(cnt_buy_cust_d/cnt_buy_cust_7_d) from t1</div><div class="line"></div><div class="line">其实在O2O中复购率可以看一些像:蔬菜,水果,生鲜等的上架周期</div></pre></td></tr></table></figure>
+<p>月平均日客户数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">目前有一个合作资源，北京某度假酒店，价值几百到8000不等的酒店套房，一共100套，可以给到购买200元以上订单用户，用于抽奖奖品，比如设置的获奖条件：凡在9月,10月,11月的用户，下单200元以上的订单，即可获得北京某度假酒店。目的带动销量，刺激用户参与活动，同时给合作方导流。合作方需要知道我们订单金额在200以上的每天平均的用户量是多少.</div><div class="line">#客户id是int类型 需注意用count</div><div class="line">SELECT </div><div class="line">SUM(CASE WHEN t.COMPLETION_DATE&gt;=&apos;20151001&apos; AND t.COMPLETION_DATE&lt;=&apos;20151031&apos; THEN 1 ELSE 0 END) AS cnt_ord_10_m		//返回的是订单数量</div><div class="line">,COUNT(DISTINCT CASE WHEN t.COMPLETION_DATE&gt;=&apos;20151001&apos; AND t.COMPLETION_DATE&lt;=&apos;20151031&apos; THEN CUST_ID END) AS cnt_cust_10_m //返回的是客户数量</div><div class="line">FROM dw.dw_order t </div><div class="line">WHERE t.COMPLETION_DATE&gt;=&apos;20151001&apos; </div><div class="line">AND t.COMPLETION_DATE&lt;=&apos;20151031&apos; </div><div class="line">AND CITY_ID=2</div><div class="line">AND ORDER_TYPE &lt;&gt;6</div><div class="line">AND PAYABLE_AMOUNT&gt;100</div><div class="line">AND t.ORDER_STATUS=5;</div><div class="line"></div><div class="line">#注意这里的sum和count分别的作用</div></pre></td></tr></table></figure>
+<p>求每个用户累计订单数，累计应付金额</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#1.在dw_customer表中有累计的订单数和累计的订单总额,这样就可以避免去全表扫描dw_order表,因为订单表很大的,这样很耗时;</div><div class="line">#2.为什么要用full join?因为dw_customer表中并不是最新的用户表,如果当天有新增的用户,而新增的用户还不存在于dw_customer表中,而此时新增用户还有购买行为,那么如果使用left join就会将新增的用户过滤掉了,所以此处使用的是full join</div><div class="line">select nvl(t1.cust_id,t2.cust_id), </div><div class="line">nvl(t2.order_cnt,0)+nvl(t1.order_cnt,0) as order_cnt,</div><div class="line">nvl(t2.amount_sum,0)+nvl(t1.amount_sum,0) as amount_sum</div><div class="line">from dw.dw_customer t1</div><div class="line">full outer join (</div><div class="line">select cust_id,count(1) as order_cnt,sum(payable_amount) as amount_sum from </div><div class="line">dw.dw_order where dt=&apos;20151011&apos; and order_status=5</div><div class="line">group by cust_id</div><div class="line">) t2 on t1.cust_id=t2.cust_id</div><div class="line">and t1.dt=20151210 limit 100;</div></pre></td></tr></table></figure>
+<p>新用户统计信息Hql分析(日粒度)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">#查看所有的时间函数</div><div class="line">show functions like &quot;*time*&quot;;</div><div class="line"></div><div class="line">/*</div><div class="line">这里涉及到两个时间的转换:</div><div class="line">1.将时间字符串转成毫秒数</div><div class="line">2015/5/1 21:46  转成毫秒数</div><div class="line"></div><div class="line">2.将毫秒数转成指定格式的时间字符串</div><div class="line">from_unixtime将毫秒数转成指定格式的字符串</div><div class="line"></div><div class="line">其实一般处理时间会使用我们写的UDF函数去统一处理</div><div class="line"></div><div class="line">*/</div><div class="line"></div><div class="line">select count(1) from dw.dw_customer</div><div class="line">where dt=&apos;20151210&apos; and  </div><div class="line">from_unixtime(unix_timestamp(register_time,&apos;yyyy/MM/dd HH:mm&apos;),&apos;yyyyMMdd&apos;)=&apos;20140610&apos;;</div></pre></td></tr></table></figure></p>
+<p>求5,6月各个渠道带来的新用户(注册时间)，以此来考核运营部门的kpi</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">select source_no,count(1) from dw.dw_customer</div><div class="line">where dt=20151211 and</div><div class="line">from_unixtime(unix_timestamp(register_time,&apos;yyyy/MM/dd HH:mm&apos;),&apos;yyyyMMdd&apos;)&gt;=&apos;20141201&apos;</div><div class="line">and from_unixtime(unix_timestamp(register_time,&apos;yyyy/MM/dd HH:mm&apos;),&apos;yyyyMMdd&apos;)&lt;=&apos;20150131&apos; </div><div class="line">and source_no is not null</div><div class="line">group by source_no;</div></pre></td></tr></table></figure>
+<p>统计各个渠道带来的用户，top10完成订单数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#求分组中的top10,使用row_number()函数:partition by 表示分组的字段, order by 表示组内排序的字段</div><div class="line"></div><div class="line">select source_no,mobile,order_cnt,rn from (</div><div class="line">select source_no,order_cnt,mobile,</div><div class="line">row_number() over(partition by source_no order by order_cnt desc) as rn </div><div class="line">from dw.dw_customer </div><div class="line">where dt=20151211 and source_no is not null and order_cnt is not null</div><div class="line">) t2 where rn &lt;10;</div></pre></td></tr></table></figure>
+<h1 id="etl开发模板"><a href="#etl开发模板" class="headerlink" title="etl开发模板"></a>etl开发模板</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#这里是需要用到的函数</div><div class="line">. /home/anjianbing/soft/functions/wait4FlagFile.sh</div><div class="line"># ===========================================================================</div><div class="line"># 程序名称:     </div><div class="line"># 功能描述:     城市每日完成订单数</div><div class="line"># 输入参数:     运行日期 20151010</div><div class="line"># 目标表名:     app.app_order_city_d 到哪张表来</div><div class="line"># 数据源表:     dw.dw_order	从哪张表来</div><div class="line">#   创建人:     安坚兵</div><div class="line"># 创建日期:     2015-12-21</div><div class="line"># 版本说明:     v1.0</div><div class="line"># 代码审核:     </div><div class="line"># 修改人名:</div><div class="line"># 修改日期:</div><div class="line"># 修改原因:</div><div class="line"># 修改列表: </div><div class="line"># ===========================================================================</div><div class="line">### 1.参数加载</div><div class="line">exe_hive=&quot;hive&quot;</div><div class="line"># 因为有的时候,可能会运行脚本的时候指定参数:sh test.sh 20151010,此时就是运行指定天的数,否则默认是运行前一天的数据</div><div class="line">if [ $# -eq 1 ]</div><div class="line">then</div><div class="line">    day_01=`date --date=&quot;$&#123;1&#125;&quot; +%Y-%m-%d`</div><div class="line">else</div><div class="line">    day_01=`date -d&apos;-1 day&apos; +%Y-%m-%d`</div><div class="line">fi</div><div class="line"></div><div class="line">#拿到时间的年月日</div><div class="line">syear=`date --date=$day_01 +%Y`</div><div class="line">smonth=`date --date=$day_01 +%m`</div><div class="line">sday=`date --date=$day_01 +%d`</div><div class="line"></div><div class="line">#目标数据库和表</div><div class="line">TARGET_DB=app.db</div><div class="line">TARGET_TABLE=app_order_city_d</div><div class="line"></div><div class="line">### 2.定义执行HQL</div><div class="line">HQL=&quot;insert overwrite table app.app_order_city_d partition (dt=&apos;$&#123;day_01&#125;&apos;)</div><div class="line">SELECT city_id,COUNT(1) FROM dw.dw_order WHERE dt=&apos;$&#123;day_01&#125;&apos; </div><div class="line">AND order_status=5 GROUP BY city_id;</div><div class="line">&quot;</div><div class="line">### 3.检查依赖 (因为只要等ods层的表跑完了,才能跑dw层的表,同样只有等dw层的表跑完了,才能跑app层的表)</div><div class="line">wait4FlagFile HDFS /user/hive/warehouse/dw.db/dw_order/dt=$&#123;day_01&#125; _SUCCESS 15801152142</div><div class="line"></div><div class="line">#### 4.执行HQL</div><div class="line">$exe_hive -e &quot;$HQL&quot;</div><div class="line"></div><div class="line">#### 5. 判断代码是否执行成功，touch控制文件</div><div class="line">result=`hadoop fs -ls /user/hive/warehouse/$&#123;TARGET_DB&#125;/$&#123;TARGET_TABLE&#125;/dt=$&#123;day_01&#125; | wc -l`</div><div class="line">if [[ $result -gt 0 ]]; then</div><div class="line">	#为下面的依赖做准备</div><div class="line">    hadoop fs -touchz /user/hive/warehouse/$&#123;TARGET_DB&#125;/$&#123;TARGET_TABLE&#125;/dt=$&#123;day_01&#125;/_SUCCESS</div><div class="line">else</div><div class="line">    echo &quot;失败发送预警短信和邮件&quot;</div><div class="line">fi</div></pre></td></tr></table></figure>
+<h1 id="给已经排好序的表添加序列号的字段"><a href="#给已经排好序的表添加序列号的字段" class="headerlink" title="给已经排好序的表添加序列号的字段"></a>给已经排好序的表添加序列号的字段</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#给已经排好序的表添加序列号的字段</div><div class="line"></div><div class="line">select </div><div class="line">student_nu, score, row_number() over() as num</div><div class="line">from student order by score;</div></pre></td></tr></table></figure>
+<h1 id="行转列"><a href="#行转列" class="headerlink" title="行转列"></a>行转列</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">name		class		score</div><div class="line">zhangsan	math		99</div><div class="line">zhangsan	chinese		88</div><div class="line">lisi		math		99</div><div class="line">lisi		chinese		100</div><div class="line"></div><div class="line">#行转列</div><div class="line">select</div><div class="line">name,</div><div class="line">max(case when class=&apos;math&apos; then score) as math_score,</div><div class="line">max(case when class=&apos;chinese&apos; then score) as math_score,</div><div class="line">from student group by name ;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/26/bigdata/hive/hive_new/hive实战/" data-id="cj290sd4j01n3ssqqjjsptw75" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hive/">hive</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/25/bigdata/hive/hive_new/hive项目实战之服访问日志处理/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          hive项目实战之服访问日志处理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/28/数据仓库/PowderDesigner/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">PowderDesigner的使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mr. Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

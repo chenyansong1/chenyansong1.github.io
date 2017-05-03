@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>hive中的外部表 | Chen&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="查看表的类型1234567891011121314151617181920212223#可以看表是管理表还是外部表desc formatted test_table;hive (default)&amp;gt; desc formatted test_table;OKcol_name        data_type       comment# col_name              data_ty">
+<meta name="keywords" content="hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive中的外部表">
+<meta property="og:url" content="http://yoursite.com/2017/04/24/bigdata/hive/hive_new/外部表/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="查看表的类型1234567891011121314151617181920212223#可以看表是管理表还是外部表desc formatted test_table;hive (default)&amp;gt; desc formatted test_table;OKcol_name        data_type       comment# col_name              data_ty">
+<meta property="og:updated_time" content="2017-04-24T01:22:16.425Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive中的外部表">
+<meta name="twitter:description" content="查看表的类型1234567891011121314151617181920212223#可以看表是管理表还是外部表desc formatted test_table;hive (default)&amp;gt; desc formatted test_table;OKcol_name        data_type       comment# col_name              data_ty">
+  
+    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Chen&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个技术渣的自说自话</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-bigdata/hive/hive_new/外部表" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/24/bigdata/hive/hive_new/外部表/" class="article-date">
+  <time datetime="2017-04-24T00:38:18.056Z" itemprop="datePublished">2017-04-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hive/">hive</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hive中的外部表
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="查看表的类型"><a href="#查看表的类型" class="headerlink" title="查看表的类型"></a>查看表的类型</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">#可以看表是管理表还是外部表</div><div class="line">desc formatted test_table;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">hive (default)&gt; desc formatted test_table;</div><div class="line">OK</div><div class="line">col_name        data_type       comment</div><div class="line"># col_name              data_type               comment             </div><div class="line">                 </div><div class="line">id                      int                                         </div><div class="line">name                    string                                      </div><div class="line">                 </div><div class="line"># Detailed Table Information             </div><div class="line">Database:               default                  </div><div class="line">Owner:                  root                     </div><div class="line">CreateTime:             Sun Apr 23 11:14:21 CST 2017     </div><div class="line">LastAccessTime:         UNKNOWN                  </div><div class="line">Protect Mode:           None                     </div><div class="line">Retention:              0                        </div><div class="line">Location:               hdfs://hdp-node-01:9000/user/hive/warehouse/test_table      </div><div class="line">#可以看表的类型</div><div class="line">Table Type:             MANAGED_TABLE</div></pre></td></tr></table></figure>
+<h1 id="创建外部表"><a href="#创建外部表" class="headerlink" title="创建外部表"></a>创建外部表</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line">create external table if not exists default.emp_external</div><div class="line">(</div><div class="line">empno int,</div><div class="line">ename string,</div><div class="line">job string,</div><div class="line">mgr int,</div><div class="line">hiredate string,</div><div class="line">sal double,</div><div class="line">comm double,</div><div class="line">deptno int</div><div class="line">)</div><div class="line">comment &apos;employee external table&apos;</div><div class="line">row format delimited</div><div class="line">fields terminated by &apos;,&apos; </div><div class="line">location &apos;/user/zhangsan/hive/warehouse/emp_external&apos; ;</div><div class="line"></div><div class="line"></div><div class="line">#查看表在HDFS中的目录是否创建</div><div class="line">hive (default)&gt; dfs -ls /user/zhangsan/hive/warehouse/;</div><div class="line">Found 1 items</div><div class="line">drwxr-xr-x   - root supergroup          0 2017-04-23 23:23 /user/zhangsan/hive/warehouse/emp_external</div><div class="line"></div><div class="line"></div><div class="line">#查看表的类型</div><div class="line">hive (default)&gt; desc emp_external;</div><div class="line">OK</div><div class="line">col_name        data_type       comment</div><div class="line">empno                   int                                         </div><div class="line">ename                   string                                      </div><div class="line">job                     string                                      </div><div class="line">mgr                     int                                         </div><div class="line">hiredate                string                                      </div><div class="line">sal                     double                                      </div><div class="line">comm                    double                                      </div><div class="line">deptno                  int                                         </div><div class="line">Time taken: 0.159 seconds, Fetched: 8 row(s)</div><div class="line">hive (default)&gt; desc formatted emp_external;</div><div class="line">OK</div><div class="line">col_name        data_type       comment</div><div class="line"># col_name              data_type               comment             </div><div class="line">                 </div><div class="line">empno                   int                                         </div><div class="line">ename                   string                                      </div><div class="line">job                     string                                      </div><div class="line">mgr                     int                                         </div><div class="line">hiredate                string                                      </div><div class="line">sal                     double                                      </div><div class="line">comm                    double                                      </div><div class="line">deptno                  int                                         </div><div class="line">                 </div><div class="line"># Detailed Table Information             </div><div class="line">Database:               default                  </div><div class="line">Owner:                  root                     </div><div class="line">CreateTime:             Sun Apr 23 23:12:23 CST 2017     </div><div class="line">LastAccessTime:         UNKNOWN                  </div><div class="line">Protect Mode:           None                     </div><div class="line">Retention:              0                        </div><div class="line">Location:               hdfs://hdp-node-01:9000/user/hive/warehouse/emp_external    </div><div class="line">#此时表的类型是外部表</div><div class="line">Table Type:             EXTERNAL_TABLE</div></pre></td></tr></table></figure>
+<h1 id="外部表和内部表-管理表-的区别"><a href="#外部表和内部表-管理表-的区别" class="headerlink" title="外部表和内部表(管理表)的区别"></a>外部表和内部表(管理表)的区别</h1><p>内部表也称为管理表,默认存储在/user/hive/warehouse下,也可以使用location去指定,删除表时,会删除表中的数和元数据</p>
+<p>外部表也称为External_table,在创建表时可以自己指定目录的位置(location),删除表时,会删除表的元数据,不会删除表数据</p>
+<h1 id="创建外部表-指向已经存在的数据"><a href="#创建外部表-指向已经存在的数据" class="headerlink" title="创建外部表,指向已经存在的数据"></a>创建外部表,指向已经存在的数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"># 向外部表的location中放入数据</div><div class="line">hive (default)&gt; dfs -put /home/hadoop/app/hive/script/employee.txt /user/zhangsan/hive/warehouse/emp_external ;</div><div class="line">hive (default)&gt; dfs -ls /user/zhangsan/hive/warehouse/emp_external;</div><div class="line">Found 1 items</div><div class="line">-rw-r--r--   3 root supergroup        652 2017-04-23 23:29 /user/zhangsan/hive/warehouse/emp_external/employee.txt</div><div class="line"></div><div class="line">hive (default)&gt; select * from emp_external;</div><div class="line">OK</div><div class="line">emp_external.empno      emp_external.ename      emp_external.job        emp_external.mgr        emp_external.hiredate   emp_external.sal    emp_external.comm       emp_external.deptno</div><div class="line">7369    SMITH   CLERK   7902    1980-12-17      800.0   NULL    20</div><div class="line">7499    ALLEN   SALESMAN        7698    1981-2-20       1600.0  300.0   30</div><div class="line">7521    WARD    SALESMAN        7698    1981-2-22       1250.0  500.0   30</div><div class="line">7566    JONES   MANAGER 7839    1981-4-2        2975.0  NULL    20</div><div class="line">7654    MARTIN  SALESMAN        7698    1981-9-28       1250.0  1400.0  30</div><div class="line">7698    BLAKE   MANAGER 7839    1981-5-1        2850.0  NULL    30</div><div class="line">7782    CLARK   MANAGER 7839    1981-7-9        2450.0  NULL    10</div><div class="line">7788    SCOTT   ANALYST 7566    1982-12-9       3000.0  NULL    20</div><div class="line">7839    KING    PRESIDENT       NULL    1981-11-17      5000.0  NULL    10</div><div class="line">7844    TURNER  SALESMAN        7698    1981-9-8        1500.0  0.0     30</div><div class="line">7876    ADAMS   CLERK   7788    1983-1-12       1100.0  NULL    20</div><div class="line">7900    JAMES   CLERK   7698    1981-12-3       950.0   NULL    30</div><div class="line">7902    FORD    ANALYST 7566    1981-12-3       3000.0  NULL    20</div><div class="line">7934    MILLER  CLERK   7782    1982-1-23       1300.0  NULL    10</div><div class="line">Time taken: 0.665 seconds, Fetched: 14 row(s)</div><div class="line">hive (default)&gt; </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#其实内部表也是一样的,在创建完表之后,我们使用load data local inpath &apos;xx.txt&apos; into table test,向表中添加数据,本质就是将xx.txt拷贝到表在HDFS中的目录下</div><div class="line">#我们不用load data的方式,使用手动的hdfs -put xx.txt /user/hive/warehouse/test/ 这样做也是可以的,所以对于外部表,只不过是表的目录在另外的hdfs上,这样在我们创建表的时候指定了location,那么当表创建完成之后,使用select去查询的时候,表中就有了数据</div><div class="line"></div><div class="line"></div><div class="line">因为外部表的数据已经存在,所以当我们创建外部表的时候,就可以直接查询数据,不用我们load数据</div><div class="line">当然我们可以先创建外部表,然后再向其中放入数据,放入数据的方式有2种,第一种是通过我们的load,第二种是直接通过hdfs -put 放入数据</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/24/bigdata/hive/hive_new/外部表/" data-id="cj290sd5c01nlssqql2a0gnwg" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hive/">hive</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/23/markdown/markdown的快捷键/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          markdown的快捷键
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/24/bigdata/hive/hive_new/hive中的分区表/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">hive中的分区表</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mr. Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

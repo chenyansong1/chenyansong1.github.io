@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>hive中的分区表 | Chen&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="分区表实际上就是对应一个hdfs文件系统上的独立的文件夹,该文件夹下是该分区所有的数据文件,hive中的分区就是分目录,把一个大的数据集根据业务需求要分割成更小的数据集">
+<meta name="keywords" content="hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive中的分区表">
+<meta property="og:url" content="http://yoursite.com/2017/04/24/bigdata/hive/hive_new/hive中的分区表/index.html">
+<meta property="og:site_name" content="Chen's Blog">
+<meta property="og:description" content="分区表实际上就是对应一个hdfs文件系统上的独立的文件夹,该文件夹下是该分区所有的数据文件,hive中的分区就是分目录,把一个大的数据集根据业务需求要分割成更小的数据集">
+<meta property="og:updated_time" content="2017-04-24T02:16:47.863Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive中的分区表">
+<meta name="twitter:description" content="分区表实际上就是对应一个hdfs文件系统上的独立的文件夹,该文件夹下是该分区所有的数据文件,hive中的分区就是分目录,把一个大的数据集根据业务需求要分割成更小的数据集">
+  
+    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Chen&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个技术渣的自说自话</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-bigdata/hive/hive_new/hive中的分区表" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/04/24/bigdata/hive/hive_new/hive中的分区表/" class="article-date">
+  <time datetime="2017-04-24T01:23:09.895Z" itemprop="datePublished">2017-04-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hive/">hive</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hive中的分区表
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>分区表实际上就是对应一个hdfs文件系统上的独立的文件夹,该文件夹下是该分区所有的数据文件,hive中的分区就是分目录,把一个大的数据集根据业务需求要分割成更小的数据集</p>
+<a id="more"></a>
+<p>在查询时通过where子句中的表达式来选择查询所需要的指定的分区,这样的查询效率会提高很多</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">create table dept_partition</div><div class="line">(</div><div class="line">deptno int,</div><div class="line">dname string,</div><div class="line">loc string</div><div class="line">)</div><div class="line">comment &apos;partition table&apos;</div><div class="line">partitioned by (event_month string)</div><div class="line">row format delimited </div><div class="line">fields terminated by &apos;,&apos; ;</div><div class="line"></div><div class="line"></div><div class="line">create external table if not exists default.emp_partition</div><div class="line">(</div><div class="line">empno int,</div><div class="line">ename string,</div><div class="line">job string,</div><div class="line">mgr int,</div><div class="line">hiredate string,</div><div class="line">sal double,</div><div class="line">comm double,</div><div class="line">deptno int</div><div class="line">)</div><div class="line">comment &apos;emp partition table&apos;</div><div class="line">partitioned by (month string)</div><div class="line">row format delimited</div><div class="line">fields terminated by &apos;,&apos;  ;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#查看分区的信息</div><div class="line">hive (default)&gt; desc formatted emp_partition;</div><div class="line">OK</div><div class="line">col_name        data_type       comment</div><div class="line"># col_name              data_type               comment             </div><div class="line">                 </div><div class="line">empno                   int                                         </div><div class="line">ename                   string                                      </div><div class="line">job                     string                                      </div><div class="line">mgr                     int                                         </div><div class="line">hiredate                string                                      </div><div class="line">sal                     double                                      </div><div class="line">comm                    double                                      </div><div class="line">deptno                  int                                         </div><div class="line"></div><div class="line">#这里可以看到分区的字段名和字段类型                 </div><div class="line"># Partition Information          </div><div class="line"># col_name              data_type               comment             </div><div class="line">                 </div><div class="line">month                   string                                      </div><div class="line">                 </div><div class="line">.....</div><div class="line">hive (default)&gt;</div></pre></td></tr></table></figure>
+<h1 id="加载数据到分区表"><a href="#加载数据到分区表" class="headerlink" title="加载数据到分区表"></a>加载数据到分区表</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">load data local inpath &apos;/home/hadoop/app/hive/script/employee2.txt&apos; into table emp_partition partition (month=&apos;201509&apos;)</div><div class="line"></div><div class="line"></div><div class="line">hive (default)&gt; dfs -ls /user/hive/warehouse/emp_partition/ ;</div><div class="line">Found 1 items</div><div class="line">drwxr-xr-x   - root supergroup          0 2017-04-24 00:10 /user/hive/warehouse/emp_partition/month=201509</div></pre></td></tr></table></figure>
+<h1 id="插叙分区表中的数据"><a href="#插叙分区表中的数据" class="headerlink" title="插叙分区表中的数据"></a>插叙分区表中的数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select * from emp_partition where month=&apos;201509&apos; ;</div></pre></td></tr></table></figure>
+<h1 id="指定多个分区字段"><a href="#指定多个分区字段" class="headerlink" title="指定多个分区字段"></a>指定多个分区字段</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">create external table if not exists default.emp_partition</div><div class="line">(</div><div class="line">empno int,</div><div class="line">ename string,</div><div class="line">job string,</div><div class="line">mgr int,</div><div class="line">hiredate string,</div><div class="line">sal double,</div><div class="line">comm double,</div><div class="line">deptno int</div><div class="line">)</div><div class="line">comment &apos;emp partition table&apos;</div><div class="line">partitioned by (month string, day string)</div><div class="line">row format delimited</div><div class="line">fields terminated by &apos;,&apos;  ;</div><div class="line"></div><div class="line">#加载数据</div><div class="line">load data local inpath &apos;/home/hadoop/app/hive/script/employee2.txt&apos; into table emp_partition partition (month=&apos;201509&apos;, day=&apos;13&apos;)</div><div class="line"></div><div class="line"></div><div class="line">#查询数据</div><div class="line">select * from emp_partition where month=&apos;201509&apos; and day=&apos;13&apos; ;</div></pre></td></tr></table></figure>
+<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">create table if not exists default.dept_nopartition</div><div class="line">(</div><div class="line">deptno int,</div><div class="line">dname string,</div><div class="line">loc string</div><div class="line">)</div><div class="line">comment &apos;dept no partition table&apos;</div><div class="line">row format delimited</div><div class="line">fields terminated by &apos;,&apos;  ;</div><div class="line"></div><div class="line">hive&gt;dfs -put /xx/dept.txt /user/hive/warehouse/dept_nopartition ;</div><div class="line"></div><div class="line">select * from dept_nopartition</div><div class="line">#此时是有数据的</div><div class="line"></div><div class="line">----------------------------------</div><div class="line"></div><div class="line">create table if not exists default.dept_partition</div><div class="line">(</div><div class="line">deptno int,</div><div class="line">dname string,</div><div class="line">loc string</div><div class="line">)</div><div class="line">comment &apos;dept no partition table&apos;</div><div class="line">partitioned by (day string)</div><div class="line">row format delimited</div><div class="line">fields terminated by &apos;,&apos;  ;</div><div class="line"></div><div class="line"></div><div class="line">hive&gt;dfs -mkdir -p /user/hive/warehouse/dept_partition/day=20150913 ;</div><div class="line"></div><div class="line">hive&gt;dfs -put /xx/dept.txt /user/hive/dept_partition/day=20150913 ;</div><div class="line"></div><div class="line">hive&gt;select * from dept_partition</div><div class="line">#此时没有数据</div><div class="line"></div><div class="line">登录到mysql中去看,表的元数据信息,</div><div class="line">mysql&gt;select * from paritions;</div><div class="line">#可以看到其中并没有表dept_partition对应的分区信息,所以当我们select查询的时候,根本不知道分区的存在</div><div class="line"></div><div class="line"></div><div class="line">既然数据我们已经手动放入了我们创建的分区目录中,那么我们又要查询到数据,怎么解决呢?</div><div class="line"></div><div class="line">#方式一:</div><div class="line">hive&gt;msck repair table dept_partition</div><div class="line">OK</div><div class="line">Partitions not in metastore: dept_part:day=20150913</div><div class="line">Repair: Added partition to metastore dept_part:day=20150913</div><div class="line"></div><div class="line">此时再去mysql中查看表的分区信息</div><div class="line">mysql&gt;select * from paritions;</div><div class="line">#此时就可以看到分区信息了</div><div class="line"></div><div class="line"></div><div class="line">#方式二:</div><div class="line">hive&gt;dfs -mkdir -p /user/hive/warehouse/dept_partition/day=20150914 ;</div><div class="line">hive&gt;dfs -put /xx/dept.txt /user/hive/dept_partition/day=20150914 ;</div><div class="line"></div><div class="line">解决:</div><div class="line">alter table dept_partition add partition(day=&apos;20150914&apos;) ;</div><div class="line"></div><div class="line">此时查看mysql中的分区信息</div><div class="line">mysql&gt;select * from paritions;</div><div class="line">#此时就可以看到分区信息了</div></pre></td></tr></table></figure>
+<h1 id="查看表的所有的分区"><a href="#查看表的所有的分区" class="headerlink" title="查看表的所有的分区"></a>查看表的所有的分区</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">hive (default)&gt; show partitions emp_partition;</div><div class="line">OK</div><div class="line">partition</div><div class="line">month=201509</div><div class="line">month=201510</div><div class="line">month=201511</div><div class="line">Time taken: 0.137 seconds, Fetched: 3 row(s)</div><div class="line">hive (default)&gt;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/04/24/bigdata/hive/hive_new/hive中的分区表/" data-id="cj290sd4001mrssqqk84zyg81" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hive/">hive</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/04/24/bigdata/hive/hive_new/外部表/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          hive中的外部表
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/24/bigdata/hive/hive_new/导入数据到hive表的六大方式/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">导入数据到hive表的六大方式</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Mr. Chen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
