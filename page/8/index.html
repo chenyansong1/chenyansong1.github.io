@@ -1,11 +1,93 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<!doctype html>
+
+
+
   
-  <title>Chen&#39;s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一个技术渣的自说自话">
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="一个技术渣的自说自话">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Chen's Blog">
 <meta property="og:url" content="http://yoursite.com/page/8/index.html">
@@ -14,272 +96,891 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chen's Blog">
 <meta name="twitter:description" content="一个技术渣的自说自话">
-  
-    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/page/8/"/>
+
+
+
+
+
+  <title> Chen's Blog </title>
 </head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Chen&#39;s Blog</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">一个技术渣的自说自话</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-bigdata/spark从入门到精通_笔记/Spark运维管理之基于zookeeper实现HA以及自动主备切换" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之基于zookeeper实现HA以及自动主备切换/" class="article-date">
-  <time datetime="2017-04-17T06:37:38.917Z" itemprop="datePublished">2017-04-17</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之基于zookeeper实现HA以及自动主备切换/">Spark运维管理之基于zookeeper实现HA以及自动主备切换</a>
-    </h1>
   
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之基于zookeeper实现HA以及自动主备切换/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之基于zookeeper实现HA以及自动主备切换/" itemprop="url">
+                  Spark运维管理之基于zookeeper实现HA以及自动主备切换
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-17T14:37:38+08:00">
+                2017-04-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>默认情况下，standalone cluster manager对于worker节点的失败是具有容错性的（迄今为止，Spark自身而言对于丢失部分计算工作是有容错性的，它会将丢失的计算工作迁移到其他worker节点上执行）。然而，调度器是依托于master进程来做出调度决策的，这就会造成单点故障：如果master挂掉了，就没法提交新的应用程序了。为了解决这个问题，spark提供了两种高可用性方案，分别是基于zookeeper的HA方案以及基于文件系统的HA方案。</p>
+      
+
+      
         
-          <p class="article-more-link">
-            <a href="/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之基于zookeeper实现HA以及自动主备切换/#more">Read More</a>
-          </p>
+          <p>默认情况下，standalone cluster manager对于worker节点的失败是具有容错性的（迄今为止，Spark自身而言对于丢失部分计算工作是有容错性的，它会将丢失的计算工作迁移到其他worker节点上执行）。然而，调度器是依托于master进程来做出调度决策的，这就会造成单点故障：如果master挂掉了，就没法提交新的应用程序了。为了解决这个问题，spark提供了两种高可用性方案，分别是基于zookeeper的HA方案以及基于文件系统的HA方案。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之基于zookeeper实现HA以及自动主备切换/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/17/bigdata/spark从入门到精通_笔记/Spark运维管理之基于zookeeper实现HA以及自动主备切换/" data-id="cj290sca6011rssqqepuiins5" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之新闻网站关键指标实时统计" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之新闻网站关键指标实时统计/" class="article-date">
-  <time datetime="2017-04-16T10:33:08.930Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之新闻网站关键指标实时统计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之新闻网站关键指标实时统计/">SparkStreaming之新闻网站关键指标实时统计</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之新闻网站关键指标实时统计/" itemprop="url">
+                  SparkStreaming之新闻网站关键指标实时统计
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T18:33:08+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="构造模拟的数据-kafka的生产者"><a href="#构造模拟的数据-kafka的生产者" class="headerlink" title="构造模拟的数据(kafka的生产者)"></a>构造模拟的数据(kafka的生产者)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div></pre></td><td class="code"><pre><div class="line">package cn.spark.study.streaming.upgrade.news;</div><div class="line"></div><div class="line">import java.text.SimpleDateFormat;</div><div class="line">import java.util.Date;</div><div class="line">import java.util.Properties;</div><div class="line">import java.util.Random;</div><div class="line"></div><div class="line">import kafka.javaapi.producer.Producer;</div><div class="line">import kafka.producer.KeyedMessage;</div><div class="line">import kafka.producer.ProducerConfig;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 访问日志Kafka Producer</div><div class="line"> * @author Administrator</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class AccessProducer extends Thread &#123;</div><div class="line">	</div><div class="line">	private static SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</div><div class="line">	private static Random random = new Random();</div><div class="line">	private static String[] sections = new String[] &#123;&quot;country&quot;, &quot;international&quot;, &quot;sport&quot;, &quot;entertainment&quot;, &quot;movie&quot;, &quot;carton&quot;, &quot;tv-show&quot;, &quot;technology&quot;, &quot;internet&quot;, &quot;car&quot;&#125;;</div><div class="line">	private static int[] arr = new int[]&#123;1, 2, 3, 4, 5, 6, 7, 8, 9, 10&#125;;</div><div class="line">	private static String date;</div><div class="line">	</div><div class="line">	private Producer&lt;Integer, String&gt; producer;</div><div class="line">	private String topic;</div><div class="line">	</div><div class="line">	public AccessProducer(String topic) &#123;</div><div class="line">		this.topic = topic;</div><div class="line">		producer = new Producer&lt;Integer, String&gt;(createProducerConfig());  </div><div class="line">		date = sdf.format(new Date());  </div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	private ProducerConfig createProducerConfig() &#123;</div><div class="line">		Properties props = new Properties();</div><div class="line">		props.put(&quot;serializer.class&quot;, &quot;kafka.serializer.StringEncoder&quot;);</div><div class="line">		props.put(&quot;metadata.broker.list&quot;, &quot;192.168.0.103:9092,192.168.0.104:9092&quot;);</div><div class="line">		return new ProducerConfig(props);  </div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	public void run() &#123;</div><div class="line">		int counter = 0;</div><div class="line"></div><div class="line">		while(true) &#123;</div><div class="line">			for(int i = 0; i &lt; 100; i++) &#123;</div><div class="line">				String log = null;</div><div class="line">				</div><div class="line">				if(arr[random.nextInt(10)] == 1) &#123;</div><div class="line">					log = getRegisterLog();</div><div class="line">				&#125; else &#123;</div><div class="line">					log = getAccessLog();</div><div class="line">				&#125;</div><div class="line">				</div><div class="line">				producer.send(new KeyedMessage&lt;Integer, String&gt;(topic, log));</div><div class="line">				</div><div class="line">				counter++;</div><div class="line">				if(counter == 100) &#123;</div><div class="line">					counter = 0;</div><div class="line">					try &#123;</div><div class="line">						Thread.sleep(1000);</div><div class="line">					&#125; catch (InterruptedException e) &#123;</div><div class="line">						e.printStackTrace();</div><div class="line">					&#125;  </div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	private static String getAccessLog() &#123;</div><div class="line">		StringBuffer buffer = new StringBuffer(&quot;&quot;);  </div><div class="line">		</div><div class="line">		// 生成时间戳</div><div class="line">		long timestamp = new Date().getTime();</div><div class="line">		</div><div class="line">		// 生成随机userid（默认1000注册用户，每天1/10的访客是未注册用户）</div><div class="line">		Long userid = 0L;</div><div class="line">		</div><div class="line">		int newOldUser = arr[random.nextInt(10)];</div><div class="line">		if(newOldUser == 1) &#123;</div><div class="line">			userid = null;</div><div class="line">		&#125; else &#123;</div><div class="line">			userid = (long) random.nextInt(1000);</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		// 生成随机pageid（总共1k个页面）</div><div class="line">		Long pageid = (long) random.nextInt(1000);  </div><div class="line">		</div><div class="line">		// 生成随机版块（总共10个版块）</div><div class="line">		String section = sections[random.nextInt(10)]; </div><div class="line">		</div><div class="line">		// 生成固定的行为，view</div><div class="line">		String action = &quot;view&quot;; </div><div class="line">		</div><div class="line">		return buffer.append(date).append(&quot; &quot;)  </div><div class="line">				.append(timestamp).append(&quot; &quot;)</div><div class="line">				.append(userid).append(&quot; &quot;)</div><div class="line">				.append(pageid).append(&quot; &quot;)</div><div class="line">				.append(section).append(&quot; &quot;)</div><div class="line">				.append(action).toString();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	private static String getRegisterLog() &#123;</div><div class="line">		StringBuffer buffer = new StringBuffer(&quot;&quot;);</div><div class="line">		</div><div class="line">		// 生成时间戳</div><div class="line">		long timestamp = new Date().getTime();</div><div class="line">		</div><div class="line">		// 新用户都是userid为null</div><div class="line">		Long userid = null;</div><div class="line"></div><div class="line">		// 生成随机pageid，都是null</div><div class="line">		Long pageid = null;  </div><div class="line">		</div><div class="line">		// 生成随机版块，都是null</div><div class="line">		String section = null; </div><div class="line">		</div><div class="line">		// 生成固定的行为，view</div><div class="line">		String action = &quot;register&quot;; </div><div class="line">		</div><div class="line">		return buffer.append(date).append(&quot; &quot;)  </div><div class="line">				.append(timestamp).append(&quot; &quot;)</div><div class="line">				.append(userid).append(&quot; &quot;)</div><div class="line">				.append(pageid).append(&quot; &quot;)</div><div class="line">				.append(section).append(&quot; &quot;)</div><div class="line">				.append(action).toString();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		AccessProducer producer = new AccessProducer(&quot;news-access&quot;);    </div><div class="line">		producer.start();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+
+      
+        
+          
+            <h1 id="构造模拟的数据-kafka的生产者"><a href="#构造模拟的数据-kafka的生产者" class="headerlink" title="构造模拟的数据(kafka的生产者)"></a>构造模拟的数据(kafka的生产者)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div></pre></td><td class="code"><pre><div class="line">package cn.spark.study.streaming.upgrade.news;</div><div class="line"></div><div class="line">import java.text.SimpleDateFormat;</div><div class="line">import java.util.Date;</div><div class="line">import java.util.Properties;</div><div class="line">import java.util.Random;</div><div class="line"></div><div class="line">import kafka.javaapi.producer.Producer;</div><div class="line">import kafka.producer.KeyedMessage;</div><div class="line">import kafka.producer.ProducerConfig;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 访问日志Kafka Producer</div><div class="line"> * @author Administrator</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class AccessProducer extends Thread &#123;</div><div class="line">	</div><div class="line">	private static SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</div><div class="line">	private static Random random = new Random();</div><div class="line">	private static String[] sections = new String[] &#123;&quot;country&quot;, &quot;international&quot;, &quot;sport&quot;, &quot;entertainment&quot;, &quot;movie&quot;, &quot;carton&quot;, &quot;tv-show&quot;, &quot;technology&quot;, &quot;internet&quot;, &quot;car&quot;&#125;;</div><div class="line">	private static int[] arr = new int[]&#123;1, 2, 3, 4, 5, 6, 7, 8, 9, 10&#125;;</div><div class="line">	private static String date;</div><div class="line">	</div><div class="line">	private Producer&lt;Integer, String&gt; producer;</div><div class="line">	private String topic;</div><div class="line">	</div><div class="line">	public AccessProducer(String topic) &#123;</div><div class="line">		this.topic = topic;</div><div class="line">		producer = new Producer&lt;Integer, String&gt;(createProducerConfig());  </div><div class="line">		date = sdf.format(new Date());  </div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	private ProducerConfig createProducerConfig() &#123;</div><div class="line">		Properties props = new Properties();</div><div class="line">		props.put(&quot;serializer.class&quot;, &quot;kafka.serializer.StringEncoder&quot;);</div><div class="line">		props.put(&quot;metadata.broker.list&quot;, &quot;192.168.0.103:9092,192.168.0.104:9092&quot;);</div><div class="line">		return new ProducerConfig(props);  </div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	public void run() &#123;</div><div class="line">		int counter = 0;</div><div class="line"></div><div class="line">		while(true) &#123;</div><div class="line">			for(int i = 0; i &lt; 100; i++) &#123;</div><div class="line">				String log = null;</div><div class="line">				</div><div class="line">				if(arr[random.nextInt(10)] == 1) &#123;</div><div class="line">					log = getRegisterLog();</div><div class="line">				&#125; else &#123;</div><div class="line">					log = getAccessLog();</div><div class="line">				&#125;</div><div class="line">				</div><div class="line">				producer.send(new KeyedMessage&lt;Integer, String&gt;(topic, log));</div><div class="line">				</div><div class="line">				counter++;</div><div class="line">				if(counter == 100) &#123;</div><div class="line">					counter = 0;</div><div class="line">					try &#123;</div><div class="line">						Thread.sleep(1000);</div><div class="line">					&#125; catch (InterruptedException e) &#123;</div><div class="line">						e.printStackTrace();</div><div class="line">					&#125;  </div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	private static String getAccessLog() &#123;</div><div class="line">		StringBuffer buffer = new StringBuffer(&quot;&quot;);  </div><div class="line">		</div><div class="line">		// 生成时间戳</div><div class="line">		long timestamp = new Date().getTime();</div><div class="line">		</div><div class="line">		// 生成随机userid（默认1000注册用户，每天1/10的访客是未注册用户）</div><div class="line">		Long userid = 0L;</div><div class="line">		</div><div class="line">		int newOldUser = arr[random.nextInt(10)];</div><div class="line">		if(newOldUser == 1) &#123;</div><div class="line">			userid = null;</div><div class="line">		&#125; else &#123;</div><div class="line">			userid = (long) random.nextInt(1000);</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		// 生成随机pageid（总共1k个页面）</div><div class="line">		Long pageid = (long) random.nextInt(1000);  </div><div class="line">		</div><div class="line">		// 生成随机版块（总共10个版块）</div><div class="line">		String section = sections[random.nextInt(10)]; </div><div class="line">		</div><div class="line">		// 生成固定的行为，view</div><div class="line">		String action = &quot;view&quot;; </div><div class="line">		</div><div class="line">		return buffer.append(date).append(&quot; &quot;)  </div><div class="line">				.append(timestamp).append(&quot; &quot;)</div><div class="line">				.append(userid).append(&quot; &quot;)</div><div class="line">				.append(pageid).append(&quot; &quot;)</div><div class="line">				.append(section).append(&quot; &quot;)</div><div class="line">				.append(action).toString();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	private static String getRegisterLog() &#123;</div><div class="line">		StringBuffer buffer = new StringBuffer(&quot;&quot;);</div><div class="line">		</div><div class="line">		// 生成时间戳</div><div class="line">		long timestamp = new Date().getTime();</div><div class="line">		</div><div class="line">		// 新用户都是userid为null</div><div class="line">		Long userid = null;</div><div class="line"></div><div class="line">		// 生成随机pageid，都是null</div><div class="line">		Long pageid = null;  </div><div class="line">		</div><div class="line">		// 生成随机版块，都是null</div><div class="line">		String section = null; </div><div class="line">		</div><div class="line">		// 生成固定的行为，view</div><div class="line">		String action = &quot;register&quot;; </div><div class="line">		</div><div class="line">		return buffer.append(date).append(&quot; &quot;)  </div><div class="line">				.append(timestamp).append(&quot; &quot;)</div><div class="line">				.append(userid).append(&quot; &quot;)</div><div class="line">				.append(pageid).append(&quot; &quot;)</div><div class="line">				.append(section).append(&quot; &quot;)</div><div class="line">				.append(action).toString();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		AccessProducer producer = new AccessProducer(&quot;news-access&quot;);    </div><div class="line">		producer.start();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h1 id="创建topic-进行”消费”测试"><a href="#创建topic-进行”消费”测试" class="headerlink" title="创建topic,进行”消费”测试"></a>创建topic,进行”消费”测试</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">kafka-topics.sh --zookeeper 192.168.0.103:2181,192.168.0.104:2181 --topic news-access --replication-factor 1 --partitions 1 --create</div><div class="line">kafka-console-consumer.sh --zookeeper 192.168.0.103:2181,192.168.0.104:2181 --topic news-access --from-beginning</div></pre></td></tr></table></figure>
 <p>消费到的数据的格式为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">2016-02-22 1442343424234234 125 115 car view</div><div class="line">2016-02-22 1442343424234235 null null null register</div></pre></td></tr></table></figure></p>
 <h1 id="总体的代码"><a href="#总体的代码" class="headerlink" title="总体的代码"></a>总体的代码</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div></pre></td><td class="code"><pre><div class="line">package cn.spark.study.streaming.upgrade.news;</div><div class="line"></div><div class="line">import java.util.HashMap;</div><div class="line">import java.util.HashSet;</div><div class="line">import java.util.Map;</div><div class="line">import java.util.Set;</div><div class="line"></div><div class="line">import kafka.serializer.StringDecoder;</div><div class="line"></div><div class="line">import org.apache.spark.SparkConf;</div><div class="line">import org.apache.spark.api.java.JavaRDD;</div><div class="line">import org.apache.spark.api.java.function.Function;</div><div class="line">import org.apache.spark.api.java.function.Function2;</div><div class="line">import org.apache.spark.api.java.function.PairFunction;</div><div class="line">import org.apache.spark.streaming.Durations;</div><div class="line">import org.apache.spark.streaming.api.java.JavaDStream;</div><div class="line">import org.apache.spark.streaming.api.java.JavaPairDStream;</div><div class="line">import org.apache.spark.streaming.api.java.JavaPairInputDStream;</div><div class="line">import org.apache.spark.streaming.api.java.JavaStreamingContext;</div><div class="line">import org.apache.spark.streaming.kafka.KafkaUtils;</div><div class="line"></div><div class="line">import scala.Tuple2;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 新闻网站关键指标实时统计Spark应用程序</div><div class="line"> * @author Administrator</div><div class="line"> *</div><div class="line"> */</div><div class="line">public class NewsRealtimeStatSpark &#123;</div><div class="line"></div><div class="line">	public static void main(String[] args) throws Exception &#123;</div><div class="line">		// 创建Spark上下文</div><div class="line">		SparkConf conf = new SparkConf()</div><div class="line">				.setMaster(&quot;local[2]&quot;)</div><div class="line">				.setAppName(&quot;NewsRealtimeStatSpark&quot;);  </div><div class="line">		JavaStreamingContext jssc = new JavaStreamingContext(</div><div class="line">				conf, Durations.seconds(5));  </div><div class="line">		</div><div class="line">		// 创建输入DStream</div><div class="line">		Map&lt;String, String&gt; kafkaParams = new HashMap&lt;String, String&gt;();</div><div class="line">		kafkaParams.put(&quot;metadata.broker.list&quot;, </div><div class="line">				&quot;192.168.0.103:9092,192.168.0.104:9092&quot;);</div><div class="line">		</div><div class="line">		Set&lt;String&gt; topics = new HashSet&lt;String&gt;();</div><div class="line">		topics.add(&quot;news-access&quot;);  </div><div class="line">		</div><div class="line">		JavaPairInputDStream&lt;String, String&gt; lines = KafkaUtils.createDirectStream(</div><div class="line">				jssc, </div><div class="line">				String.class, </div><div class="line">				String.class, </div><div class="line">				StringDecoder.class, </div><div class="line">				StringDecoder.class, </div><div class="line">				kafkaParams, </div><div class="line">				topics);</div><div class="line">		</div><div class="line">		// 过滤出访问日志</div><div class="line">		JavaPairDStream&lt;String, String&gt; accessDStream = lines.filter(</div><div class="line">				</div><div class="line">				new Function&lt;Tuple2&lt;String,String&gt;, Boolean&gt;() &#123;</div><div class="line">			</div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public Boolean call(Tuple2&lt;String, String&gt; tuple) throws Exception &#123;</div><div class="line">						String log = tuple._2;</div><div class="line">						String[] logSplited = log.split(&quot; &quot;);  </div><div class="line">						</div><div class="line">						String action = logSplited[5];</div><div class="line">						if(&quot;view&quot;.equals(action)) &#123;</div><div class="line">							return true;</div><div class="line">						&#125; else &#123;</div><div class="line">							return false;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		// 统计第一个指标：实时页面pv(页面pv的实时统计,每10秒内各个页面被访问的pv)</div><div class="line">		calculatePagePv(accessDStream);  </div><div class="line">		// 统计第二个指标：实时页面uv</div><div class="line">		calculatePageUv(accessDStream); </div><div class="line">		// 统计第三个指标：实时注册用户数</div><div class="line">		calculateRegisterCount(lines);  </div><div class="line">		// 统计第四个指标：实时用户跳出数:注册用户只是访问了一个页面就退出了,那么就属于跳出用户</div><div class="line">		calculateUserJumpCount(accessDStream);</div><div class="line">		// 统计第五个指标：实时版块pv</div><div class="line">		calcualteSectionPv(accessDStream);  </div><div class="line">		</div><div class="line">		jssc.start();</div><div class="line">		jssc.awaitTermination();</div><div class="line">		jssc.close();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * 计算页面pv</div><div class="line">	 * @param accessDStream</div><div class="line">	 */</div><div class="line">	private static void calculatePagePv(JavaPairDStream&lt;String, String&gt; accessDStream) &#123;</div><div class="line">		JavaPairDStream&lt;Long, Long&gt; pageidDStream = accessDStream.mapToPair(</div><div class="line">				</div><div class="line">				new PairFunction&lt;Tuple2&lt;String,String&gt;, Long, Long&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public Tuple2&lt;Long, Long&gt; call(Tuple2&lt;String, String&gt; tuple)</div><div class="line">							throws Exception &#123;</div><div class="line">						String log = tuple._2;</div><div class="line">						String[] logSplited = log.split(&quot; &quot;); </div><div class="line">						</div><div class="line">						Long pageid = Long.valueOf(logSplited[3]);  </div><div class="line">						</div><div class="line">						return new Tuple2&lt;Long, Long&gt;(pageid, 1L);  </div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;Long, Long&gt; pagePvDStream = pageidDStream.reduceByKey(</div><div class="line">				</div><div class="line">				new Function2&lt;Long, Long, Long&gt;() &#123;</div><div class="line">			</div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public Long call(Long v1, Long v2) throws Exception &#123;</div><div class="line">						return v1 + v2;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		pagePvDStream.print();  </div><div class="line">		</div><div class="line">		// 在计算出每10秒钟的页面pv之后，其实在真实项目中，应该持久化</div><div class="line">		// 到mysql，或redis中，对每个页面的pv进行累加(或者取原来的值,然后加上此时的pv,再生成一条新的记录,那么就可以做成pv随时间变化的曲线图)</div><div class="line">		// javaee系统，就可以从mysql或redis中，读取page pv实时变化的数据，以及曲线图</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * 计算页面uv</div><div class="line">	 * @param &lt;U&gt;</div><div class="line">	 * @param accessDStream</div><div class="line">	 */</div><div class="line">	private static &lt;U&gt; void calculatePageUv(JavaPairDStream&lt;String, String&gt; accessDStream) &#123;</div><div class="line">		JavaDStream&lt;String&gt; pageidUseridDStream = accessDStream.map(</div><div class="line">				</div><div class="line">				new Function&lt;Tuple2&lt;String,String&gt;, String&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">					@Override</div><div class="line">					public String call(Tuple2&lt;String, String&gt; tuple) throws Exception &#123;</div><div class="line">						String log = tuple._2;</div><div class="line">						String[] logSplited = log.split(&quot; &quot;); </div><div class="line">						</div><div class="line">						Long pageid = Long.valueOf(logSplited[3]);  </div><div class="line">						Long userid = Long.valueOf(&quot;null&quot;.equalsIgnoreCase(logSplited[2]) ? &quot;-1&quot; : logSplited[2]);  </div><div class="line">						</div><div class="line">						return pageid + &quot;_&quot; + userid;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		// 使用transform操作,对DStream中的每个rdd进行distinct操作		</div><div class="line">		JavaDStream&lt;String&gt; distinctPageidUseridDStream = pageidUseridDStream.transform(</div><div class="line">				</div><div class="line">				new Function&lt;JavaRDD&lt;String&gt;, JavaRDD&lt;String&gt;&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public JavaRDD&lt;String&gt; call(JavaRDD&lt;String&gt; rdd) throws Exception &#123;</div><div class="line">						return rdd.distinct();</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;Long, Long&gt; pageidDStream = distinctPageidUseridDStream.mapToPair(</div><div class="line">				</div><div class="line">				new PairFunction&lt;String, Long, Long&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public Tuple2&lt;Long, Long&gt; call(String str) throws Exception &#123;</div><div class="line">						String[] splited = str.split(&quot;_&quot;);  </div><div class="line">						Long pageid = Long.valueOf(splited[0]);  </div><div class="line">						return new Tuple2&lt;Long, Long&gt;(pageid, 1L);   </div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;Long, Long&gt; pageUvDStream = pageidDStream.reduceByKey(</div><div class="line">				</div><div class="line">				new Function2&lt;Long, Long, Long&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public Long call(Long v1, Long v2) throws Exception &#123;</div><div class="line">						return v1 + v2;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		pageUvDStream.print();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * 计算实时注册用户数</div><div class="line">	 * @param lines</div><div class="line">	 */</div><div class="line">	private static void calculateRegisterCount(JavaPairInputDStream&lt;String, String&gt; lines) &#123;</div><div class="line">		JavaPairDStream&lt;String, String&gt; registerDStream = lines.filter(</div><div class="line">				</div><div class="line">				new Function&lt;Tuple2&lt;String,String&gt;, Boolean&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public Boolean call(Tuple2&lt;String, String&gt; tuple) throws Exception &#123;</div><div class="line">						String log = tuple._2;</div><div class="line">						String[] logSplited = log.split(&quot; &quot;);  </div><div class="line">						</div><div class="line">						String action = logSplited[5];</div><div class="line">						if(&quot;register&quot;.equals(action)) &#123;</div><div class="line">							return true;</div><div class="line">						&#125; else &#123;</div><div class="line">							return false;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaDStream&lt;Long&gt; registerCountDStream = registerDStream.count();</div><div class="line">		</div><div class="line">		registerCountDStream.print();  </div><div class="line">		</div><div class="line">		// 每次统计完一个最近10秒的数据之后，不是打印出来</div><div class="line">		// 去存储（mysql、redis、hbase），选用哪一种主要看你的公司提供的环境，以及你的看实时报表的用户以及并发数量，包括你的数据量</div><div class="line">		// 如果是一般的展示效果，就选用mysql就可以</div><div class="line">		// 如果是需要超高并发的展示，比如QPS 1w来看实时报表，那么建议用redis、memcached</div><div class="line">		// 如果是数据量特别大，建议用hbase</div><div class="line">		</div><div class="line">		// 每次从存储中，查询注册数量，最近一次插入的记录，比如上一次是10秒前</div><div class="line">		// 然后将当前记录与上一次的记录累加，然后往存储中插入一条新记录，就是最新的一条数据</div><div class="line">		// 然后javaee系统在展示的时候，可以比如查看最近半小时内的注册用户数量变化的曲线图</div><div class="line">		// 查看一周内，每天的注册用户数量的变化曲线图（每天就取最后一条数据，就是每天的最终数据）</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * 计算用户跳出数量</div><div class="line">	 * @param accessDStream</div><div class="line">	 */</div><div class="line">	private static void calculateUserJumpCount(JavaPairDStream&lt;String, String&gt; accessDStream) &#123;</div><div class="line">		JavaPairDStream&lt;Long, Long&gt; useridDStream = accessDStream.mapToPair(</div><div class="line">				</div><div class="line">				new PairFunction&lt;Tuple2&lt;String,String&gt;, Long, Long&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public Tuple2&lt;Long, Long&gt; call(Tuple2&lt;String, String&gt; tuple)</div><div class="line">							throws Exception &#123;</div><div class="line">						String log = tuple._2;</div><div class="line">						String[] logSplited = log.split(&quot; &quot;);  </div><div class="line">						Long userid = Long.valueOf(&quot;null&quot;.equalsIgnoreCase(logSplited[2]) ? &quot;-1&quot; : logSplited[2]);    </div><div class="line">						return new Tuple2&lt;Long, Long&gt;(userid, 1L); </div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;Long, Long&gt; useridCountDStream = useridDStream.reduceByKey(</div><div class="line">				</div><div class="line">				new Function2&lt;Long, Long, Long&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">					@Override</div><div class="line">					public Long call(Long v1, Long v2) throws Exception &#123;</div><div class="line">						return v1 + v2;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;Long, Long&gt; jumpUserDStream = useridCountDStream.filter(</div><div class="line">				</div><div class="line">				new Function&lt;Tuple2&lt;Long,Long&gt;, Boolean&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line"></div><div class="line">					@Override</div><div class="line">					public Boolean call(Tuple2&lt;Long, Long&gt; tuple) throws Exception &#123;</div><div class="line">						if(tuple._2 == 1) &#123;</div><div class="line">							return true;</div><div class="line">						&#125; else &#123;</div><div class="line">							return false;</div><div class="line">						&#125;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaDStream&lt;Long&gt; jumpUserCountDStream = jumpUserDStream.count();</div><div class="line">		</div><div class="line">		jumpUserCountDStream.print();  </div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * 版块实时pv</div><div class="line">	 * @param accessDStream</div><div class="line">	 */</div><div class="line">	private static void calcualteSectionPv(JavaPairDStream&lt;String, String&gt; accessDStream) &#123;</div><div class="line">		JavaPairDStream&lt;String, Long&gt; sectionDStream = accessDStream.mapToPair(</div><div class="line">				</div><div class="line">				new PairFunction&lt;Tuple2&lt;String,String&gt;, String, Long&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public Tuple2&lt;String, Long&gt; call(Tuple2&lt;String, String&gt; tuple)</div><div class="line">							throws Exception &#123;</div><div class="line">						String log = tuple._2;</div><div class="line">						String[] logSplited = log.split(&quot; &quot;);  </div><div class="line">						</div><div class="line">						String section = logSplited[4];</div><div class="line">						</div><div class="line">						return new Tuple2&lt;String, Long&gt;(section, 1L);  </div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		JavaPairDStream&lt;String, Long&gt; sectionPvDStream = sectionDStream.reduceByKey(</div><div class="line">				</div><div class="line">				new Function2&lt;Long, Long, Long&gt;() &#123;</div><div class="line"></div><div class="line">					private static final long serialVersionUID = 1L;</div><div class="line">		</div><div class="line">					@Override</div><div class="line">					public Long call(Long v1, Long v2) throws Exception &#123;</div><div class="line">						return v1 + v2;</div><div class="line">					&#125;</div><div class="line">					</div><div class="line">				&#125;);</div><div class="line">		</div><div class="line">		sectionPvDStream.print();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之新闻网站关键指标实时统计/" data-id="cj290sc8z010rssqqdzvsj398" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之自定义Receiver" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之自定义Receiver/" class="article-date">
-  <time datetime="2017-04-16T10:04:24.116Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之自定义Receiver/">SparkStreaming之自定义Receiver</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>spark streaming可以从任何数据源来接收数据，哪怕是除了它内置支持的数据源以外的其他数据源（比如flume、kafka、socket等）。如果我们想要从spark streaming没有内置支持的数据源中接收实时数据，那么我们需要自己实现一个receiver。</p>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之自定义Receiver/#more">Read More</a>
-          </p>
+          
         
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之自定义Receiver/" data-id="cj290sc99010xssqqmjc9asgp" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之flume" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/" class="article-date">
-  <time datetime="2017-04-16T08:50:08.714Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之自定义Receiver/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/">SparkStreaming之flume</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之自定义Receiver/" itemprop="url">
+                  SparkStreaming之自定义Receiver
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T18:04:24+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>flume的安装参见详细的文档</p>
+      
+
+      
         
-          <p class="article-more-link">
-            <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/#more">Read More</a>
-          </p>
+          <p>spark streaming可以从任何数据源来接收数据，哪怕是除了它内置支持的数据源以外的其他数据源（比如flume、kafka、socket等）。如果我们想要从spark streaming没有内置支持的数据源中接收实时数据，那么我们需要自己实现一个receiver。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之自定义Receiver/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/" data-id="cj290sc8200zxssqqctvchp3g" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-数据仓库/数据仓库" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/数据仓库/数据仓库/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.920Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/数据仓库/">数据仓库</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/数据仓库/数据仓库/">数据仓库</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/" itemprop="url">
+                  SparkStreaming之flume
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T16:50:08+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>数据仓库:Data Warehouse 简写DW,是企业索泽级别的决策制定过程,他处于分析性报告和决策支持目的而创建</p>
+      
+
+      
+        
+          <p>flume的安装参见详细的文档</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之flume/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/数据仓库/数据仓库/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/数据仓库/数据仓库/" itemprop="url">
+                  数据仓库
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据仓库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据仓库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>数据仓库:Data Warehouse 简写DW,是企业索泽级别的决策制定过程,他处于分析性报告和决策支持目的而创建</p>
 <h1 id="数据仓库的特点"><a href="#数据仓库的特点" class="headerlink" title="数据仓库的特点"></a>数据仓库的特点</h1><ul>
 <li>数据仓库的数据是面向主题的<br>与传统数据库面向应用进行数据组织的特点相对应,数据仓库的数据是面向主题进行组织的,这个主题是一个抽象的概念,其实就是:老板关心哪个方面,然后在此建立主题</li>
 </ul>
@@ -301,236 +1002,736 @@
 <h1 id="数据库与数据仓库的区别"><a href="#数据库与数据仓库的区别" class="headerlink" title="数据库与数据仓库的区别"></a>数据库与数据仓库的区别</h1><p>数据库软件:mysql,oracle等<br>数据库:是一种逻辑的概念,由很多表组成,表是二维的<br>数据仓库:从数据量来说,数据仓库要比数据库更庞大的多,数据仓库主要用于数据挖掘和数据分析,辅助领导做决策</p>
 <p>数据库和数据仓库的区别讲的是OLTP和OLAP的区别<br>操作型数据:联机事务处理OLTP,主要对数据进行CRUD<br>分析型数据:联机分析处理</p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/数据仓库/数据仓库/" data-id="cj290sbfd00d0ssqqozh9tegy" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-scala编程/第四章 类和对象" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/scala编程/第四章 类和对象/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.917Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/scala/">scala</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/scala编程/第四章 类和对象/">第四章 类和对象</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-类-对象和方法"><a href="#1-类-对象和方法" class="headerlink" title="1.类 对象和方法"></a>1.类 对象和方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#类是对象的蓝图,一旦你定义了类,就可以用关键字new来创建对象</div><div class="line">class CheckSumAccumulator &#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">#使用类创建对象</div><div class="line">new CheckSumAccumulator</div></pre></td></tr></table></figure>
-        
-          <p class="article-more-link">
-            <a href="/2017/04/16/scala编程/第四章 类和对象/#more">Read More</a>
-          </p>
+          
         
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/scala编程/第四章 类和对象/" data-id="cj290sba5008cssqqbz1wfy0n" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala/">scala</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala编程/">scala编程</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-scala编程/第十章 组合与继承" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/scala编程/第十章 组合与继承/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.915Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/scala/">scala</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第四章 类和对象/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/scala编程/第十章 组合与继承/">第十章 组合与继承</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/scala编程/第四章 类和对象/" itemprop="url">
+                  第四章 类和对象
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>&emsp;组合是指一个类持有另一个的引用,借助被引用的类完成任务,继承是超类/子类的关系</p>
+      
+
+      
         
-          <p class="article-more-link">
-            <a href="/2017/04/16/scala编程/第十章 组合与继承/#more">Read More</a>
-          </p>
+          <h1 id="1-类-对象和方法"><a href="#1-类-对象和方法" class="headerlink" title="1.类 对象和方法"></a>1.类 对象和方法</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#类是对象的蓝图,一旦你定义了类,就可以用关键字new来创建对象</div><div class="line">class CheckSumAccumulator &#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">#使用类创建对象</div><div class="line">new CheckSumAccumulator</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/16/scala编程/第四章 类和对象/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/scala编程/第十章 组合与继承/" data-id="cj290sba20089ssqqd5xb44bn" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala/">scala</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala编程/">scala编程</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-scala编程/第十六章 使用列表" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/scala编程/第十六章 使用列表/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.913Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/scala/">scala</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第十章 组合与继承/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/scala编程/第十六章 使用列表/">第十六章 使用列表</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/scala编程/第十章 组合与继承/" itemprop="url">
+                  第十章 组合与继承
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="1-列表字面量"><a href="#1-列表字面量" class="headerlink" title="1.列表字面量"></a>1.列表字面量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">val fruit = List(&quot;apples&quot;, &quot;oranges&quot;, &quot;pears&quot;)</div><div class="line">val nums = List(1,2,3,4)</div><div class="line">val diag3 = </div><div class="line">  List(</div><div class="line">    List(1,0,1),</div><div class="line">    List(0,1,0),</div><div class="line">    List(0,0,1)</div><div class="line">  )</div><div class="line">val empty = List()</div><div class="line">/*</div><div class="line">列表与数组非常相似,不过有两点重要的差别,首先,列表时不可变的,也就是说,不能通过赋值改变列表的元素,其次列表具有递归的结构,而数组是连续的</div><div class="line"> */</div></pre></td></tr></table></figure>
+      
+
+      
         
-          <p class="article-more-link">
-            <a href="/2017/04/16/scala编程/第十六章 使用列表/#more">Read More</a>
-          </p>
+          <p>&emsp;组合是指一个类持有另一个的引用,借助被引用的类完成任务,继承是超类/子类的关系</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/16/scala编程/第十章 组合与继承/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/scala编程/第十六章 使用列表/" data-id="cj290sb9z0085ssqqvgrlgfxl" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala/">scala</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala编程/">scala编程</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-scala编程/第十五章 样本类和模式匹配" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/scala编程/第十五章 样本类和模式匹配/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.911Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/scala/">scala</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第十六章 使用列表/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/scala编程/第十五章 样本类和模式匹配/">第十五章 样本类和模式匹配</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/scala编程/第十六章 使用列表/" itemprop="url">
+                  第十六章 使用列表
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="1-简单的例子"><a href="#1-简单的例子" class="headerlink" title="1.简单的例子"></a>1.简单的例子</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">abstract class Expr</div><div class="line">case class Var(name: String) extends Expr</div><div class="line">case class Number(num: Double) extends Expr</div><div class="line">case class UnOP(operator: String, arg: Expr) extends Expr</div><div class="line">case class BinOp(operator: String, left: Expr, right: Expr) extends Expr</div><div class="line"></div><div class="line">/*</div><div class="line">上述每个class类都有一个case修饰符,带有这种修饰符的类被称为样本类(case class) ,这种修饰符可以让scala的编译器自动为你的类添加一些语句上的便捷设定</div><div class="line">1.他会添加与类名一致的工厂方法,比如:写成Var(&quot;x&quot;)来构造Var对象以替代稍长一些的new Var(&quot;x&quot;)</div><div class="line">  val v = Var(&quot;x&quot;)</div><div class="line"></div><div class="line">2.样本类参数列表中的所有参数隐式获得了val前缀,因此他被当做你字段维护</div><div class="line">v.name</div><div class="line">op.left</div><div class="line"></div><div class="line">3.编译器为你的类添加了方法toString,hashCode和equals的自然实现,他们能够打印,哈希和比较由类及其所有参数组成的整棵树,因为scala里的==始终直接转到equals,这也就特别意味着样本类的元素一直是在做结构化的比较</div><div class="line">val op = BinOp(&quot;+&quot;, Number(1), v)</div><div class="line">println(op)   //BinOp(+, Number(1.0), Var(x))</div><div class="line">op.right == Var(&quot;x&quot;)   //true</div><div class="line"></div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">所有这些转换以极低的代价带来了大量的便利,代价就是必须写case修饰符并且你的类和对象都会变得稍微大一点,变大的原因是因为产生了附加的方法及对于每个构造器参数添加了隐含的字段,不过样本类最大的好处还在于它们能够支持模式匹配</div><div class="line">*/</div></pre></td></tr></table></figure>
+      
+
+      
         
-          <p class="article-more-link">
-            <a href="/2017/04/16/scala编程/第十五章 样本类和模式匹配/#more">Read More</a>
-          </p>
+          <h1 id="1-列表字面量"><a href="#1-列表字面量" class="headerlink" title="1.列表字面量"></a>1.列表字面量</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">val fruit = List(&quot;apples&quot;, &quot;oranges&quot;, &quot;pears&quot;)</div><div class="line">val nums = List(1,2,3,4)</div><div class="line">val diag3 = </div><div class="line">  List(</div><div class="line">    List(1,0,1),</div><div class="line">    List(0,1,0),</div><div class="line">    List(0,0,1)</div><div class="line">  )</div><div class="line">val empty = List()</div><div class="line">/*</div><div class="line">列表与数组非常相似,不过有两点重要的差别,首先,列表时不可变的,也就是说,不能通过赋值改变列表的元素,其次列表具有递归的结构,而数组是连续的</div><div class="line"> */</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/16/scala编程/第十六章 使用列表/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/scala编程/第十五章 样本类和模式匹配/" data-id="cj290sb9x0082ssqqhwu5lowd" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala/">scala</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala编程/">scala编程</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-scala编程/第十二章 特质" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/scala编程/第十二章 特质/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.909Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/scala/">scala</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第十五章 样本类和模式匹配/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/scala编程/第十二章 特质/">第十二章 特质</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/scala编程/第十五章 样本类和模式匹配/" itemprop="url">
+                  第十五章 样本类和模式匹配
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="1-特质是如何工作的"><a href="#1-特质是如何工作的" class="headerlink" title="1.特质是如何工作的?"></a>1.特质是如何工作的?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">//特质的定义除了使用关键字trait之外,与类的定义无异</div><div class="line">trait Philosophical &#123;</div><div class="line">  def philosophize() &#123;</div><div class="line">    println(&quot;I consumne memory , therefore i am!&quot;)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">这个特质名为Philosophical ,他没有声明超类,因此和类一样,有个默认的超类AnyRef</div><div class="line">*/</div><div class="line"></div><div class="line">//一旦特质被定义了,就可以使用extends或with关键字,把它混入类中,是&quot;混入&quot;特质而不是继承他们,因为特质的混入与那些其他语言中的多重继承有重要的差别</div><div class="line">class Frog extends Philosophical &#123;</div><div class="line">  override def toString = &quot;green&quot;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">你可以使用extends关键字混入特质:这种情况下隐式地继承了特质的超类,</div><div class="line">如:Frog类是AnyRef(Philosohpical的超类)的子类并混入了Philosohpical,从特质继承的方法可以像从超类继承的方法那样使用</div><div class="line">*/</div><div class="line">val frog = new Frog</div><div class="line">frog.philosophize()</div><div class="line"></div><div class="line">//特质同样也是类型,以下是把Philosophical用作类型的例子</div><div class="line">val phil: Philosohpical = frog    //变量phil可以被初始化为任何混入了Philosohpical特质的类的对象</div><div class="line"></div><div class="line">//如果想要混入多个特质,都加在with子句里就可以了</div><div class="line">class Animal</div><div class="line">trait HasLegs</div><div class="line">class Frog extends Animal with Philosohpical with HasLegs &#123;</div><div class="line">    override def toString = &quot;green&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//类Frog重写Philosohpical的philosophize方法,语法与重写超类总定义的方法一样</div><div class="line">class Animal</div><div class="line">class Frog extends Animal with Philosohpical &#123;</div><div class="line">    override def toString = &quot;green&quot;</div><div class="line">    override def philosophize()&#123;</div><div class="line">        println(&quot;I am easy being a man&quot;)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">你或许会得出以下的结论:特质就像是带有具体方法的Java接口,不过他其实能做更多的事情,例如:特质可以声明字段和维持状态值,但是特质有两点不同:</div><div class="line">1.特质不能有任何&quot;类&quot;参数,即传递给类的主构造器的参数</div><div class="line">class Point(x:Int, y:Int)</div><div class="line">trait NoPoint(x:Int, y:Int)    //不能编译通过</div><div class="line">2.类和特质的另一个差别在于不论在类的哪个角落,super调用都是静态绑定的,而在特质中,他们是动态绑定的,如果你在类中写下&quot;super.toString&quot; ,你很明确哪个方法实现将被调用,然而如果你在特质中写了同样的东西,在你定义特质的时候super调用的方法实现尚未定义,调用的实现将在每一次特质被混入到具体类的时候才被决定(根据多态的形式决定的),这种处理super的有趣的行为是使得特质能以可堆叠的改变方式工作的关键</div><div class="line">*/</div></pre></td></tr></table></figure>
+      
+
+      
+        
+          <h1 id="1-简单的例子"><a href="#1-简单的例子" class="headerlink" title="1.简单的例子"></a>1.简单的例子</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">abstract class Expr</div><div class="line">case class Var(name: String) extends Expr</div><div class="line">case class Number(num: Double) extends Expr</div><div class="line">case class UnOP(operator: String, arg: Expr) extends Expr</div><div class="line">case class BinOp(operator: String, left: Expr, right: Expr) extends Expr</div><div class="line"></div><div class="line">/*</div><div class="line">上述每个class类都有一个case修饰符,带有这种修饰符的类被称为样本类(case class) ,这种修饰符可以让scala的编译器自动为你的类添加一些语句上的便捷设定</div><div class="line">1.他会添加与类名一致的工厂方法,比如:写成Var(&quot;x&quot;)来构造Var对象以替代稍长一些的new Var(&quot;x&quot;)</div><div class="line">  val v = Var(&quot;x&quot;)</div><div class="line"></div><div class="line">2.样本类参数列表中的所有参数隐式获得了val前缀,因此他被当做你字段维护</div><div class="line">v.name</div><div class="line">op.left</div><div class="line"></div><div class="line">3.编译器为你的类添加了方法toString,hashCode和equals的自然实现,他们能够打印,哈希和比较由类及其所有参数组成的整棵树,因为scala里的==始终直接转到equals,这也就特别意味着样本类的元素一直是在做结构化的比较</div><div class="line">val op = BinOp(&quot;+&quot;, Number(1), v)</div><div class="line">println(op)   //BinOp(+, Number(1.0), Var(x))</div><div class="line">op.right == Var(&quot;x&quot;)   //true</div><div class="line"></div><div class="line">*/</div><div class="line"></div><div class="line">/*</div><div class="line">所有这些转换以极低的代价带来了大量的便利,代价就是必须写case修饰符并且你的类和对象都会变得稍微大一点,变大的原因是因为产生了附加的方法及对于每个构造器参数添加了隐含的字段,不过样本类最大的好处还在于它们能够支持模式匹配</div><div class="line">*/</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/16/scala编程/第十五章 样本类和模式匹配/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scala编程/第十二章 特质/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/scala编程/第十二章 特质/" itemprop="url">
+                  第十二章 特质
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/scala/" itemprop="url" rel="index">
+                    <span itemprop="name">scala</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-特质是如何工作的"><a href="#1-特质是如何工作的" class="headerlink" title="1.特质是如何工作的?"></a>1.特质是如何工作的?</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">//特质的定义除了使用关键字trait之外,与类的定义无异</div><div class="line">trait Philosophical &#123;</div><div class="line">  def philosophize() &#123;</div><div class="line">    println(&quot;I consumne memory , therefore i am!&quot;)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">这个特质名为Philosophical ,他没有声明超类,因此和类一样,有个默认的超类AnyRef</div><div class="line">*/</div><div class="line"></div><div class="line">//一旦特质被定义了,就可以使用extends或with关键字,把它混入类中,是&quot;混入&quot;特质而不是继承他们,因为特质的混入与那些其他语言中的多重继承有重要的差别</div><div class="line">class Frog extends Philosophical &#123;</div><div class="line">  override def toString = &quot;green&quot;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">你可以使用extends关键字混入特质:这种情况下隐式地继承了特质的超类,</div><div class="line">如:Frog类是AnyRef(Philosohpical的超类)的子类并混入了Philosohpical,从特质继承的方法可以像从超类继承的方法那样使用</div><div class="line">*/</div><div class="line">val frog = new Frog</div><div class="line">frog.philosophize()</div><div class="line"></div><div class="line">//特质同样也是类型,以下是把Philosophical用作类型的例子</div><div class="line">val phil: Philosohpical = frog    //变量phil可以被初始化为任何混入了Philosohpical特质的类的对象</div><div class="line"></div><div class="line">//如果想要混入多个特质,都加在with子句里就可以了</div><div class="line">class Animal</div><div class="line">trait HasLegs</div><div class="line">class Frog extends Animal with Philosohpical with HasLegs &#123;</div><div class="line">    override def toString = &quot;green&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//类Frog重写Philosohpical的philosophize方法,语法与重写超类总定义的方法一样</div><div class="line">class Animal</div><div class="line">class Frog extends Animal with Philosohpical &#123;</div><div class="line">    override def toString = &quot;green&quot;</div><div class="line">    override def philosophize()&#123;</div><div class="line">        println(&quot;I am easy being a man&quot;)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">你或许会得出以下的结论:特质就像是带有具体方法的Java接口,不过他其实能做更多的事情,例如:特质可以声明字段和维持状态值,但是特质有两点不同:</div><div class="line">1.特质不能有任何&quot;类&quot;参数,即传递给类的主构造器的参数</div><div class="line">class Point(x:Int, y:Int)</div><div class="line">trait NoPoint(x:Int, y:Int)    //不能编译通过</div><div class="line">2.类和特质的另一个差别在于不论在类的哪个角落,super调用都是静态绑定的,而在特质中,他们是动态绑定的,如果你在类中写下&quot;super.toString&quot; ,你很明确哪个方法实现将被调用,然而如果你在特质中写了同样的东西,在你定义特质的时候super调用的方法实现尚未定义,调用的实现将在每一次特质被混入到具体类的时候才被决定(根据多态的形式决定的),这种处理super的有趣的行为是使得特质能以可堆叠的改变方式工作的关键</div><div class="line">*/</div></pre></td></tr></table></figure>
 <h1 id="2-瘦接口对阵胖接口"><a href="#2-瘦接口对阵胖接口" class="headerlink" title="2.瘦接口对阵胖接口"></a>2.瘦接口对阵胖接口</h1><p>略</p>
 <h1 id="3-样例-长方形对象"><a href="#3-样例-长方形对象" class="headerlink" title="3.样例:长方形对象"></a>3.样例:长方形对象</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">trait Rectangular &#123;</div><div class="line">  def topLeft: Point</div><div class="line">  def bottomRight: Point</div><div class="line"></div><div class="line">  def left = topLeft.x</div><div class="line">  def right = bottomRight.x</div><div class="line">  def width = right - left</div><div class="line">  //...</div><div class="line">&#125;</div><div class="line"></div><div class="line">abstract class Component extends Rectangular&#123;</div><div class="line">  //其他方法...</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Rectangle(val topLeft:Point, val bottomRight: Point) extends  Rectangular&#123;</div><div class="line">  //其他方法...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h1 id="4-ordered特质"><a href="#4-ordered特质" class="headerlink" title="4.ordered特质"></a>4.ordered特质</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">当你比较两个排序对象时,如果一个方法调用就能获知精确的比较结果将非常便利,如果你想要&quot;小于&quot;,你会调用&lt;,如果你想要&quot;小于等于&quot;,你会调用&lt;=,对于瘦接口来说,你或许只有&lt;方法,所以或许什么时候你会不得不写出类似于&quot;(x&lt;y)||(x==y)&quot; 这样的东西</div><div class="line">*/</div><div class="line"></div><div class="line">//在第六章里,我们知道了Rational表示的是一个分数(有理数)</div><div class="line">class Rational(n:Int, d:Int) &#123;</div><div class="line">  //...</div><div class="line">  def &lt; (that: Rational) =</div><div class="line">    this.number * that.denom &gt; that.number * this.denom</div><div class="line">  def &gt; (that:Rational) = that &lt; this</div><div class="line">  def &lt;= (that:Rational) = (this&lt;that)||(this==that)</div><div class="line">  def &gt;= (that:Rational) = (this&gt;that)||(this==that)</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">注意到三个比较操作符都定义在使用第一个的基础上,例如:&gt;被定义为&lt;的反转,&lt;=被定义为句法上的&quot;小于或等于&quot; ,另外,还可以注意到所有这三个方法对于任何可比较的类来说都是一样的,所以讨论&lt;=的时候不会有任何对于分数来说特别的东西,在比较的上下文中,&lt;=永远表示着&quot;小于或等于&quot;,总而言之,这个类的代码中存在着与任何其他实现了比较操作符的类一样的大量的固定格式写法</div><div class="line">*/</div><div class="line"></div><div class="line">//由于比较操作时如此的常见,以至于scala专门提供了一个特质解决他,这个特质就是Ordered,要使用它,你首先要用一个compare方法替换所有独立的比较方法(相当于上面的&lt;方法),然后Ordered特质就会利用这个方法为你定义&lt;,&gt;,&lt;=和&gt;= ,Ordered特质让你可以通过仅仅实现了一个方法--compare,使你的类具有了全套的比较方法</div><div class="line">class Rational(n: Int, d: Int) extends Ordered[Rational] &#123;</div><div class="line">  //...</div><div class="line">  def compare(that: Rational) = //这个compare就是所有比较的基础,就像上面的&lt;方法</div><div class="line">    (this.number * that.denom) - (that.number * this.denom)</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">这个版本的Rational混入了Ordered特质,不像你之前看到过的特质,Ordered需要你在混入的时候设定类型参数:type parameter,所以实际上混入的是Ordered[C] ,这里的C是你比较的元素的类,在本例中Rational混入了Ordered[Rational]</div><div class="line">你要做的第二件事就是compare方法来比较两个对象,这个方法应该能比较方法的接受者this和当做方法参数传入的对象,如果对象相同应该返回一个整数零,否则返回正数或者是负数</div><div class="line">*/</div><div class="line">val hafl = new Rational(1,2)</div><div class="line">val third = new Rational(1,3)</div><div class="line">half &lt; third        //false</div><div class="line">half &gt; third         //true</div><div class="line"></div><div class="line">/*</div><div class="line">混入Ordered特质,你可以实现某种排序的类,请当心,Ordered特质并没有为你定义equals方法,因为他无法做到,问题在于要通过使用compare实现equals需要检查传入对象的类型,但是因为类型擦除,Ordered本身无法做这种测试,因此,即使你继承了Ordered,也还是需要自己定义equals</div><div class="line">*/</div></pre></td></tr></table></figure>
@@ -541,136 +1742,438 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">//当上述类和特质中的任何一个通过super调用了方法,那么被调用的实现将是他线性化的右侧的第一个实现</div></pre></td></tr></table></figure>
 <h1 id="7-特质-用还是不用"><a href="#7-特质-用还是不用" class="headerlink" title="7.特质,用还是不用"></a>7.特质,用还是不用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">当你实现了一个可重用的行为集合时,你将必须决定是使用特质还是抽象类,这里没有固定的规律,但是本节包含了一条可供考虑的规则</div><div class="line">1.如果行为不被重用,那么就把它当做具体类,具体类没有可重用的行为</div><div class="line">2.如果要在多个不相关的类中重用,就做成特质,只有特质可以混入到不同的类层级中</div><div class="line">*/</div></pre></td></tr></table></figure>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/scala编程/第十二章 特质/" data-id="cj290sb9v007yssqqtawnf4xu" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala/">scala</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala编程/">scala编程</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
-  
-</article>
+  </article>
 
 
-  
-
-
-  <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
-</section>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
         
-          <aside id="sidebar">
+          
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
 
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">576</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
     </div>
-  </div>
+  </aside>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
         
       </div>
-      <footer id="footer">
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
   
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2017 Mr. Chen<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/js/script.js"></script>
-
-
-
-
   </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>

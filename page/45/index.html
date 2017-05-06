@@ -1,11 +1,93 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<!doctype html>
+
+
+
   
-  <title>Chen&#39;s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一个技术渣的自说自话">
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="一个技术渣的自说自话">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Chen's Blog">
 <meta property="og:url" content="http://yoursite.com/page/45/index.html">
@@ -14,347 +96,742 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chen's Blog">
 <meta name="twitter:description" content="一个技术渣的自说自话">
-  
-    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/page/45/"/>
+
+
+
+
+
+  <title> Chen's Blog </title>
 </head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Chen&#39;s Blog</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">一个技术渣的自说自话</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之与Spark sql结合使用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之与Spark sql结合使用/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.216Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之与Spark sql结合使用/">SparkStreaming之与Spark sql结合使用</a>
-    </h1>
   
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之updateStateByKey/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之updateStateByKey/" itemprop="url">
+                  SparkStreaming之updateStateByKey和WordCount全局统计
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>spark Streaming 最强大的地方在于,可以与spark core, spark sql整合使用的,下面来看看,如何将DStream中的RDD与spark sql结合起来使用</p>
-<p>案例:每隔10秒,统计最近60秒的,每个种类的每个商品的点击次数,然后统计出每个种类的top3热门商品</p>
-<p>实现:<br>1.每隔10秒,统计最近60秒的,每个种类的每个商品的点击次数:用到的是reduceByKeyAndWindow<br>2.统计出每个种类的top3热门商品:用到的是DStream.foreachRDD然后对每次生成的窗口中的RDD进行sql查询,取top3</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">val conf = new SparkConf()</div><div class="line">  .setAppName(&quot;Streaming&quot;)</div><div class="line">  .setMaster(&quot;local[2]&quot;)</div><div class="line"></div><div class="line">// 每收集多长时间的数据就划分为一个batch进行处理,这里设置为1秒:Seconds(1)</div><div class="line">val ssc = new StreamingContext(conf,Seconds(5))</div><div class="line"></div><div class="line">// 输入日志的格式:username product1 catatory</div><div class="line">// zhangsan iphone  mobile_phone</div><div class="line">val productClickLogsDStream = ssc.socketTextStream(&quot;spark1&quot;, 9999)</div><div class="line"></div><div class="line">// 要统计:每个种类的每个商品的点击次数,所以我们将数据格式转成:(category_product,1)</div><div class="line">// 然后使用window操作,对窗口中的数据进行reduceByKey</div><div class="line">// 从而统计出一个窗口中的每个种类的每个商品的点击次数</div><div class="line">val productClickLogsPairs = productClickLogsDStream.map&#123;</div><div class="line">  line=&gt;</div><div class="line">    val arr = line.split(&quot; &quot;)</div><div class="line">    (arr(2)+&quot;_&quot;+arr(1),1)</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 计算60s内每个种类的每个商品的点击次数统计</div><div class="line">val categoryProductCountsDStream = productClickLogsPairs.reduceByKeyAndWindow((x:Int,y:Int)=&gt;x+y, Durations.seconds(60),Durations.seconds(10))</div><div class="line">//</div><div class="line">val categoryProductCountRowRdd = categoryProductCountsDStream.foreachRDD&#123;</div><div class="line">  categoryProductCountsRdd=&gt;</div><div class="line">    val rowRdd = categoryProductCountsRdd.map&#123;</div><div class="line">      categoryProductCount=&gt;</div><div class="line">        val (category,product) = categoryProductCount._1.split(&quot;_&quot;).toVector</div><div class="line">        val count = categoryProductCount._2</div><div class="line">        Row(category,product,count)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    val structType = StructType(Array(</div><div class="line">      StructField(&quot;category&quot;, StringType, true),</div><div class="line">      StructField(&quot;product&quot;, StringType, true),</div><div class="line">      StructField(&quot;click_count&quot;, IntegerType, true)</div><div class="line">    ))</div><div class="line">    val sqlContext = new HiveContext(rowRdd.sparkContext)</div><div class="line">    val categoryProductCountsDF = sqlContext.createDataFrame(rowRdd,structType)</div><div class="line">    categoryProductCountsDF.registerTempTable(&quot;product_click_log&quot;)</div><div class="line"></div><div class="line">    // 使用spark sql执行top3热门商品的统计</div><div class="line">    val top3ProductDF = sqlContext.sql(&quot;&quot; +</div><div class="line">      &quot;select category, product, click_count&quot; +</div><div class="line">      &quot;from (&quot; +</div><div class="line">      &quot;   select &quot; +</div><div class="line">      &quot;       category,&quot; +</div><div class="line">      &quot;       product,&quot; +</div><div class="line">      &quot;       click_count,&quot; +</div><div class="line">      &quot;       row_number() over (partition by category order by click_count desc) rank&quot; +</div><div class="line">      &quot;    from product_click_log&quot; +</div><div class="line">      &quot;) tmp&quot; +</div><div class="line">      &quot;where rank &lt;= 3&quot;)</div><div class="line"></div><div class="line">    // 将数据保存到redis或者db中,然后在web中对数据进行展示</div><div class="line">    // 但是这里只是测试,所以用show</div><div class="line">    top3ProductDF.show</div><div class="line">&#125;</div><div class="line"></div><div class="line">ssc.start()</div><div class="line">ssc.awaitTermination()</div><div class="line">ssc.stop()</div></pre></td></tr></table></figure>
-<p>spark-submit<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/usr/local/spark/bin/spark-submit \</div><div class="line">--class cn.xxx.Top3HotProduct</div><div class="line">--num-executor 3 \</div><div class="line">--driver-memory 100m \</div><div class="line">--execuotr-memory 100m \</div><div class="line">--executor-cores 3 \</div><div class="line">--files /usr/local/hive/conf/hive-site.xml</div><div class="line">--driver-class-path /usr/local/hive/lib/mysql-connector-java-5.1.17.jar \</div><div class="line">/user/xx/spark-study-test.jar \</div></pre></td></tr></table></figure></p>
+
+
+    <div class="post-body" itemprop="articleBody">
 
       
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之与Spark sql结合使用/" data-id="cj290sc8b0106ssqq056z8hiz" class="article-share-link">Share</a>
       
+
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之window滑动窗口" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之window滑动窗口/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.214Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之window滑动窗口/">SparkStreaming之window滑动窗口</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>spark streaming提供了滑动窗口操作的支持,从而让我们可以对一个滑动窗口内的数据执行计算操作,每次掉落在窗口内的RDD的数据,会被聚合起来执行计算操作,然后生成的RDD,会作为window DStream的一个RDD,比如下图中,就是对每三秒钟的数据执行一次滑动窗口计算,这3秒内的3个RDD会被聚合起来进行处理,然后过了2秒钟,又会对最近3秒内的数据执行滑动窗口计算,所以每个滑动窗口操作,都必须指定2个参数,窗口长度以及滑动间隔,而且这两个参数值都必须是batch间隔的整数倍</p>
-<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/window.png" alt=""></p>
-<p>window滑动窗口的操作</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Transformation</th>
-<th style="text-align:left">含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">window</td>
-<td style="text-align:left">对每个滑动窗口的数据执行自定义的计算</td>
-</tr>
-<tr>
-<td style="text-align:left">countByWindow</td>
-<td style="text-align:left">对每个滑动窗口的数据执行count操作</td>
-</tr>
-<tr>
-<td style="text-align:left">reduceByWindow</td>
-<td style="text-align:left">对每个滑动窗口的数据执行reduceByKey操作</td>
-</tr>
-<tr>
-<td style="text-align:left">reduceByKeyAndWindow</td>
-<td style="text-align:left">对每个滑动窗口的数据执行reduceByKey操作</td>
-</tr>
-<tr>
-<td style="text-align:left">countByValueAndWindow</td>
-<td style="text-align:left">对每个滑动窗口的数据执行countByValue操作</td>
-</tr>
-</tbody>
-</table>
-<p>案例:热点搜索词滑动统计,每隔5秒钟,统计最近10秒钟的搜索词的搜索频次,并打印出来排名最靠前的3个搜索词以及出现次数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line">val conf = new SparkConf()</div><div class="line">  .setAppName(&quot;Streaming&quot;)</div><div class="line">  .setMaster(&quot;local[2]&quot;)</div><div class="line"></div><div class="line">// 每收集多长时间的数据就划分为一个batch进行处理,这里设置为1秒:Seconds(1)</div><div class="line">val ssc = new StreamingContext(conf,Seconds(5))</div><div class="line"></div><div class="line">// 搜素日志的格式: username searchWord</div><div class="line">val searchLog = ssc.socketTextStream(&quot;spark1&quot;, 9999)</div><div class="line">// (searchWord,1)</div><div class="line">val searchWordPairDStream = searchLog.map(_.split(&quot; &quot;)(2)).map((_,1))</div><div class="line"></div><div class="line">/*</div><div class="line">第一个参数是:reduceByKey中的需要指定的函数</div><div class="line">第二个参数是:窗口长度,这里是60秒</div><div class="line">第三个参数:滑动间隔,这是是10秒</div><div class="line">也就是说:每隔10秒钟,将最近60秒的数据,作为一个窗口,</div><div class="line">进行内部的RDD的聚合,统一成一个RDD,然后进行后续计算</div><div class="line"></div><div class="line">每隔10秒钟,就会滑动一下,会将之前60秒的RDD(因为一个batch的间隔是5秒,</div><div class="line">所以之前60秒就有12个RDD)给聚合起来统一执行reduceByKey操作,</div><div class="line">所以这里的reduceByKeyAndWindow是针对每隔窗口执行计算的,而不是针对某个DStream中的RDD</div><div class="line"> */</div><div class="line">val searchWordCountsDStream = searchWordPairDStream.reduceByKeyAndWindow((x:Int,y:Int)=&gt;x+y,Durations.seconds(60),Durations.seconds(10))</div><div class="line">/*</div><div class="line"> @param reduceFunc associative and commutative reduce function</div><div class="line"> @param windowDuration width of the window; must be a multiple of this DStream&apos;s batching interval(必须是batch的整数倍)</div><div class="line"> @param slideDuration  sliding interval of the window</div><div class="line"> */</div><div class="line"></div><div class="line">// 执行transform,因为一个窗口就是一个60秒钟的数据,会变成一个RDD,</div><div class="line">// 然后对这一个RDD根据每个搜索词出现的频率进行排序,</div><div class="line">// 然后获取排名前3的热点搜索词</div><div class="line">val finalDStream = searchWordCountsDStream.transform&#123;</div><div class="line">  searchWordCountsRdd=&gt;</div><div class="line">    // 执行搜索词和频率的反转,格式为:(count, searchWord)</div><div class="line">    val searchCountsWordRdd = searchWordCountsRdd.map(t=&gt;(t._2, t._1))</div><div class="line">    val searchCountsWordSortedRdd = searchCountsWordRdd.sortByKey(false)</div><div class="line">    // 格式为:(searchWord, count)</div><div class="line">    val searchWordCountsSortedRdd = searchCountsWordSortedRdd.map(t=&gt;(t._2, t._1))</div><div class="line">    // 然后take(),获取排名前3的特点搜索词</div><div class="line">    val top3SearchWordCounts = searchWordCountsSortedRdd.take(3)</div><div class="line"></div><div class="line">    top3SearchWordCounts.foreach(println)</div><div class="line"></div><div class="line">    null</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 触发</div><div class="line">finalDStream.print</div><div class="line"></div><div class="line">ssc.start()</div><div class="line">ssc.awaitTermination()</div><div class="line">ssc.stop()</div><div class="line">/*</div><div class="line">其实window函数就是对一个时间段中的数据进行统计,比如:看过去60秒钟内的热点搜索词</div><div class="line"> */</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之window滑动窗口/" data-id="cj290sc880103ssqqupgo6gvn" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之updateStateByKey" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之updateStateByKey/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.213Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之updateStateByKey/">SparkStreaming之updateStateByKey和WordCount全局统计</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>updateStateByKey操作,可以让我们为每个key维护一份state,并持续不断的更新该state<br>1.首先,定义个state,可以是任意的数据类型<br>2.其次,要定义state更新函数—指定一个函数如何使用之前的state和新值来更新state</p>
+          
+            <p>updateStateByKey操作,可以让我们为每个key维护一份state,并持续不断的更新该state<br>1.首先,定义个state,可以是任意的数据类型<br>2.其次,要定义state更新函数—指定一个函数如何使用之前的state和新值来更新state</p>
 <p>对于每个batch,spark都会为每个之前已经存在的key去应用一次state更新函数,无论这个key在batch中是否有新的数据,如果state更新函数返回none,那么key对应的state就会被删除</p>
 <p>当然,对于每个新初出现的key,也会执行state更新操作</p>
 <p>注意,updateStateByKey操作,要求必须开启checkpoint机制</p>
 <p>案例:基于缓存的实时WordCount程序<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">val conf = new SparkConf()</div><div class="line">  .setAppName(&quot;Streaming&quot;)</div><div class="line">  .setMaster(&quot;local[2]&quot;)</div><div class="line"></div><div class="line">// 每收集多长时间的数据就划分为一个batch进行处理,这里设置为1秒:Seconds(1)</div><div class="line">val ssc = new StreamingContext(conf,Seconds(1))</div><div class="line"></div><div class="line">// 如果要使用updateStateByKey算子,就必须设置一个checkpoint目录,</div><div class="line">// 这样便于在内存数据丢失的时候,可以从checkpoint中恢复数据</div><div class="line">ssc.checkpoint(&quot;hdfs://spark1:9000/wordcount_checkpoint&quot;)</div><div class="line"></div><div class="line">val updateFunc = (iter: Iterator[(String, Seq[Int], Option[Int])]) =&gt; &#123;</div><div class="line">  //iter.flatMap(it=&gt;Some(it._2.sum + it._3.getOrElse(0)).map(x=&gt;(it._1,x)))</div><div class="line">  iter.flatMap &#123; case (x, y, z) =&gt; Some(y.sum + z.getOrElse(0)).map(i =&gt; (x, i)) &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">val lines = ssc.socketTextStream(&quot;localhost&quot;,9999)</div><div class="line">val pairs = lines.flatMap(_.split(&quot; &quot;)).map((_,1))</div><div class="line">// 在之前的WordCount中,是直接使用pairs.reduceByKey</div><div class="line">// 得到的是每个时间段的batch对应的RDD,这样计算出来的是那个时间段的单词计数</div><div class="line">// 但是如果我们想要统计每个单词的全局的计数呢?</div><div class="line">// 就是说:统计出来从程序启动开始,到现在为止,统计一个单词出现的次数,那么之前的方式就不好实现了</div><div class="line">// 就必须基于redis缓存,或者mysql来实现累加</div><div class="line">// 但是我们的updateStateByKey就可以维护一份每个单词的全局的统计次数</div><div class="line"></div><div class="line">/*实际上,对于每个单词,每次batch的时候,都会调用这个函数</div><div class="line">第一个参数values:相当于这个batch中,这个key的新的值,可能有多个</div><div class="line">比如说:(hello,1) (hello,1),那么传入的是(1,1)</div><div class="line">第二个参数state:就是指的是这个key之前的状态,其中的泛型的类型是自己指定的</div><div class="line"> */</div><div class="line">val func2 = (values:Seq[Int], state:Option[Int])=&gt;&#123;</div><div class="line">  val newValue = state.getOrElse(0)//之前的状态不存在返回0</div><div class="line">  Option(newValue + values.sum)//将本次新出现的值求和,然后再和state的值相加,就是这个key目前的全局统计</div><div class="line">&#125;</div><div class="line">val wordCounts = pairs.updateStateByKey(func2)//其实内部就是调用的是下面的一种方式,只不过使用func2的方法更加的简洁</div><div class="line">//val wordCounts = pairs.updateStateByKey(updateFunc,new HashPartitioner(ssc.sparkContext.defaultParallelism), true)</div><div class="line">/*</div><div class="line">默认的情况:</div><div class="line">new HashPartitioner(ssc.sparkContext.defaultParallelism) 是指定分区函数,默认就是使用的是HashPartitioner</div><div class="line">true:Whether to remember the partitioner object in the generated RDDs.</div><div class="line"> */</div><div class="line">wordCounts.print</div><div class="line"></div><div class="line">ssc.start()</div><div class="line">ssc.awaitTermination()</div><div class="line">ssc.stop()</div></pre></td></tr></table></figure></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之updateStateByKey/" data-id="cj290sc850100ssqqg08k2g20" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之transform" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之transform/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.211Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之transform/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之transform/">SparkStreaming之transform</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之transform/" itemprop="url">
+                  SparkStreaming之transform
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>transform操作,应用在DStream上时,可以用于执行任意的RDD到RDD的转换操作,他可以用于实现,DStream API中所没有的操作,比如说,DStream API中,并没有提供将一个DStream中的每个batch,与一个特定的RDD进行join的操作,但是我们自己就可以使用transform操作来实现该功能</p>
+      
+
+      
+        
+          
+            <p>transform操作,应用在DStream上时,可以用于执行任意的RDD到RDD的转换操作,他可以用于实现,DStream API中所没有的操作,比如说,DStream API中,并没有提供将一个DStream中的每个batch,与一个特定的RDD进行join的操作,但是我们自己就可以使用transform操作来实现该功能</p>
 <p>DStream.join(),只能join其他DStream,在DStream每个batch的RDD计算出来之后,回去跟其他DStream的RDD进行join</p>
 <p>案例:实时黑名单过滤</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">    val conf = new SparkConf()</div><div class="line">      .setAppName(&quot;Streaming&quot;)</div><div class="line">      .setMaster(&quot;local[2]&quot;)</div><div class="line"></div><div class="line">    // 每收集多长时间的数据就划分为一个batch进行处理,这里设置为1秒:Seconds(1)</div><div class="line">    val ssc = new StreamingContext(conf,Seconds(1))</div><div class="line"></div><div class="line">    // 构造模拟数据:黑名单RDD</div><div class="line">    val blackListData = Array(</div><div class="line">      (&quot;tom&quot;, true)</div><div class="line">    )</div><div class="line">    val blckListRdd = ssc.sparkContext.parallelize(blackListData)</div><div class="line"></div><div class="line">    // 日志的格式为:date  username</div><div class="line">    val adsChickLogDStream = ssc.socketTextStream(&quot;spark1&quot;, 9999)</div><div class="line">    val userAdsClickLogDStream = adsChickLogDStream.map&#123;</div><div class="line">      line=&gt;</div><div class="line">        // (username, line)</div><div class="line">        (line.split(&quot; &quot;)(1), line)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 执行transform操作,将每个batch的RDD,与黑名单RDD进行join,filter,map等操作</div><div class="line">    // 实时黑名单过滤</div><div class="line">    val validAdsClickLogDstream = userAdsClickLogDStream.transform(</div><div class="line">      userAdsClickLogRdd=&gt;&#123;</div><div class="line">        // (leo, (&quot;20150101 leo&quot;, None))</div><div class="line">        // (tom, (&quot;20150101 tom&quot;, Some(true))</div><div class="line">        // leftOuterJoin[W](other: RDD[(K, W)]): RDD[(K, (V, Option[W]))]</div><div class="line">        val joinedRdd = userAdsClickLogRdd.leftOuterJoin(blckListRdd)</div><div class="line"></div><div class="line">        val filterRdd = joinedRdd.filter(</div><div class="line">//          tuple=&gt;&#123;</div><div class="line">//            if(tuple._2._2.getOrElse(false))&#123;</div><div class="line">//              false</div><div class="line">//            &#125;else&#123;</div><div class="line">//              true</div><div class="line">//            &#125;</div><div class="line">//          &#125;</div><div class="line">          !_._2._2.getOrElse(false)</div><div class="line">        )</div><div class="line"></div><div class="line">        // 将:&quot;20150101 leo&quot;这一条数据返回</div><div class="line">        filterRdd.map(_._2._1)</div><div class="line">      &#125;</div><div class="line">    )</div><div class="line"></div><div class="line">    // 写入kafka等消息中间件,</div><div class="line">    // 然后再开发一个专门的后台服务,作为广告计费服务,执行实时的广告计费,这里就拿到了有效的广告点击</div><div class="line">    validAdsClickLogDstream.print</div><div class="line"></div><div class="line">    ssc.start()</div><div class="line">    ssc.awaitTermination()</div><div class="line">    ssc.stop()</div><div class="line"></div><div class="line">    /*</div><div class="line">    其实使用transform,会将DStream中batch的每个RDD与指定的Rdd进行操作</div><div class="line">     */</div></pre></td></tr></table></figure>
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之transform/" data-id="cj290sc9f0113ssqqa3g08uzm" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之StreamingContext详解" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之StreamingContext详解/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.209Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之StreamingContext详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之StreamingContext详解/">SparkStreaming之StreamingContext详解</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之StreamingContext详解/" itemprop="url">
+                  SparkStreaming之StreamingContext详解
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>有两种创建StreamingContext</p>
+      
+
+      
+        
+          
+            <p>有两种创建StreamingContext</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//通过SparkConf直接创建</div><div class="line">val conf = new SparkConf().setAppName(&quot;Streaming&quot;).setMaster(&quot;local[2]&quot;)</div><div class="line">val ssc = new StreamingContext(conf,Seconds(1))</div><div class="line"></div><div class="line">//或者:通过SparkContext创建</div><div class="line">val sc = new SparkContext(conf)</div><div class="line">val ssc = new StreamingContext(sc,Durations.seconds(1))</div></pre></td></tr></table></figure>
 <p>一个StreamingContext定义之后,必须做以下几件事情:<br>1.通过创建输入DStream来创建输入数据源<br>2.通过对DStream定义Transformation和output算子操作,来定义实时计算逻辑<br>3.调用StreamingContext的start()方法,来开始实时处理数据<br>4.调用StreamingContext的waitTermination()方法来等待应用程序的终止,可以使用    Ctrl+c手动终止,或者就是让他持续不断的运行进行计算<br>5.也可以通过调用StreamingContext的stop()方法来停止应用程序的运行</p>
 <p>需要主要的要点:<br>1.只要一个StreamingContext启动之后,就不能再往其中添加任何计算逻辑了,比如执行了start()方法之后,还给某个DStream执行一个算子,这样是无效的,所以一般start()方法之后就是waitTermination()方法,然后后面就没有任何执行逻辑了<br>2.一个StreamingContext停止之后,是肯定不能够重启的,调用stop()之后,不能再调用start()<br>3.一个JVM同时只能有一个StreamingContext启动,在你的应用程序中,不能创建两个StreamingContext<br>4.调用stop()方法时,会同时停止内部的SparkContext,如果不希望如此,还希望后面继续使用SparkContext创建其他类型的Context,比如SQLContext,那么就使用stop(false)<br>5.一个SparkContext可以创建多个StreamingContext,只要上一个先用stop(false)停止,在创建下一个即可</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之StreamingContext详解/" data-id="cj290sc7w00zrssqqyyd2eypv" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之DStream的output操作" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之DStream的output操作/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.208Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之DStream的output操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之DStream的output操作/">SparkStreaming之DStream的output操作</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之DStream的output操作/" itemprop="url">
+                  SparkStreaming之DStream的output操作
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="DStream的output操作"><a href="#DStream的output操作" class="headerlink" title="DStream的output操作"></a>DStream的output操作</h1><table>
+      
+
+      
+        
+          
+            <h1 id="DStream的output操作"><a href="#DStream的output操作" class="headerlink" title="DStream的output操作"></a>DStream的output操作</h1><table>
 <thead>
 <tr>
 <th style="text-align:left">Output</th>
@@ -400,48 +877,148 @@
 <p>代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">val conf = new SparkConf()</div><div class="line">  .setAppName(&quot;Streaming&quot;)</div><div class="line">  .setMaster(&quot;local[2]&quot;)</div><div class="line"></div><div class="line">// 每收集多长时间的数据就划分为一个batch进行处理,这里设置为1秒:Seconds(1)</div><div class="line">val ssc = new StreamingContext(conf,Seconds(5))</div><div class="line"></div><div class="line">val line = ssc.socketTextStream(&quot;spark1&quot;, 9999)</div><div class="line">val pairDStream = line.flatMap(_.split(&quot; &quot;)).map((_,1))</div><div class="line"></div><div class="line">//updateFunc: (Seq[V], Option[S]) =&gt; Option[S]</div><div class="line">val func = (values:Seq[Int], state:Option[Int])=&gt;&#123;</div><div class="line">  val sum = values.sum + state.getOrElse(0)</div><div class="line">  Option(sum)</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 全局统计</div><div class="line">val wordCount = pairDStream.updateStateByKey(func)</div><div class="line"></div><div class="line">// 每次得到当前所有单词的统计次数之后,将其写入mysql,以便后续的J2EE应用程序进行web展示</div><div class="line">wordCount.foreachRDD&#123;</div><div class="line">  wordCountRdd=&gt;</div><div class="line">    wordCountRdd.foreachPartition&#123;</div><div class="line">      partitionRecord=&gt;</div><div class="line">        // 获取连接</div><div class="line">        val conn = ConnectionPool.getConnection()</div><div class="line">        // 遍历partition中的数据,使用一个连接,插入数据到mysql</div><div class="line">        while(partitionRecord.hasNext)&#123;</div><div class="line">          val (word, count ) = partitionRecord.next()</div><div class="line">          val sql = &quot;insert into wordcount(word,count) values(?, ?)&quot;</div><div class="line">          val ps = conn.prepareStatement(sql)</div><div class="line">          ps.setString(1,word)</div><div class="line">          ps.setInt(2,count)</div><div class="line">          ps.executeUpdate()</div><div class="line">        &#125;</div><div class="line">        // 还回去连接</div><div class="line">        ConnectionPool.returnConnection(conn)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">ssc.start()</div><div class="line">ssc.awaitTermination()</div><div class="line">ssc.stop()</div></pre></td></tr></table></figure></p>
 <p>连接池代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">package org.dt.spark</div><div class="line"></div><div class="line">import java.sql.&#123;Connection, DriverManager&#125;</div><div class="line"></div><div class="line">import scala.collection.mutable</div><div class="line"></div><div class="line">object ConnectionPool &#123;</div><div class="line"></div><div class="line">  val connectionQueue = new mutable.LinkedList[Connection]()</div><div class="line"></div><div class="line">  // 加载驱动</div><div class="line">  Class.forName(&quot;com.mysql.jdbc.Driver&quot;)</div><div class="line"></div><div class="line">  // 获取连接,多线程并发访问控制</div><div class="line">  def getConnection(): Connection =&#123;</div><div class="line">    if(connectionQueue==null)&#123;</div><div class="line"></div><div class="line">      for(i&lt;-1 to 10)&#123;</div><div class="line">        val conn = DriverManager.getConnection(&quot;jdbc:mysql://spark1:3306/testdb&quot;, &quot;root&quot;, &quot;root&quot;)</div><div class="line">        connectionQueue.push(conn)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    connectionQueue.poll()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  def returnConnection(conn: Connection): Unit =&#123;</div><div class="line">    connectionQueue.push(conn)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之DStream的output操作/" data-id="cj290sc7t00zossqqhw3namct" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkStreaming之checkpoint机制" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之checkpoint机制/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.206Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之checkpoint机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之checkpoint机制/">SparkStreaming之checkpoint机制</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之checkpoint机制/" itemprop="url">
+                  SparkStreaming之checkpoint机制
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>每一个spark streaming应用,正常来说,都是要7*24小时运转的,这就是实时计算程序的特点,因为要持续不断的对数据进行计算,因此,读实时计算应用的要求,应该是必须要能够对与应用程序逻辑无关的失败进行容错</p>
+      
+
+      
+        
+          
+            <p>每一个spark streaming应用,正常来说,都是要7*24小时运转的,这就是实时计算程序的特点,因为要持续不断的对数据进行计算,因此,读实时计算应用的要求,应该是必须要能够对与应用程序逻辑无关的失败进行容错</p>
 <p>如果要实现这个目标,spark streaming程序就必须将足够的信息checkpoint到容错的存储系统上,从而让他能够从失败中进行恢复,有两种数据需要被进行checkpoint</p>
 <p>1.元数据checkpoint—将定义了流式计算逻辑的信息,把偶才能到容错的存储系统上,如HDFS,当运行spark streaming应用程序的driver进程所在节点失败时,该信息可以用于进行行恢复,元数据信息包括了<br>1.1.配置信息—创建spark streaming的应用程序的配置信息,比如sparkConf中的信息<br>1.2.DStream的操作信息—定义了spark stream应用程序的计算逻辑的DStream操作信息<br>1.3.未处理的batch信息—那些job正在排队,还没处理的batch信息</p>
 <p>2.数据checkpoint—-将实时计算过程中产生的RDD的数据保存到可靠的存储系统中</p>
@@ -463,48 +1040,148 @@
 <p>使用了上述第二部提交应用之后,就可以让Driver在失败时自动被重启,并且通过checkpoint目录的元数据恢复StreamingContext</p>
 <p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/spark从入门到精通_笔记/checkpoint_1.png" alt=""></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkStreaming之checkpoint机制/" data-id="cj290sc7z00zussqq72mk08j2" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkSQL的前世今生" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL的前世今生/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.204Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL的前世今生/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL的前世今生/">SparkSQL的前世今生</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL的前世今生/" itemprop="url">
+                  SparkSQL的前世今生
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>spark1.0版本开始,推出了spark sql,其实最早使用的都是Hadoop自己的hive查询引擎,但是后来spark提供了Shark,再后来Shark被淘汰,退出了Spark sql,Shark的性能比hive就要高出一个数量级,而spark sql的性能又比Shark高出一个数量级</p>
+      
+
+      
+        
+          
+            <p>spark1.0版本开始,推出了spark sql,其实最早使用的都是Hadoop自己的hive查询引擎,但是后来spark提供了Shark,再后来Shark被淘汰,退出了Spark sql,Shark的性能比hive就要高出一个数量级,而spark sql的性能又比Shark高出一个数量级</p>
 <p>最早来说,hive的诞生,主要是因为要让哪些不熟悉java,无法深入进行MapReduce编程的数据分析师,能够使用它们熟悉的关系型数据库的sql模型,来操作HDFS上的数据,因此推出了hive,hive底层基于MapReduce实现了sql功能,能够让数据分析人员,以及数据开发人员,方便的使用hive进行数据仓库的建模和建设,然后使用sql模型针对数据仓库中的数据进行统计和分析,但是hive有个致命的缺陷,就是他的底层是基于MapReduce的,而MapReduce的shuffle又是基于磁盘的,因此导致hive的性能异常低下,经常出现复杂的sql etl,要运行数个小时,甚至数十个小时的情况</p>
 <p>后来,spark推出了Shark,shark与hive实际上还是紧密关联的,shark底层的很多东西还是依赖于hive,但是修改了内存管理,物理计划,执行三个模块,底层使用spark的基于内存的计算模型,从而让性能比hive提升了数倍到上百倍</p>
 <p>然而,shark还是他的问题梭子,shark底层依赖了hive的语法解析器,查询优化器等组件,因此对于其性能的提升还是造成了制约,所以后来spark团队决定,完全抛弃shark,退出了全新的spark sql项目</p>
@@ -515,48 +1192,148 @@
 <p>2.字节码生成技术(byte-code generation)<br>spark sql在其catalyst模块的expressions中增加了codegen模块,对于sql语句中的计算表达式,比如select num+num from t 这样的sql,就可以使用动态字节码技术来优化其性能</p>
 <p>3.scala代码编写的优化<br>对于scala代码编写中,可能会造成较大的性能开销的地方,自己重写,使用更加复杂的方式,来获取更好的性能,比如Option样例类,for循环,map/filter/foreach等高阶函数,以及不可变对象,都改成了用null,while循环等来实现,并且重用了可变的对象</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL的前世今生/" data-id="cj290sc7q00zlssqqq1l9ls89" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkSQL数据源之Parquet数据源" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之Parquet数据源/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.203Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之Parquet数据源/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之Parquet数据源/">SparkSQL数据源之Parquet数据源</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之Parquet数据源/" itemprop="url">
+                  SparkSQL数据源之Parquet数据源
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="数据源Parquet的介绍"><a href="#数据源Parquet的介绍" class="headerlink" title="数据源Parquet的介绍"></a>数据源Parquet的介绍</h1><p>Parquet是面向分析性业务的列式存储格式,由Twitter和Cloudera合作开发,2015年5月从Apache的孵化器里毕业成为Apache顶级项目</p>
+      
+
+      
+        
+          
+            <h1 id="数据源Parquet的介绍"><a href="#数据源Parquet的介绍" class="headerlink" title="数据源Parquet的介绍"></a>数据源Parquet的介绍</h1><p>Parquet是面向分析性业务的列式存储格式,由Twitter和Cloudera合作开发,2015年5月从Apache的孵化器里毕业成为Apache顶级项目</p>
 <p>列式存储和行式存储相比有哪些优势呢?<br>1.可以跳过不符合条件的数据,制只读取需要的数据,降低IO数据量<br>2.压缩编码可以降低磁盘存储空间,由于同一列的数据类型是一样的,可以使用更高效的压缩编码(例如:Run Length Encoding和Delta Encoding)进一步节约存储空间<br>3.只读取需要的列,支持向量运算,能够获取更好的扫描性能</p>
 <h1 id="数据源Parquet的编程方式加载数据"><a href="#数据源Parquet的编程方式加载数据" class="headerlink" title="数据源Parquet的编程方式加载数据"></a>数据源Parquet的编程方式加载数据</h1><p>下面介绍的是Parquet数据源,使用编程的方式加载Parquet文件中的数据</p>
 <p>案例:查询用户数据中的用户名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">val sparkConf = new SparkConf().setAppName(&quot;dataFrame&quot;).setMaster(&quot;local&quot;)</div><div class="line">val sc = new SparkContext(sparkConf)</div><div class="line">val sqlContext = new SQLContext(sc)</div><div class="line"></div><div class="line">// 使用format(&quot;parquet&quot;).load()是通用的方式</div><div class="line">//val userDF = sqlContext.read.format(&quot;parquet&quot;).load(&quot;C:\\Users\\Administrator\\Desktop\\users.parquet&quot;)</div><div class="line">// parquet()是针对parquet文件具体的读取,例如对于json文件,就有sqlContext.read.json();cvs,jdbc等是一样的</div><div class="line">val userDF = sqlContext.read.parquet(&quot;C:\\Users\\Administrator\\Desktop\\users.parquet&quot;)</div><div class="line"></div><div class="line">// 将DataFrame注册为临时表,然后使用sql查询需要的数据</div><div class="line">userDF.registerTempTable(&quot;users&quot;)</div><div class="line">val userNameDF = sqlContext.sql(&quot;select name from users&quot;)</div><div class="line"></div><div class="line">//对查询出来的DataFrame进行Transformation操作,然后打印</div><div class="line">// 在进行DF到rdd的转换的时候,一行数据转成rdd就是一个Array,所以用()去取数组元素</div><div class="line">val userName = userNameDF.rdd.map(row=&gt;row(0).toString+&quot;-xxx&quot;)</div><div class="line">userName.foreach(println)</div><div class="line"></div><div class="line">/*打印结果:</div><div class="line">  Alyssa-xxx</div><div class="line">  Ben-xxx</div><div class="line"> */</div></pre></td></tr></table></figure></p>
@@ -571,184 +1348,887 @@
 <p>因为元数据合并是一种相对耗时的操作,而且在大多数情况下不是一种必要的特性,从spark 1.5.0版本开始,默认是关闭Parquet文件的自动合并元数据的特性的,可以通过以下的两种方式开启Parquet数据源的自动合并元数据的特性:<br>1.读取parquet文件时,将数据源的选项,mergeSchema设置为true<br>2.使用SQLContext.setConf()方法,将”spark.sql.parquet.mergeSchema”参数设置为true</p>
 <p>案例:合并学生的基本信息和成绩信息的元数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"> val sparkConf = new SparkConf().setAppName(&quot;dataFrame&quot;).setMaster(&quot;local&quot;)</div><div class="line"> val sc = new SparkContext(sparkConf)</div><div class="line"> val sqlContext = new SQLContext(sc)</div><div class="line"></div><div class="line"> import sqlContext.implicits._</div><div class="line"></div><div class="line"> // 首先手动创建一个DataFrame,作为学生的基本信息数据,并将其写入到一个Parquet文件中</div><div class="line"> val studentWithNameAge = Array((&quot;leo&quot;,23),(&quot;jack&quot;,25))</div><div class="line"> val studentWithNameAgeDF = sc.parallelize(studentWithNameAge).toDF(&quot;name&quot;, &quot;age&quot;)</div><div class="line"> studentWithNameAgeDF.write.save(&quot;C:\\Users\\Administrator\\Desktop\\student&quot;, SaveMode.Append)</div><div class="line"></div><div class="line"> //创建第二个DataFrame,作为学生的成绩信息,并写入一个Parquet文件中</div><div class="line"> val studentWithNameGrade = Array((&quot;marry&quot;,&quot;A&quot;),(&quot;tom&quot;,&quot;B&quot;))</div><div class="line"> val studentWithNameGradeDF = sc.parallelize(studentWithNameGrade).toDF(&quot;name&quot;, &quot;grade&quot;)</div><div class="line"> studentWithNameGradeDF.write.save(&quot;C:\\Users\\Administrator\\Desktop\\student&quot;, SaveMode.Append)</div><div class="line"></div><div class="line"> /*</div><div class="line"> 第一个DataFrame的元数据和第二个DataFrame的元数据是不相同的,</div><div class="line"> 第一个包含了name和age两个列,第二个包含了name和grade两个列</div><div class="line"> 所以,这里期望的是,读取出来的表数据,自动合并两个问价你的元数据,</div><div class="line"> 出现3个列:name,age,grade</div><div class="line">  */</div><div class="line"> val studentDF = sqlContext.read.option(&quot;mergeSchema&quot;, true).parquet(&quot;C:\\Users\\Administrator\\Desktop\\student&quot;)</div><div class="line"> studentDF.printSchema()</div><div class="line"> studentDF.show</div><div class="line"></div><div class="line"></div><div class="line">// 注意在spark1.5.0上是可以的,在spark2.1.0上不行,编译就报错</div></pre></td></tr></table></figure></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之Parquet数据源/" data-id="cj290sc7g00zcssqq915pc4sb" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/spark从入门到精通_笔记/SparkSQL数据源之json数据源" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之json数据源/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.201Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/spark/">spark</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之json数据源/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之json数据源/">SparkSQL数据源之json数据源</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之json数据源/" itemprop="url">
+                  SparkSQL数据源之json数据源
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>spark sql可以自动推断json文件的元数据,并且加载其数据,创建一个DataFrame,可以使用SQLContext.read.json()方法,针对一个元素类型为String的RDD,或者是一个json文件</p>
+      
+
+      
+        
+          
+            <p>spark sql可以自动推断json文件的元数据,并且加载其数据,创建一个DataFrame,可以使用SQLContext.read.json()方法,针对一个元素类型为String的RDD,或者是一个json文件</p>
 <p>但是要主要的是,这里使用的json文件与传统意义上的json文件是不一样的,每行都必须,也只能包含一个,单独的,自包含的,有效的json对象,不能让一个json对象分散在多行,否则会报错</p>
 <p>案例:查询成绩为80分一身的学生的基本信息与成绩信息</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//json文件</div><div class="line">&#123;&quot;name&quot;:&quot;Michael&quot;,&quot;score&quot;:88&#125;</div><div class="line">&#123;&quot;name&quot;:&quot;Andy&quot;, &quot;score&quot;:99&#125;</div><div class="line">&#123;&quot;name&quot;:&quot;Justin&quot;, &quot;score&quot;:77&#125;</div></pre></td></tr></table></figure>
 <p>完整的代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">val sparkConf = new SparkConf().setAppName(&quot;dataFrame&quot;).setMaster(&quot;local&quot;)</div><div class="line">val sc = new SparkContext(sparkConf)</div><div class="line">val sqlContext = new SQLContext(sc)</div><div class="line"></div><div class="line">// 针对json文件,创建DataFrame</div><div class="line">val studentScoresDF = sqlContext.read.json(&quot;C:\\Users\\Administrator\\Desktop\\studentscores.json&quot;)</div><div class="line"></div><div class="line">// 针对学生成绩的DataFrame,注册临时表,查询分数大于80的学生的姓名数组</div><div class="line">studentScoresDF.registerTempTable(&quot;student_scores&quot;)</div><div class="line">val goodStudentScoresDF = sqlContext.sql(&quot;select name,score from student_scores where score &gt;= 80&quot;)</div><div class="line">val goodStudentNames = goodStudentScoresDF.rdd.map(row=&gt;row(0).toString).collect</div><div class="line"></div><div class="line">// 构造学生信息数据</div><div class="line">val studentInfoJson = Array(</div><div class="line">  &quot;&#123;\&quot;name\&quot;:\&quot;Michael\&quot;,\&quot;age\&quot;:18&#125;&quot;,</div><div class="line">  &quot;&#123;\&quot;name\&quot;:\&quot;Andy\&quot;,\&quot;age\&quot;:17&#125;&quot;,</div><div class="line">  &quot;&#123;\&quot;name\&quot;:\&quot;Justin\&quot;,\&quot;age\&quot;:19&#125;&quot;)</div><div class="line">val studentInfoJsonRDD = sc.parallelize(studentInfoJson)</div><div class="line">val studentInfoJsonDF = sqlContext.read.json(studentInfoJsonRDD)</div><div class="line"></div><div class="line">// 查询学生成绩大于80分的学生信息</div><div class="line">studentInfoJsonDF.registerTempTable(&quot;stduent_infos&quot;)</div><div class="line"></div><div class="line">// 构造sql语句</div><div class="line">var sql = &quot;select name, age from stduent_infos where name in (&quot;</div><div class="line">for(i &lt;- 0 until goodStudentNames.length)&#123;</div><div class="line">  sql += &quot;&apos;&quot;+goodStudentNames(i)+&quot;&apos;&quot;</div><div class="line">  if(i &lt; goodStudentNames.length-1)&#123;</div><div class="line">    sql += &quot;,&quot;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">sql += &quot;)&quot;</div><div class="line"></div><div class="line">val goodStudentInfoDF = sqlContext.sql(sql)</div><div class="line">// 将DataFrame转换为RDD[Tuple], 这样在进行join的时候,可以按照Tuple的key进行join</div><div class="line">val goodStudentInfoRdd = goodStudentInfoDF.rdd.map&#123;row =&gt; (row(0).toString, row(1).toString.toInt)&#125;</div><div class="line"></div><div class="line">// 将分数大于80分的学生的成绩信息和基本基本信息进行join</div><div class="line">val goodStudentsRdd = goodStudentScoresDF.rdd.map(row=&gt;(row(0).toString, row(1).toString.toInt))</div><div class="line">    .join(goodStudentInfoRdd)</div><div class="line"></div><div class="line">// 将RDD转换为DataFrame,并保存成json格式</div><div class="line">val goodStudents = goodStudentsRdd.map(t=&gt;Row(t._1,t._2._1.toInt,t._2._2.toInt))//将RDD转成RDD[Row]</div><div class="line">val meta = StructType(Array(</div><div class="line">  StructField(&quot;name&quot;, StringType, true),</div><div class="line">  StructField(&quot;score&quot;, IntegerType, true),</div><div class="line">  StructField(&quot;age&quot;, IntegerType, true)</div><div class="line">))</div><div class="line"></div><div class="line">val goodStudentsDF = sqlContext.createDataFrame(goodStudents,meta)</div><div class="line">goodStudentsDF.write.format(&quot;json&quot;).save(&quot;C:\\Users\\Administrator\\Desktop\\studentscores.json1&quot;)</div></pre></td></tr></table></figure></p>
 <p>总结:<br>1.要实现两张表的join<br>2.而join的过程是RDD的join,所以要将两个DataFrame转成RDD(这里涉及到Row)<br>3.join之后是一个RDD,此时要将RDD转成DataFrame,保存成json格式(这里涉及到RDD转DataFrame的时候,要将RDD抓成RDD[Row]</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之json数据源/" data-id="cj290sc7n00zissqqgva2zoy1" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
-  
-</article>
+  </article>
 
 
-  
-
-
-  <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/44/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/43/">43</a><a class="page-number" href="/page/44/">44</a><span class="page-number current">45</span><a class="page-number" href="/page/46/">46</a><a class="page-number" href="/page/47/">47</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/46/">Next &raquo;</a>
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之JDBC数据源/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之JDBC数据源/" itemprop="url">
+                  SparkSQL数据源之JDBC数据源
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>spark sql支持使用JDBC从关系型数据库(比如Mysql)中读取数据,读取的数据,依然由DataFrame表示,可以很方便的使用spark core提供的各种算子进行处理</p>
+<p>实际上使用spark sql处理JDBC中的数据是非常有用的,比如说,你的mysql业务数据库中,有大量的数据,比如1000万,然后,你现在需要编写一个程序,对线上的脏数据进行某种复杂业务逻辑的处理,甚至复杂到可能涉及到要用spark sql反复查询hive中的数据,来进行关联处理</p>
+<p>此时,用spark sql来通过JDBC数据源,加载mysql中的数据,然后通过各种算子进行处理,是最好的选择,因为spark是分布式的计算框架,对于1000万数据,肯定是分布式处理的,而如果你自己手工编写一个java程序,那么你只能分批次处理了,首先处理2万条,再处理2万条,可能运行完你的java程序,已经是好久之后的事情了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sqlContext.read.format(&quot;jdbc&quot;).options(</div><div class="line">Map(</div><div class="line">&quot;url&quot;-&gt;&quot;jdbc:mysql://spark1:3306/testdb&quot;,</div><div class="line">&quot;dbtable&quot;-&gt;&quot;students&quot;</div><div class="line">)).load()</div></pre></td></tr></table></figure>
+<p>案例:查询分数大于80分的学生信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">create database testdb;</div><div class="line">use testdb;</div><div class="line">create table student_infos(name varchar(20), age int);</div><div class="line">create table student_scores(name varchar(20), score int);</div><div class="line"></div><div class="line">insert into student_infos values(&quot;leo&quot;,18),(&quot;marry&quot;,17),(&quot;jack&quot;,19);</div><div class="line"></div><div class="line">insert into student_scores values(&quot;leo&quot;,88),(&quot;marry&quot;,77),(&quot;jack&quot;,99);</div><div class="line"></div><div class="line"></div><div class="line">create table good_student_infos(name varchar(20),  age  int, score int);</div></pre></td></tr></table></figure>
+<p>完整的代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">val data2Mysql = (iterator: Iterator[(String, Int, Int)])=&gt;&#123;</div><div class="line">  val conn:Connection = null</div><div class="line">  val ps:PreparedStatement = null</div><div class="line">  var sql = &quot;insert into good_student_infos (name,age,scores) values (?,?,?)&quot;</div><div class="line">  try&#123;</div><div class="line">    //Class.forName(&quot;com.mysql.jdbc.Driver&quot;)</div><div class="line">    val conn = DriverManager.getConnection(&quot;jdbc:mysql://spark1:3306/testdb&quot;,&quot;&quot;,&quot;&quot;)</div><div class="line">    iterator.foreach&#123;</div><div class="line">      case (name,age,scores) =&gt;</div><div class="line">        ps.setString(1,name)</div><div class="line">        ps.setInt(2,age)</div><div class="line">        ps.setInt(3,age)</div><div class="line">        ps.executeUpdate()</div><div class="line">      case _ =&gt;</div><div class="line">    &#125;</div><div class="line">  &#125;catch&#123;</div><div class="line">    case e:Exception =&gt; println(&quot;mysql exception&quot;)</div><div class="line">  &#125;finally &#123;</div><div class="line">    if (ps != null)</div><div class="line">      ps.close()</div><div class="line">    if (conn != null)</div><div class="line">      conn.close()</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">def RDD2DataFrameByReflection(): Unit =&#123;</div><div class="line">  val sparkConf = new SparkConf().setAppName(&quot;dataFrame&quot;).setMaster(&quot;local&quot;)</div><div class="line">  val sc = new SparkContext(sparkConf)</div><div class="line"></div><div class="line">  val sqlContext = new SQLContext(sc)</div><div class="line"></div><div class="line">  // 通过jdbc构建DataFrame</div><div class="line">  val studentInfosDF = sqlContext.read.format(&quot;jdbc&quot;)</div><div class="line">    .options(Map(</div><div class="line">      &quot;url&quot;-&gt;&quot;jdbc:mysql://spark1:3306/testdb&quot;,</div><div class="line">      &quot;dbtable&quot;-&gt;&quot;student_infos&quot;</div><div class="line">    )).load()</div><div class="line"></div><div class="line">  val studentScoresDF = sqlContext.read.format(&quot;jdbc&quot;)</div><div class="line">    .options(Map(</div><div class="line">      &quot;url&quot;-&gt;&quot;jdbc:mysql://spark1:3306/testdb&quot;,</div><div class="line">      &quot;dbtable&quot;-&gt;&quot;student_scores&quot;</div><div class="line">    )).load()</div><div class="line"></div><div class="line">  // 将两个DataFrame转换为rdd,执行join操作</div><div class="line">  val studentInfosRdd = studentInfosDF.rdd.map(row=&gt;(row(0).toString,row(1).toString.toInt))</div><div class="line">  val studentScoresRdd = studentScoresDF.rdd.map(row=&gt;(row(0).toString,row(1).toString.toInt))</div><div class="line">  val studentInfoScoresRdd = studentInfosRdd.join(studentScoresRdd).map(t=&gt;(t._1, t._2._1, t._2._2))</div><div class="line"></div><div class="line">  // 过滤学生成绩大于80的学生信息</div><div class="line">  val goodStudentRdd = studentInfoScoresRdd.filter(_._3 &gt; 80)</div><div class="line"></div><div class="line">  goodStudentRdd.foreachPartition(data2Mysql(_))</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之hive数据源/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/spark从入门到精通_笔记/SparkSQL数据源之hive数据源/" itemprop="url">
+                  SparkSQL数据源之hive数据源
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>spark sql支持对hive中存储的数据进行读写,操作hive中的数据时,必须创建HiveContext,而不是SQLContext,HiveContext继承自SQLContext,但是增加了在hive元数据库中查找表,以及用HiveQL语法编写SQL的功能,除了sql()方法,HiveContext还提供了hql()方法,从而用hive语法来编译sql</p>
+<p>使用HiveContext,可以执行hive的大部分功能,包括创建表,往表里到入数据以及用sql语句查询表中的数据,查询出来的数据是一个Row数组</p>
+<p>将hive-site.xml拷贝到spark/conf目录下,将mysql connector拷贝到spark/lib目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">val sqlContext = new HiveContext(sc)</div><div class="line">sqlContext.sql(&quot;create table if not exists students (name String, age Int)&quot;)</div><div class="line"></div><div class="line">sqlContext.sql(&quot;load data local inpath &apos;/usr/local/spark-study/resouces/students.txt&apos; into table students&quot;)</div><div class="line"></div><div class="line">sqlContext.sql(&quot;select name, age from students where age&lt;=18&quot;).collect</div></pre></td></tr></table></figure>
+<p>spark sql还允许将数据保存到hive表中,调用DataFrame的saveAsTable命令,即可将DataFrame中的数据保存到hive表中,与registerTempTable不同,saveAsTable是会将DataFrame中的数据物化到hive表中的,而且还会在hive元数据库中创建表的元数据</p>
+<p>默认情况下,saveAsTable会创建一张hive Managed Table,也就是说,数据的位置都是由元数据库中国你的信息控制的,当managed Table被删除时,表中的数据也会一并被物理删除</p>
+<p>registerTempTable只是注册一个临时的表,只要按spark Application重启或者停止了,那么表就没了,而saveAsTable创建的是物化的表,无论spark Application重启或停止,表都会一直存在</p>
+<p>调用hiveContext.table()方法还可以直接针对hive中的表,创建一个DataFrame</p>
+<p>案例:查询分数大于80分的学生的信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">val sparkConf = new SparkConf().setAppName(&quot;dataFrame&quot;).setMaster(&quot;local&quot;)</div><div class="line">val sc = new SparkContext(sparkConf)</div><div class="line"></div><div class="line">val hiveContext = new HiveContext(sc)</div><div class="line"></div><div class="line">// 判断是否存在student_info表,如果存在就删除</div><div class="line">hiveContext.sql(&quot;drop if exists table student_info&quot;)</div><div class="line">// 创建表</div><div class="line">hiveContext.sql(&quot;create if not exists table studnet_info (name STRNG, age INT&quot;)</div><div class="line"></div><div class="line">// 将学生基本信息数据导入student_info表</div><div class="line">hiveContext.sql(&quot;load data local inpath &apos;/usr/local/spark-study/resouces/student_info.txt&apos; into table student_info &quot;)</div><div class="line"></div><div class="line">// 同样的步骤:创建表student_score,并加载数据</div><div class="line">hiveContext.sql(&quot;drop if exists table student_score&quot;)</div><div class="line">hiveContext.sql(&quot;create if not exists table student_score (name STRNG, score INT&quot;)</div><div class="line">hiveContext.sql(&quot;load data local inpath &apos;/usr/local/spark-study/resouces/student_score.txt&apos; into table student_score &quot;)</div><div class="line"></div><div class="line">// 执行sql查询,关联2张表,查询成绩大于80分的学生成绩</div><div class="line">val goodStudentDF = hiveContext.sql(&quot;select info.name,info.age,score.score&quot; +</div><div class="line">                        &quot;from student_info info&quot; +</div><div class="line">                        &quot;join student_score score on info.name=score.name&quot; +</div><div class="line">                        &quot;where score.score&gt;=80&quot;)</div><div class="line"></div><div class="line">// 接着将DataFrame中的数据保存到good_student_info表中</div><div class="line">hiveContext.sql(&quot;drop if exists table good_student_info&quot;)</div><div class="line">goodStudentDF.saveAsTable(&quot;good_student_info&quot;)</div><div class="line"></div><div class="line">// 然后针对good_student_info表直接创建DataFrame</div><div class="line">val goodStudentRows = hiveContext.table(&quot;good_student_info&quot;).collect</div><div class="line">for(goodStudentRow &lt;- goodStudentRows)&#123;</div><div class="line">  println(goodStudentRow)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">进入到hive的shell中</div><div class="line"></div><div class="line">&gt;hive</div><div class="line">&gt;show tables;</div><div class="line">&gt;select * from good_student_info;</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/44/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><span class="page-number current">45</span><a class="page-number" href="/page/46/">46</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/46/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
-</section>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
         
-          <aside id="sidebar">
+          
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
 
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">576</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
     </div>
-  </div>
+  </aside>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
         
       </div>
-      <footer id="footer">
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
   
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2017 Mr. Chen<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/js/script.js"></script>
-
-
-
-
   </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>

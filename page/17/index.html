@@ -1,11 +1,93 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<!doctype html>
+
+
+
   
-  <title>Chen&#39;s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一个技术渣的自说自话">
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="一个技术渣的自说自话">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Chen's Blog">
 <meta property="og:url" content="http://yoursite.com/page/17/index.html">
@@ -14,202 +96,304 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chen's Blog">
 <meta name="twitter:description" content="一个技术渣的自说自话">
-  
-    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/page/17/"/>
+
+
+
+
+
+  <title> Chen's Blog </title>
 </head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Chen&#39;s Blog</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">一个技术渣的自说自话</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-nosql/redis/order set(有序set)结构及命令详解" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/redis/order set(有序set)结构及命令详解/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.784Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/redis/">redis</a>
-  </div>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/redis/order set(有序set)结构及命令详解/">order set(有序set)结构及命令详解</a>
-    </h1>
   
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/redis/aof日志持久化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/redis/aof日志持久化/" itemprop="url">
+                  aof日志持久化
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="zadd-添加"><a href="#zadd-添加" class="headerlink" title="zadd 添加"></a>zadd 添加</h1><p>ZADD key [NX|XX] [CH] [INCR] score member [score member …]<br>如果指定添加的成员已经是有序集合里面的成员，则会更新改成员的分数（scrore）并更新到正确的排序位置<br>如果key不存在，将会创建一个新的有序集合（sorted set）并将分数/成员（score/member）对添加到有序集合，就像原来存在一个空的有序集合一样。如果key存在，但是类型不是有序集合，将会返回一个错误应答<br>历史>= 2.4: 接受多个成员。 在Redis 2.4以前，命令只能添加或者更新一个成员</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">XX: 仅仅更新存在的成员，不添加新成员。</div><div class="line">NX: 不更新存在的成员。只添加新成员。</div><div class="line">CH: 修改返回值为发生变化的成员总数，原始是返回新添加成员的总数 (CH 是 changed 的意思)。更改的元素是新添加的成员，已经存在的成员更新分数。 所以在命令中指定的成员有相同的分数将不被计算在内。注：在通常情况下，ZADD返回值只计算新添加成员的数量。</div><div class="line">INCR: 当ZADD指定这个选项时，成员的操作就等同ZINCRBY命令，对成员的分数进行递增操作。</div><div class="line"></div><div class="line">--------------------------------------------------------------------------------------------------------------------------------------------------</div><div class="line"></div><div class="line">redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 1 &quot;uno&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot; 3 &quot;three&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZRANGE myzset 0 -1 WITHSCORES</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;1&quot;</div><div class="line">3) &quot;uno&quot;</div><div class="line">4) &quot;1&quot;</div><div class="line">5) &quot;two&quot;</div><div class="line">6) &quot;2&quot;</div><div class="line">7) &quot;three&quot;</div><div class="line">8) &quot;3&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
-<h1 id="zrange-查询一定范围的元素"><a href="#zrange-查询一定范围的元素" class="headerlink" title="zrange 查询一定范围的元素"></a>zrange 查询一定范围的元素</h1><p>ZRANGE key start stop [WITHSCORES]<br>把集合排序后，返回名次【start，stop】的元素<br>默认是升序排列<br>withscores 是把score也打印出来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANGE myzset 0 -1</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">redis&gt; ZRANGE myzset 2 3</div><div class="line">1) &quot;three&quot;</div><div class="line">redis&gt; ZRANGE myzset -2 -1</div><div class="line">1) &quot;two&quot;</div><div class="line">2) &quot;three&quot;</div><div class="line">redis&gt;</div><div class="line"></div><div class="line">redis&gt; ZRANGE myzset 0 1 WITHSCORES            #打印分数</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;1&quot;</div><div class="line">3) &quot;two&quot;</div><div class="line">4) &quot;2&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure></p>
-<h1 id="zrangebyscore-指定分数的最大与最小值查询"><a href="#zrangebyscore-指定分数的最大与最小值查询" class="headerlink" title="zrangebyscore 指定分数的最大与最小值查询"></a>zrangebyscore 指定分数的最大与最小值查询</h1><p>ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]<br>作用：集合（升序）排序后，取score在【start，max】内的元素<br>返回分数在min和max之间（包含）的有序的元素<br>如果有limit， 则跳过offset，取出count个<br>withscores 是打印分数和元素</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">&apos;区间的控制&apos;</div><div class="line">min和max可以是-inf和+inf，这样一来，你就可以在不知道有序集的最低和最高score值的情况下，使用ZRANGEBYSCORE这类命令。</div><div class="line">默认情况下，区间的取值使用闭区间(小于等于或大于等于)，你也可以通过给参数前增加(符号来使用可选的开区间(小于或大于)。</div><div class="line">举个例子：</div><div class="line">ZRANGEBYSCORE zset (1 5</div><div class="line">返回所有符合条件1 &lt; score &lt;= 5的成员；</div><div class="line">ZRANGEBYSCORE zset (5 (10</div><div class="line">返回所有符合条件5 &lt; score &lt; 10 的成员。</div><div class="line"></div><div class="line"></div><div class="line">redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANGEBYSCORE myzset -inf +inf</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">redis&gt; ZRANGEBYSCORE myzset 1 2</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;two&quot;</div><div class="line">redis&gt; ZRANGEBYSCORE myzset (1 2</div><div class="line">1) &quot;two&quot;</div><div class="line">redis&gt; ZRANGEBYSCORE myzset (1 (2</div><div class="line">(empty list or set)</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
-<h1 id="zrank-升序时查看排名"><a href="#zrank-升序时查看排名" class="headerlink" title="zrank 升序时查看排名"></a>zrank 升序时查看排名</h1><p>ZRANK key member<br>从低到高排序，第一个元素排名是0</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANK myzset &quot;three&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZRANK myzset &quot;four&quot;        #元素不存在就返回nil</div><div class="line">(nil)</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
-<h1 id="zrevrank-降序时查看排名"><a href="#zrevrank-降序时查看排名" class="headerlink" title="zrevrank 降序时查看排名"></a>zrevrank 降序时查看排名</h1><p>ZREVRANK key member<br>从高到低排序，第一个元素排名是0</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZREVRANK myzset &quot;one&quot;</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZREVRANK myzset &quot;four&quot;</div><div class="line">(nil)</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
-<h1 id="zremrangebyscore删除：通过分数来删"><a href="#zremrangebyscore删除：通过分数来删" class="headerlink" title="zremrangebyscore删除：通过分数来删"></a>zremrangebyscore删除：通过分数来删</h1><p>ZREMRANGEBYSCORE key min max</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZREMRANGEBYSCORE myzset -inf (2                    #（-inf，2） 不包含2</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANGE myzset 0 -1 WITHSCORES</div><div class="line">1) &quot;two&quot;</div><div class="line">2) &quot;2&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">4) &quot;3&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
-<h1 id="zremrangebyrank删除：通过排名来删"><a href="#zremrangebyrank删除：通过排名来删" class="headerlink" title="zremrangebyrank删除：通过排名来删"></a>zremrangebyrank删除：通过排名来删</h1><p>ZREMRANGEBYRANK key start stop<br> 排名是从0开始的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZREMRANGEBYRANK myzset 0 1</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZRANGE myzset 0 -1 WITHSCORES</div><div class="line">1) &quot;three&quot;</div><div class="line">2) &quot;3&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure></p>
-<h1 id="zrem删除；指定元素"><a href="#zrem删除；指定元素" class="headerlink" title="zrem删除；指定元素"></a>zrem删除；指定元素</h1><p>ZREM key member [member …]</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZREM myzset &quot;two&quot;            #删除指定值的元素</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZRANGE myzset 0 -1 WITHSCORES</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;1&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">4) &quot;3&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
-<h1 id="zcard-统计集合的数量"><a href="#zcard-统计集合的数量" class="headerlink" title="zcard 统计集合的数量"></a>zcard 统计集合的数量</h1><p>ZCARD key</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZCARD myzset        #统计</div><div class="line">(integer) 2</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
-<h1 id="zcount：统计在特殊分数段的元素的个数"><a href="#zcount：统计在特殊分数段的元素的个数" class="headerlink" title="zcount：统计在特殊分数段的元素的个数"></a>zcount：统计在特殊分数段的元素的个数</h1><p>ZCOUNT key min max</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD myzset 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD myzset 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZCOUNT myzset -inf +inf                    #【-inf , +inf 】</div><div class="line">(integer) 3    </div><div class="line">redis&gt; ZCOUNT myzset (1 3                    #（1,3】 的个数</div><div class="line">(integer) 2</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
-<h1 id="zunionstore求并集："><a href="#zunionstore求并集：" class="headerlink" title="zunionstore求并集："></a>zunionstore求并集：</h1><p>ZUNIONSTORE destination numkeys key [key …] [WEIGHTS weight [weight …]] [AGGREGATE SUM|MIN|MAX]</p>
-<ol>
-<li>计算给定的numkeys个有序集合的并集，并且把结果放到destination中。在给定要计算的key和其它参数之前，必须先给定key个数(numberkeys)。 默认情况下，结果集中某个成员的score值是所有给定集下该成员score值之和。</li>
-<li>使用WEIGHTS选项，你可以为每个给定的有序集指定一个乘法因子，意思就是，每个给定有序集的所有成员的score值在传递给聚合函数之前都要先乘以该因子。如果WEIGHTS没有给定，默认就是1。</li>
-<li>使用AGGREGATE选项，你可以指定并集的结果集的聚合方式。默认使用的参数SUM，可以将所有集合中某个成员的score值之和作为结果集中该成员的score值。如果使用参数MIN或者MAX，结果集就是所有集合中元素最小或最大的元素。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD zset1 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset1 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZUNIONSTORE out 2 zset1 zset2 WEIGHTS 2 3</div><div class="line">(integer) 3</div><div class="line">redis&gt; ZRANGE out 0 -1 WITHSCORES</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;5&quot;</div><div class="line">3) &quot;three&quot;</div><div class="line">4) &quot;9&quot;</div><div class="line">5) &quot;two&quot;</div><div class="line">6) &quot;10&quot;</div><div class="line">redis&gt;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h1 id="ZINTERSTORE求交集："><a href="#ZINTERSTORE求交集：" class="headerlink" title="ZINTERSTORE求交集："></a>ZINTERSTORE求交集：</h1><p>ZINTERSTORE destination numkeys key [key …] [WEIGHTS weight [weight …]] [AGGREGATE SUM|MIN|MAX]</p>
-<ol>
-<li>语法参见zunionstore<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"> redis&gt; ZADD zset1 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset1 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 1 &quot;one&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 2 &quot;two&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZADD zset2 3 &quot;three&quot;</div><div class="line">(integer) 1</div><div class="line">redis&gt; ZINTERSTORE out 2 zset1 zset2 WEIGHTS 2 3</div><div class="line">(integer) 2</div><div class="line">redis&gt; ZRANGE out 0 -1 WITHSCORES</div><div class="line">1) &quot;one&quot;</div><div class="line">2) &quot;5&quot;</div><div class="line">3) &quot;two&quot;</div><div class="line">4) &quot;10&quot;</div><div class="line">redis&gt;</div><div class="line">#1.将单个集合中的所有元素乘以weights, 2.将每个集合间key相同的score相加(aggregate默认是求sum),然后求交集</div></pre></td></tr></table></figure>
-</li>
-</ol>
+
+
+    <div class="post-body" itemprop="articleBody">
 
       
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/redis/order set(有序set)结构及命令详解/" data-id="cj290scun01hvssqqzv4ijldu" class="article-share-link">Share</a>
       
+
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-nosql/redis/flushall故障处理和rdb服务器间的迁移" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/redis/flushall故障处理和rdb服务器间的迁移/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.782Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/redis/">redis</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/redis/flushall故障处理和rdb服务器间的迁移/">flushall故障处理和rdb服务器间的迁移</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-flushall故障处理"><a href="#1-flushall故障处理" class="headerlink" title="1.flushall故障处理"></a>1.flushall故障处理</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">flushdb    #清空当前库所有键</div><div class="line">flushall        #清空所有库所有键</div></pre></td></tr></table></figure>
-<p>如果不小心运行了flushall, 立即 shutdown nosave ,关闭服务器, 然后 手工编辑aof文件, 去掉文件中的 “flushall ”相关行, 然后开启服务器,就可以导入回原来数据.<br>如果,flushall之后,系统恰好bgrewriteaof了,那么aof就清空了,数据丢失.</p>
-<h1 id="2-rdb服务器间的迁移"><a href="#2-rdb服务器间的迁移" class="headerlink" title="2.rdb服务器间的迁移"></a>2.rdb服务器间的迁移</h1><p>将rdb文件拿到，然后在配置文件中指定rdb的路径，redis会自动读入rdb文件，实现迁移</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/redis/flushall故障处理和rdb服务器间的迁移/" data-id="cj290scuf01hrssqqtt7zlxsm" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-nosql/redis/aof日志持久化" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/redis/aof日志持久化/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.780Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/redis/">redis</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/redis/aof日志持久化/">aof日志持久化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h1><p>除了Redis的持久化功能外，Redis还提供了AOF（Append Only File ）持久化功能，AOF持久化是通过保存Redis服务器所执行的写命令来记录数据库状态的，如下图：</p>
+          
+            <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h1><p>除了Redis的持久化功能外，Redis还提供了AOF（Append Only File ）持久化功能，AOF持久化是通过保存Redis服务器所执行的写命令来记录数据库状态的，如下图：</p>
 <p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/redis/aof/1.png" alt=""></p>
 <p>aof持久化功能的实现可以分为命令追加（append），文件写入、文件同步（sync）三个步骤</p>
 <h1 id="2-命令追加"><a href="#2-命令追加" class="headerlink" title="2.命令追加"></a>2.命令追加</h1><p>服务器在执行完一个写命令之后，会以协议格式将被执行的写命令追加到服务器状态的aof_buf缓冲区的末尾</p>
@@ -382,48 +566,148 @@
 </tbody>
 </table>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/redis/aof日志持久化/" data-id="cj290scua01hnssqq0bqb1qmz" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-nosql/mongodb/聚集运算之group与aggregate(转)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/mongodb/聚集运算之group与aggregate(转)/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.777Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/mongodb/">mongodb</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/聚集运算之group与aggregate(转)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/mongodb/聚集运算之group与aggregate(转)/">聚集运算之group与aggregate(转)</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/mongodb/聚集运算之group与aggregate(转)/" itemprop="url">
+                  聚集运算之group与aggregate(转)
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="1-group"><a href="#1-group" class="headerlink" title="1.group"></a>1.group</h1><h2 id="1-1-语法"><a href="#1-1-语法" class="headerlink" title="1.1.语法"></a>1.1.语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">db.collection.group(&#123;</div><div class="line">    key:&#123;field:1&#125;,//按什么字段进行分组</div><div class="line">    initial:&#123;count:0&#125;,//进行分组前变量初始化,该处声明的变量可以在以下回调函数中作为result的属性使用</div><div class="line">    cond:&#123;&#125;,//类似mysql中的having,分组后的查询返回</div><div class="line">    reduce: function ( curr, result ) &#123; &#125;, //The function takes two arguments: the current document and an aggregation result document for that group.</div><div class="line">    #先迭代出分组,然后再迭代分组中的文档,即curr变量就代表当前分组中此刻迭代到的文档,result变量就代表当前分组。</div><div class="line">   keyf：function(doc)&#123;&#125;,//keyf和key二选一,传入的参数doc代表当前文档,如果分组的字段是经过运算后的字段用到,作用类似mysql中的group by left(&apos;2015-09-12 14:05:22&apos;,10);</div><div class="line">   finalize:function(result) &#123;&#125;//该result也就是reduce的result,都是代表当前分组,这个函数是在走完当前分组结束后回调;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+      
+
+      
+        
+          
+            <h1 id="1-group"><a href="#1-group" class="headerlink" title="1.group"></a>1.group</h1><h2 id="1-1-语法"><a href="#1-1-语法" class="headerlink" title="1.1.语法"></a>1.1.语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">db.collection.group(&#123;</div><div class="line">    key:&#123;field:1&#125;,//按什么字段进行分组</div><div class="line">    initial:&#123;count:0&#125;,//进行分组前变量初始化,该处声明的变量可以在以下回调函数中作为result的属性使用</div><div class="line">    cond:&#123;&#125;,//类似mysql中的having,分组后的查询返回</div><div class="line">    reduce: function ( curr, result ) &#123; &#125;, //The function takes two arguments: the current document and an aggregation result document for that group.</div><div class="line">    #先迭代出分组,然后再迭代分组中的文档,即curr变量就代表当前分组中此刻迭代到的文档,result变量就代表当前分组。</div><div class="line">   keyf：function(doc)&#123;&#125;,//keyf和key二选一,传入的参数doc代表当前文档,如果分组的字段是经过运算后的字段用到,作用类似mysql中的group by left(&apos;2015-09-12 14:05:22&apos;,10);</div><div class="line">   finalize:function(result) &#123;&#125;//该result也就是reduce的result,都是代表当前分组,这个函数是在走完当前分组结束后回调;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
 <p>除了分组的key字段外,就只返回有result参数的回调函数中的操作的属性字段;</p>
 <h2 id="1-2-实例"><a href="#1-2-实例" class="headerlink" title="1.2.实例"></a>1.2.实例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># 表结构如下</div><div class="line">&#123;</div><div class="line">  _id: ObjectId(&quot;5085a95c8fada716c89d0021&quot;),</div><div class="line">  ord_dt: ISODate(&quot;2012-07-01T04:00:00Z&quot;),</div><div class="line">  ship_dt: ISODate(&quot;2012-07-02T04:00:00Z&quot;),</div><div class="line">  item: &#123; sku: &quot;abc123&quot;,</div><div class="line">          price: 1.99,</div><div class="line">          uom: &quot;pcs&quot;,</div><div class="line">          qty: 25 &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line">#Example1</div><div class="line">SELECT ord_dt, item_sku</div><div class="line">FROM orders</div><div class="line">WHERE ord_dt &gt; &apos;01/01/2012&apos;</div><div class="line">GROUP BY ord_dt, item_sku</div><div class="line">↓↓↓↓</div><div class="line">db.orders.group(</div><div class="line">   &#123;</div><div class="line">     key: &#123; ord_dt: 1, &apos;item.sku&apos;: 1 &#125;,</div><div class="line">     cond: &#123; ord_dt: &#123; $gt: new Date( &apos;01/01/2012&apos; ) &#125; &#125;,</div><div class="line">     reduce: function ( curr, result ) &#123; &#125;,</div><div class="line">     initial: &#123; &#125;</div><div class="line">   &#125;</div><div class="line">)</div><div class="line"> </div><div class="line"></div><div class="line"></div><div class="line">#Example2</div><div class="line">SELECT ord_dt, item_sku, SUM(item_qty) as total</div><div class="line">FROM orders</div><div class="line">WHERE ord_dt &gt; &apos;01/01/2012&apos;</div><div class="line">GROUP BY ord_dt, item_sku</div><div class="line">↓↓↓↓</div><div class="line">db.orders.group(</div><div class="line">   &#123;</div><div class="line">     key: &#123; ord_dt: 1, &apos;item.sku&apos;: 1 &#125;,</div><div class="line">     cond: &#123; ord_dt: &#123; $gt: new Date( &apos;01/01/2012&apos; ) &#125; &#125;,</div><div class="line">     reduce: function( curr, result ) &#123;</div><div class="line">                 result.total += curr.item.qty;</div><div class="line">             &#125;,</div><div class="line">     initial: &#123; total : 0 &#125;</div><div class="line">   &#125;</div><div class="line">)</div><div class="line"> </div><div class="line"></div><div class="line"></div><div class="line">#Example3</div><div class="line">db.orders.group(</div><div class="line">   &#123;</div><div class="line">     keyf: function(doc) &#123;    #计算的结果进行分组</div><div class="line">               return &#123; day_of_week: doc.ord_dt.getDay() &#125;;</div><div class="line">           &#125;,</div><div class="line">     cond: &#123; ord_dt: &#123; $gt: new Date( &apos;01/01/2012&apos; ) &#125; &#125;,</div><div class="line">    reduce: function( curr, result ) &#123;</div><div class="line">                result.total += curr.item.qty;</div><div class="line">                result.count++;</div><div class="line">            &#125;,</div><div class="line">    initial: &#123; total : 0, count: 0 &#125;,</div><div class="line">    finalize: function(result) &#123;</div><div class="line">                  var weekdays = [</div><div class="line">                       &quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;,</div><div class="line">                       &quot;Wednesday&quot;, &quot;Thursday&quot;,</div><div class="line">                       &quot;Friday&quot;, &quot;Saturday&quot;</div><div class="line">                      ];</div><div class="line">                  result.day_of_week = weekdays[result.day_of_week];</div><div class="line">                  result.avg = Math.round(result.total / result.count);</div><div class="line">              &#125;</div><div class="line">   &#125;</div><div class="line">)</div><div class="line"> </div><div class="line">[</div><div class="line">  &#123; &quot;day_of_week&quot; : &quot;Sunday&quot;, &quot;total&quot; : 70, &quot;count&quot; : 4, &quot;avg&quot; : 18 &#125;,</div><div class="line">  &#123; &quot;day_of_week&quot; : &quot;Friday&quot;, &quot;total&quot; : 110, &quot;count&quot; : 6, &quot;avg&quot; : 18 &#125;,</div><div class="line">  &#123; &quot;day_of_week&quot; : &quot;Tuesday&quot;, &quot;total&quot; : 70, &quot;count&quot; : 3, &quot;avg&quot; : 23 &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
@@ -442,48 +726,148 @@
 <p>对用户爱好数据做聚合实例: <a href="http://docs.mongoing.com/manual-zh/tutorial/aggregation-with-user-preference-data.html" target="_blank" rel="external">http://docs.mongoing.com/manual-zh/tutorial/aggregation-with-user-preference-data.html</a></p>
 <p>转自:<br><a href="https://segmentfault.com/a/1190000004263347" target="_blank" rel="external">聚集运算之group与aggregate</a></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/mongodb/聚集运算之group与aggregate(转)/" data-id="cj290sctr01h8ssqq2uqx4t0p" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongodb/">mongodb</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-nosql/mongodb/索引与expain(转)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/mongodb/索引与expain(转)/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.776Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/mongodb/">mongodb</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/索引与expain(转)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/mongodb/索引与expain(转)/">索引与expain(转)</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/mongodb/索引与expain(转)/" itemprop="url">
+                  索引与expain(转)
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>官网：<a href="https://docs.mongodb.com/manual/indexes/" target="_blank" rel="external">https://docs.mongodb.com/manual/indexes/</a></p>
+      
+
+      
+        
+          
+            <p>官网：<a href="https://docs.mongodb.com/manual/indexes/" target="_blank" rel="external">https://docs.mongodb.com/manual/indexes/</a></p>
 <h1 id="1-索引操作"><a href="#1-索引操作" class="headerlink" title="1.索引操作"></a>1.索引操作</h1><p>&emsp;数据库百分之八十的工作基本上都是查询,而索引能帮我们更快的查询到想要的数据.但是其降低了数据的写入速度,所以要权衡常用的查询字段,不必在太多字段上建立索引.在mongoDB中默认是用btree来组织索引文件,并且可以按字段升序/降序来创建,便于排序.</p>
 <h2 id="1-1-数据准备"><a href="#1-1-数据准备" class="headerlink" title="1.1.数据准备"></a>1.1.数据准备</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">for (var i = 1; i &lt;100000; i++) &#123;</div><div class="line">  db.test.insert(&#123;name:&apos;user&apos;+i,num:i,sn:Math.floor(Math.random()*10000000)&#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="1-2-索引常用操作"><a href="#1-2-索引常用操作" class="headerlink" title="1.2.索引常用操作"></a>1.2.索引常用操作</h2><h3 id="1-2-1-查看当前索引"><a href="#1-2-1-查看当前索引" class="headerlink" title="1.2.1.查看当前索引"></a>1.2.1.查看当前索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&gt; db.test.getIndexes();</div><div class="line">[</div><div class="line">    &#123;</div><div class="line">        &quot;v&quot; : 1,</div><div class="line">        &quot;key&quot; : &#123;</div><div class="line">                &quot;_id&quot; : 1</div><div class="line">        &#125;,</div><div class="line">        &quot;name&quot; : &quot;_id_&quot;,</div><div class="line">        &quot;ns&quot; : &quot;test.test&quot;</div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
@@ -595,48 +979,148 @@
 <p>hint函数会返回游标，我们可以在游标上调用explain查看索引的使用情况！99%的情况，我们没有必要通过hint去强制使用某个索引，MongoDB的查询优化器非常智能，绝对能帮助我们使用最佳的索引去进行查询！</p>
 <p><a href="https://segmentfault.com/a/1190000004263246" target="_blank" rel="external">转自</a></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/mongodb/索引与expain(转)/" data-id="cj290sctn01h5ssqqlcnmr9p6" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongodb/">mongodb</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-nosql/mongodb/用户管理(转)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/mongodb/用户管理(转)/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.774Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/mongodb/">mongodb</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/用户管理(转)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/mongodb/用户管理(转)/">用户管理(转)</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/mongodb/用户管理(转)/" itemprop="url">
+                  用户管理(转)
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="1-3-0版本以前"><a href="#1-3-0版本以前" class="headerlink" title="1. 3.0版本以前"></a>1. 3.0版本以前</h1><p>在mongodb3.0版本以前中,有一个admin数据库, 牵涉到服务器配置层面的操作,需要先切换到admin数据库.即 use admin , 相当于进入超级用户管理模式,mongo的用户是以数据库为单位来建立的, 每个数据库有自己的管理员.我们在设置用户时,需要先在admin数据库下建立管理员—这个管理员登陆后,相当于超级管理员.</p>
+      
+
+      
+        
+          
+            <h1 id="1-3-0版本以前"><a href="#1-3-0版本以前" class="headerlink" title="1. 3.0版本以前"></a>1. 3.0版本以前</h1><p>在mongodb3.0版本以前中,有一个admin数据库, 牵涉到服务器配置层面的操作,需要先切换到admin数据库.即 use admin , 相当于进入超级用户管理模式,mongo的用户是以数据库为单位来建立的, 每个数据库有自己的管理员.我们在设置用户时,需要先在admin数据库下建立管理员—这个管理员登陆后,相当于超级管理员.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#命令:</div><div class="line">db.addUser();</div><div class="line">#简单参数: db.addUser(用户名,密码,是否只读)</div></pre></td></tr></table></figure>
 <p>注意: 添加用户后,我们再次退出并登陆,发现依然可以直接读数据库?<br>原因: mongodb服务器启动时, 默认不是需要认证的.<br>要让用户生效, 需要启动服务器时,就指定–auth选项.这样, 操作时,就需要认证了.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># 添加用户</div><div class="line">&gt; use admin</div><div class="line">&gt; db.addUser(&apos;admin&apos;,&apos;admin&apos;,false); # 3.0版本更改为createUser();</div><div class="line"> </div><div class="line"># 删除用户</div><div class="line">&gt; use test</div><div class="line">&gt; db.removeUser(用户名); # 3.0版本更改为dropUser();</div></pre></td></tr></table></figure>
@@ -674,48 +1158,148 @@
 <h1 id="3-权限规则"><a href="#3-权限规则" class="headerlink" title="3. 权限规则"></a>3. 权限规则</h1><p>参考: <a href="http://blog.csdn.net/kk185800961/article/details/45619863" target="_blank" rel="external">http://blog.csdn.net/kk185800961/article/details/45619863</a></p>
 <p><a href="https://segmentfault.com/a/1190000004263255" target="_blank" rel="external">转自</a></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/mongodb/用户管理(转)/" data-id="cj290scth01h1ssqqj97ntcm5" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongodb/">mongodb</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-nosql/mongodb/游标操作(转)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/mongodb/游标操作(转)/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.773Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/mongodb/">mongodb</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/游标操作(转)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/mongodb/游标操作(转)/">游标操作(转)</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/mongodb/游标操作(转)/" itemprop="url">
+                  游标操作(转)
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>官网：<a href="https://docs.mongodb.com/manual/reference/method/js-cursor/" target="_blank" rel="external">https://docs.mongodb.com/manual/reference/method/js-cursor/</a></p>
+      
+
+      
+        
+          
+            <p>官网：<a href="https://docs.mongodb.com/manual/reference/method/js-cursor/" target="_blank" rel="external">https://docs.mongodb.com/manual/reference/method/js-cursor/</a></p>
 <h1 id="1-简述"><a href="#1-简述" class="headerlink" title="1.简述"></a>1.简述</h1><p>通俗的说,游标不是查询结果,可以理解为数据在遍历过程中的内部指针,其返回的是一个资源,或者说数据读取接口.</p>
 <p>客户端通过对游标进行一些设置就能对查询结果进行有效地控制，如可以限制查询得到的结果数量、跳过部分结果、或对结果集按任意键进行排序等！</p>
 <p>直接对一个集合调用find()方法时，我们会发现，如果查询结果超过二十条，只会返回二十条的结果，这是因为Mongodb会自动递归find() 返回的游标。</p>
@@ -730,48 +1314,148 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"># 查询5条</div><div class="line">&gt; var cursor = db.goods.find(&#123;&#125;,&#123;_id:0,goods_id:1&#125;).limit(5); //注意,再次使用游标的时候,游标得重置,因为使用过一次就游到最后了;</div><div class="line">&gt; cursor.forEach(function(obj)&#123;print(obj.goods_id);&#125;)</div><div class="line"> </div><div class="line"># 查询5条,并按照shop_price的降序排列</div><div class="line">&gt; var cursor = db.goods.find(&#123;&#125;,&#123;_id:0,goods_id:1,shop_price:1&#125;).limit(5).sort(&#123;shop_price:-1&#125;)</div><div class="line">&gt; cursor.forEach(function(obj)&#123;</div><div class="line">    print(obj.goods_id+&apos; &apos;+obj.shop_price)</div><div class="line">  &#125;)</div><div class="line">22 5999</div><div class="line">23 3700</div><div class="line">32 3010</div><div class="line">18 2878</div><div class="line">14 2625</div><div class="line"> </div><div class="line"># 每页10条取第二页,并且升序排列</div><div class="line">var cursor = db.goods.find(&#123;&#125;,&#123;_id:0,goods_id:1,shop_price:1&#125;).limit(10).sort(&#123;goods_id:1&#125;).skip(10)</div><div class="line">cursor.forEach(function(obj)&#123;</div><div class="line">  print(obj.goods_id+&apos; &apos;+obj.shop_price)</div><div class="line">&#125;)</div><div class="line"> </div><div class="line"># 一次性打印所有的行,以易读的模式</div><div class="line">var cursor = db.goods.find(&#123;&#125;,&#123;_id:0,goods_id:1,shop_price:1&#125;);</div><div class="line">printjson(cursor.toArray());</div><div class="line"> </div><div class="line">/*</div><div class="line">注意: 不要随意使用toArray()</div><div class="line">原因: 会把所有的行立即以对象形式组织在内存里.可以在取出少数几行时,用此功能.</div><div class="line">*/</div></pre></td></tr></table></figure>
 <p><a href="https://segmentfault.com/a/1190000004181817" target="_blank" rel="external">转自</a></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/mongodb/游标操作(转)/" data-id="cj290sctd01gyssqqon67cbev" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongodb/">mongodb</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-nosql/mongodb/查询表达式" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/mongodb/查询表达式/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.772Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/mongodb/">mongodb</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/查询表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/mongodb/查询表达式/">查询表达式</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/mongodb/查询表达式/" itemprop="url">
+                  查询表达式
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <blockquote>
+      
+
+      
+        
+          
+            <blockquote>
 <p>db.goods.find().count();</p>
 </blockquote>
 <h1 id="1-比较查询操作符"><a href="#1-比较查询操作符" class="headerlink" title="1.比较查询操作符"></a>1.比较查询操作符</h1><p>对于官网：$eq     $gt    $gte    $lt    $lte    $ne        $in    $nin<br><a href="https://docs.mongodb.com/manual/reference/operator/query/in/" target="_blank" rel="external">https://docs.mongodb.com/manual/reference/operator/query/in/</a></p>
@@ -795,91 +1479,291 @@
 <h1 id="13-子文档查询-elemMatch与对象中的属性"><a href="#13-子文档查询-elemMatch与对象中的属性" class="headerlink" title="13.子文档查询 $elemMatch与对象中的属性"></a>13.子文档查询 $elemMatch与对象中的属性</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&#123; _id: 1, results: [ 82, 85, 88 ] &#125;</div><div class="line">&#123; _id: 2, results: [ 75, 88, 89 ] &#125;</div><div class="line"> </div><div class="line">db.scores.find(</div><div class="line">   &#123; results: &#123; $elemMatch: &#123; $gte: 80, $lt: 85 &#125; &#125; &#125; #查询results文档中的元素同时满足即大于80并且又小于85的,注意此处只要其中一个元素满足这个查询就会返回</div><div class="line">)</div><div class="line"> </div><div class="line">&#123; &quot;_id&quot; : 1, &quot;results&quot; : [ 82, 85, 88 ] &#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">&gt; db.user.find();</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c070a02cc8cec37073a1d9&quot;), &quot;name&quot; : &quot;zxg&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : &#123; &quot;life&quot; : [ &quot;电影&quot;, &quot;小说&quot;, &quot;漫画&quot; ], &quot;work&quot; : [ &quot;发呆&quot;, &quot;发呆2&quot; ], &quot;home&quot; : &quot;玩耍&quot; &#125; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c070a52cc8cec37073a1da&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ], &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ], &quot;home&quot; : &quot;卖萌&quot; &#125; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c072db2cc8cec37073a1db&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : [ &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ] &#125;, &#123; &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ] &#125;, &#123; &quot;home&quot; : &quot;卖萌&quot; &#125; ] &#125;</div><div class="line"> </div><div class="line">&gt; db.user.find(&#123;hobby:&#123;$elemMatch:&#123;home:&apos;卖萌&apos;&#125;&#125;&#125;) # 注意上文的结构,必须是要在数组中才可以查出</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c072db2cc8cec37073a1db&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : [ &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ] &#125;, &#123; &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ] &#125;, &#123; &quot;home&quot; : &quot;卖萌&quot; &#125; ] &#125;</div><div class="line"> </div><div class="line">&gt; db.user.find(&#123;&apos;hobby.home&apos;:&apos;卖萌&apos;&#125;) # 注意,hobby.home类似js中对象与属性的操作方式,但是要加上引号,否则会报错</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c070a52cc8cec37073a1da&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ], &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ], &quot;home&quot; : &quot;卖萌&quot; &#125; &#125;</div><div class="line">&#123; &quot;_id&quot; : ObjectId(&quot;55c072db2cc8cec37073a1db&quot;), &quot;name&quot; : &quot;jyh&quot;, &quot;age&quot; : 28, &quot;hobby&quot; : [ &#123; &quot;life&quot; : [ &quot;卖萌&quot;, &quot;养兔子&quot;, &quot;做家务&quot; ] &#125;, &#123; &quot;work&quot; : [ &quot;郁闷&quot;, &quot;郁闷2&quot; ] &#125;, &#123; &quot;home&quot; : &quot;卖萌&quot; &#125; ] &#125;</div></pre></td></tr></table></figure>
 <h1 id="14-查询实例"><a href="#14-查询实例" class="headerlink" title="14.查询实例"></a>14.查询实例</h1><p>以下查询基于ecshop网站的数据查询<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"># 本店价格低于或等于100元的商品($lte)</div><div class="line">db.goods.find(&#123;shop_price:&#123;$lte:100&#125;&#125;,&#123;goods_name:1,shop_price:1&#125;);</div><div class="line"> </div><div class="line"># 取出第4栏目或第11栏目的商品($in)</div><div class="line">db.goods.find(&#123;cat_id:&#123;$in:[4,11]&#125;&#125;,&#123;goods_name:1,shop_price:1&#125;);</div><div class="line"> </div><div class="line"># 取出100&lt;=价格&lt;=500的商品($and)</div><div class="line">db.goods.find(&#123;$and:[&#123;&apos;shop_price&apos;:&#123;$gte:100&#125;&#125;,&#123;&apos;shop_price&apos;:&#123;$lte:500&#125;&#125;]&#125;,&#123;_id:0,shop_price:1&#125;)</div><div class="line"> </div><div class="line"># 取出不属于第3栏目且不属于第11栏目的商品($and $nin和$nor分别实现)</div><div class="line">db.goods.find(&#123;$and:[&#123;cat_id:&#123;$ne:3&#125;&#125;,&#123;cat_id:&#123;$ne:11&#125;&#125;]&#125;,&#123;_id:0,cat_id:1&#125;)</div><div class="line">db.goods.find(&#123;cat_id:&#123;$nin:[3,11]&#125;&#125;,&#123;_id:0,cat_id:1&#125;)</div><div class="line">db.goods.find(&#123;$nor:[&#123;cat_id:3&#125;,&#123;cat_id:11&#125;]&#125;,&#123;_id:0,cat_id:1&#125;)</div><div class="line"> </div><div class="line"># 取出价格大于100且小于300,或者大于2000且小于5000的商品()</div><div class="line">db.goods.find(&#123;$or:[&#123;$and:[&#123;shop_price:&#123;$gt:100&#125;&#125;, &#123;shop_price:&#123;$lt:300&#125; &#125;]&#125;, &#123;$and:[&#123;shop_price:&#123;$gt:2000&#125;&#125;, &#123;shop_price:&#123;$lt:5000&#125; &#125;] &#125; ] &#125;,&#123;_id:0,shop_price:1&#125; )</div><div class="line"> </div><div class="line"># 取出所有goods_id为偶数的商品;</div><div class="line">db.goods.find(&#123;goods_id:&#123;$mod:[2,0]&#125;&#125;,&#123;_id:0,goods_id:1&#125;)</div><div class="line"></div><div class="line"></div><div class="line">#主键为32的商品</div><div class="line">db.goods.find(&#123;goods_id:32&#125;);</div><div class="line"></div><div class="line"></div><div class="line">#不属第3栏目的所有商品($ne)</div><div class="line">db.goods.find(&#123;cat_id:&#123;$ne:3&#125;&#125;,&#123;goods_id:1,cat_id:1,goods_name:1&#125;);</div><div class="line"> </div><div class="line">#本店价格高于3000元的商品&#123;$gt&#125;</div><div class="line">db.goods.find(&#123;shop_price:&#123;$gt:3000&#125;&#125;,&#123;goods_name:1,shop_price:1&#125;);</div><div class="line"></div><div class="line">#本店价格低于或等于100元的商品($lte)</div><div class="line">db.goods.find(&#123;shop_price:&#123;$lte:100&#125;&#125;,&#123;goods_name:1,shop_price:1&#125;);</div><div class="line">  </div><div class="line"> </div><div class="line">#取出100&lt;=价格&lt;=500的商品($and)</div><div class="line">db.goods.find(&#123;$and:[&#123;price:&#123;$gt:100&#125;,&#123;$price:&#123;$lt:500&#125;&#125;&#125;]);</div><div class="line"> </div><div class="line">#取出价格大于100且小于300,或者大于4000且小于5000的商品()</div><div class="line">db.goods.find(&#123;$or:[&#123;$and:[&#123;shop_price:&#123;$gt:100&#125;&#125;,&#123;shop_price:&#123;$lt:300&#125;&#125;]&#125;,&#123;$and:[&#123;shop_price:&#123;$gt:4000&#125;&#125;,&#123;shop_price:&#123;$lt:5000&#125;&#125;]&#125;]&#125;,&#123;goods_name:1,shop_price:1&#125;);</div></pre></td></tr></table></figure></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/mongodb/查询表达式/" data-id="cj290sct801gussqqp7ha2egj" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongodb/">mongodb</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-nosql/mongodb/帮助说明" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/mongodb/帮助说明/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.770Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/mongodb/">mongodb</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/帮助说明/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/mongodb/帮助说明/">帮助说明</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/mongodb/帮助说明/" itemprop="url">
+                  帮助说明
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="help"><a href="#help" class="headerlink" title="help"></a>help</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">help</div><div class="line">       db.help()                    help on db methods</div><div class="line">       db.mycoll.help()             help on collection methods</div><div class="line">       sh.help()                    sharding helpers</div><div class="line">       rs.help()                    replica set helpers</div><div class="line">       help admin                   administrative help</div><div class="line">       help connect                 connecting to a db help</div><div class="line">       help keys                    key shortcuts</div><div class="line">       help misc                    misc things to know</div><div class="line">       help mr                      mapreduce</div><div class="line">       show dbs                     show database names</div><div class="line">       show collections             show collections in current database</div><div class="line">       show users                   show users in current database</div><div class="line">       show profile                 show most recent system.profile entries with time &gt;= 1ms</div><div class="line">       show logs                    show the accessible logger names</div><div class="line">       show log [name]              prints out the last segment of log in memory, &apos;global&apos; is default</div><div class="line">       use &lt;db_name&gt;                set current database</div><div class="line">       db.foo.find()                list objects in collection foo</div><div class="line">       db.foo.find( &#123; a : 1 &#125; )     list objects in foo where a == 1</div><div class="line">       it                           result of the last line evaluated; use to further iterate</div><div class="line">       DBQuery.shellBatchSize = x   set default number of items to display on shell</div><div class="line">       exit                         quit the mongo shell</div></pre></td></tr></table></figure>
+      
+
+      
+        
+          
+            <h1 id="help"><a href="#help" class="headerlink" title="help"></a>help</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">help</div><div class="line">       db.help()                    help on db methods</div><div class="line">       db.mycoll.help()             help on collection methods</div><div class="line">       sh.help()                    sharding helpers</div><div class="line">       rs.help()                    replica set helpers</div><div class="line">       help admin                   administrative help</div><div class="line">       help connect                 connecting to a db help</div><div class="line">       help keys                    key shortcuts</div><div class="line">       help misc                    misc things to know</div><div class="line">       help mr                      mapreduce</div><div class="line">       show dbs                     show database names</div><div class="line">       show collections             show collections in current database</div><div class="line">       show users                   show users in current database</div><div class="line">       show profile                 show most recent system.profile entries with time &gt;= 1ms</div><div class="line">       show logs                    show the accessible logger names</div><div class="line">       show log [name]              prints out the last segment of log in memory, &apos;global&apos; is default</div><div class="line">       use &lt;db_name&gt;                set current database</div><div class="line">       db.foo.find()                list objects in collection foo</div><div class="line">       db.foo.find( &#123; a : 1 &#125; )     list objects in foo where a == 1</div><div class="line">       it                           result of the last line evaluated; use to further iterate</div><div class="line">       DBQuery.shellBatchSize = x   set default number of items to display on shell</div><div class="line">       exit                         quit the mongo shell</div></pre></td></tr></table></figure>
 <h1 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档:"></a>官方文档:</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#很多操作文档上都有详细的示例</div><div class="line">https://docs.mongodb.com/manual/</div></pre></td></tr></table></figure>
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/mongodb/帮助说明/" data-id="cj290sct401grssqq73hzwr7c" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongodb/">mongodb</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-nosql/mongodb/备份还原与导出导入" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/nosql/mongodb/备份还原与导出导入/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.769Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/mongodb/">mongodb</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/备份还原与导出导入/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/nosql/mongodb/备份还原与导出导入/">备份还原与导出导入(转)</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/mongodb/备份还原与导出导入/" itemprop="url">
+                  备份还原与导出导入(转)
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>官方文档:<a href="https://docs.mongodb.com/manual/core/backups/" target="_blank" rel="external">https://docs.mongodb.com/manual/core/backups/</a><br>原本使用操作系统的快照进行备份还原，备份成功后，还原没有成功（参考：<a href="https://docs.mongodb.com/manual/tutorial/backup-with-filesystem-snapshots/" target="_blank" rel="external">Backup and Restore with Filesystem Snapshots</a>）,所以这个方法就先不记录到这里了。</p>
+      
+
+      
+        
+          
+            <p>官方文档:<a href="https://docs.mongodb.com/manual/core/backups/" target="_blank" rel="external">https://docs.mongodb.com/manual/core/backups/</a><br>原本使用操作系统的快照进行备份还原，备份成功后，还原没有成功（参考：<a href="https://docs.mongodb.com/manual/tutorial/backup-with-filesystem-snapshots/" target="_blank" rel="external">Backup and Restore with Filesystem Snapshots</a>）,所以这个方法就先不记录到这里了。</p>
 <p>当前测试以下几种备份还原方法（个人初学理解）：</p>
 <ol>
 <li>使用拷贝和替换数据库文件进行备份还原</li>
@@ -902,136 +1786,790 @@
 <h2 id="3-4-查看帮助：-mongoimport-–help"><a href="#3-4-查看帮助：-mongoimport-–help" class="headerlink" title="3.4.查看帮助： mongoimport –help"></a>3.4.查看帮助： mongoimport –help</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">general options: </div><div class="line">      --help                         print usage </div><div class="line">      --version                      print the tool version and exit </div><div class="line"> </div><div class="line">verbosity options: </div><div class="line">  -v, --verbose                      more detailed log output (include multiple times for more verbosity, e.g. -vvvvv) </div><div class="line">      --quiet                        hide all log output </div><div class="line"> </div><div class="line">connection options: </div><div class="line">  -h, --host=                        mongodb host to connect to (setname/host1,host2 for replica sets) </div><div class="line">      --port=                        server port (can also use --host hostname:port) </div><div class="line"> </div><div class="line">ssl options: </div><div class="line">      --ssl                          connect to a mongod or mongos that has ssl enabled </div><div class="line">      --sslCAFile=                   the .pem file containing the root certificate chain from the certificate authority </div><div class="line">      --sslPEMKeyFile=               the .pem file containing the certificate and key </div><div class="line">      --sslPEMKeyPassword=           the password to decrypt the sslPEMKeyFile, if necessary </div><div class="line">      --sslCRLFile=                  the .pem file containing the certificate revocation list </div><div class="line">      --sslAllowInvalidCertificates  bypass the validation for server certificates </div><div class="line">      --sslAllowInvalidHostnames     bypass the validation for server name </div><div class="line">      --sslFIPSMode                  use FIPS mode of the installed openssl library </div><div class="line"> </div><div class="line">authentication options: </div><div class="line">  -u, --username=                    username for authentication </div><div class="line">  -p, --password=                    password for authentication </div><div class="line">      --authenticationDatabase=      database that holds the user&apos;s credentials </div><div class="line">      --authenticationMechanism=     authentication mechanism to use </div><div class="line"> </div><div class="line">namespace options: </div><div class="line">  -d, --db=                          database to use </div><div class="line">  -c, --collection=                  collection to use </div><div class="line"> </div><div class="line">input options: </div><div class="line">  -f, --fields=                      comma separated list of field names, e.g. -f name,age </div><div class="line">      --fieldFile=                   file with field names - 1 per line </div><div class="line">      --file=                        file to import from; if not specified, stdin is used </div><div class="line">      --headerline                   use first line in input source as the field list (CSV and TSV </div><div class="line">                                     only) </div><div class="line">      --jsonArray                    treat input source as a JSON array </div><div class="line">      --type=                        input format to import: json, csv, or tsv (defaults to &apos;json&apos;) </div><div class="line"> </div><div class="line">ingest options: </div><div class="line">      --drop                         drop collection before inserting documents </div><div class="line">      --ignoreBlanks                 ignore fields with empty values in CSV and TSV </div><div class="line">      --maintainInsertionOrder       insert documents in the order of their appearance in the input source </div><div class="line">  -j, --numInsertionWorkers=         number of insert operations to run concurrently (defaults to 1) </div><div class="line">      --stopOnError                  stop importing at first insert/upsert error </div><div class="line">      --upsert                       insert or update objects that already exist </div><div class="line">      --upsertFields=                comma-separated fields for the query part of the upsert </div><div class="line">      --writeConcern=                write concern options e.g. --writeConcern majority, </div><div class="line">                                     --writeConcern &apos;&#123;w: 3, wtimeout: 500, fsync: true, j: true&#125;&apos; </div><div class="line">                                     (defaults to &apos;majority&apos;)</div></pre></td></tr></table></figure>
 <p><a href="http://blog.csdn.net/kk185800961/article/details/45541893" target="_blank" rel="external">转自</a></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/nosql/mongodb/备份还原与导出导入/" data-id="cj290scsx01gmssqqe3owakgw" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mongodb/">mongodb</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
-  
-</article>
+  </article>
 
 
-  
-
-
-  <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/16/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/18/">Next &raquo;</a>
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/shard分片/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/mongodb/shard分片/" itemprop="url">
+                  shard分片(转)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-简述"><a href="#1-简述" class="headerlink" title="1.简述"></a>1.简述</h1><h2 id="1-1-为何要分片"><a href="#1-1-为何要分片" class="headerlink" title="1.1.为何要分片"></a>1.1.为何要分片</h2><ul>
+<li>减少单机请求数，降低单机负载，提高总负载</li>
+<li>减少单机的存储空间，提高总存空间。</li>
+</ul>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/shard/1.png" alt=""></p>
+<h2 id="1-2-常见的mongodb-sharding服务器架构"><a href="#1-2-常见的mongodb-sharding服务器架构" class="headerlink" title="1.2.常见的mongodb sharding服务器架构"></a>1.2.常见的mongodb sharding服务器架构</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/shard/2.png" alt=""></p>
+<p>要构建一个 MongoDB Sharding Cluster，需要三种角色：</p>
+<ul>
+<li>Shard Server<br>即存储实际数据的分片，每个Shard可以是一个mongod实例，也可以是一组mongod实例构成的Replication Set。为了实现每个Shard内部的auto-failover(自动故障切换)，MongoDB官方建议每个Shard为一组Replica Set。</li>
+</ul>
+<ul>
+<li><p>Config Server<br>为了将一个特定的collection存储在多个shard中，需要为该collection指定一个shard key(片键)，例如{age: 1} ，shard key可以决定该条记录属于哪个chunk(分片是以chunk为单位,后续会介绍)。Config Servers就是用来存储：所有shard节点的配置信息、每个chunk的shard key范围、chunk在各shard的分布情况、该集群中所有DB和collection的sharding配置信息。</p>
+</li>
+<li><p>Route Process<br>这是一个前端路由，客户端由此接入，然后询问Config Servers需要到哪个Shard上查询或保存记录，再连接相应的Shard进行操作，最后将结果返回给客户端。客户端只需要将原本发给mongod的查询或更新请求原封不动地发给Routing Process，而不必关心所操作的记录存储在哪个Shard上。（所有操作在mongos上操作即可）</p>
+</li>
+</ul>
+<h1 id="2-配置分片服务器"><a href="#2-配置分片服务器" class="headerlink" title="2.配置分片服务器"></a>2.配置分片服务器</h1><p>下面我们在同一台物理机器上构建一个简单的 Sharding Cluster：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/shard/3.gif" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Shard Server 1：27017</div><div class="line">Shard Server 2：27018</div><div class="line">Config Server ：27027</div><div class="line">Route Process：40000</div></pre></td></tr></table></figure>
+<h2 id="2-1-步骤一-启动Shard-Server"><a href="#2-1-步骤一-启动Shard-Server" class="headerlink" title="2.1.步骤一:启动Shard Server"></a>2.1.步骤一:启动Shard Server</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mkdir -p ./data/shard/s0 ./data/shard/s1  #创建数据目录</div><div class="line">mkdir -p ./data/shard/log # 创建日志目录</div><div class="line"></div><div class="line">./bin/mongod --port 27017 --dbpath /usr/local/mongodb/data/shard/s0 --fork --logpath /usr/local/mongodb/data/shard/log/s0.log </div><div class="line"># 启动Shard Server实例1</div><div class="line"></div><div class="line">./bin/mongod --port 27018 --dbpath /usr/local/mongodb/data/shard/s1 --fork --logpath /usr/local/mongodb/data/shard/log/s1.log </div><div class="line"># 启动Shard Server实例2</div></pre></td></tr></table></figure>
+<h2 id="2-2-步骤二-启动Config-Server"><a href="#2-2-步骤二-启动Config-Server" class="headerlink" title="2.2.步骤二:启动Config Server"></a>2.2.步骤二:启动Config Server</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">mkdir -p ./data/shard/config </div><div class="line">#创建数据目录</div><div class="line"> </div><div class="line">./bin/mongod --port 27027 --dbpath /usr/local/mongodb/data/shard/config --fork --logpath /usr/local/mongodb/data/shard/log/config.log </div><div class="line">#启动Config Server实例</div></pre></td></tr></table></figure>
+<p>注意，这里我们完全可以像启动普通mongodb服务一样启动，不需要添加—shardsvr和configsvr参数。因为这两个参数的作用就是改变启动端口的，所以我们自行指定了端口就可以</p>
+<h2 id="2-3-启动Route-Process"><a href="#2-3-启动Route-Process" class="headerlink" title="2.3.启动Route Process"></a>2.3.启动Route Process</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./bin/mongos --port 4000 --configdb localhost:27027 --fork --logpath /usr/local/mongodb/data/shard/log/route.log --chunkSize=1 </div><div class="line"># 启动Route Server实例</div></pre></td></tr></table></figure>
+<p>mongos启动参数中，chunkSize这一项是用来指定chunk的大小的，单位是MB，默认大小为200MB，为了方便测试Sharding效果，我们把chunkSize指定为 1MB。意思是当这个分片中插入的数据大于1M时开始进行数据转移</p>
+<h2 id="2-4-配置Sharding"><a href="#2-4-配置Sharding" class="headerlink" title="2.4.配置Sharding"></a>2.4.配置Sharding</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"># 我们使用MongoDB Shell登录到mongos，添加Shard节点</div><div class="line">./bin/mongo admin --port 40000 #此操作需要连接admin库</div><div class="line">&gt; db.runCommand(&#123; addshard:&quot;localhost:27017&quot; &#125;) #添加 Shard Server 或者用 sh.addshard()命令来添加,下同;</div><div class="line">&#123; &quot;shardAdded&quot; : &quot;shard0000&quot;, &quot;ok&quot; : 1 &#125;</div><div class="line">&gt; db.runCommand(&#123; addshard:&quot;localhost:27018&quot; &#125;)</div><div class="line">&#123; &quot;shardAdded&quot; : &quot;shard0001&quot;, &quot;ok&quot; : 1 &#125;</div><div class="line"> </div><div class="line">&gt; db.runCommand(&#123; enablesharding:&quot;test&quot; &#125;) #设置分片存储的数据库</div><div class="line">&#123; &quot;ok&quot; : 1 &#125;</div><div class="line"> </div><div class="line">&gt; db.runCommand(&#123; shardcollection: &quot;test.users&quot;, key: &#123; id:1 &#125;&#125;) # 设置分片的集合名称。且必须指定Shard Key，系统会自动创建索引，然后根据这个shard Key来计算</div><div class="line">&#123; &quot;collectionsharded&quot; : &quot;test.users&quot;, &quot;ok&quot; : 1 &#125;</div><div class="line"> </div><div class="line">&gt; sh.status(); #查看片的状态</div><div class="line">&gt; printShardingStatus(db.getSisterDB(&quot;config&quot;),1); # 查看片状态(完整版);</div><div class="line">&gt; db.stats(); # 查看所有的分片服务器状态</div></pre></td></tr></table></figure>
+<p>注意这里我们要注意片键的选择，选择片键时需要根据具体业务的数据形态来选择，切不可随意选择，实际中尤其不要轻易选择自增_id作为片键，除非你很清楚你这么做的目的，具体原因我不在此分析，根据经验推荐一种较合理的片键方式，“自增字段+查询字段”，没错，片键可以是多个字段的组合。</p>
+<p>另外这里说明一点，分片的机制：mongodb不是从单篇文档的级别,绝对平均的散落在各个片上, 而是N篇文档,形成一个块”chunk”,优先放在某个片上, 当这片上的chunk,比另一个片的chunk区别比较大时(&gt;=3) ,会把本片上的chunk,移到另一个片上, 以chunk为单位,维护片之间的数据均衡。</p>
+<p>也就是说，一开始插入数据时，数据是只插入到其中一块分片上的，插入完毕后，mongodb内部开始在各片之间进行数据的移动，这个过程可能不是立即的，mongodb足够智能会根据当前负载决定是立即进行移动还是稍后移动。在插入数据后，立马执行db.users.stats();两次可以验证如上所说。</p>
+<p>这种分片机制,节省了人工维护成本,但是由于其是优先往某个片上插入,等到chunk失衡时,再移动chunk,并且随着数据的增多,shard的实例之间,有chunk来回移动的现象,这将会为服务器带来很大的IO开销,解决这种开销的方法,就是手动预先分片;</p>
+<h1 id="3-手动预先分片"><a href="#3-手动预先分片" class="headerlink" title="3. 手动预先分片"></a>3. 手动预先分片</h1><p>以shop.user表为例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sh.shardCollection(‘shop.user’,&#123;userid:1&#125;); </div><div class="line"># user表用userid做shard key</div><div class="line"> </div><div class="line">for(var i=1;i&lt;=40;i++) &#123; sh.splitAt(&apos;shop.user&apos;,&#123;userid:i*1000&#125;) &#125; </div><div class="line"># 预先在1K 2K...40K这样的界限切好chunk(虽然chunk是空的), 这些chunk将会均匀移动到各片上.</div></pre></td></tr></table></figure></p>
+<p>通过mongos添加user数据. 数据会添加到预先分配好的chunk上, chunk就不会来回移动了.</p>
+<h1 id="4-replication-set-and-shard"><a href="#4-replication-set-and-shard" class="headerlink" title="4.replication set and shard"></a>4.replication set and shard</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sh.addShard( host ) server:port OR setname/server:port # 如果是复制集的片服务器,我们应该复制集的名称写在前面比如</div><div class="line">sh.addShard(&apos;ras/192.168.42.168:27017&apos;); # 27017也就是复制集中的primary</div></pre></td></tr></table></figure>
+<p>另外在启动本机的mongod服务的时候,最好把ip也给写进去,否则有可能会有不可预知的错误;</p>
+<p>转载:<br><a href="https://segmentfault.com/a/1190000004263332" target="_blank" rel="external">Shard 分片集群</a></p>
+<p>参考:<br><a href="http://blog.csdn.net/kk185800961/article/details/45932747" target="_blank" rel="external">MongoDB 基础（九）分片</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/nosql/mongodb/replication set复制集/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/nosql/mongodb/replication set复制集/" itemprop="url">
+                  replication set复制集
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h1><p>replicattion set 多台服务器维护相同的数据副本,提高服务器的可用性,总结下来有以下好处:</p>
+<ul>
+<li>数据备份与恢复</li>
+<li>读写分离</li>
+</ul>
+<h2 id="1-1-Mongodb复制集的结构及基本概念"><a href="#1-1-Mongodb复制集的结构及基本概念" class="headerlink" title="1.1.Mongodb复制集的结构及基本概念"></a>1.1.Mongodb复制集的结构及基本概念</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/1.png" alt=""></p>
+<p>正如上图所示，MongoDB 复制集的架构中，主要分为两部分：主节点（Primary）和从节点（Secondary）。</p>
+<ul>
+<li>主节点：在一个复制集中只有并且必须有一个主节点，主节点也是众多实例中唯一可以接收客户端写操作的节点，当然也可以进行读操作；</li>
+<li>从节点：从节点会复制主节点的操作，以获取完全一致的数据集。客户端不能够直接对从节点进行写操作，但是可以进行读操作，这个需要通过复制集选项进行设置。</li>
+<li>投票节点：投票节点 并不含有 复制集中的数据集副本，且也 无法 升职为主节点。投票节点的存在是为了使复制集中的节点数量为奇数，这样保证在进行投票的时候不会出现票数相同的情况。如果添加了一个节点后，总节点数为偶数，那么就需要相应的增加一个投票节点。</li>
+</ul>
+<p>注：MongoDB 3.0 把复制集中的成员数量从原来的12个提升到了50个，但是投票节点的数量仍然保持不变，还是7个。</p>
+<h2 id="1-2-最基本的复制集架构"><a href="#1-2-最基本的复制集架构" class="headerlink" title="1.2.最基本的复制集架构"></a>1.2.最基本的复制集架构</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/2.png" alt=""></p>
+<p>一个主节点，两个从节点，自动化故障切换的特性<br>最基本的复制集架构是有3个节点的形式。这样在主节点不可用以后，从节点会进行投票选出一个节点成为主节点，继续工作。如下图所示：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/3.png" alt=""></p>
+<p>三个节点的复制集架构，还有另外一种形式：一个主节点，一个从节点，一个投票节点。如下图所示：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/4.png" alt=""></p>
+<p> 一个主节点，一个从节点，一个投票节点<br>在这种架构中，当主节点不可用时，只有从节点可以升为主节点，而投票节点是不可以成为主节点的。投票节点仅仅在选举中进行投票。如下图所示：</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/5.png" alt=""></p>
+<h2 id="1-3-从节点无法升职为主节点的情况"><a href="#1-3-从节点无法升职为主节点的情况" class="headerlink" title="1.3.从节点无法升职为主节点的情况"></a>1.3.从节点无法升职为主节点的情况</h2><p>其他概念<br>从节点还有集中特殊的设置情况，不同的设置有不同的需求：</p>
+<p>优先级为0：设置 priority:0 ，那么该结点将不能成为主节点，但是其数据仍是与主节点保持一致的,而且应用程序也可以进行读操作。这样可以在某些特殊的情况下，保证其他特定节点优先成为主节点。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/6.png" alt=""></p>
+<p>隐藏节点：隐藏节点与主节点的数据集一致，但是对于应用程序来说是不可见的。隐藏节点可以很好的与 复制集 中的其他节点隔离，并应对特殊的需求，比如进行报表或者数据备份。隐藏节点也应该是一个不能升职为主节点的优先级为0的节点。</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/nosql/mongodb/replicationSet/7.png" alt=""></p>
+<p>延时节点：延时节点也将从 复制集 中主节点复制数据，然而延时节点中的数据集将会比复制集中主节点的数据延后。举个例子，现在是09：52，如果延时节点延后了1小时，那么延时节点的数据集中将不会有08：52之后的操作。</p>
+<p>由于延时节点的数据集是延时的，因此它可以帮助我们在人为误操作或是其他意外情况下恢复数据。举个例子，当应用升级失败，或是误操作删除了表和数据库时，我们可以通过延时节点进行数据恢复。</p>
+<p>oplog：全拼 oprations log，它保存有数据库的所有的操作的记录。在复制集中，主节点产生 oplog，然后从节点复制主节点的 oplog 进行相应的操作，这样达到保持数据集一致的要求。因此从节点的数据与主节点的数据相比是有延迟的。</p>
+<h1 id="2-配置"><a href="#2-配置" class="headerlink" title="2.配置"></a>2.配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"># 创建数据存储目录</div><div class="line">mkdir -p /data/r0 /data/r1 /data/r2</div><div class="line"> </div><div class="line"># 创建日志文件</div><div class="line">touch /var/log/mongo17.log /var/log/mongo18.log /var/log/mongo19.log</div><div class="line"> </div><div class="line">#启动3个实例,且声明实例属于某复制集 rsa</div><div class="line">./bin/mongod --port 27017 --dbpath /data/r0 --smallfiles --replSet rsa --fork --logpath /var/log/mongo17.log</div><div class="line">./bin/mongod --port 27018 --dbpath /data/r1 --smallfiles --replSet rsa --fork --logpath /var/log/mongo18.log</div><div class="line">./bin/mongod --port 27019 --dbpath /data/r2 --smallfiles --replSet rsa --fork --logpath /var/log/mongo19.log</div><div class="line"> </div><div class="line"># 进入27017进行配置初始化</div><div class="line">./bin/mongo --port 27017</div><div class="line">rsconf = &#123;</div><div class="line">    _id:&apos;rsa&apos;,</div><div class="line">    members:</div><div class="line">    [</div><div class="line">        &#123;_id:0,</div><div class="line">        host:&apos;192.168.42.168:27017&apos;</div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;</div><div class="line">rs.initiate(rsconf); # 如果以后需要再重载一下config的话,用rs.reconfig(rsconf);</div><div class="line"> </div><div class="line"># 添加节点</div><div class="line">rs.add(&apos;192.168.42.168:27018&apos;);</div><div class="line">rs.add(&apos;192.168.42.168:27019&apos;);</div><div class="line"> </div><div class="line"># 查看状态</div><div class="line">rs.status();</div><div class="line"> </div><div class="line"># 删除节点</div><div class="line">rs.remove(&apos;192.168.1.201:27019&apos;);</div><div class="line"> </div><div class="line"># 主节点插入数据</div><div class="line">&gt;use test</div><div class="line">&gt;db.user.insert(&#123;uid:1,name:&apos;lily&apos;&#125;);</div><div class="line"> </div><div class="line">#连接secondary查询同步情况</div><div class="line">./bin/mongo --port 27019</div><div class="line">&gt;show dbs</div><div class="line"> </div><div class="line">rsa:SECONDARY&gt; show dbs;</div><div class="line">2015-08-27T11:39:00.638+0800 E QUERY    Error: listDatabases failed:&#123; &quot;note&quot; : &quot;from execCommand&quot;, &quot;ok&quot; : 0, &quot;errmsg&quot; : &quot;not master&quot; &#125;</div><div class="line"> </div><div class="line"># 还可以通过isMaster()命令来查看信息;</div><div class="line">rsa:PRIMARY&gt; db.isMaster();</div><div class="line">&#123;</div><div class="line">        &quot;setName&quot; : &quot;rsa&quot;,</div><div class="line">        &quot;setVersion&quot; : 5,</div><div class="line">        &quot;ismaster&quot; : true,</div><div class="line">        &quot;secondary&quot; : false,</div><div class="line">        &quot;hosts&quot; : [</div><div class="line">                &quot;192.168.42.168:27018&quot;,</div><div class="line">                &quot;192.168.42.168:27019&quot;,</div><div class="line">                &quot;192.168.42.168:27017&quot;</div><div class="line">        ],</div><div class="line">        &quot;primary&quot; : &quot;192.168.42.168:27018&quot;,</div><div class="line">        &quot;me&quot; : &quot;192.168.42.168:27018&quot;,</div><div class="line">        &quot;electionId&quot; : ObjectId(&quot;55dea0cffa0c638625a82486&quot;),</div><div class="line">        &quot;maxBsonObjectSize&quot; : 16777216,</div><div class="line">        &quot;maxMessageSizeBytes&quot; : 48000000,</div><div class="line">        &quot;maxWriteBatchSize&quot; : 1000,</div><div class="line">        &quot;localTime&quot; : ISODate(&quot;2015-08-27T05:49:13.740Z&quot;),</div><div class="line">        &quot;maxWireVersion&quot; : 3,</div><div class="line">        &quot;minWireVersion&quot; : 0,</div><div class="line">        &quot;ok&quot; : 1</div><div class="line">&#125;</div><div class="line"> </div><div class="line"># 出现上述错误,是因为slave默认不许读写</div><div class="line">&gt;rs.slaveOk();</div><div class="line">&gt;show dbs; # 执行上面一个语句就可以看到和primary一致的数据,并且可以把读和写分离开来;</div></pre></td></tr></table></figure>
+<p>以上便是一个最简单的复制集架构,其中如果27017的主节点崩溃,那27018的节点就由从节点变为主节点;注意,如果再添加原来的27017节点进来,那主节点还是27018;</p>
+<h2 id="2-1-自动化配置脚本"><a href="#2-1-自动化配置脚本" class="headerlink" title="2.1.自动化配置脚本"></a>2.1.自动化配置脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">IP=&apos;192.168.1.202&apos;</div><div class="line">NA=&apos;rsb&apos;</div><div class="line"> </div><div class="line">if [ &quot;$1&quot; = &quot;reset&quot; ]</div><div class="line">then</div><div class="line">  pkill -9 mongo</div><div class="line">  rm -rf /home/m*</div><div class="line">  exit</div><div class="line">fi</div><div class="line"> </div><div class="line"> </div><div class="line">if [ &quot;$1&quot; = &quot;install&quot; ]</div><div class="line">then</div><div class="line"> </div><div class="line">mkdir -p /home/m0 /home/m1 /home/m2 /home/mlog</div><div class="line"> </div><div class="line">/usr/local/mongodb/bin/mongod --dbpath /home/m0 --logpath /home/mlog/m17.log --logappend --port 27017 --fork</div><div class="line">--replSet $&#123;NA&#125;</div><div class="line">/usr/local/mongodb/bin/mongod --dbpath /home/m1 --logpath /home/mlog/m18.log --logappend --port 27018 --fork</div><div class="line">--replSet $&#123;NA&#125;</div><div class="line">/usr/local/mongodb/bin/mongod --dbpath /home/m2 --logpath /home/mlog/m19.log --logappend --port 27019 --fork</div><div class="line">--replSet $&#123;NA&#125;</div><div class="line"> </div><div class="line">exit</div><div class="line">fi</div><div class="line"> </div><div class="line">if [ &quot;$1&quot; = &quot;repl&quot; ]</div><div class="line">then</div><div class="line">/usr/local/mongodb/bin/mongo &lt;&lt;EOF</div><div class="line"> </div><div class="line">use admin</div><div class="line">rsconf = &#123;</div><div class="line">  _id:&apos;$&#123;NA&#125;&apos;,</div><div class="line">  members:[</div><div class="line">    &#123;_id:0,host:&apos;$&#123;IP&#125;:27017&apos;&#125;,</div><div class="line">    &#123;_id:1,host:&apos;$&#123;IP&#125;:27018&apos;&#125;,</div><div class="line">    &#123;_id:2,host:&apos;$&#123;IP&#125;:27019&apos;&#125;,</div><div class="line">  ]</div><div class="line">&#125;</div><div class="line">rs.initiate(rsconf)</div><div class="line">EOF</div><div class="line">fi</div></pre></td></tr></table></figure>
+<p>转自:<br><a href="https://segmentfault.com/a/1190000004263290" target="_blank" rel="external">replication set复制集</a></p>
+<p>参考:<br><a href="http://blog.csdn.net/kk185800961/article/details/45791903" target="_blank" rel="external">MongoDB 基础（八）复制Ⅱ—部署仲裁节点</a><br><a href="http://blog.csdn.net/kk185800961/article/details/45700485" target="_blank" rel="external"> MongoDB 基础（七）复制Ⅰ—部署复制集</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/16/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/18/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
-</section>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
         
-          <aside id="sidebar">
+          
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
 
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">576</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
     </div>
-  </div>
+  </aside>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
         
       </div>
-      <footer id="footer">
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
   
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2017 Mr. Chen<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/js/script.js"></script>
-
-
-
-
   </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>

@@ -1,11 +1,93 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<!doctype html>
+
+
+
   
-  <title>Chen&#39;s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一个技术渣的自说自话">
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="一个技术渣的自说自话">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Chen's Blog">
 <meta property="og:url" content="http://yoursite.com/page/36/index.html">
@@ -14,489 +96,304 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chen's Blog">
 <meta name="twitter:description" content="一个技术渣的自说自话">
-  
-    <link rel="alternate" href="/atom.xml" title="Chen&#39;s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"always","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/page/36/"/>
+
+
+
+
+
+  <title> Chen's Blog </title>
 </head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Chen&#39;s Blog</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">一个技术渣的自说自话</a>
-        </h2>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-bigdata/zookeeper/zookeeper选举及数据一致性" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper选举及数据一致性/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.353Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper选举及数据一致性/">zookeeper选举及数据一致性</a>
-    </h1>
   
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right 
+   page-home 
+ ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个技术渣的自说自话</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper目录文件说明/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper目录文件说明/" itemprop="url">
+                  zookeeper目录文件说明
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="zab协议"><a href="#zab协议" class="headerlink" title="zab协议"></a>zab协议</h1><p>ZooKeeper Atomic Broadcast 即ZooKeeper原子消息广播协议，简称为ZAB</p>
-<ul>
-<li>选举过程需要依赖此协议</li>
-<li>数据写入过程也需要此协议</li>
-<li>ab的核心是定义了那些会改变zk服务器数据状态的事务请求的处理方式</li>
-</ul>
-<p>所有事务请求必须由一个全局唯一的服务器来协调处理，这样的服务器被称为Leader服务器，而余下的其它服务器则成ОFollower服务器。 Leader服务器负责将一个客户端事务请求转换成一个proposal(提议),并将该Proposal分发给集群中所有的Follower服务器。之后Leader服务器需要等待所有Follower服务器的反馈，一旦超过半数的Follower服务器进行了正确的反馈后，那ТLeader就会再次向所有的Follower服务器分发Commit消息，要求其将前一个Proposal进行提交</p>
-<ul>
-<li>zab协议的三阶段:<ul>
-<li>发现ͧDiscovery，即选举Leader过程</li>
-<li>同步(Synchronization),选举出新的Leader后,Follwer或者Observer从Leader同步最新数据</li>
-<li>广播,同步完成之后,就可以接收客户端新的事物请求,并进行广播,实现数据在集群节点的副本存储</li>
-</ul>
-</li>
-</ul>
-<h1 id="服务器角色"><a href="#服务器角色" class="headerlink" title="服务器角色"></a>服务器角色</h1><ul>
-<li>Leader<ul>
-<li>事物请求的唯一调度和处理者,保证集群事物处理的顺序性</li>
-<li>集群内部各服务器的调度者</li>
-</ul>
-</li>
-<li>Follower<ul>
-<li>处理客户端非事物请求,转发事物请求给Leader服务器</li>
-<li>参与事物请求Proposal的投票</li>
-<li>参与Leader选举投票</li>
-</ul>
-</li>
-<li>Observer<ul>
-<li>处理客户端非事物请求,转发事物请求给Leader服务器</li>
-<li>不参与任何形式的投票,包括选举和事务投票(超过半数确认)</li>
-<li>此角色存在通常是为了提高读性能</li>
-</ul>
-</li>
-</ul>
-<h1 id="服务器状态"><a href="#服务器状态" class="headerlink" title="服务器状态"></a>服务器状态</h1><ul>
-<li>LOOKING<ul>
-<li>寻找Leader状态</li>
-<li>当服务器处于此状态时,表示当前没有Leader,需要进入选举流程</li>
-</ul>
-</li>
-<li>Following<ul>
-<li>跟随者状态,表名当前服务器角色是Follower</li>
-</ul>
-</li>
-<li>Observing<ul>
-<li>观察者状态,表明当前服务器角色为Observer</li>
-</ul>
-</li>
-<li>Leading<ul>
-<li>Leader状态,表明当前服务器角色为Leader</li>
-</ul>
-</li>
-</ul>
-<p>以上四种状态由:org.apache.zookeeper.server.quorum. ServerState类维护</p>
-<h1 id="集群通信"><a href="#集群通信" class="headerlink" title="集群通信"></a>集群通信</h1><ul>
-<li>基于tcp协议</li>
-</ul>
-<p>为了避免重复创建两个节点之间的tcp连接,zk按照myid数值方向来建立连接,id大的向小的发起连接，在zk实现中，当发现自己的id比发起连接的id还大时,会关闭此连接</p>
-<ul>
-<li>多端口</li>
-</ul>
-<p>配置文件中第一个端口是通信和数据同步端口,默认是2888<br>第二个端口是投票端口,默认是3888</p>
-<h1 id="选举触发的时机"><a href="#选举触发的时机" class="headerlink" title="选举触发的时机"></a>选举触发的时机</h1><ul>
-<li>集群启动<ul>
-<li>寻找Leader状态</li>
-<li>当服务器处于此状态时,表示当前没有Leader,需要进入选举流程</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li>崩溃恢复<ul>
-<li>Leader宕机</li>
-<li>网络原因导致过半数节点与Leader心跳中断</li>
-</ul>
-</li>
-</ul>
-<h1 id="影响成为Leader的因素"><a href="#影响成为Leader的因素" class="headerlink" title="影响成为Leader的因素"></a>影响成为Leader的因素</h1><ul>
-<li><p>数据新旧程度</p>
-<ul>
-<li>只有拥有最新数据的接单才能有机会成为Leader</li>
-<li>通过事务id(zxid)的大小来表示数据的新旧,越大代表数据越新</li>
-</ul>
-</li>
-<li><p>myid</p>
-<ul>
-<li>集群启动时,会在data目录下配置myid文件,里面的数字代表当前zk服务器节点的编号</li>
-<li>当zk服务器节点数据一样新时,myid中数字越大的就会选举称为Leader</li>
-<li>当集群中已经有Leader时,新加入的节点不会影响原有的集群</li>
-</ul>
-</li>
-<li><p>投票数量</p>
-<ul>
-<li>只有得到集群中多半的投票,才能称为Leader</li>
-<li>多半即:(n/2)+1,其中n为集群中的节点数量</li>
-</ul>
-</li>
-</ul>
-<h1 id="zxid-事务id-的构成"><a href="#zxid-事务id-的构成" class="headerlink" title="zxid(事务id)的构成"></a>zxid(事务id)的构成</h1><ul>
-<li>主进程周期<ul>
-<li>也叫epoch</li>
-<li>选举的轮次,每多一次选举,则主进程周期加1</li>
-<li>zxid总共64位来表示,其高32位代表主进程周期</li>
-<li>比较数据新旧的时候,先比较epoch的大小</li>
-</ul>
-</li>
-<li>事务单调递增的计数器<ul>
-<li>zxid的低32位表示,选举完成后,从0开始</li>
-</ul>
-</li>
-</ul>
-<h1 id="zk的初次启动时的选举过程"><a href="#zk的初次启动时的选举过程" class="headerlink" title="zk的初次启动时的选举过程"></a>zk的初次启动时的选举过程</h1><ul>
-<li>第一步:启动myid为1的节点,此时zxid为0,此时没法选举出主节点</li>
-<li>第二步:启动myid为2的节点,他的zxid也为0,此时2这个节点成为主节点</li>
-<li>第三步:启动myid为3的节点,因为已经有主节点,则3加入集群,2还是leader</li>
-</ul>
-<h1 id="zk主节点宕机的选举过程"><a href="#zk主节点宕机的选举过程" class="headerlink" title="zk主节点宕机的选举过程"></a>zk主节点宕机的选举过程</h1><ul>
-<li><p>场景说明</p>
-<ul>
-<li>3台机器,此时server2为主,并且server2宕机</li>
-</ul>
-</li>
-<li><p>选举流程</p>
-<ul>
-<li>变更状态<ul>
-<li>当leader宕机后,其他节点的状态变更为Looking</li>
-</ul>
-</li>
-<li>每个server发出一个投自己的票的投票<ul>
-<li>生成投票信息(myid,zxid)</li>
-<li>假定:server1为(1,123),server3为(2,122)</li>
-<li>server1发给server3,server3发给server1</li>
-</ul>
-</li>
-<li>接收投票</li>
-<li>投票处理<ul>
-<li>server1收到server3,因为server1的zxid(123)比server3的zxid(122)大,所以server3修改自己的投票为(1,123),然后发送给server1</li>
-<li>server1收到server3的投票,因为123大于122,因此不改变自己的投票</li>
-</ul>
-</li>
-<li>投票统计<ul>
-<li>server3统计:自己收到投票(包括自己投的)中,(1,123)是两票</li>
-<li>server1统计:自己收到的投票(包括自己投的)中,(1,123)是两票</li>
-</ul>
-</li>
-<li>修改服务器状态<ul>
-<li>server3,选出的leader是server1,因此自己进入followering,即:follower角色</li>
-<li>server1,选出的leader是server1,即自己,因此自己进入leading状态,即:自己是leader角色</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h1><ul>
-<li>同步时机</li>
-</ul>
-<p>当leader完成选举后,follower需要与新的leader同步数据</p>
-<ul>
-<li>同步准备–leader<ul>
-<li>leader告诉其他follower当前最新数据是什么即zxid<ul>
-<li>leader构建一个newleader的包,包括当前最大的zxid,发送给所有的follower或者Observer</li>
-</ul>
-</li>
-<li>leader给每个follower创建一个线程leaderHandler来负责处理每个follower的数据同步请求,同时主线程开始阻塞,只有超过一半的follower同步完成,同步过程才完成,leader才能成为真正的leader</li>
-<li>根据同步算法进行操作</li>
-</ul>
-</li>
-<li>同步准备–follower端<ul>
-<li>选举完成后,尝试与leader建立同步连接,如果一段时间没有连接上就报错超时,重新回到选举状态</li>
-<li>向leader发送followerinfo包,带上follower自己最大的zxid</li>
-<li>根据不同同步算法进行操作</li>
-</ul>
-</li>
-<li>初始化<ul>
-<li>minCommittedLog:最小的事务日志id,即zxid(没有被快照存储的日志文件的第一条,每次快照存储完,会重新生成一个事务日志文件)</li>
-<li>maxCommittedLog:事务日志中最大的事务,即zxid</li>
-</ul>
-</li>
-<li>同步算法<ul>
-<li>直接差异化同步(diff同步)</li>
-<li>仅回滚同步(trunc),即删除多余的事务日志,比如原来的主宕机后重新加入,可能存在他自己写入提交但是别的节点还没来得及提交</li>
-<li>先回滚再差异化同步(trunc+diff同步)</li>
-<li>全量同步(snap同步)</li>
-</ul>
-</li>
-</ul>
-<h1 id="同步应用的场景"><a href="#同步应用的场景" class="headerlink" title="同步应用的场景"></a>同步应用的场景</h1><h2 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h2><ul>
-<li>把follower最后的事务zxid称为peerLastZxid</li>
-<li>当minCommittedLog&lt;peerLastZxid&lt;maxCommittedLog</li>
-</ul>
-<p>同步方案:</p>
-<ul>
-<li>直接差异化同步</li>
-<li>leader会给follower服务器发送diff指令,意思是:进入差异化数据同步阶段,leader会把proposal同步给follower</li>
-<li>实际同步过程会先发送数据修改proposal,然后再发送commit指令数据包</li>
-</ul>
-<p>举例说明</p>
-<p>某个时刻Leader服务器为proposal队列对应的zxid依次是0x500000001 0x500000002 0x500000003 0x500000004 0x500000005<br>此时follower的peerLastZxid为0x500000003，因此需要把0x500000004 0x500000005同步给follower</p>
-<p>差异化同步的消息发送顺序如下:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">发送顺序</th>
-<th style="text-align:center">数据包类型</th>
-<th style="text-align:center">对应的zxid</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">proposal</td>
-<td style="text-align:center">0x500000004</td>
-</tr>
-<tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">commit</td>
-<td style="text-align:center">0x500000004</td>
-</tr>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">proposal</td>
-<td style="text-align:center">0x500000005</td>
-</tr>
-<tr>
-<td style="text-align:center">4</td>
-<td style="text-align:center">commit</td>
-<td style="text-align:center">0x500000005</td>
-</tr>
-</tbody>
-</table>
-<p>执行的流程如下:</p>
-<ul>
-<li>follower端收到diff指令,然后进入diff同步阶段</li>
-<li>follower收到同步的数据和提交命令,并应用到内存数据库中</li>
-<li>同步完成后:<ul>
-<li>leader会发送一个newLeader指令,通知follower已经将最新的数据都同步给follower了</li>
-<li>follower收到newLeader指令后反馈一个ack消息,表名自己已经完成同步</li>
-</ul>
-</li>
-<li>单个follower的同步完成,Leader进入集群的”过半策略”等待状态</li>
-<li>当有超过一半的follower都同步完成后,leader会向已经完成同步的follower发送uptodate指令,用于通知follower完成数据同步,可以对外提供服务了</li>
-<li>follower收到leader的uptodate指令后,会终止数据同步流程,向leader再次反馈ack消息</li>
-</ul>
-<h2 id="场景二"><a href="#场景二" class="headerlink" title="场景二"></a>场景二</h2><p>Leader在提交本地完成，还没有把事务Proposal提交给其它节点前，leader宕机了</p>
-<p>假设3个节点的集群，分别是A,B,Cͺ没有宕机前，leader是B，已经发送过0X500000001和0X500000002的数据和事务提交proposal，并且发送了0X500000003的数据修改提议，但是在B节点<br>发送事务提交的proposal之前，B宕机了，由于B是本机发送，所以B的本地事务已经提交，即B最新的数据是0X500000003</p>
-<p>在A和C进行选举后，C成为主,并且进行过两次数据修改，对应的Proposal是0X600000001 0X600000002</p>
-<p>B机器恢复后加入集群(AC), 重新进行数据同步，对于B来说，peerLastZxidО0X500000003,对于当前的主C来说, minCommittedLog= 0X500000001 maxCommittedLog= 0X600000002</p>
-<p>同步方案:</p>
-<ul>
-<li>B恢复后,并且向已有的集群(AC)注册后,向C发起同步连接请求</li>
-<li>B向leader(C)发送followerinfo包,带上follower自己最大的zxid</li>
-<li>C发现B上没有自己的事务提交记录(0X500000003),则向B发送trunc命令,让B混滚到0X500000002</li>
-<li>B完成混滚后,向C发送信息包,确认完成,并说明当前的zxid为0X500000002</li>
-<li>C向B发送diff同步命令</li>
-<li>B收到Diff命令后进入同步状态,并向C发送ack确认包</li>
-<li>C陆续把对应的差异数据和Commit提交proposal发送给B,当数据发送完成后,在发送通知包给B</li>
-<li>B应用用于内存的数据结构,当收到C通知已经完成同步后,B给回应ACK,并且结束同步</li>
-</ul>
-<h2 id="场景三"><a href="#场景三" class="headerlink" title="场景三"></a>场景三</h2><p>某个节点宕机时间太长,当恢复并且加入集群后,数据的事务日志文件已经生成多个,此时的minCommittedLog比节点宕机时的最大日志还要大</p>
-<p>假设B宕机后,几天后才恢复,此时minCommittedLog为0X6000008731，而peerLastZxid为0X500000003</p>
-<p>同步方案</p>
-<ul>
-<li>采用全量同步(snap)</li>
-<li>当leader(C)发现,B的zxid小于minCommittedLog时,向B发送snap指令</li>
-<li>B收到指令,进入同步阶段</li>
-<li>leader(C)会从内存数据库中获取全量的数据发送给B</li>
-<li>B收到数据处理完成后,C还会把最新的proposal(全量同步期间产生)通过增量的方式发送给B</li>
-</ul>
-<h1 id="广播流程"><a href="#广播流程" class="headerlink" title="广播流程"></a>广播流程</h1><ul>
-<li>集群选举完成后,并且完成数据同步后,即可开始对外提供服务,接收读写请求</li>
-<li>当leader接收到客户端新的事务请求后,会生成对应的事务proposal,并根据zxid的顺序向所有的follower发送提案,即:proposal</li>
-<li>当follower收到leader的事务proposal时,根据接收的先后顺序处理这些proposal,即如果先后收到1,2,3条,则如果处理完了第3条,则代表1,2两条一定已经处理成功</li>
-<li>当leader收到follower针对某个事务proposal过半的ack后,则发起事务提交,重新发送一个commit的proposal</li>
-<li>follower收到commit的proposal后,记录事务提交,并把数据更新到内存数据库</li>
-<li>补充说明:<ul>
-<li>由于只有过半的机器给出反馈,则可能存在某时刻某些节点数据不是最新的</li>
-<li>业务上如果需要确认读取到的数据是最新的,则可以读取之前,调用sync方法进行数据同步</li>
-</ul>
-</li>
-</ul>
+
+
+    <div class="post-body" itemprop="articleBody">
 
       
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper选举及数据一致性/" data-id="cj290scoi01d5ssqqu7ogsags" class="article-share-link">Share</a>
       
+
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-bigdata/zookeeper/zookeeper运维日常" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper运维日常/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.352Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper运维日常/">zookeeper运维日常</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><ul>
-<li>Zk本身是基于java实现的，因此,调大JVM内存是优化点之一,具体数额需要根据业务情况来定,涉及到的JVM参数为-Xmx-Xms-Xmn</li>
-<li>IO优化:把事务日志与快照存储分磁盘存储,提高IOPS,最好事务日志单独磁盘挂载</li>
-<li>加大linux系统的文件句柄数和用户线程数,通过linux的命令ulimit可以查看当前的配置</li>
-<li>业务并发高时,可以创建多于1个的客户端会话,可以不同的业务模块采用不同的客户端实例</li>
-<li>利用zk进行业务开发时,尽量通过良好的设计减少资源消耗,比如watcher的数量</li>
-<li>节点数量,在写少,读多应用场景,采用多一点的节点会提升整体的读并发性能</li>
-<li>节点数据最好比默认的10M还小</li>
-<li>带宽尽量高,可以通过网络监控查看带宽是否已经是瓶颈</li>
-</ul>
-<h1 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h1><ul>
-<li>停机<br>增加相应的节点即可,比较简单</li>
-</ul>
-<ul>
-<li>不停机<ul>
-<li>增加新的节点,id一定要比原来集群的要大</li>
-<li>新节点启动后会加入集群,并且同步数据</li>
-<li>当用mntr命令查看新的节点数据已经同步成功后做下面的操作</li>
-<li>按照之前的id顺序依次再去关闭zk实例,然后修改配置,启动实例</li>
-</ul>
-</li>
-</ul>
-<h1 id="容灾"><a href="#容灾" class="headerlink" title="容灾"></a>容灾</h1><ul>
-<li>单机房的容灾靠zk本身的集群机制就能很好的支撑</li>
-<li>多机房的容灾<br>由于多半投票机制,zk不支持双机房的容灾,比如5节点,分为2和3,当3这个机房出现故障    ,2不能选举成功<br>因此,多机房容灾主要是考虑三机房的情况<br>跨机房的网络延时较大,做这个容灾要避免大量写应用场景</li>
-</ul>
-<p>为了避免服务器的地址变化影响客户端,客户端尽量采用域名的方式</p>
-<h1 id="重点监控指标"><a href="#重点监控指标" class="headerlink" title="重点监控指标"></a>重点监控指标</h1><ul>
-<li>连接数</li>
-<li>注册的watchers数</li>
-<li>zk事件通知的延时是否过大</li>
-<li>zookeeper事务日志<ul>
-<li>磁盘IO</li>
-<li>可以开启事务日志自动清理<ul>
-<li>autopurge.snapRetainCount</li>
-<li>autopurge.purgeInterval=24</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper运维日常/" data-id="cj290scoe01d2ssqqkyfvx4lj" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-bigdata/zookeeper/zookeeper目录文件说明" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper目录文件说明/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.351Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper目录文件说明/">zookeeper目录文件说明</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-bin目录文件"><a href="#1-bin目录文件" class="headerlink" title="1.bin目录文件"></a>1.bin目录文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">.sh为linux的脚本文件</div><div class="line">.cmd为Windows的脚本文件</div><div class="line">*/</div><div class="line">[root@data-1-1 zookeeper0]# cd bin/</div><div class="line">[root@data-1-1 bin]# ll</div><div class="line">total 48</div><div class="line">-rwxr-xr-x 1 1000 1000  238 Feb 20  2014 README.txt</div><div class="line">-rwxr-xr-x 1 1000 1000 1937 Feb 20  2014 zkCleanup.sh</div><div class="line">-rwxr-xr-x 1 1000 1000 1049 Feb 20  2014 zkCli.cmd                        </div><div class="line">-rwxr-xr-x 1 1000 1000 1534 Feb 20  2014 zkCli.sh            #客户端启动脚本</div><div class="line">-rwxr-xr-x 1 1000 1000 1333 Feb 20  2014 zkEnv.cmd</div><div class="line">-rwxr-xr-x 1 1000 1000 2697 Nov  5 16:53 zkEnv.sh            #环境变量启动脚本</div><div class="line">-rwxr-xr-x 1 root root 2696 Nov  5 16:44 zkEnv.sh.bak</div><div class="line">-rwxr-xr-x 1 1000 1000 1084 Feb 20  2014 zkServer.cmd</div><div class="line">-rwxr-xr-x 1 1000 1000 5797 Nov  6 19:35 zkServer.sh            #服务端启动脚本</div><div class="line">-rw-r--r-- 1 root root 5980 Nov  5 16:45 zookeeper.out            #日志文件</div><div class="line">[root@data-1-1 bin]#</div></pre></td></tr></table></figure>
+          
+            <h1 id="1-bin目录文件"><a href="#1-bin目录文件" class="headerlink" title="1.bin目录文件"></a>1.bin目录文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">.sh为linux的脚本文件</div><div class="line">.cmd为Windows的脚本文件</div><div class="line">*/</div><div class="line">[root@data-1-1 zookeeper0]# cd bin/</div><div class="line">[root@data-1-1 bin]# ll</div><div class="line">total 48</div><div class="line">-rwxr-xr-x 1 1000 1000  238 Feb 20  2014 README.txt</div><div class="line">-rwxr-xr-x 1 1000 1000 1937 Feb 20  2014 zkCleanup.sh</div><div class="line">-rwxr-xr-x 1 1000 1000 1049 Feb 20  2014 zkCli.cmd                        </div><div class="line">-rwxr-xr-x 1 1000 1000 1534 Feb 20  2014 zkCli.sh            #客户端启动脚本</div><div class="line">-rwxr-xr-x 1 1000 1000 1333 Feb 20  2014 zkEnv.cmd</div><div class="line">-rwxr-xr-x 1 1000 1000 2697 Nov  5 16:53 zkEnv.sh            #环境变量启动脚本</div><div class="line">-rwxr-xr-x 1 root root 2696 Nov  5 16:44 zkEnv.sh.bak</div><div class="line">-rwxr-xr-x 1 1000 1000 1084 Feb 20  2014 zkServer.cmd</div><div class="line">-rwxr-xr-x 1 1000 1000 5797 Nov  6 19:35 zkServer.sh            #服务端启动脚本</div><div class="line">-rw-r--r-- 1 root root 5980 Nov  5 16:45 zookeeper.out            #日志文件</div><div class="line">[root@data-1-1 bin]#</div></pre></td></tr></table></figure>
 <h1 id="2-conf目录"><a href="#2-conf目录" class="headerlink" title="2.conf目录"></a>2.conf目录</h1><ol>
 <li>zoo_sample.cfg为样例配置文件，需要修改为自己的名称，一般为zoo.cfg</li>
 <li>Log4j.properties为日志配置文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@data-1-1 zookeeper0]# cd conf/</div><div class="line">[root@data-1-1 conf]# ll</div><div class="line">total 48</div><div class="line">-rw-rw-r-- 1 1000 1000   535 Feb 20  2014 configuration.xsl</div><div class="line">-rw-rw-r-- 1 1000 1000  2161 Nov  5 16:55 log4j.properties                #log4j日志</div><div class="line">-rw-r--r-- 1 root root  1085 Nov  6 19:20 zoo.cfg            #启动的配置文件</div><div class="line">-rw-r--r-- 1 root root 21487 Nov  6 23:11 zookeeper.out        #日志文件</div><div class="line">-rw-rw-r-- 1 1000 1000   922 Feb 20  2014 zoo_sample.cfg.bak          #启动的配置文件（原）</div><div class="line">[root@data-1-1 conf]#</div></pre></td></tr></table></figure>
@@ -508,93 +405,293 @@
 <h1 id="6-dist-maven-目录"><a href="#6-dist-maven-目录" class="headerlink" title="6.dist-maven 目录"></a>6.dist-maven 目录</h1><p>maven编译后的发布目录</p>
 <h1 id="7-dataDir目录"><a href="#7-dataDir目录" class="headerlink" title="7.dataDir目录"></a>7.dataDir目录</h1><p>在zoo.cfg中的dataDir 选项配置中是数据的配置目录<br>如，默认是：/tmp/zookeeper/<br>那么在zk服务启动额时候，在/tmp/zookeeper/zookeeper_server.pid  是server的进程pid<br>如果将服务停止，那么该文件将会被自动删除</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper目录文件说明/" data-id="cj290sco601cwssqqmq93urr9" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/zookeeper/zookeeper的配置文件说明" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper的配置文件说明/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.349Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的配置文件说明/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper的配置文件说明/">zookeeper的配置文件说明</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper的配置文件说明/" itemprop="url">
+                  zookeeper的配置文件说明
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="1-基本配置"><a href="#1-基本配置" class="headerlink" title="1.基本配置"></a>1.基本配置</h1><p>最低配置要求中必须配置的参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">clientPort</div><div class="line">#监听客户端连接的端口。</div><div class="line"></div><div class="line">tickTime</div><div class="line">#基本事件单元，这个时间是作为Zookeeper服务器之间或客户端与服务器之间维持心跳的时间间隔，每隔tickTime时间就会发送一个心跳；最小 的session过期时间为2倍tickTime 　　</div><div class="line"></div><div class="line">dataDir</div><div class="line">#存储内存中数据库快照的位置，如果不设置参数，更新事务的日志将被存储到默认位置。</div><div class="line"></div><div class="line">/*</div><div class="line">应该谨慎的选择日志存放的位置，使用专用的日志存储设备能够大大提高系统的性能，如果将日志存储在比较繁忙的存储设备上，那么将会很大程度上影像系统性能</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+      
+
+      
+        
+          
+            <h1 id="1-基本配置"><a href="#1-基本配置" class="headerlink" title="1.基本配置"></a>1.基本配置</h1><p>最低配置要求中必须配置的参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">clientPort</div><div class="line">#监听客户端连接的端口。</div><div class="line"></div><div class="line">tickTime</div><div class="line">#基本事件单元，这个时间是作为Zookeeper服务器之间或客户端与服务器之间维持心跳的时间间隔，每隔tickTime时间就会发送一个心跳；最小 的session过期时间为2倍tickTime 　　</div><div class="line"></div><div class="line">dataDir</div><div class="line">#存储内存中数据库快照的位置，如果不设置参数，更新事务的日志将被存储到默认位置。</div><div class="line"></div><div class="line">/*</div><div class="line">应该谨慎的选择日志存放的位置，使用专用的日志存储设备能够大大提高系统的性能，如果将日志存储在比较繁忙的存储设备上，那么将会很大程度上影像系统性能</div><div class="line">*/</div></pre></td></tr></table></figure></p>
 <h1 id="2-高级配置"><a href="#2-高级配置" class="headerlink" title="2.高级配置"></a>2.高级配置</h1><p>高级配置参数中可选配置参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">dataLogdDir</div><div class="line">#这个操作让管理机器把事务日志写入“dataLogDir”所指定的目录中，而不是“dataDir”所指定的目录。这将允许使用一个专用的日志设备，帮助我们避免日志和快照的竞争</div><div class="line"></div><div class="line"></div><div class="line">maxClientCnxns</div><div class="line">/*这个操作将限制连接到Zookeeper的客户端数量，并限制并发连接的数量，通过IP来区分不同的客户端。</div><div class="line">此配置选项可以阻止某些类别的Dos攻击。将他设置为零或忽略不进行设置将会取消对并发连接的限制。</div><div class="line">例如，此时我们将maxClientCnxns的值设为1，如下所示：</div><div class="line">#set maxClientCnxns</div><div class="line">   maxClientCnxns=1</div><div class="line">启动Zookeeper之后，首先用一个客户端连接到Zookeeper服务器上。之后如果有第二个客户端尝试对Zookeeper进行连接，</div><div class="line">或者有某些隐式的对客户端的连接操作，将会触发Zookeeper的上述配置</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">minSessionTimeout和maxSessionTimeout </div><div class="line">#即最小的会话超时和最大的会话超时时间。在默认情况下，minSession=2*tickTime；maxSession=20*tickTime</div></pre></td></tr></table></figure></p>
 <h1 id="3-集群配置"><a href="#3-集群配置" class="headerlink" title="3.集群配置"></a>3.集群配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">initLimit=10</div><div class="line">#此配置表示，允许follower(相对于Leaderer言的“客户端”)连接并同步到Leader的初始化连接时间，以tickTime为单位。当初始化连接时间超过该值，则表示连接失败。</div><div class="line"> </div><div class="line">syncLimit=5</div><div class="line">#此配置项表示Leader与Follower之间发送消息时，请求和应答时间长度。如果follower在设置时间内不能与leader通信，那么此follower将会被丢弃。</div><div class="line"> </div><div class="line">server.A=B：C：D</div><div class="line">/*</div><div class="line">#Example</div><div class="line">server.0=hadoop:2288:3388</div><div class="line">server.1=hadoop0:2288:3388</div><div class="line">server.2=hadoop1:2288:3388</div><div class="line"></div><div class="line">A：其中 A 是一个数字，表示这个是服务器的编号；</div><div class="line">B：是这个服务器的 ip 地址；</div><div class="line">C：Leader选举的端口；</div><div class="line">D：Zookeeper服务器之间的通信端口。</div><div class="line">*/</div><div class="line"> </div><div class="line"></div><div class="line"> </div><div class="line">myid和zoo.cfg</div><div class="line">/* </div><div class="line">除了修改 zoo.cfg 配置文件，集群模式下还要配置一个文件 myid，这个文件在 dataDir 目录下，</div><div class="line">这个文件里面就有一个数据就是 A 的值，Zookeeper 启动时会读取这个文件，拿到里面的数据与 zoo.cfg 里面的配置信息比较从而判断到底是那个 server</div><div class="line">*/</div></pre></td></tr></table></figure>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的配置文件说明/" data-id="cj290sco201ctssqqyz0l4mie" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/zookeeper/zookeeper的典型应用场景" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper的典型应用场景/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.348Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的典型应用场景/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper的典型应用场景/">zookeeper的典型应用场景</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper的典型应用场景/" itemprop="url">
+                  zookeeper的典型应用场景
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="1-数据发布-订阅"><a href="#1-数据发布-订阅" class="headerlink" title="1.数据发布/订阅"></a>1.数据发布/订阅</h1><p>数据发布/订阅即所谓的配置中心：发布者将数据发布到zk的一个或者一系列节点上，阅者进行数据订阅，当数据有变化时，可以及时得到数据的变化通知</p>
+      
+
+      
+        
+          
+            <h1 id="1-数据发布-订阅"><a href="#1-数据发布-订阅" class="headerlink" title="1.数据发布/订阅"></a>1.数据发布/订阅</h1><p>数据发布/订阅即所谓的配置中心：发布者将数据发布到zk的一个或者一系列节点上，阅者进行数据订阅，当数据有变化时，可以及时得到数据的变化通知</p>
 <p>因为应用B对zk的某一个节点进行了监听（watch） ，所以当应用A向该监听的节点发布数据的时候（即节点的数据发生变化），此时会触发监听，然后就会通知应用B（即订阅的过程）</p>
 <h1 id="2-负载均衡"><a href="#2-负载均衡" class="headerlink" title="2.负载均衡"></a>2.负载均衡</h1><p>本质是利用zookeeper的配置管理功能，涉及的步骤为：</p>
 <ol>
@@ -625,48 +722,148 @@
 </ol>
 <h1 id="8-分布式队列"><a href="#8-分布式队列" class="headerlink" title="8.分布式队列"></a>8.分布式队列</h1><p>FIFO</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的典型应用场景/" data-id="cj290scny01cqssqq9rglgl9d" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/zookeeper/zookeeper的事务日志" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper的事务日志/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.347Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的事务日志/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper的事务日志/">zookeeper的事务日志</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper的事务日志/" itemprop="url">
+                  zookeeper的事务日志
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="日志文件的存储路径"><a href="#日志文件的存储路径" class="headerlink" title="日志文件的存储路径"></a>日志文件的存储路径</h1><ul>
+      
+
+      
+        
+          
+            <h1 id="日志文件的存储路径"><a href="#日志文件的存储路径" class="headerlink" title="日志文件的存储路径"></a>日志文件的存储路径</h1><ul>
 <li>存储于datalog或者是dataLogDir配置目录</li>
 <li>对应目录下的version-2代表的是日志格式版本号</li>
 <li>日志文件命名<ul>
@@ -718,48 +915,148 @@
 <li>把数据刷入快照文件</li>
 </ul>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的事务日志/" data-id="cj290sco901czssqqssk0c3hd" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/zookeeper/zookeeper的Znode数据模型" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper的Znode数据模型/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.345Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的Znode数据模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper的Znode数据模型/">zookeeper的Znode数据模型</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper的Znode数据模型/" itemprop="url">
+                  zookeeper的Znode数据模型
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="1-zkdatabase、datatree、datanode的关系"><a href="#1-zkdatabase、datatree、datanode的关系" class="headerlink" title="1.zkdatabase、datatree、datanode的关系"></a>1.zkdatabase、datatree、datanode的关系</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/znode_structure/1.png" alt=""></p>
+      
+
+      
+        
+          
+            <h1 id="1-zkdatabase、datatree、datanode的关系"><a href="#1-zkdatabase、datatree、datanode的关系" class="headerlink" title="1.zkdatabase、datatree、datanode的关系"></a>1.zkdatabase、datatree、datanode的关系</h1><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/znode_structure/1.png" alt=""></p>
 <h2 id="1-1-DataTree"><a href="#1-1-DataTree" class="headerlink" title="1.1.DataTree"></a>1.1.DataTree</h2><p>整个zk的数据就靠datatree维护，包括数据、目录、权限, DataTree是<strong>内存数据</strong>存储的核心，是一个树结构，代表了内存中一份完整的数据。DataTree不包含任何与网络、客户端连接及请求处理相关的业务逻辑，是一个独立的组件, 默认初始化三目录</p>
 <h2 id="1-2-DataNode"><a href="#1-2-DataNode" class="headerlink" title="1.2.DataNode"></a>1.2.DataNode</h2><p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/znode_structure/2.jpg" alt=""></p>
 <ol>
@@ -770,48 +1067,148 @@
 <h2 id="1-3-ZKDatabase"><a href="#1-3-ZKDatabase" class="headerlink" title="1.3. ZKDatabase"></a>1.3. ZKDatabase</h2><p>Zookeeper的内存数据库，管理Zookeeper的所有会话、DataTree存储和事务日志。ZKDatabase会定时向磁盘dump快照数据，同时在Zookeeper启动时，会通过磁盘的事务日志和快照文件恢复成一个完整的内存数据库。
 　　</p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的Znode数据模型/" data-id="cj290scnu01cnssqqed1l3p8y" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/zookeeper/zookeeper的ACL" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper的ACL/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.344Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的ACL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper的ACL/">zookeeper的ACL</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper的ACL/" itemprop="url">
+                  zookeeper的ACL
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="ACL组成"><a href="#ACL组成" class="headerlink" title="ACL组成"></a>ACL组成</h1><ul>
+      
+
+      
+        
+          
+            <h1 id="ACL组成"><a href="#ACL组成" class="headerlink" title="ACL组成"></a>ACL组成</h1><ul>
 <li>Scheme:id:permission 比如:world:anyone:crdwa</li>
 <li>Scheme:验证过程中使用的检验策略</li>
 <li>id:权限被赋予的对象,比如ip或者某个用户</li>
@@ -865,48 +1262,148 @@
 <li>用户名和密码也需要通过sha1和base64编码</li>
 </ul>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper的ACL/" data-id="cj290scnq01ckssqq1yk4i7z5" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/zookeeper/zookeeper开源客户端" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper开源客户端/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.343Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper开源客户端/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper开源客户端/">zookeeper开源客户端</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper开源客户端/" itemprop="url">
+                  zookeeper开源客户端
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <h1 id="1-原生api的不足"><a href="#1-原生api的不足" class="headerlink" title="1.原生api的不足"></a>1.原生api的不足</h1><ul>
+      
+
+      
+        
+          
+            <h1 id="1-原生api的不足"><a href="#1-原生api的不足" class="headerlink" title="1.原生api的不足"></a>1.原生api的不足</h1><ul>
 <li>连接的创建是异步的，需要开发人员自行编码实现等待</li>
 <li>连接没有自动的超时重连机制</li>
 <li>zk本省不提供序列化机制,需要开发人员自行制定,从而实现数据的序列化和反序列化</li>
@@ -1177,48 +1674,148 @@
 </table>
 <p>实例代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">public void addChildWatcher(String path) throws Exception &#123;</div><div class="line">	final PathChildrenCache cache = new PathChildrenCache(this.client, path, true);</div><div class="line">	cache.start(StartMode.POST_INITIALIZED_EVENT);//ppt中需要讲StartMode</div><div class="line">	System.out.println(cache.getCurrentData().size());</div><div class="line">	</div><div class="line">	cache.getListenable().addListener(new PathChildrenCacheListener() &#123;</div><div class="line">		public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception &#123;</div><div class="line">			if(event.getType().equals(PathChildrenCacheEvent.Type.INITIALIZED))&#123;</div><div class="line">				System.out.println(&quot;客户端子节点cache初始化数据完成&quot;);</div><div class="line">				System.out.println(&quot;size=&quot;+cache.getCurrentData().size());</div><div class="line">			&#125;else if(event.getType().equals(PathChildrenCacheEvent.Type.CHILD_ADDED))&#123;</div><div class="line">				System.out.println(&quot;添加子节点:&quot;+event.getData().getPath());</div><div class="line">				System.out.println(&quot;修改子节点数据:&quot;+new String(event.getData().getData()));</div><div class="line">			&#125;else if(event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED))&#123;</div><div class="line">				System.out.println(&quot;删除子节点:&quot;+event.getData().getPath());</div><div class="line">			&#125;else if(event.getType().equals(PathChildrenCacheEvent.Type.CHILD_UPDATED))&#123;</div><div class="line">				System.out.println(&quot;修改子节点数据:&quot;+event.getData().getPath());</div><div class="line">				System.out.println(&quot;修改子节点数据:&quot;+new String(event.getData().getData()));</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*</div><div class="line">PathChildrenCache.StartMode	有:</div><div class="line">BUILD_INITIAL_CACHE //同࠵初始化客户端的cache，及创建cache后，就从服务器端拉入对应的数据</div><div class="line">NORMAL //异࠵初始化cache</div><div class="line">POST_INITIALIZED_EVENT //异࠵初始化，初始化完成触发事件PathChildrenCacheEvent.Type.INITIALIZED</div><div class="line">*/</div></pre></td></tr></table></figure></p>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper开源客户端/" data-id="cj290scnl01chssqq52d1k1xr" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
+  </article>
+
+
+    
+      
+
   
-</article>
-
 
   
-    <article id="post-bigdata/zookeeper/zookeeper客户端连接的原理" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/04/16/bigdata/zookeeper/zookeeper客户端连接的原理/" class="article-date">
-  <time datetime="2017-04-16T04:47:25.341Z" itemprop="datePublished">2017-04-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
-  </div>
+  
+  
 
-  </div>
-  <div class="article-inner">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper客户端连接的原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
     
-    
-      <header class="article-header">
+      <header class="post-header">
+
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/16/bigdata/zookeeper/zookeeper客户端连接的原理/">zookeeper客户端连接的原理</a>
-    </h1>
-  
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper客户端连接的原理/" itemprop="url">
+                  zookeeper客户端连接的原理
+                </a>
+              
+            
+          </h1>
+        
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
-    <div class="article-entry" itemprop="articleBody">
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-        <p>创建zookeeper连接对象时，如何选择哪个服务器进行连接？</p>
+      
+
+      
+        
+          
+            <p>创建zookeeper连接对象时，如何选择哪个服务器进行连接？</p>
 <ul>
 <li>客户端的connectstring:localhost:2181, localhost:2182, localhost:2183</li>
 <li>通过类:org.apache.zookeeper.client. StaticHostProvider维护地址列表</li>
@@ -1231,136 +1828,990 @@
 <p>connectstring为:192.168.1.2:2181, 192.168.1.3:2181, 192.168.1.4:2181<br>随机打乱后的顺序为:192.168.1.3:2181, 192.168.1.2:2181, 192.168.1.4:2181<br>则第一次连接时选择1.3这个节点,如果连接不上,则重新选择1.2, 然后是1.4,如果1.4连接不上,则开始连接第一个节点1.3</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">在StaticHostProvider类中,有如下的两个方法:</div><div class="line">初始化连接地址列表</div><div class="line">*/</div><div class="line"></div><div class="line">public StaticHostProvider(Collection&lt;InetSocketAddress&gt; serverAddresses)</div><div class="line">        throws UnknownHostException &#123;</div><div class="line">    for (InetSocketAddress address : serverAddresses) &#123;</div><div class="line">        InetAddress ia = address.getAddress();</div><div class="line">        InetAddress resolvedAddresses[] = InetAddress.getAllByName((ia!=null) ? ia.getHostAddress():</div><div class="line">            address.getHostName());</div><div class="line">        for (InetAddress resolvedAddress : resolvedAddresses) &#123;</div><div class="line">           </div><div class="line">            if (resolvedAddress.toString().startsWith(&quot;/&quot;) </div><div class="line">                    &amp;&amp; resolvedAddress.getAddress() != null) &#123;</div><div class="line">                this.serverAddresses.add(</div><div class="line">                        new InetSocketAddress(InetAddress.getByAddress(</div><div class="line">                                address.getHostName(),</div><div class="line">                                resolvedAddress.getAddress()), </div><div class="line">                                address.getPort()));</div><div class="line">            &#125; else &#123;</div><div class="line">                this.serverAddresses.add(new InetSocketAddress(resolvedAddress.getHostAddress(), address.getPort()));</div><div class="line">            &#125;  </div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    if (this.serverAddresses.isEmpty()) &#123;</div><div class="line">        throw new IllegalArgumentException(</div><div class="line">                &quot;A HostProvider may not be empty!&quot;);</div><div class="line">    &#125;</div><div class="line">    Collections.shuffle(this.serverAddresses);	//随机排序</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">------选择一个地址返回--------------</div><div class="line"></div><div class="line">public InetSocketAddress next(long spinDelay) &#123;</div><div class="line">    ++currentIndex;</div><div class="line">	//如果已经是最后一个节点,则从第一个节点开始</div><div class="line">    if (currentIndex == serverAddresses.size()) &#123;</div><div class="line">        currentIndex = 0;</div><div class="line">    &#125;</div><div class="line">	//当地址列表只有一个地址时,再次获取之前先sleep一定时间再返回,这算是一个重试时间间隔</div><div class="line">    if (currentIndex == lastIndex &amp;&amp; spinDelay &gt; 0) &#123;</div><div class="line">        try &#123;</div><div class="line">            Thread.sleep(spinDelay);</div><div class="line">        &#125; catch (InterruptedException e) &#123;</div><div class="line">            LOG.warn(&quot;Unexpected exception&quot;, e);</div><div class="line">        &#125;</div><div class="line">    &#125; else if (lastIndex == -1) &#123;</div><div class="line">        // We don&apos;t want to sleep on the first ever connect attempt.</div><div class="line">        lastIndex = 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return serverAddresses.get(currentIndex);//返回下一个节点的地址</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
+          
+        
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper客户端连接的原理/" data-id="cj290scnc01cassqqfld9fp5o" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zookeeper/">zookeeper</a></li></ul>
 
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
     </footer>
-  </div>
-  
-</article>
+  </article>
 
 
-  
-
-
-  <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/35/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/34/">34</a><a class="page-number" href="/page/35/">35</a><span class="page-number current">36</span><a class="page-number" href="/page/37/">37</a><a class="page-number" href="/page/38/">38</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/37/">Next &raquo;</a>
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper客户端API使用(zk-API)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper客户端API使用(zk-API)/" itemprop="url">
+                  zookeeper客户端API使用(zk-API)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-创建zk实例"><a href="#1-创建zk实例" class="headerlink" title="1.创建zk实例"></a>1.创建zk实例</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ZooKeeper(String connectString, int sessionTimeout, Watcher watcher)</div><div class="line">ZooKeeper(String connectString, int sessionTimeout, Watcher watcher, boolean canBeReadOnly)</div><div class="line">ZooKeeper(String connectString, int sessionTimeout, Watcher watcher, long sessionId, byte[] sessionPasswd)</div><div class="line">ZooKeeper(String connectString, int sessionTimeout, Watcher watcher, long sessionId, byte[] sessionPasswd, boolean canBeReadOnly)</div></pre></td></tr></table></figure>
+<ul>
+<li>客户端与服务器端会话的建立是一个异步的过程</li>
+<li>完成客户端的初始化就返回，此时连接并没有真正的建立，所以主线程中使用：connectedSignal.await()去等待</li>
+<li>当连接真正建立的时候，客户端会收到一个事件的通知，会触发Watcher的process，所以在process函数中connectedSignal.countDown();//计数器减1，阻塞结束</li>
+</ul>
+<blockquote>
+<p>Zk构造方法参数说明</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>connectString</td>
+<td>1.指zk服务器列表，host:port,示例：192.168.0.50:2180,192.168.0.51:2181 ,<br>2.也可以在后面跟上目录，表示此客户端的操作都是在此目录下，如：192.168.0.50:2180/zk-book 表示此客户端操作的节点都是在/zk-book根目录下，比如创建/foo/bar，其实完整的路径是/zk-book/foo/bar</td>
+</tr>
+<tr>
+<td>sessionTimeout</td>
+<td>会话超时时间，单位是毫秒，当在这个时间内没有收到心跳检测，会话就会失效</td>
+</tr>
+<tr>
+<td>watcher</td>
+<td>注ӆ的watcher，null表示不设置</td>
+</tr>
+<tr>
+<td>canBeReadOnly</td>
+<td>用于标识当前会话是否支持”read-only”模式ͺ</td>
+</tr>
+<tr>
+<td>sessionPasswd 和 sessionId</td>
+<td>分别代表会话ID和会话密钥，这两个参数一起可以唯一确定一个会话，客户端通过这两个参数实现客户端会话复用</td>
+</tr>
+</tbody>
+</table>
+<h1 id="2-创建节点"><a href="#2-创建节点" class="headerlink" title="2.创建节点"></a>2.创建节点</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">String create(String path, byte[] data, List&lt;ACL&gt; acl, CreateMode createMode)        </div><div class="line">	#以同步的方式创建节点</div><div class="line">void create(String path, byte[] data, List&lt;ACL&gt; acl, CreateMode createMode, </div><div class="line">	AsyncCallback.StringCallback cb, Object ctx)      </div><div class="line">	#以异步的方式创建节点</div></pre></td></tr></table></figure>
+<ul>
+<li>无论是上面的同步或者异步都不支持递归创建节点</li>
+<li>当创建的节点存在时，抛出异常NodeExistsException</li>
+</ul>
+<blockquote>
+<p>Zk create api参数说明</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>path</td>
+<td>被创建的节点路径，比如：/zk-book/foo</td>
+</tr>
+<tr>
+<td>data[]</td>
+<td>节点中的数据</td>
+</tr>
+<tr>
+<td>acl</td>
+<td>acl策略</td>
+</tr>
+<tr>
+<td>createMode</td>
+<td>节点类型，枚举类型，有四种选择：<br>持久(PERSISTENT)<br>持久顺序（PERSISTENT_SEQUENTIAL）<br>临时（EPHEMERAL）<br>临时顺序（EPHEMERAL_SEQUENTIAL）</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>回调函数，需要实现接口StringCallback接口，当服务器端创建完成后，客户端会自动调用这个对象的方法processResult</td>
+</tr>
+<tr>
+<td>ctx</td>
+<td>用于传递一个对象，可以在回调方法执行的时候用，通常用于传递业务的上下文信息</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>创建节点时的ACL</p>
+</blockquote>
+<ul>
+<li>1.通过接口Ids可以预先定义几种scheme模式<ul>
+<li>OPEN_ACL_UNSAFE：相当于world:anyone:cdrwa</li>
+<li>CREATOR_ALL_ACL：相当于auth:用户名:密码,但是需要通过ZooKeeper的addAuthInfo添加对应的用户和密码对</li>
+<li>READ_ACL_UNSAFE：相当于world:anyone:r，即所有人拥有读权限</li>
+</ul>
+</li>
+<li>2.自己定义,比如:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public List&lt;ACL&gt; getDigestAcl()&#123;</div><div class="line">	List&lt;ACL&gt; acls = new ArrayList&lt;ACL&gt;();</div><div class="line">	Id digestId = new Id(&quot;digest&quot;, &quot;javaclient2:CGf2ydfsfdsjfsldfsdfsdfs=&quot;);</div><div class="line">	acls.add(new ACL(Perms.ALL, digestId));</div><div class="line">	return acls;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="3-删除节点"><a href="#3-删除节点" class="headerlink" title="3.删除节点"></a>3.删除节点</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">void delete(String path, int version)            </div><div class="line">	#以同步的方式删除</div><div class="line"></div><div class="line">void delete(String path, int version, AsyncCallback.VoidCallback cb, Object ctx)    </div><div class="line">	#以异步的方式删除，客户端主线程不能退出，否则可能请求没有发到服务器或者是异步回调不成功</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Path</td>
+<td>被删除的节点的路径</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>知道节点的数据版本，如果指定的版本不是最新版本，将会报错，它的作用类似于hibernate中的乐观锁,if the given version is -1, it matches any node’s versions(删除指定版本，-1表示删除所有版本)</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>异步回调函数</td>
+</tr>
+<tr>
+<td>ctx</td>
+<td>传递上下文信息，即操作之前的信息传递到删除之后的异步回调函数里（可以用于保留删除前的状态）</td>
+</tr>
+</tbody>
+</table>
+<h1 id="4-获取子节点list"><a href="#4-获取子节点list" class="headerlink" title="4.获取子节点list"></a>4.获取子节点list</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">List&lt;String&gt; getChildren(String path, boolean watch)        </div><div class="line">	#返回path节点的子节点列表</div><div class="line"></div><div class="line">void getChildren(String path, boolean watch, AsyncCallback.Children2Callback cb, Object ctx)   </div><div class="line">	#以异步的方式返回子节点，返回path指定节点的状态信息stat</div><div class="line"></div><div class="line">void getChildren(String path, boolean watch, AsyncCallback.ChildrenCallback cb, Object ctx)   </div><div class="line">	##以异步的方式返回子节点，不返回path指定节点的状态信息ͧstatͨ</div><div class="line"></div><div class="line">List&lt;String&gt; getChildren(String path, boolean watch, Stat stat)        </div><div class="line">	#返回path指定节点的状态信息stat和子节点列表</div><div class="line"></div><div class="line">List&lt;String&gt; getChildren(String path, Watcher watcher)</div><div class="line"></div><div class="line">void getChildren(String path, Watcher watcher, AsyncCallback.Children2Callback  cb, Object ctx)</div><div class="line"></div><div class="line">void getChildren(String path, Watcher watcher, AsyncCallback.ChildrenCallback cb, Object ctx)</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>path</td>
+<td>数据节点的路径，比如：/zk-book/foo，获取该路径下的子节点列表</td>
+</tr>
+<tr>
+<td>watcher</td>
+<td>设置watcher，如果path对应节点的子节点数量发生变化，将会得到通知，允许为null</td>
+</tr>
+<tr>
+<td>watch</td>
+<td>是否使用默认的watcher（就是在创建zk实例的时候指定的watcher）</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>指定数据节点的状态信息</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>异步回调函数</td>
+</tr>
+<tr>
+<td>ctx</td>
+<td>用于传递一个对象，可以在回调方法执行的时候用，通常用于传递业务的上下文信息</td>
+</tr>
+</tbody>
+</table>
+<h1 id="5-获取节点数据"><a href="#5-获取节点数据" class="headerlink" title="5.获取节点数据"></a>5.获取节点数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">void getData(String path, boolean watch, AsyncCallback.DataCallback cb, Object ctx)</div><div class="line"></div><div class="line">byte[] getData(String path, boolean watch, Stat stat)</div><div class="line"></div><div class="line">void getData(String path, Watcher watcher, AsyncCallback.DataCallback cb, Object ctx)</div><div class="line"></div><div class="line">byte[] getData(String path, Watcher watcher, Stat stat)</div><div class="line"></div><div class="line"></div><div class="line">############ Stat  类的内部（其实是对状态属性的封装）##############</div><div class="line">public class Stat implements Record &#123;</div><div class="line">  private long czxid;</div><div class="line">  private long mzxid;</div><div class="line">  private long ctime;</div><div class="line">  private long mtime;</div><div class="line">  private int version;</div><div class="line">  private int cversion;</div><div class="line">  private int aversion;</div><div class="line">  private long ephemeralOwner;</div><div class="line">  private int dataLength;</div><div class="line">  private int numChildren;</div><div class="line">  private long pzxid;</div><div class="line">  public Stat() &#123;</div><div class="line">  &#125;</div><div class="line">//............</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>path</td>
+<td>数据节点的路径，比如：/zk-book/foo，获取该路径的数据</td>
+</tr>
+<tr>
+<td>watcher</td>
+<td>设置watcher后，如果path对应节点的数据发生变化，将会得到通知，允许为null</td>
+</tr>
+<tr>
+<td>watch</td>
+<td>是否使用默认的watcher（就是在创建zk实例的时候指定的watcher）</td>
+</tr>
+<tr>
+<td>stat</td>
+<td>指定数据节点的状态信息</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>异步回调函数</td>
+</tr>
+<tr>
+<td>ctx</td>
+<td>用于传递一个对象，可以在回调方法执行的时候用，通常用于传递业务的上下文信息</td>
+</tr>
+</tbody>
+</table>
+<h1 id="6-修改数据"><a href="#6-修改数据" class="headerlink" title="6.修改数据"></a>6.修改数据</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Stat setData(String path, byte[] data, int version)</div><div class="line"></div><div class="line">void setData(String path, byte[] data, int version, AsyncCallback.StatCallback cb, Object ctx)</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>path</td>
+<td>被修改的节点的路径</td>
+</tr>
+<tr>
+<td>data</td>
+<td>新的数据</td>
+</tr>
+<tr>
+<td>version</td>
+<td>知道节点的数据版本，如果指定的版本不是最新版本，将会报错，它的作用类似于hibernate中的乐观锁,if the given version is -1, it matches any node’s versions</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>异步回调函数</td>
+</tr>
+<tr>
+<td>ctx</td>
+<td>传递上下文信息，即操作之前的信息传递到操作之后的异步回调函数里</td>
+</tr>
+</tbody>
+</table>
+<h1 id="7-检查节点是否存在"><a href="#7-检查节点是否存在" class="headerlink" title="7.检查节点是否存在"></a>7.检查节点是否存在</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">Stat exists(String path, boolean watch)        </div><div class="line">	#如果节点不存在就返回为null</div><div class="line"></div><div class="line">void exists(String path, boolean watch, AsyncCallback.StatCallback cb, Object ctx)</div><div class="line"></div><div class="line">Stat exists(String path, Watcher watcher)</div><div class="line"></div><div class="line">void exists(String path, Watcher watcher, AsyncCallback.StatCallback cb, Object ctx)</div><div class="line"></div><div class="line"></div><div class="line">##############################</div><div class="line">    interface StatCallback extends AsyncCallback &#123;</div><div class="line">        public void processResult(int rc, String path, Object ctx, Stat stat);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>path</td>
+<td>数据节点的路径，如：/zk-book/foo  即API调用的目的是检测该节点是否存在</td>
+</tr>
+<tr>
+<td>watcher</td>
+<td>注册的watcher，用于监听以下三个事件：<br>节点被创建<br>节点被删除<br>节点被更新</td>
+</tr>
+<tr>
+<td>watch</td>
+<td>是否使用默认的watcher</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>异步回调函数</td>
+</tr>
+<tr>
+<td>ctx</td>
+<td>传递上下文信息，即操作之前的信息传递到操作之后的异步回调函数里</td>
+</tr>
+</tbody>
+</table>
+<h1 id="8-异步函数的实现"><a href="#8-异步函数的实现" class="headerlink" title="8.异步函数的实现"></a>8.异步函数的实现</h1><p>其实以上所有的异步回调函数都是在AsyncCallback中</p>
+<p><img src="http://ols7leonh.bkt.clouddn.com//assert/img/bigdata/zookeeper/crud-api/1.png" alt=""></p>
+<h1 id="9-代码实现（重要）"><a href="#9-代码实现（重要）" class="headerlink" title="9.代码实现（重要）"></a>9.代码实现（<em>重要</em>）</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div></pre></td><td class="code"><pre><div class="line">package it.com.zk;</div><div class="line">import java.io.IOException;</div><div class="line">import java.util.List;</div><div class="line">import java.util.concurrent.CountDownLatch;</div><div class="line">import org.apache.zookeeper.AsyncCallback;</div><div class="line">import org.apache.zookeeper.CreateMode;</div><div class="line">import org.apache.zookeeper.KeeperException;</div><div class="line">import org.apache.zookeeper.WatchedEvent;</div><div class="line">import org.apache.zookeeper.Watcher;</div><div class="line">import org.apache.zookeeper.ZooKeeper;</div><div class="line">import org.apache.zookeeper.AsyncCallback.StringCallback;</div><div class="line">import org.apache.zookeeper.AsyncCallback.VoidCallback;</div><div class="line">import org.apache.zookeeper.Watcher.Event.KeeperState;</div><div class="line">import org.apache.zookeeper.ZooDefs.Ids;</div><div class="line">import org.apache.zookeeper.data.Stat;</div><div class="line">public class WatchExample implements Watcher&#123;</div><div class="line">    private static final int SESSION_TIMEOUT=5000;</div><div class="line">    </div><div class="line">    private ZooKeeper zk;</div><div class="line">    private CountDownLatch connectedSignal=new CountDownLatch(1);//初始化计数器为1</div><div class="line">    @Override</div><div class="line">    public void process(WatchedEvent event) &#123;</div><div class="line">        if(event.getState()==KeeperState.SyncConnected)&#123;//KeeperState是枚举类型，存放的是状态</div><div class="line">            connectedSignal.countDown();//计数器减1，阻塞结束</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    private void close() throws InterruptedException &#123;</div><div class="line">        zk.close();</div><div class="line">        System.out.println(&quot;close........&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">/*-------------------- 连接 start---------------------*/ </div><div class="line">    private void connect(String hosts) throws IOException, InterruptedException &#123;</div><div class="line">        zk = new ZooKeeper(hosts, SESSION_TIMEOUT, this);    //因为自身实现了Watcher，所以将自身传过来了</div><div class="line">        connectedSignal.await();//阻塞等待，直到计数器为0结束(主线程阻塞，登台子线程调用process函数，然后唤醒自己)</div><div class="line">        /*</div><div class="line">             客户端与服务端会话的建立是一个异步的过程，即</div><div class="line">                完成ۨ客户端的初始化后就返回，此时连接并没有真正的建立起来</div><div class="line">                当连接真正建立起来后，客户端会收到一个事件通知（即Watcher函数process的调用）</div><div class="line">        */</div><div class="line">    &#125;</div><div class="line">/*---------------------   连接 end -------------------------------*/  </div><div class="line">    </div><div class="line"></div><div class="line">/*---------------------   创建节点 start ----------------------*/  </div><div class="line">    //创建节点</div><div class="line">    private void createSync(String groupName, String dataStr) throws KeeperException, InterruptedException &#123;</div><div class="line">        String path=&quot;/&quot;+groupName;</div><div class="line">        if(zk.exists(path, false)== null)&#123;//判断路径是否存在,不存在就创建</div><div class="line">            String actual_path = zk.create(path, dataStr.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);</div><div class="line">            /*</div><div class="line">            Ids:提供了几种默认的acl，但是也可以通过new Id()来自己指定，Ids内部就是new的</div><div class="line">            CreateMode:持久节点、持久顺序节点、临时节点、临时顺序节点</div><div class="line">             </div><div class="line">            */</div><div class="line">            System.out.println(actual_path);</div><div class="line">            System.out.println(&quot;Created Sync:&quot;+path);</div><div class="line">        &#125;</div><div class="line">    &#125; </div><div class="line">    //异步创建节点</div><div class="line">    private void createAsync(String groupName, String dataStr) throws KeeperException, InterruptedException &#123;</div><div class="line">        String path=&quot;/&quot;+groupName;</div><div class="line">        if(zk.exists(path, false)== null)&#123;//判断路径是否存在</div><div class="line">            zk.create(path, dataStr.getBytes(), Ids.CREATOR_ALL_ACL, CreateMode.PERSISTENT, new StringCallback()&#123;</div><div class="line">                @Override</div><div class="line">                public void processResult(int rc, String path, Object ctx, String name) &#123;</div><div class="line">                    System.out.println(&quot;rc:&quot;+rc);</div><div class="line">                    System.out.println(&quot;path:&quot;+path);</div><div class="line">                    System.out.println(&quot;ctx:&quot;+ctx);</div><div class="line">                    System.out.println(&quot;name:&quot;+name);</div><div class="line">                &#125;</div><div class="line">                </div><div class="line">            &#125;, &quot;async_&quot;);</div><div class="line">            </div><div class="line">            String actual_path = zk.create(path, dataStr.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);</div><div class="line">            System.out.println(&quot;Created Async success:&quot;+path);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">/*-------------------------   创建节点 end---------------------------------*/      </div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">/*-----------------------  删除节点 start ---------------------------------*/  </div><div class="line">    //删除</div><div class="line">    public void deleteSync(String path) throws InterruptedException, KeeperException&#123;</div><div class="line">        path=&quot;/&quot;+path;</div><div class="line">        if(zk.exists(path, false)!= null)&#123;//判断路径是否存在</div><div class="line">            //if the given version is -1, it matches any node&apos;s versions</div><div class="line">            zk.delete(path, -1);</div><div class="line">            System.out.println(&quot;delete sync success......&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">  //删除</div><div class="line">    public void deleteAsync(String path) throws InterruptedException, KeeperException&#123;</div><div class="line">        </div><div class="line">        path=&quot;/&quot;+path;</div><div class="line">        if(zk.exists(path, false)!= null)&#123;//判断路径是否存在</div><div class="line">            zk.delete(path, -1, new VoidCallback()&#123;</div><div class="line">                @Override</div><div class="line">                public void processResult(int rc, String path, Object ctx) &#123;</div><div class="line">                    System.out.println(&quot;rc:&quot;+rc);</div><div class="line">                    System.out.println(&quot;path:&quot;+path);</div><div class="line">                    System.out.println(&quot;ctx:&quot;+ctx);</div><div class="line">                &#125;</div><div class="line">                </div><div class="line">            &#125;, &quot;delete_async&quot;);</div><div class="line">            System.out.println(&quot;delete async success......&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">/*------------------  删除节点 end-------------------------------------*/    </div><div class="line"></div><div class="line">  </div><div class="line">/*--------------------  获取子节点 start --------------------------------*/  </div><div class="line">    //获取子节点(同步)</div><div class="line">    public List&lt;String&gt; getChildrenSync(String path) throws KeeperException, InterruptedException&#123;</div><div class="line">        path = &quot;/&quot;+path;</div><div class="line">        if(zk.exists(path, false)!= null)&#123;//判断路径是否存在</div><div class="line">            return zk.getChildren(path, false);</div><div class="line">        &#125;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    </div><div class="line">  //获取子节点(同步+stat)</div><div class="line">    public List&lt;String&gt; getChildrenSyncWithStat(String path) throws KeeperException, InterruptedException&#123;</div><div class="line">        path = &quot;/&quot;+path;</div><div class="line">        if(zk.exists(path, false)!= null)&#123;//判断路径是否存在</div><div class="line">            Stat stat = new Stat();</div><div class="line">            List childList = zk.getChildren(path, false, stat);//会将查询到的状态copy到stat中：如DataTree.copyStat(response.getStat(), stat);</div><div class="line">            /*下面是所有的状态信息（stat的封装信息）</div><div class="line">            [zk: localhost:2182(CONNECTED) 65] get /name_async</div><div class="line">            &quot;zshangsna&quot;</div><div class="line">            cZxid = 0x200000070</div><div class="line">            ctime = Mon Nov 07 22:31:48 CST 2016</div><div class="line">            mZxid = 0x200000070</div><div class="line">            mtime = Mon Nov 07 22:31:48 CST 2016</div><div class="line">            pZxid = 0x200000074</div><div class="line">            cversion = 2</div><div class="line">            dataVersion = 0</div><div class="line">            aclVersion = 0</div><div class="line">            ephemeralOwner = 0x0</div><div class="line">            dataLength = 11</div><div class="line">            numChildren = 2</div><div class="line">             */</div><div class="line">            System.out.println(&quot;stat:&quot;+stat.getNumChildren()+&quot;;;;dataLength:&quot;+stat.getDataLength());</div><div class="line">            return childList;</div><div class="line">        &#125;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //获取子节点(异步)</div><div class="line">    public void getChildrenASync(String path) throws KeeperException, InterruptedException&#123;</div><div class="line">        path = &quot;/&quot;+path;</div><div class="line">        if(zk.exists(path, false)!= null)&#123;//判断路径是否存在</div><div class="line">            zk.getChildren(path, false, new AsyncCallback.Children2Callback()&#123;</div><div class="line">                @Override</div><div class="line">                public void processResult(int rc, String path, Object ctx,List&lt;String&gt; children, Stat stat) &#123;</div><div class="line">                    if(children != null)&#123;</div><div class="line">                        for(String child : children)&#123;</div><div class="line">                            System.out.println(&quot;child-name:&quot;+child);</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;&#125;, &quot;async_getchildren&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public void printChildList(String path) throws KeeperException, InterruptedException&#123;</div><div class="line">        </div><div class="line">//        List&lt;String&gt; childList = this.getChildrenSync(path);</div><div class="line">        List&lt;String&gt; childList = this.getChildrenSyncWithStat(path);</div><div class="line">        if(childList != null)&#123;</div><div class="line">            for(String child : childList)&#123;</div><div class="line">                System.out.println(&quot;child-name:&quot;+child);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">/*---------------  获取子节点 end-------------------------*/  </div><div class="line"></div><div class="line">    </div><div class="line"></div><div class="line">/*------------------  获取节点数据 start ----------------*/  </div><div class="line">    //获取节点数据(异步)</div><div class="line">    public void printNodeData(String path) throws KeeperException, InterruptedException&#123;</div><div class="line">        path = &quot;/&quot;+path;</div><div class="line">        if(zk.exists(path, false)!= null)&#123;//判断路径是否存在</div><div class="line">            zk.getData(    path, false, new AsyncCallback.DataCallback()&#123;</div><div class="line">                @Override</div><div class="line">                public void processResult(int rc, String path, Object ctx,byte[] data, Stat stat) &#123;</div><div class="line">                    if(data != null)&#123;</div><div class="line">                        System.out.println(&quot;path:&quot;+path);</div><div class="line">                        System.out.println(&quot;data:&quot;+new String(data));</div><div class="line">                        System.out.println(&quot;stat:&quot;+stat);</div><div class="line">                        System.out.println(&quot;ctx:&quot;+ctx);</div><div class="line">                    &#125;</div><div class="line">                &#125;&#125;,&quot;ctx_data&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">/*------------------  获取节点数据 end--------------------*/  </div><div class="line"></div><div class="line">    </div><div class="line">    public static void main(String[] args) throws IOException, InterruptedException, KeeperException &#123;</div><div class="line">        WatchExample watchExample = new WatchExample();</div><div class="line">        String path = &quot;name_async&quot;;</div><div class="line">        //连接</div><div class="line">        watchExample.connect(&quot;192.168.0.50:2182&quot;);</div><div class="line">        </div><div class="line">        </div><div class="line">        //创建</div><div class="line">//        watchExample.createSync(&quot;name/beijing&quot;,&quot;zhangsan&quot;);</div><div class="line">//        watchExample.createAsync(path,&quot;async&quot;);</div><div class="line">        </div><div class="line">        //删除</div><div class="line">//        watchExample.deleteSync(path);</div><div class="line">//        watchExample.deleteAsync(path);</div><div class="line">        </div><div class="line">        System.out.println(&quot;main..............&quot;); </div><div class="line">        </div><div class="line">        //打印子节点列表</div><div class="line">//        watchExample.printChildList(path);</div><div class="line">//        watchExample.getChildrenASync(path);</div><div class="line">        </div><div class="line">        //打印节点数据</div><div class="line">        watchExample.printNodeData(path);</div><div class="line">        </div><div class="line">        Thread.sleep(8000);//如果是异步的话，那么就要在子线程结束后，主线程才能推出，不然子线程的结果无法返回，所以这里会sleep</div><div class="line">        watchExample.close();</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/bigdata/zookeeper/zookeeper安装配置(单机，伪分布式、集群)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr. Chen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/header.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/bigdata/zookeeper/zookeeper安装配置(单机，伪分布式、集群)/" itemprop="url">
+                  zookeeper安装配置(单机，伪分布式、集群)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T12:47:25+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="1-单机模式搭建"><a href="#1-单机模式搭建" class="headerlink" title="1.单机模式搭建"></a>1.单机模式搭建</h1><h2 id="1-1-解压"><a href="#1-1-解压" class="headerlink" title="1.1.解压"></a>1.1.解压</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd /home/oldboy/tools/                </div><div class="line">tar -zxvf zookeeper-3.4.5.tar.gz </div><div class="line">mv zookeeper-3.4.5 zookeeper</div></pre></td></tr></table></figure>
+<h2 id="1-2-修改配置文件"><a href="#1-2-修改配置文件" class="headerlink" title="1.2.修改配置文件"></a>1.2.修改配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">cd zookeeper/conf/ </div><div class="line">cp   zoo_sample.cfg   zoo_sample.cfg.bak          #首先备份配置文件</div><div class="line">mv   zoo_sample.cfg   zoo.cfg               #将配置文件改名</div><div class="line"></div><div class="line"></div><div class="line">&apos;修改下列选项&apos;</div><div class="line">tickTime=2000</div><div class="line">dataDir=/usr/local/zk/data</div><div class="line">dataLogDir=/usr/local/zk/dataLog      </div><div class="line">clientPort=2181</div></pre></td></tr></table></figure>
+<h2 id="1-3-配置环境变量"><a href="#1-3-配置环境变量" class="headerlink" title="1.3.配置环境变量"></a>1.3.配置环境变量</h2><p>为了今后操作方便，我们需要对Zookeeper的环境变量进行配置，方法如下在/etc/profile文件中加入如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&apos;需要Java的环境，所以如果没有jdk，需要配置jdk&apos;</div><div class="line">ZOOKEEPER=/home/oldboy/tools/zookeeper</div><div class="line">PATH=$ZOOKEEPER/bin:$PATH</div><div class="line">export PATH</div></pre></td></tr></table></figure></p>
+<h2 id="1-4-启动-停止服务"><a href="#1-4-启动-停止服务" class="headerlink" title="1.4.启动/停止服务"></a>1.4.启动/停止服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#启动ZooKeeper的Server</div><div class="line">./bin/zkServer.sh start</div><div class="line"></div><div class="line">#关闭ZooKeeper的Server</div><div class="line">./bin/zkServer.sh stop</div></pre></td></tr></table></figure>
+<h1 id="2-伪集群模式搭建"><a href="#2-伪集群模式搭建" class="headerlink" title="2.伪集群模式搭建"></a>2.伪集群模式搭建</h1><h2 id="2-1-复制及修改配置文件"><a href="#2-1-复制及修改配置文件" class="headerlink" title="2.1.复制及修改配置文件"></a>2.1.复制及修改配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line">[root@data-1-1 ~]# cd /home/oldboy/tools/zookeeper</div><div class="line">[root@data-1-1 zookeeper0]# cp ./conf/zoo.cfg zoo1.cfg</div><div class="line">[root@data-1-1 zookeeper0]# cp ./conf/zoo.cfg zoo2.cfg</div><div class="line">[root@data-1-1 zookeeper0]# cp ./conf/zoo.cfg zoo3.cfg</div><div class="line"></div><div class="line">&apos;##################   zoo1.cfg   ###########################&apos;</div><div class="line"># The number of milliseconds of each tick</div><div class="line">tickTime=2000</div><div class="line"> </div><div class="line"># The number of ticks that the initial</div><div class="line"># synchronization phase can take</div><div class="line">initLimit=10</div><div class="line"> </div><div class="line"># The number of ticks that can pass between</div><div class="line"># sending a request and getting an acknowledgement</div><div class="line">syncLimit=5</div><div class="line"> </div><div class="line"># the directory where the snapshot is stored.</div><div class="line">dataDir=/usr/local/zk/data_1</div><div class="line"> </div><div class="line"># the port at which the clients will connect</div><div class="line">clientPort=2181</div><div class="line"> </div><div class="line">#the location of the log file</div><div class="line">dataLogDir=/usr/local/zk/logs_1</div><div class="line"> </div><div class="line">server.0=localhost:2287:3387</div><div class="line">server.1=localhost:2288:3388</div><div class="line">server.2=localhost:2289:3389</div><div class="line"></div><div class="line">&apos;##################   zoo2.cfg   ###########################&apos;</div><div class="line"># The number of milliseconds of each tick</div><div class="line">tickTime=2000</div><div class="line"> </div><div class="line"># The number of ticks that the initial</div><div class="line"># synchronization phase can take</div><div class="line">initLimit=10</div><div class="line"> </div><div class="line"># The number of ticks that can pass between</div><div class="line"># sending a request and getting an acknowledgement</div><div class="line">syncLimit=5</div><div class="line"> </div><div class="line"># the directory where the snapshot is stored.</div><div class="line">dataDir=/usr/local/zk/data_2</div><div class="line"> </div><div class="line"># the port at which the clients will connect</div><div class="line">clientPort=2182</div><div class="line"> </div><div class="line">#the location of the log file</div><div class="line">dataLogDir=/usr/local/zk/logs_2</div><div class="line"> </div><div class="line">server.0=localhost:2287:3387</div><div class="line">server.1=localhost:2288:3388</div><div class="line">server.2=localhost:2289:3389</div><div class="line"></div><div class="line">&apos;##################   zoo3.cfg   ###########################&apos;</div><div class="line"># The number of milliseconds of each tick</div><div class="line">tickTime=2000</div><div class="line"> </div><div class="line"># The number of ticks that the initial</div><div class="line"># synchronization phase can take</div><div class="line">initLimit=10</div><div class="line"> </div><div class="line"># The number of ticks that can pass between</div><div class="line"># sending a request and getting an acknowledgement</div><div class="line">syncLimit=5</div><div class="line"> </div><div class="line"># the directory where the snapshot is stored.</div><div class="line">dataDir=/usr/local/zk/data_3</div><div class="line"> </div><div class="line"># the port at which the clients will connect</div><div class="line">clientPort=2183</div><div class="line"> </div><div class="line">#the location of the log file</div><div class="line">dataLogDir=/usr/local/zk/logs_3</div><div class="line"> </div><div class="line">server.0=localhost:2287:3387</div><div class="line">server.1=localhost:2288:3388</div><div class="line">server.2=localhost:2289:3389</div><div class="line"></div><div class="line"></div><div class="line">&apos;#其实上述配置文件就是：clientPort、dataDir、dataLogDir、server.x 不同&apos;</div></pre></td></tr></table></figure>
+<h2 id="2-2-创建相应的文件"><a href="#2-2-创建相应的文件" class="headerlink" title="2.2.创建相应的文件"></a>2.2.创建相应的文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//创建dataLogDir</div><div class="line">mkdir /usr/local/zk/logs_1 -p</div><div class="line">mkdir /usr/local/zk/logs_2 -p</div><div class="line">mkdir /usr/local/zk/logs_3 -p</div><div class="line"></div><div class="line">//创建dataDir</div><div class="line">mkdir /usr/local/zk/data_1 -p</div><div class="line">mkdir /usr/local/zk/data_2 -p</div><div class="line">mkdir /usr/local/zk/data_3 -p</div><div class="line"></div><div class="line">//在dataDir下创建myid</div><div class="line">/*</div><div class="line">在/usr/local/zk/data_x目录下创建myid文件，在对应的myid文件中写入数字，</div><div class="line">server.X和myid： server.X 这个数字就是对应，data/myid中的数字。在3个server的myid文件中分别写入了0，1，2</div><div class="line">*/</div><div class="line">echo &quot;0&quot;&gt;/usr/local/zk/data_1/myid</div><div class="line">echo &quot;1&quot;&gt;/usr/local/zk/data_2/myid</div><div class="line">echo &quot;2&quot;&gt;/usr/local/zk/data_3/myid</div><div class="line"></div><div class="line">cat    /usr/local/zk/data_3/myid        #检查一下</div></pre></td></tr></table></figure>
+<h2 id="2-3-启动"><a href="#2-3-启动" class="headerlink" title="2.3.启动"></a>2.3.启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">[root@data-1-1 conf]# zkServer.sh start zoo1.cfg               </div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo1.cfg        #为什么没有指定路径，因为配置了zk的环境变量，这里就可以看到回去找对应的bin和conf目录</div><div class="line">Starting zookeeper ... STARTED</div><div class="line"></div><div class="line">[root@data-1-1 conf]# zkServer.sh start zoo2.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo2.cfg</div><div class="line">Starting zookeeper ... STARTED</div><div class="line"></div><div class="line">[root@data-1-1 conf]# zkServer.sh start zoo3.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo3.cfg</div><div class="line">Starting zookeeper ... STARTED</div><div class="line"></div><div class="line">//检查，是3个表示启动成功</div><div class="line">[root@data-1-1 conf]# jps</div><div class="line">2566 QuorumPeerMain</div><div class="line">2539 QuorumPeerMain</div><div class="line">2638 Jps</div><div class="line">2607 QuorumPeerMain</div><div class="line">[root@data-1-1 conf]#</div><div class="line"></div><div class="line"></div><div class="line">//检查2：通过命令的方式</div><div class="line">[root@data-1-1 tools]# zkServer.sh status zoo1.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo1.cfg</div><div class="line">Mode: follower</div><div class="line"></div><div class="line">[root@data-1-1 tools]# zkServer.sh status zoo2.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo2.cfg</div><div class="line">Mode: leader</div><div class="line"></div><div class="line">[root@data-1-1 tools]# zkServer.sh status zoo3.cfg</div><div class="line">JMX enabled by default</div><div class="line">Using config: /home/oldboy/tools/zookeeper0/bin/../conf/zoo3.cfg</div><div class="line">Mode: follower</div></pre></td></tr></table></figure>
+<h1 id="3-集群模式搭建"><a href="#3-集群模式搭建" class="headerlink" title="3.集群模式搭建"></a>3.集群模式搭建</h1><h2 id="3-1-相同的配置文件"><a href="#3-1-相同的配置文件" class="headerlink" title="3.1.相同的配置文件"></a>3.1.相同的配置文件</h2><p>创建一个配置文件zoo.cfg<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"># The number of milliseconds of each tick</div><div class="line">tickTime=2000</div><div class="line"> </div><div class="line"># The number of ticks that the initial</div><div class="line"># synchronization phase can take</div><div class="line">initLimit=10</div><div class="line"> </div><div class="line"># The number of ticks that can pass between</div><div class="line"># sending a request and getting an acknowledgement</div><div class="line">syncLimit=5</div><div class="line"> </div><div class="line"># the directory where the snapshot is stored.</div><div class="line">dataDir=/usr/local/zk/data</div><div class="line"> </div><div class="line"># the port at which the clients will connect</div><div class="line">clientPort=2183</div><div class="line"> </div><div class="line">#the location of the log file</div><div class="line">dataLogDir=/usr/local/zk/log</div><div class="line"> </div><div class="line">server.0=hadoop:2288:3388</div><div class="line">server.1=hadoop0:2288:3388</div><div class="line">server.2=hadoop1:2288:3388</div><div class="line"></div><div class="line">#此时的server.x就相同，因为配置文件在不同的机器上，所以不必担心端口冲突的问题</div></pre></td></tr></table></figure></p>
+<h2 id="3-2-创建myid"><a href="#3-2-创建myid" class="headerlink" title="3.2.创建myid"></a>3.2.创建myid</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">在dataDir(/usr/local/zk/data)目录创建myid文件</div><div class="line"> </div><div class="line">Server0机器的内容为：0</div><div class="line">Server1机器的内容为：1</div><div class="line">Server2机器的内容为：2</div></pre></td></tr></table></figure>
+<h2 id="3-3-创建dataDir和dataLogDir"><a href="#3-3-创建dataDir和dataLogDir" class="headerlink" title="3.3.创建dataDir和dataLogDir"></a>3.3.创建dataDir和dataLogDir</h2><p>在3台机器上都执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//创建dataLogDir</div><div class="line">mkdir /usr/local/zk/logs -p</div><div class="line"></div><div class="line"> </div><div class="line">//创建dataDir</div><div class="line">mkdir /usr/local/zk/data -p</div></pre></td></tr></table></figure></p>
+<h2 id="3-4-启动"><a href="#3-4-启动" class="headerlink" title="3.4.启动"></a>3.4.启动</h2><p>在3台机器上都执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">zkServer.sh start</div><div class="line"></div><div class="line">//检查</div><div class="line">zkServer.sh status</div></pre></td></tr></table></figure></p>
+<h2 id="3-5-客户端连接"><a href="#3-5-客户端连接" class="headerlink" title="3.5.客户端连接"></a>3.5.客户端连接</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">zkCli.sh -server 192.168.0.50:2182                        #带-server连接的是远端</div><div class="line">zkCli.sh                #连接的是本地</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/35/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/35/">35</a><span class="page-number current">36</span><a class="page-number" href="/page/37/">37</a><span class="space">&hellip;</span><a class="page-number" href="/page/58/">58</a><a class="extend next" rel="next" href="/page/37/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
-</section>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
         
-          <aside id="sidebar">
+          
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/IDEA/">IDEA</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NFS/">NFS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tachyon/">Tachyon</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/azkaban/">azkaban</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/echarts/">echarts</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/flume/">flume</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hadoop/">hadoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hbase/">hbase</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hive/">hive</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/inotify/">inotify</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/kafka/">kafka</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/logstash/">logstash</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/memcached/">memcached</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mongodb/">mongodb</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/project/">project</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/rsync/">rsync</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/scala/">scala</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/spark/">spark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/sqoop/">sqoop</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/storm/">storm</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/数据仓库/">数据仓库</a></li></ul>
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
     </div>
   </div>
 
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础命令/">Linux基础命令</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux重要配置文件/">Linux重要配置文件</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NFS/">NFS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NIO/">NIO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/azkaban/">azkaban</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/echarts/">echarts</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flume/">flume</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hadoop/">hadoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hbase/">hbase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/">hive</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/inotify/">inotify</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/">kafka</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/logstash/">logstash</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mapreduce/">mapreduce</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/markdown/">markdown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memcached/">memcached</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/">mongodb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/netty/">netty</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/project/">project</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rpc/">rpc</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rsync/">rsync</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala/">scala</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala函数式编程/">scala函数式编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scala编程/">scala编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/socket/">socket</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spark/">spark</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqoop/">sqoop</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/storm/">storm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zookeeper/">zookeeper</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据仓库/">数据仓库</a></li></ul>
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/header.jpg"
+               alt="Mr. Chen" />
+          <p class="site-author-name" itemprop="name">Mr. Chen</p>
+           
+              <p class="site-description motion-element" itemprop="description">一个技术渣的自说自话</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">576</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
     </div>
-  </div>
+  </aside>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Linux基础命令/" style="font-size: 19.52px;">Linux基础命令</a> <a href="/tags/Linux重要配置文件/" style="font-size: 14.76px;">Linux重要配置文件</a> <a href="/tags/NFS/" style="font-size: 10px;">NFS</a> <a href="/tags/NIO/" style="font-size: 11.43px;">NIO</a> <a href="/tags/azkaban/" style="font-size: 10.48px;">azkaban</a> <a href="/tags/echarts/" style="font-size: 10.95px;">echarts</a> <a href="/tags/flume/" style="font-size: 10.95px;">flume</a> <a href="/tags/hadoop/" style="font-size: 18.57px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 13.33px;">hbase</a> <a href="/tags/hive/" style="font-size: 18.1px;">hive</a> <a href="/tags/inotify/" style="font-size: 10px;">inotify</a> <a href="/tags/java/" style="font-size: 12.38px;">java</a> <a href="/tags/kafka/" style="font-size: 12.86px;">kafka</a> <a href="/tags/linux/" style="font-size: 13.33px;">linux</a> <a href="/tags/logstash/" style="font-size: 10.48px;">logstash</a> <a href="/tags/mapreduce/" style="font-size: 16.67px;">mapreduce</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/memcached/" style="font-size: 13.81px;">memcached</a> <a href="/tags/mongodb/" style="font-size: 14.76px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 17.14px;">mysql</a> <a href="/tags/netty/" style="font-size: 10.95px;">netty</a> <a href="/tags/nginx/" style="font-size: 14.29px;">nginx</a> <a href="/tags/project/" style="font-size: 10.48px;">project</a> <a href="/tags/python/" style="font-size: 19.05px;">python</a> <a href="/tags/redis/" style="font-size: 17.14px;">redis</a> <a href="/tags/rpc/" style="font-size: 10.48px;">rpc</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/scala/" style="font-size: 17.62px;">scala</a> <a href="/tags/scala函数式编程/" style="font-size: 11.9px;">scala函数式编程</a> <a href="/tags/scala编程/" style="font-size: 15.71px;">scala编程</a> <a href="/tags/shell/" style="font-size: 17.62px;">shell</a> <a href="/tags/socket/" style="font-size: 11.9px;">socket</a> <a href="/tags/spark/" style="font-size: 20px;">spark</a> <a href="/tags/sqoop/" style="font-size: 10.95px;">sqoop</a> <a href="/tags/storm/" style="font-size: 15.24px;">storm</a> <a href="/tags/zookeeper/" style="font-size: 16.19px;">zookeeper</a> <a href="/tags/数据仓库/" style="font-size: 11.43px;">数据仓库</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/05/02/bigdata/spark从入门到精通_笔记/Tachyon/">Tachyon</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/30/数据仓库/数据仓库2/">数据仓库</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/29/IDEA/IDEA/">IDEA</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/29/数据仓库/ETL/">ETL</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/28/数据仓库/PowderDesigner/">PowderDesigner的使用</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
         
       </div>
-      <footer id="footer">
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
   
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2017 Mr. Chen<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr. Chen</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-<script src="/js/script.js"></script>
-
-
-
-
   </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>
